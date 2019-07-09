@@ -1,0 +1,24 @@
+
+<h1>Optimizer Session manager</h1>
+<h3>Currently available materials:</h3>
+{% if materials %}
+    <ul>
+    {% for material in materials %}
+        <li><a href="/session/{{ material.name }}/">{{ material.name }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No materials are available.</p>
+{% endif %}
+
+
+<h3>Currently available machines:</h3>
+{% if machines %}
+    <ul>
+    {% for machine in machines %}
+        <li><a href="/session/{{ machine.model }}/">{{ machine.model }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No machines are available.</p>
+{% endif %}

@@ -1,0 +1,12 @@
+{% if material_name %}
+    <ul>
+        <p>Currently Viewing:</p>
+        <a>{{ material_name }}</a>
+        <p>Outer diameter: {{ size_od }} mm</p>
+        <p>Publication date: {{ pub_date }}</p>
+
+
+    </ul>
+{% else %}
+    <p>Invalid material.</p>
+{% endif %}
