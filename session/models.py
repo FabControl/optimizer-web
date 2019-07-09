@@ -4,28 +4,34 @@ from django.db import models
 
 
 class Material(models.Model):
-    size_od = models.DecimalField(max_digits=3, decimal_places=2)
+    size_od = models.DecimalField(default=1.75, max_digits=3, decimal_places=2)
     name = models.CharField(max_length=60)
+    pub_date = models.DateTimeField('date published', auto_now_add=True)
 
     def __str__(self):
         return "{} ({} mm)".format(self.name, str(self.size_od))
 
 
+class Chamber(object):
+    def __init__(self, tool, gcode_command="M141 S$temp", temperature_max=80):
+        self.tool = tool
+        self.gcode_command = gcode_command
+        self.temprature_max = temperature_max
+
+
 class Machine(models.Model):
-    model = models.CharField(max_length=30)
-    buildarea_maxdim1 = models.IntegerField()
-    buildarea_maxdim2 = models.IntegerField()
+    model = models.CharField(max_length=30, default="Unknown")
+    buildarea_maxdim1 = models.IntegerField(default=0)
+    buildarea_maxdim2 = models.IntegerField(default=0)
 
     FORM_CHOICES = [("elliptic", "Elliptic"), ("cartesian", "Cartesian")]
-    form = models.CharField(max_length=20, choices=FORM_CHOICES, default="Cartesian")
+    form = models.CharField(max_length=20, choices=FORM_CHOICES, default="cartesian")
+
+    TOOL_CHOICES = [("T0", "T0"), ("T1", "T1"), ("T2", "T2")]
+    chamber = Chamber(tool=models.CharField(max_length=3, choices=TOOL_CHOICES, default="T0"))
 
     def __str__(self):
         return self.model
-
-
-
-
-
 
 # {
 #   "machine": {
