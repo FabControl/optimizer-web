@@ -33,6 +33,10 @@ class Machine(models.Model):
     def __str__(self):
         return self.model
 
+#
+# class Session(models.Model):
+#
+
 # {
 #   "machine": {
 #     "model": "model name",
