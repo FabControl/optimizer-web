@@ -1,12 +1,18 @@
+{% extends "session/base.html" %}
+
+{% block content %}
 {% if material_name %}
-    <ul>
-        <p>Currently Viewing:</p>
-        <a>{{ material_name }}</a>
-        <p>Outer diameter: {{ size_od }} mm</p>
-        <p>Publication date: {{ pub_date }}</p>
+<div class="container">
+      <ul>
+          <p>Currently Viewing:</p>
+          <a>{{ material_name }}</a>
+          <p>Outer diameter: {{ size_od }} mm</p>
+          <p>Publication date: {{ pub_date }}</p>
 
 
-    </ul>
-{% else %}
-    <p>Invalid material.</p>
-{% endif %}
+      </ul>
+  {% else %}
+      <p>Invalid material.</p>
+  {% endif %}
+</div>
+{% endblock %}

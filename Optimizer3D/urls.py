@@ -17,10 +17,11 @@ from django.contrib import admin
 from django.urls import path
 from django.contrib import admin
 from django.urls import include, path
+from .views import index
 
 
 urlpatterns = [
-    path('polls/', include('polls.urls')),
     path('session/', include('session.urls')),
     path('admin/', admin.site.urls),
+    path('', index, name='index')
 ]

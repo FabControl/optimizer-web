@@ -35,8 +35,13 @@ class Machine(models.Model):
 
 
 class Session(models.Model):
-    session_number = models.IntegerField(default=0, max_digits=8)
-
+    session_number = models.IntegerField(default=0)
+    TARGET_CHOICES = [("MS", "Mechanical Strength"), ("A", "Aesthetics"), ("FP", "Fast Printing")]
+    target = models.CharField(max_length=20, choices=TARGET_CHOICES, default="MS")
+    TEST_NUMBER_CHOICES = [("01", "First-layer printing height test"), ("03", "Extrusion temperature test")]
+    test_number = models.CharField(max_length=20, choices=TEST_NUMBER_CHOICES, default="01")
+    SLICER_CHOICES = [("Prusa", "Slic3r PE"), ("Simplify3D", "Simplify3D"), ("Cura", "Cura")]
+    slicer = models.CharField(max_length=20, choices=SLICER_CHOICES, default="Prusa")
 
 # {
 #   "machine": {
