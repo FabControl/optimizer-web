@@ -21,3 +21,10 @@ def material(request, name):
                'size_od': material.size_od,
                'pub_date': material.pub_date}
     return render(request, 'session/material.html', context)
+
+
+def session(request, session_number):
+    try:
+        session = Session.objects.get(session_number=session_number)
+    context = {}
+    return render(request, 'session/new_session.html', context)

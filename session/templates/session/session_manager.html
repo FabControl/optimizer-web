@@ -1,0 +1,35 @@
+{% extends "session/base.html" %}
+
+{% block content %}
+<div class="container">
+
+  <h4>Resource manager</h4>
+  <div class="row">
+    <div class="col-sm">
+      <p>Currently available materials:</p>
+      {% if materials %}
+      <ul>
+        {% for material in materials %}
+        <li><a href="{% url 'material' material.name %}">{{ material.name }}</a></li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p>No materials are available.</p>
+      {% endif %}
+    </div>
+
+    <div class="col-sm">
+      <p>Currently available machines:</p>
+      {% if machines %}
+      <ul>
+        {% for machine in machines %}
+        <li><a href="/session/{{ machine.model }}/">{{ machine.model }}</a></li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p>No machines are available.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

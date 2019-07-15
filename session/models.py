@@ -33,9 +33,10 @@ class Machine(models.Model):
     def __str__(self):
         return self.model
 
-#
-# class Session(models.Model):
-#
+
+class Session(models.Model):
+    session_number = models.IntegerField(default=0, max_digits=8)
+
 
 # {
 #   "machine": {
