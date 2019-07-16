@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import datetime
 
 # Create your models here.
 
@@ -6,7 +7,7 @@ from django.db import models
 class Material(models.Model):
     size_od = models.DecimalField(default=1.75, max_digits=3, decimal_places=2)
     name = models.CharField(max_length=60)
-    pub_date = models.DateTimeField('date published', auto_now_add=True)
+    pub_date = models.DateTimeField(default=datetime.now, blank=True)
 
     def __str__(self):
         return "{} ({} mm)".format(self.name, str(self.size_od))
@@ -35,13 +36,20 @@ class Machine(models.Model):
 
 
 class Session(models.Model):
-    session_number = models.IntegerField(default=0)
+    number = models.IntegerField(default=0)
+    name = models.CharField(default="Untitled", max_length=20)
+    pub_date = models.DateTimeField(default=datetime.now, blank=True)
     TARGET_CHOICES = [("MS", "Mechanical Strength"), ("A", "Aesthetics"), ("FP", "Fast Printing")]
     target = models.CharField(max_length=20, choices=TARGET_CHOICES, default="MS")
     TEST_NUMBER_CHOICES = [("01", "First-layer printing height test"), ("03", "Extrusion temperature test")]
     test_number = models.CharField(max_length=20, choices=TEST_NUMBER_CHOICES, default="01")
     SLICER_CHOICES = [("Prusa", "Slic3r PE"), ("Simplify3D", "Simplify3D"), ("Cura", "Cura")]
     slicer = models.CharField(max_length=20, choices=SLICER_CHOICES, default="Prusa")
+    machine = models.ForeignKey(Machine, on_delete=models.SET_NULL, null=True)
+    material = models.ForeignKey(Material, on_delete=models.SET_NULL, null=True)
+
+    def __str__(self):
+        return "{} (target: {})".format(self.name, self.target)
 
 # {
 #   "machine": {

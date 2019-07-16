@@ -1,34 +1,58 @@
 {% extends "session/base.html" %}
 
 {% block content %}
-<div class="container">
+{% load static %}
+<script src="{% static 'session/js/sortable.min.js' %}"></script>
+<link rel="stylesheet" href="{% static 'session/css/sortable-theme-bootstrap.css' %}" />
+<div class="container p-5 rounded">
 
-  <h4>Resource manager</h4>
-  <div class="row">
-    <div class="col-sm">
-      <p>Currently available materials:</p>
-      {% if materials %}
-      <ul>
-        {% for material in materials %}
-        <li><a href="{% url 'material' material.name %}">{{ material.name }}</a></li>
-        {% endfor %}
-      </ul>
-      {% else %}
-      <p>No materials are available.</p>
-      {% endif %}
+  <div class="d-flex justify-content-end p-2">
+    <!-- Search form -->
+    <div class="md-form mt-0">
+      <input class="form-control" type="text" placeholder="Search" aria-label="Search">
     </div>
+  </div>
+  <div class="col pt-3">
+    <div class="card p-2">
+      <table class="sortable-theme-bootstrap" data-sortable>
+        <thead>
+          <tr>
+            <th data-sortable="true">Name</th>
+            <th data-sortable="true">Target</th>
+            <th data-sortable="true">Printer</th>
+            <th data-sortable="true">Material</th>
+            <th data-sortable="true">Tests</th>
+            <th data-sorted="true" data-sortable="true">Created</th>
+            <th data-sortable="false">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {# ROW CONTENTS #}
+          {% for session in sessions %}
+          <tr>
+            <td><a href="{% url 'session_detail' session.number %}">{{ session.name }}</a></td>
+            <td>{{ session.target }}</td>
+            <td><a class="text-secondary" href="{% url 'machine_detail' session.machine.pk %}">{{ session.machine.model }}</a></td>
+            <td><a class="text-secondary" href="{% url 'material_detail' session.material.pk %}">{{ session.material.name }}</a></td>
+            <td>0/0</td>
+            <td>{{ session.pub_date }}</td>
+            <td>
+              <div class="dropdown">
+                <button class="btn-sm btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Action
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <a class="dropdown-item" href="#">Open</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="#">Delete</a>
+                </div>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
 
-    <div class="col-sm">
-      <p>Currently available machines:</p>
-      {% if machines %}
-      <ul>
-        {% for machine in machines %}
-        <li><a href="/session/{{ machine.model }}/">{{ machine.model }}</a></li>
-        {% endfor %}
-      </ul>
-      {% else %}
-      <p>No machines are available.</p>
-      {% endif %}
+        </tbody>
+      </table>
     </div>
   </div>
 </div>

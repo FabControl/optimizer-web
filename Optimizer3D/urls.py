@@ -21,7 +21,7 @@ from .views import index
 
 
 urlpatterns = [
-    path('session/', include('session.urls')),
+    path('', include('session.urls')),
     path('admin/', admin.site.urls),
-    path('', index, name='index')
+    # path('', index, name='index')
 ]

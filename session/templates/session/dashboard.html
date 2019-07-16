@@ -1,0 +1,28 @@
+{% extends "session/base.html" %}
+
+{% block content %}
+<div class="container pt-5">
+  <div class="card p-5">
+    <div class"col">
+      <p class="lead">
+        This is Optimizer's Dashboard.
+      </p>
+      <p>
+        Here you can manage your active sessions, materials and machines.
+      </p>
+      <p>Your most recent sessions:</p>
+      {% if latest_sessions %}
+      <ul>
+        {% for session in latest_sessions %}
+        {# <li><a href="{% url 'session_manager/session_number' session.session_number %}">{{ session.session_number }}</a></li> #}
+        <li><a href="{% url 'session_detail' session.number %}">{{ session.name }} {{ session.target }} {{ session.pk }}</a></li>
+        {% endfor %}
+      </ul>
+      {% else %}
+
+      {% endif %}
+      <button type="button" onclick="location.href='{% url 'new_session' %}'" class="btn btn-primary btn-sm">+ New Testing Session</button>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -6,8 +6,9 @@ urlpatterns = [
     # ex: /session/
     path('', views.index, name='index'),
     path('dashboard', views.dashboard, name='dashboard'),
-    path('session_manager/<str:name>/', views.material, name='material'),
-    path('session_manager/', views.session_manager, name="session_manager"),
-    path('session_manager/<int:session_number>', views.new_session, name='session'),
+    path('materials/<pk>/', views.MaterialView.as_view(), name='material_detail'),
+    path('machines/<pk>', views.MachineView.as_view(), name='machine_detail'),
+    path('session_manager/', views.SessionListView.as_view(), name="session_manager"),
+    path('session_manager/<int:pk>/', views.SessionView.as_view(), name='session_detail'),
     path('new_session/', views.new_session, name="new_session")
     ]
