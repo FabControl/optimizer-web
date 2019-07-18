@@ -1,22 +1,46 @@
 {% extends "session/base.html" %}
 
 {% block content %}
-<div class="container pt-5">
+<div class="container">
   <h2>New Testing Session</h2>
   <div class="card p-3">
-    <form>
-      <div class="flex-d p-2">
-        <div class="row">
-          <div class="col">
-            <label for="sessionName">Session name:</label>
-          </div>
-          <div class="col">
-            <input type="text" class="form-control" id="session-name" aria-describedby="sessionName" placeholder="Name">
-          </div>
+    <form method="post">
+
+      <div class="row">
+        <div class="col-sm-2 text-right"><label for="sessionName">Session name:</label></div>
+        <div class="col-sm-3"><input type="text" class="form-control" id="session-name" aria-describedby="sessionName" placeholder="Name"></div>
+      </div>
+
+      <div class="row pt-3">
+        <div class="col-sm-2 text-right"><label for="sessionName">Material:</label></div>
+        <div class="col-sm-3 form-group">
+          <select class="form-control" id="exampleFormControlSelect1">
+            {% for material in materials %}
+            <option>{{ material.name }}</option>
+            {% endfor %}
+          </select>
         </div>
       </div>
+
       <div class="row">
-        <div class="col-4">
+        <div class="col-sm-2 text-right"><label for="sessionName">Machine:</label></div>
+        <div class="col-sm-3 form-group">
+          <select class="form-control" id="exampleFormControlSelect1">
+            {% for machine in machines %}
+            <option>{{ machine.model }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      <div class="row pt-3">
+        <div class="col-sm-2">
+          <label for="sessionName">Target:</label>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-3">
           <div class="list-group" id="list-tab" role="tablist">
             <a class="list-group-item list-group-item-action active" id="list-mechanical-strength-list" data-toggle="list" href="#list-mechanical-strength" role="tab" aria-controls="mechanical-strength">Mechanical strength</a>
             <a class="list-group-item list-group-item-action" id="list-aesthetics-list" data-toggle="list" href="#list-aesthetics" role="tab" aria-controls="aesthetics">Aesthetics</a>
@@ -25,11 +49,28 @@
         </div>
         <div class="col-8">
           <div class="tab-content" id="nav-tabContent">
-            <div class="tab-pane fade show active" id="list-mechanical-strength" role="tabpanel" aria-labelledby="list-mechanical-strength-list">Mechanical strength is blahblahblabh</div>
-            <div class="tab-pane fade" id="list-aesthetics" role="tabpanel" aria-labelledby="list-aesthetics-list">Aesthetics is blahblahblabh</div>
-            <div class="tab-pane fade" id="list-fast-printing" role="tabpanel" aria-labelledby="list-fast-printing-list">Fast printing is blahblahblabh</div>
+            <div class="tab-pane fade show active" id="list-mechanical-strength" role="tabpanel" aria-labelledby="list-mechanical-strength-list">{{ target_descriptions.mechanical_strength }}</div>
+            <div class="tab-pane fade" id="list-aesthetics" role="tabpanel" aria-labelledby="list-aesthetics-list">{{ target_descriptions.aesthetics }}</div>
+            <div class="tab-pane fade" id="list-fast-printing" role="tabpanel" aria-labelledby="list-fast-printing-list">{{ target_descriptions.fast_printing }}</div>
           </div>
         </div>
+      </div>
+
+      <div class="row pt-3">
+        <div class="col-sm-12">
+          <div class="form-group">
+            <label for="commentsTextArea">Comments:</label>
+            <textarea class="form-control" id="commentsTextArea" rows="3"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-4"></div>
+        <div class="col-sm-4 text-center">
+          <input class="btn btn-primary" type="submit" value="Initialize Testing Session">
+        </div>
+        <div class="col-sm-4"></div>
       </div>
     </form>
   </div>

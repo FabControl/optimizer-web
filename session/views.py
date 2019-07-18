@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from .utilities import load_json
 from django.template import loader
 from .models import *
 from django.views import generic
@@ -42,21 +43,36 @@ class SessionListView(generic.ListView):
         return Session.objects.order_by('pub_date')
 
 
-# def session_manager(request):
-#     latest_materials = Material.objects.order_by('-pub_date')[:5]
-#     materials = Material.objects.all()
-#     machines = Machine.objects.all()
-#     context = {'latest_materials': latest_materials,
-#                'materials': materials,
-#                'machines': machines}
-#     return render(request, 'session/session_manager.html', context)
-
-
 class SessionView(generic.DetailView):
     model = Session
     template_name = 'session/session.html'
 
 
 def new_session(request):
-    context = {}
+    target_descriptions = load_json("session/static/session/json/target_descriptions.json")
+    materials = Material.objects.order_by('pub_date')
+    machines = Machine.objects.order_by('pub_date')
+    context = {"materials": materials,
+               "machines": machines,
+               "target_descriptions": target_descriptions}
     return render(request, 'session/new_session.html', context)
+
+
+def faq(request):
+    context = {}
+    return render(request, 'session/faq.html', context)
+
+
+def quick_start(request):
+    context = {}
+    return render(request, 'session/quick_start.html', context)
+
+
+def support(request):
+    context = {}
+    return render(request, 'session/support.html', context)
+
+
+def guide(request):
+    context = {}
+    return render(request, 'session/guide.html', context)

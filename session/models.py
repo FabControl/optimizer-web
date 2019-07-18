@@ -21,6 +21,7 @@ class Chamber(object):
 
 
 class Machine(models.Model):
+    pub_date = models.DateTimeField(default=datetime.now, blank=True)
     model = models.CharField(max_length=30, default="Unknown")
     buildarea_maxdim1 = models.IntegerField(default=0)
     buildarea_maxdim2 = models.IntegerField(default=0)
