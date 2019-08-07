@@ -1,0 +1,12 @@
+\{% extends "session/base.html" %}
+
+{% block content %}
+<div class="container">
+      <ul>
+          <p>Currently Viewing:</p>
+          <a>{{ material.name }}</a>
+          <p>Outer diameter: {{ material.size_od }} mm</p>
+          <p>Publication date: {{ material.pub_date }}</p>
+      </ul>
+</div>
+{% endblock %}
