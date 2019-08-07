@@ -18,17 +18,27 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
-        <li class="nav-item {% if request.resolver_match.url_name == "dashboard" %}active{% endif %}">
+        <li class="nav-item {% if "/dashboard/" in request.path %}active{% endif %}">
           <a class="nav-link" href="{% url 'dashboard' %}">Dashboard <span class="sr-only">(current)</span></a>
         </li>
-        <li class="nav-item {% if request.resolver_match.url_name == "session_manager" %}active{% endif %}">
+        <li class="nav-item {% if "/sessions/" in request.path %}active{% endif %}">
           <a class="nav-link" href="{% url 'session_manager' %}">Session manager</a>
         </li>
-        <li class="nav-item {% if request.resolver_match.url_name == "help" %}active{% endif %} dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <li class="nav-item {% if "/resources/" in request.path %}active{% endif %} dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="resourcesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Resources
+          </a>
+          <div class="dropdown-menu" aria-labelledby="resourcesDropdown">
+            <a class="dropdown-item" href="{% url 'materials' %}">Materials</a>
+            <a class="dropdown-item" href="{% url 'machines' %}">Machines</a>
+            <a class="dropdown-item" href="{% url 'settings' %}">Settings</a>
+          </div>
+        </li>
+        <li class="nav-item {% if "/help/" in request.path %}active{% endif %} dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="helpDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Help
           </a>
-          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <div class="dropdown-menu" aria-labelledby="helpDropdown">
             <a class="dropdown-item" href="{% url 'quickstart' %}">Quickstart guide</a>
             <a class="dropdown-item" href="mailto:support@fabcontrol.com">Support</a>
             <a class="dropdown-item" href="{% url 'faq' %}">FAQ</a>

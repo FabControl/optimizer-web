@@ -10,8 +10,8 @@
       <p>
         Here you can manage your active sessions, materials and machines.
       </p>
-      <p>Your most recent sessions:</p>
       {% if latest_sessions %}
+      <p>Your most recent sessions:</p>
       <ul>
         {% for session in latest_sessions %}
         {# <li><a href="{% url 'session_manager/session_number' session.session_number %}">{{ session.session_number }}</a></li> #}
