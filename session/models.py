@@ -68,23 +68,14 @@ class Machine(models.Model):
         return self.model
 
 
-class Session(models.Model):
-    number = models.IntegerField(default=0)
-    name = models.CharField(default="Untitled", max_length=20)
-    pub_date = models.DateTimeField(default=datetime.now, blank=True)
-    target = models.CharField(max_length=20, choices=TARGET_CHOICES, default="MS")
-    test_number = models.CharField(max_length=20, choices=TEST_NUMBER_CHOICES, default="01")
-    slicer = models.CharField(max_length=20, choices=SLICER_CHOICES, default="Prusa")
-    machine = models.ForeignKey(Machine, on_delete=models.SET_NULL, null=True)
-    material = models.ForeignKey(Material, on_delete=models.SET_NULL, null=True)
-
-    def __str__(self):
-        return "{} (target: {})".format(self.name, self.target)
-
-
 class Settings(models.Model):
     name = models.CharField(max_length=20, blank=True)
     pub_date = models.DateTimeField(default=datetime.now, blank=True)
+
+    min_max_parameter_one_min = models.DecimalField(default=0, max_digits=3, decimal_places=2)
+    min_max_parameter_one_max = models.DecimalField(default=0, max_digits=3, decimal_places=2)
+    min_max_parameter_two_min = models.IntegerField(default=0)
+    min_max_parameter_two_max = models.IntegerField(default=0)
 
     speed_travel = models.IntegerField(default=140)
     raft_density = models.IntegerField(default=100)
@@ -111,6 +102,51 @@ class Settings(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Session(models.Model):
+    number = models.IntegerField(default=0)
+    name = models.CharField(default="Untitled", max_length=20)
+    pub_date = models.DateTimeField(default=datetime.now, blank=True)
+    target = models.CharField(max_length=20, choices=TARGET_CHOICES, default="MS")
+    test_number = models.CharField(max_length=20, choices=TEST_NUMBER_CHOICES, default="01")
+    slicer = models.CharField(max_length=20, choices=SLICER_CHOICES, default="Prusa")
+    machine = models.ForeignKey(Machine, on_delete=models.SET_NULL, null=True)
+    material = models.ForeignKey(Material, on_delete=models.SET_NULL, null=True)
+    settings = models.ForeignKey(Settings, on_delete=models.CASCADE, null=True)
+
+    def __str__(self):
+        return "{} (target: {})".format(self.name, self.target)
+
+
+# class Test(models.Model):
+#     test_name = models.CharField(max_length=64, choices=[(x, x) for y, x in TEST_NUMBER_CHOICES])
+#     test_number = models.CharField(max_length=64, choices=[(y, y) for y, x in TEST_NUMBER_CHOICES])
+#     executed = models.BooleanField(default=True)
+#     tested_parameter_one_values = None
+#     tested_parameter_two_values = None
+#     tested_parameter_three_values = None
+#     tested_volumetric_flow_rate_values = None
+#     selected_parameter_one_value = models.DecimalField(max_digits=4, decimal_places=3, default=0, blank=True)
+#     selected_parameter_two_value = models.DecimalField(max_digits=4, decimal_places=3, default=0, blank=True)
+#     selected_parameter_three_value = models.DecimalField(max_digits=4, decimal_places=3, default=0, blank=True)
+#     selected_volumetric_flow_rate_value = models.DecimalField(max_digits=4, decimal_places=3, default=0, blank=True)
+#     # "selected_parameter_one_value": 0.375,
+#     # "selected_parameter_two_value": 25,
+#     # "selected_volumetric_flow-rate_value": 8.432,
+#     # "parameter_one_name": "first-layer track height",
+#     # "parameter_two_name": "first-layer printing speed",
+#     # "parameter_one_units": "mm",
+#     # "parameter_two_units": "mm/s",
+#     # "parameter_one_precision": "{:.3f}",
+#     # "parameter_two_precision": "{:.1f}",
+#     # "gcode_path": "G:\\3d_printing\\Procedure\\OOP\\mp-testing-suite-v2\\gcodes\\212_01.gcode",
+#     # "label_path": "G:\\3d_printing\\Procedure\\OOP\\mp-testing-suite-v2\\pngs\\212_01.png",
+#     # "comments": 0,
+#     # "datetime_info": "2019-07-18 09:15:06",
+#     # "extruded_filament_mm": 841.53,
+#     # "estimated_printing_time": "0:09:28"
+
 
 # {
 #   "machine": {

@@ -27,6 +27,5 @@ urlpatterns = [
     path('help/support/', views.support, name="support"),
     path('help/guide/', views.guide, name="guide"),
 
-    path('form_test/', views.form_test, name="form_test"),
     path('testing_session', views.testing_session, name="testing_session")
     ]

@@ -1,10 +1,10 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.contrib import messages
-from .utilities import load_json
+from .utilities import load_json, optimizer_info
 from django.template import loader
 from .models import *
 from django.views import generic
-from .forms import NewTestForm, SessionForm, MaterialForm, MachineForm
+from .forms import NewTestForm, SessionForm, MaterialForm, MachineForm, SettingForm
 
 # Create your views here.
 
@@ -55,7 +55,7 @@ def material_form(request):
 class MachineView(generic.DetailView):
     model = Machine
     template_name = 'session/machine_detail.html'
-    
+
 
 class MachinesView(generic.ListView):
     template_name = "session/machine_manager.html"
@@ -98,19 +98,49 @@ class SessionListView(generic.ListView):
         return Session.objects.order_by('pub_date')
 
 
-class SessionView(generic.DetailView):
+class SessionView(generic.UpdateView):
     model = Session
+    form_class = SettingForm
     template_name = 'session/session.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['percentage_complete'] = 100 / optimizer_info.length * int(self.object.test_number)
+        context['executed'] = False
+        return context
 
-def new_session(request):
-    target_descriptions = load_json("session/static/session/json/target_descriptions.json")
-    materials = Material.objects.order_by('pub_date')
-    machines = Machine.objects.order_by('pub_date')
-    context = {"materials": materials,
-               "machines": machines,
-               "target_descriptions": target_descriptions}
-    return render(request, 'session/new_session.html', context)
+
+class SessionUpdatedView(generic.UpdateView):
+    template_name = 'session/session.html'
+    form_class = SettingForm
+    model = Settings
+
+    # That should be all you need. If you need to do any more custom stuff
+    # before saving the form, override the `form_valid` method, like this:
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['percentage_complete'] = 100 / optimizer_info.length * int(self.object.test_number)
+        context['executed'] = False
+        return context
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+
+        # Do any custom stuff here
+
+        self.object.save()
+        return redirect('session_detail', pk=self.object.pk)
+
+
+# def new_session(request):
+#     target_descriptions = load_json("session/static/session/json/target_descriptions.json")
+#     materials = Material.objects.order_by('pub_date')
+#     machines = Machine.objects.order_by('pub_date')
+#     context = {"materials": materials,
+#                "machines": machines,
+#                "target_descriptions": target_descriptions}
+#     return render(request, 'session/new_session.html', context)
 
 
 def faq(request):
@@ -143,15 +173,19 @@ def guide(request):
 #         return context
 
 
-def form_test(request):
+def new_session(request):
     if request.method == 'POST':
         form = SessionForm(request.POST)
+        if form.is_valid():
+            messages.info(request, 'The session has been created!')
+            session = form.save()
+            return redirect('session_detail', pk=session.pk)
     else:
         form = SessionForm()
 
-    context = {"form": form}
+    context = {"form": form, "target_descriptions": load_json("session/static/session/json/target_descriptions.json")}
 
-    return render(request, 'session/form_test.html', context)
+    return render(request, 'session/new_session.html', context)
 
 
 def testing_session(request):

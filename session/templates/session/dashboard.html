@@ -15,7 +15,7 @@
       <ul>
         {% for session in latest_sessions %}
         {# <li><a href="{% url 'session_manager/session_number' session.session_number %}">{{ session.session_number }}</a></li> #}
-        <li><a href="{% url 'session_detail' session.number %}">{{ session.name }} {{ session.target }} {{ session.pk }}</a></li>
+        <li><a href="{% url 'session_detail' session.pk %}">{{ session.name }} {{ session.target }} {{ session.pk }}</a></li>
         {% endfor %}
       </ul>
       {% else %}
