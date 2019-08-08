@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="{% static 'session/css/sortable-theme-bootstrap.css' %}" />
 <div class="container p-5">
   <div class="row">
-    <div class="col-sm-9"><button type="button" onclick="location.href='{% url 'new_machine' %}'" class="btn btn-primary btn">+ New Machine</button></div>
+    <div class="col-sm-9"><button type="button" onclick="location.href='{% url 'machine_form' %}'" class="btn btn-primary btn">+ New Machine</button></div>
     <div class="col-sm-3">
       <div class="md-form mt-0">
         <input class="form-control" type="text" placeholder="Search" aria-label="Search">
@@ -20,10 +20,8 @@
           <thead>
             <tr>
               <th data-sortable="true">Name</th>
-              <th data-sortable="true">Target</th>
-              <th data-sortable="true">Printer</th>
-              <th data-sortable="true">Material</th>
-              <th data-sortable="true">Tests</th>
+              <th data-sortable="true">Form</th>
+              <th data-sortable="true">Nozzle ⌀ (mm)</th>
               <th data-sorted="true" data-sortable="true">Created</th>
               <th data-sortable="false">Action</th>
             </tr>
@@ -32,11 +30,10 @@
             {# ROW CONTENTS #}
             {% for machine in machines %}
             <tr>
-              <td><a href="{% url 'machine_detail' machine.number %}">{{ machine.model }}</a></td>
-              <td>{{ session.target }}</td>
-              <td><a class="text-secondary" href="{% url 'machine_detail' machine.pk %}">{{ machine.model }}</a></td>
-              <td>0/0</td>
-              <td>{{ session.pub_date }}</td>
+              <td><a href="{% url 'machine_detail' machine.pk %}">{{ machine.model }}</a></td>
+              <td>{{ machine.form }}</td>
+              <td>{{machine.extruder.nozzle.size_id}}</td>
+              <td>{{ machine.pub_date }}</td>
               <td>
                 <div class="dropdown">
                   <button class="btn-sm btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

@@ -51,6 +51,7 @@ class SettingForm(forms.ModelForm):
 
         self.helper = FormHelper()
         self.helper.field_class = 'col-lg-3'
+        self.helper.form_tag = False
         #
         # self.helper.add_input(Submit('submit', 'Submit'))
         # self.helper.layout = Layout(

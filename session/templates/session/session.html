@@ -12,30 +12,29 @@
   <div class="row p-3">
     <ul class="nav nav-tabs">
       <li class="nav-item">
-        <a class="nav-link {% if not executed %}active{% else %}disabled{% endif %}" href="#">Generate</a>
+        <a class="nav-link {% if not executed %}active{% endif %} disabled">Generate</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link {% if executed %}active{% else %}disabled{% endif %}" href="#">Validate</a>
+        <a class="nav-link {% if executed %}active{% endif %} disabled" href="#">Validate</a>
       </li>
     </ul>
   </div>
   <div class="container">
-
-  <form class="" action="" method="post">
-    {% csrf_token %}
-    {% if not executed %}
-    {% include "session/session_generate.html" %}
-    {% else %}
-    {% include "session/session_validate.html" %}
-    {% endif %}
-    <div class="row pt-3 justify-content-end">
-      <div class="col text-right">
-        <button class="btn btn-secondary disabled" type="submit">Skip this test</button>
-        <button class="btn btn-primary" type="submit">Next>></button>
+    <form class="" action="" method="post">
+      {% csrf_token %}
+      {% if not executed %}
+      {% include "session/session_generate.html" %}
+      {% else %}
+      {% include "session/session_validate.html" %}
+      {% endif %}
+      <div class="row pt-3 justify-content-end">
+        <div class="col text-right">
+          <button class="btn btn-secondary disabled" type="submit">Skip this test</button>
+          <button type="submit" class="btn btn-primary">Next></button>
+        </div>
       </div>
-    </div>
-  </form>
-</div>
+    </form>
+  </div>
 
 </div>
 {% endblock %}

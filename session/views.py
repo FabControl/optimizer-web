@@ -1,7 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.contrib import messages
+from django.contrib.staticfiles import finders
 from .utilities import load_json, optimizer_info
-from django.template import loader
+from django.http import FileResponse, Http404
+
 from .models import *
 from django.views import generic
 from .forms import NewTestForm, SessionForm, MaterialForm, MachineForm, SettingForm
@@ -115,9 +117,6 @@ class SessionUpdatedView(generic.UpdateView):
     form_class = SettingForm
     model = Settings
 
-    # That should be all you need. If you need to do any more custom stuff
-    # before saving the form, override the `form_valid` method, like this:
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['percentage_complete'] = 100 / optimizer_info.length * int(self.object.test_number)
@@ -125,12 +124,11 @@ class SessionUpdatedView(generic.UpdateView):
         return context
 
     def form_valid(self, form):
-        self.object = form.save(commit=False)
-
+        settings = form.save(commit=False)
         # Do any custom stuff here
-
-        self.object.save()
-        return redirect('session_detail', pk=self.object.pk)
+        settings.save()
+        self.get_context_data()['executed'] = True
+        return redirect('session_detail', pk=settings.pk)
 
 
 # def new_session(request):
@@ -159,8 +157,9 @@ def support(request):
 
 
 def guide(request):
-    context = {}
-    return render(request, 'session/guide.html', context)
+
+    return FileResponse(open(finders.find('session/doc/manual.pdf'), 'rb'), content_type='application/pdf')
+
 
 
 # class FormsTestView(generic.TemplateView):
