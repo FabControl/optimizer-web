@@ -2,7 +2,7 @@ from django import forms
 from .choices import TEST_NUMBER_CHOICES
 from .models import Session, Material, Machine, Settings
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit, Layout
+from crispy_forms.layout import Submit, Layout, Row, Column
 
 
 class NewTestForm(forms.Form):
@@ -39,27 +39,50 @@ class SettingForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(SettingForm, self).__init__(*args, **kwargs)
-        self.fields['min_max_parameter_one_min'].label = 'First layer track height (mm)'
-        self.fields['min_max_parameter_one_max'].label = ''
-        self.fields['min_max_parameter_two_min'].label = 'First layer printing speed (mm/s)'
-        self.fields['min_max_parameter_two_max'].label = ''
+        self.fields['min_max_parameter_one_min'].label = 'First layer track height min. value (mm)'
+        self.fields['min_max_parameter_one_max'].label = 'First layer track height max. value (mm)'
+        self.fields['min_max_parameter_two_min'].label = 'First layer printing speed min. value (mm/s)'
+        self.fields['min_max_parameter_two_max'].label = 'First layer printing speed max. value (mm/s)'
+
         self.fields['track_height_raft'].label = "First layer track height (mm)"
+        self.fields['track_height_raft'].field_class = "field-horizontal"
+
         self.fields['speed_printing_raft'].label = 'First layer printing spped (mm/s)'
-        self.fields['temperature_extruder_raft'].label = 'First layer extrusion temperature (degC)'
-        self.fields['temperature_printbed_setpoint'].label = 'Pritbed temperature (degC)'
+        self.fields['temperature_extruder_raft'].label = 'First layer extrusion temperature (°C)'
+        self.fields['temperature_printbed_setpoint'].label = 'Pritbed temperature (°C)'
         self.fields['track_width_raft'].label = 'First layer track width (mm)'
 
         self.helper = FormHelper()
-        self.helper.field_class = 'col-lg-3'
+        # self.helper.form_class = 'form-horizontal'
+        # self.helper.field_class = 'col-lg-3'
+        # self.helper.label_class = 'col-lg-6'
         self.helper.form_tag = False
-        #
-        # self.helper.add_input(Submit('submit', 'Submit'))
-        # self.helper.layout = Layout(
-        #     'email',
-        #     'password',
-        #     'remember_me',
-        #     StrictButton('Sign in', css_class='btn-default'),
-        # )
+
+        self.helper.layout = Layout(
+            Row(
+                Column('email', css_class='form-group col-md-6 mb-0'),
+                Column('password', css_class='form-group col-md-6 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('min_max_parameter_one_min', css_class='form-group col-md-6 mb-0'),
+                Column('min_max_parameter_one_max', css_class='form-group col-md-6 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('min_max_parameter_two_min', css_class='form-group col-md-6 mb-0'),
+                Column('min_max_parameter_two_max', css_class='form-group col-md-6 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('track_height_raft',
+                       'speed_printing_raft',
+                       'temperature_extruder_raft',
+                       'temperature_printbed_setpoint',
+                       'track_width_raft',
+                       css_class='form-group col-md-12 mb-0'),
+            )
+        )
 
     class Meta:
         model = Settings

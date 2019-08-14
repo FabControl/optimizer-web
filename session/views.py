@@ -112,10 +112,10 @@ class SessionView(generic.UpdateView):
         return context
 
 
-class SessionUpdatedView(generic.UpdateView):
+class SessionUpdateView(generic.UpdateView):
     template_name = 'session/session.html'
     form_class = SettingForm
-    model = Settings
+    model = Session.settings
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -161,7 +161,6 @@ def guide(request):
     return FileResponse(open(finders.find('session/doc/manual.pdf'), 'rb'), content_type='application/pdf')
 
 
-
 # class FormsTestView(generic.TemplateView):
 #     template_name = "session/form_test.html"
 #     form = NewTestForm(request.POST)
@@ -171,13 +170,15 @@ def guide(request):
 #         context['latest_articles'] = Article.objects.all()[:5]
 #         return context
 
-
 def new_session(request):
     if request.method == 'POST':
         form = SessionForm(request.POST)
+
         if form.is_valid():
             messages.info(request, 'The session has been created!')
-            session = form.save()
+            session = form.save(commit=False)
+            session.settings = Settings.objects.create(name=session.name)
+            session.save()
             return redirect('session_detail', pk=session.pk)
     else:
         form = SessionForm()

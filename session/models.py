@@ -111,9 +111,9 @@ class Session(models.Model):
     target = models.CharField(max_length=20, choices=TARGET_CHOICES, default="MS")
     test_number = models.CharField(max_length=20, choices=TEST_NUMBER_CHOICES, default="01")
     slicer = models.CharField(max_length=20, choices=SLICER_CHOICES, default="Prusa")
-    machine = models.ForeignKey(Machine, on_delete=models.SET_NULL, null=True)
-    material = models.ForeignKey(Material, on_delete=models.SET_NULL, null=True)
-    settings = models.ForeignKey(Settings, on_delete=models.CASCADE, null=True)
+    machine = models.ForeignKey(Machine, on_delete=models.CASCADE, null=False)
+    material = models.ForeignKey(Material, on_delete=models.CASCADE, null=False)
+    settings = models.ForeignKey(Settings, on_delete=models.CASCADE, null=False)
 
     def __str__(self):
         return "{} (target: {})".format(self.name, self.target)

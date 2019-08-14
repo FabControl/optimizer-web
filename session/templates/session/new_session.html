@@ -7,10 +7,10 @@
   <form action="" method="post">
     {% csrf_token %}
     <div class="row">
-      <div class="col-sm-3">
+      <div class="col-sm-6">
         {{ form|crispy }}
       </div>
-      <div class="col-sm-9">
+      <div class="col-sm-6">
         Sed neque eros, pulvinar in diam id, tempus auctor sem. Fusce dapibus quam sapien, ut auctor purus tempor ut. Vivamus fermentum egestas tellus sit amet tempor. Donec vitae porttitor urna. Lorem ipsum dolor sit amet, consectetur adipiscing
         elit. Quisque quis efficitur tellus, sed sollicitudin ex. Nam pharetra et tortor sit amet blandit. Curabitur facilisis volutpat sapien, quis euismod nibh ultricies eget. Etiam venenatis porta viverra. Nullam quis laoreet nulla, a lobortis
         quam. Donec vel sapien id eros commodo condimentum non rutrum magna. Pellentesque sed nisl pretium, vehicula orci quis, dictum mauris. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nullam orci ex, sollicitudin quis orci sed,
@@ -40,7 +40,6 @@
         target_selector_div = document.getElementById("div_id_target")
         target_selector_div.style.display = "none";
         target_selector = document.getElementById("id_target")
-
         //Use the active list item to select target
         function selectTarget() {
             //get the id of the active tab item
