@@ -12,7 +12,8 @@ from .forms import NewTestForm, SessionForm, MaterialForm, MachineForm, SettingF
 
 
 def index(request):
-    return redirect('dashboard')
+    # return redirect('dashboard')
+    return Http404()
 
 
 def dashboard(request):
