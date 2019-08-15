@@ -1,9 +1,10 @@
 import json
 import session.choices
+from django.contrib.staticfiles import finders
 
 
 def load_json(path: str):
-    with open(path, mode="r") as file:
+    with open(finders.find(path), 'rb') as file:
         output = json.load(file)
     if output is not None:
         return output

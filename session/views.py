@@ -184,13 +184,13 @@ def new_session(request):
     else:
         form = SessionForm()
 
-    context = {"form": form, "target_descriptions": load_json("session/static/session/json/target_descriptions.json")}
+    context = {"form": form, "target_descriptions": load_json('session/json/target_descriptions.json')}
 
     return render(request, 'session/new_session.html', context)
 
 
 def testing_session(request):
-    target_descriptions = load_json("session/static/session/json/target_descriptions.json")
+    target_descriptions = load_json("session/json/target_descriptions.json")
     print(target_descriptions)
     context = {"target_descriptions": target_descriptions}
     return render(request, 'session/testing_session.html', context)
