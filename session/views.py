@@ -13,7 +13,7 @@ from .forms import NewTestForm, SessionForm, MaterialForm, MachineForm, SettingF
 
 def index(request):
     # return redirect('dashboard')
-    return Http404()
+    raise Http404("Page not found")
 
 
 def dashboard(request):

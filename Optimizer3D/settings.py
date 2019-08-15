@@ -29,7 +29,7 @@ SECRET_KEY = config["SECRET_KEY"]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["dev.3doptimizer.com", "test.3doptimizer.com", "3doptimizer.com", "3.122.252.11"]
+ALLOWED_HOSTS = ["dev.3doptimizer.com", "test.3doptimizer.com", "3doptimizer.com", "3.122.252.11", "127.0.0.1"]
 
 
 # Application definition
