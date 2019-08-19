@@ -6,3 +6,4 @@ SLICER_CHOICES = [("Prusa", "Slic3r PE"), ("Simplify3D", "Simplify3D"), ("Cura",
 TARGET_CHOICES = [("mechanical_strength", "Mechanical Strength"), ("aesthetics", "Aesthetics"), ("fast_printing", "Fast Printing")]
 TOOL_CHOICES = [("T0", "T0"), ("T1", "T1"), ("T2", "T2")]
 FORM_CHOICES = [("elliptic", "Elliptic"), ("cartesian", "Cartesian")]
+UNITS = [("mm", "mm"), ("mm/s", "mm/s"), ("degC", "degC")]
