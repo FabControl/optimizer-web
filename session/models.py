@@ -108,7 +108,7 @@ class Session(models.Model):
     number = models.IntegerField(default=0)
     name = models.CharField(default="Untitled", max_length=20)
     pub_date = models.DateTimeField(default=datetime.now, blank=True)
-    target = models.CharField(max_length=20, choices=TARGET_CHOICES, default="MS")
+    target = models.CharField(max_length=20, choices=TARGET_CHOICES, default="mechanical_strength")
     test_number = models.CharField(max_length=20, choices=TEST_NUMBER_CHOICES, default="01")
     slicer = models.CharField(max_length=20, choices=SLICER_CHOICES, default="Prusa")
     machine = models.ForeignKey(Machine, on_delete=models.CASCADE, null=False)

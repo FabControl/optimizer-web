@@ -45,9 +45,9 @@
             //get the id of the active tab item
             var target = document.getElementsByClassName('list-group-item active')[0].getAttribute("id");
             //check if it contains any of the target names and change the selected target to it, if it does.
-            if (target.includes("MS")) target_selector.value = "MS";
-            if (target.includes("aesthetics")) target_selector.value = "A";
-            if (target.includes("fast")) target_selector.value = "FP";
+            if (target.includes("MS")) target_selector.value = "mechanical_strength";
+            if (target.includes("aesthetics")) target_selector.value = "aesthetics";
+            if (target.includes("fast")) target_selector.value = "fast_printing";
         }
       </script>
     </div>
