@@ -4,33 +4,37 @@ import json
 
 
 class ApiClient(object):
-    def __init__(self, remote_url: str):
+    def __init__(self, remote_url: str, port: int = 80):
         self.url = remote_url
         self.persistence = None
+        self.port = port
         self.gcode = None
-        self._last_response = None
+        self.response = None
+
+    def get_response(self, **kwargs):
+        response = requests.post("http://" + self.url + ":{}".format(str(self.port)), json=kwargs)
+        self.response = response
 
     def get_template(self):
-        return json.loads(requests.post("http://" + self.url + ":5000").text)["persistence"]
+        self.get_response()
+        if self.response.status_code == 200:
+            self.persistence = json.loads(self.response.text)["persistence"]
+            return self.persistence
 
     def get_gcode(self, arguments):
-        response = requests.post("http://" + self.url + ":5000", json=arguments)
-        self._last_response = response
-        if response.status_code == 200:
-            response_parsed = json.loads(response.text)
+        self.get_response(**arguments)
+        if self.response.status_code == 200:
+            response_parsed = json.loads(self.response.text)
             self.persistence = response_parsed["persistence"]
             if response_parsed["content"] is not None:
                 # A gcode file has been returned
-                self.gcode = b64decode(response_parsed["content"])
 
-
-
-
-
-
+                # Decode from b64 and then from bytes to UTF-8
+                self.gcode = b64decode(response_parsed["content"]).decode()
+                return self.gcode
 
 
 if __name__ == "__main__":
-    api = ApiClient("127.0.0.1")
+    api = ApiClient("ec2-54-93-100-66.eu-central-1.compute.amazonaws.com")
     with open("212.json") as jsonfile:
         session212 = json.load(jsonfile)
