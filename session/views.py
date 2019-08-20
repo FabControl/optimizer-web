@@ -8,6 +8,9 @@ from .models import *
 from django.views import generic
 from .forms import NewTestForm, SessionForm, MaterialForm, MachineForm, SettingForm
 
+from config import config
+from optimizer_api import ApiClient
+
 # Create your views here.
 
 
@@ -116,7 +119,7 @@ class SessionView(generic.UpdateView):
 class SessionUpdateView(generic.UpdateView):
     template_name = 'session/session.html'
     form_class = SettingForm
-    model = Session.settings
+    model = Session
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -178,6 +181,9 @@ def new_session(request):
         if form.is_valid():
             messages.info(request, 'The session has been created!')
             session = form.save(commit=False)
+
+            session.persistence = ApiClient(config["OPTIMIZER_DNS"], port=80).get_template()
+
             session.settings = Settings.objects.create(name=session.name)
             session.save()
             return redirect('session_detail', pk=session.pk)
