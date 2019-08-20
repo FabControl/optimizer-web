@@ -1,25 +1,15 @@
 {% extends "session/base.html" %}
 
 {% block content %}
-<div class="container">
-  <div class="row pt-5">
-    <div class="col-sm-12">
-      <div class="progress">
-        <div class="progress-bar" role="progressbar" style="width: {{ percentage_complete }}%" aria-valuenow="{{ percentage_complete }}" aria-valuemin="0" aria-valuemax="100"></div>
-      </div>
-    </div>
-  </div>
-  <div class="row p-3">
-    <ul class="nav nav-tabs">
-      <li class="nav-item">
-        <a class="nav-link {% if not executed %}active{% endif %} disabled">Generate</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link {% if executed %}active{% endif %} disabled" href="#">Validate</a>
-      </li>
-    </ul>
-  </div>
+<div class="container-fluid">
+
+  <button type="submit" class="btn btn-primary">Next></button>
+
+
+
+
   <div class="container">
+    {% include "session/session_nav.html" %}
     <form class="" action="" method="post">
       {% csrf_token %}
       {% if not executed %}
