@@ -3,6 +3,7 @@ from datetime import datetime
 from .choices import TEST_NUMBER_CHOICES, TARGET_CHOICES, SLICER_CHOICES, TOOL_CHOICES, FORM_CHOICES, UNITS
 from django.conf import settings
 from optimizer_api import ApiClient
+import json
 
 # Create your models here.
 
@@ -186,6 +187,12 @@ class Session(models.Model):
     machine = models.ForeignKey(Machine, on_delete=models.CASCADE, null=False)
     material = models.ForeignKey(Material, on_delete=models.CASCADE, null=False)
     settings = models.ForeignKey(Settings, on_delete=models.CASCADE, null=False)
+
+    persistence = models.TextField(default="", max_length=100000)
+
+    @property
+    def previous_tests(self):
+        return json.loads(self.persistence)["session"]["previous_tests"]
 
     def save(self, **kwargs):
         super(Session, self).save(**kwargs)
