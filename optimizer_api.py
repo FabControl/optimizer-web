@@ -12,7 +12,7 @@ class ApiClient(object):
         self.response = None
 
     def get_response(self, **kwargs):
-        response = requests.post("http://" + self.url + ":{}".format(str(self.port)), json=kwargs)
+        response = requests.post(self.base_url, json=kwargs)
         self.response = response
 
     def get_template(self):
@@ -32,6 +32,13 @@ class ApiClient(object):
                 # Decode from b64 and then from bytes to UTF-8
                 self.gcode = b64decode(response_parsed["content"]).decode()
                 return self.gcode
+
+    def get_routine(self):
+        return json.loads(requests.get(self.base_url + "/routine").text)
+
+    @property
+    def base_url(self):
+        return "http://" + self.url + ":{}".format(str(self.port))
 
 
 if __name__ == "__main__":
