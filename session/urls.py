@@ -20,6 +20,7 @@ urlpatterns = [
 
     path('sessions/', views.SessionListView.as_view(), name="session_manager"),
     path('sessions/<int:pk>/', views.SessionView.as_view(), name='session_detail'),
+    path('sessions/<int:pk>/delete', views.SessionDelete.as_view(), name='session_delete'),
     path('sessions/new/', views.new_session, name='new_session'),
 
     path('help/FAQ/', views.faq, name="faq"),

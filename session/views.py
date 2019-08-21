@@ -1,6 +1,7 @@
-from django.shortcuts import render, get_object_or_404, redirect, reverse
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.contrib.staticfiles import finders
+from django.urls import reverse_lazy
 from .utilities import load_json, optimizer_info
 from django.http import FileResponse, Http404
 
@@ -114,6 +115,11 @@ class SessionView(generic.UpdateView):
         context['executed'] = False
         context['routine'] = ApiClient(config["OPTIMIZER_DNS"], port=80).get_routine()
         return context
+
+
+class SessionDelete(generic.DeleteView):
+    model = Session
+    success_url = reverse_lazy('session_manager')
 
 
 class SessionUpdateView(generic.UpdateView):
