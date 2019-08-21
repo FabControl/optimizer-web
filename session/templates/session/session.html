@@ -1,30 +1,43 @@
 {% extends "session/base.html" %}
 
 {% block content %}
-<div class="container-fluid">
+<div class="container-fluid" style="max-width:1366px">
+  <form class="" action="" method="post">
+    <div class="row pt-3">
+      <div class="col-sm-12">
+        {% include "session/session_nav.html" %}
+      </div>
+    </div>
+    <div class="row p-3">
+      <div class="col-sm-3">
+        {% include "session/session_test_selection.html" %}
+      </div>
+      <div class="col-sm-6">
+        <div class="card p-3">
+          {% csrf_token %}
+          {% if not executed %}
+          {% include "session/session_generate.html" %}
+          {% else %}
+          {% include "session/session_validate.html" %}
+          {% endif %}
+        </div>
 
-  <button type="submit" class="btn btn-primary">Next></button>
 
-
-
-
-  <div class="container">
-    {% include "session/session_nav.html" %}
-    <form class="" action="" method="post">
-      {% csrf_token %}
-      {% if not executed %}
-      {% include "session/session_generate.html" %}
-      {% else %}
-      {% include "session/session_validate.html" %}
-      {% endif %}
-      <div class="row pt-3 justify-content-end">
-        <div class="col text-right">
-          <button class="btn btn-secondary disabled" type="submit">Skip this test</button>
-          <button type="submit" class="btn btn-primary">Next></button>
+      </div>
+      <div class="col-sm-3">
+        <div class="card p-3">
+          {% include "session/session_info.html" %}
         </div>
       </div>
-    </form>
-  </div>
+    </div>
+    <div class="row pt-3 justify-content-end">
+      <div class="col text-right">
+        <button class="btn btn-secondary" type="submit">Back</button>
+        <button class="btn btn-secondary" type="submit">Skip this test</button>
+        <button type="submit" class="btn btn-primary">Next></button>
+      </div>
+    </div>
 
+  </form>
 </div>
 {% endblock %}
