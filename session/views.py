@@ -111,8 +111,8 @@ class SessionView(generic.UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['percentage_complete'] = 100 / optimizer_info.length * int(self.object.test_number)
         context['executed'] = False
+        context['routine'] = ApiClient(config["OPTIMIZER_DNS"], port=80).get_routine()
         return context
 
 
@@ -133,16 +133,6 @@ class SessionUpdateView(generic.UpdateView):
         settings.save()
         self.get_context_data()['executed'] = True
         return redirect('session_detail', pk=settings.pk)
-
-
-# def new_session(request):
-#     target_descriptions = load_json("session/static/session/json/target_descriptions.json")
-#     materials = Material.objects.order_by('pub_date')
-#     machines = Machine.objects.order_by('pub_date')
-#     context = {"materials": materials,
-#                "machines": machines,
-#                "target_descriptions": target_descriptions}
-#     return render(request, 'session/new_session.html', context)
 
 
 def faq(request):
