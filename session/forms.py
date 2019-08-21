@@ -59,11 +59,11 @@ class SettingForm(forms.ModelForm):
         self.helper.form_tag = False
 
         self.helper.layout = Layout(
-            Row(
-                Column('email', css_class='form-group col-md-6 mb-0'),
-                Column('password', css_class='form-group col-md-6 mb-0'),
-                css_class='form-row'
-            ),
+            # Row(
+            #     Column('email', css_class='form-group col-md-6 mb-0'),
+            #     Column('password', css_class='form-group col-md-6 mb-0'),
+            #     css_class='form-row'
+            # ),
             Row(
                 Column('min_max_parameter_one_min', css_class='form-group col-md-6 mb-0'),
                 Column('min_max_parameter_one_max', css_class='form-group col-md-6 mb-0'),
