@@ -4,6 +4,8 @@ from .choices import TEST_NUMBER_CHOICES, TARGET_CHOICES, SLICER_CHOICES, TOOL_C
 from django.conf import settings
 from optimizer_api import ApiClient
 import json
+from django.core.serializers.json import DjangoJSONEncoder
+
 
 # Create your models here.
 
@@ -19,9 +21,9 @@ class Material(models.Model):
     @property
     def __json__(self):
         output = {
-                     "size_od": self.size_od,
-                     "name": self.name
-                 }
+            "size_od": self.size_od,
+            "name": self.name
+        }
         return output
 
 
@@ -69,7 +71,7 @@ class Chamber(models.Model):
             "gcode_command": self.gcode_command,
             "temperature_max": self.temperature_max,
             "chamber_heatable": self.chamber_heatable
-          }
+        }
         return output
 
 
@@ -188,11 +190,24 @@ class Session(models.Model):
     material = models.ForeignKey(Material, on_delete=models.CASCADE, null=False)
     settings = models.ForeignKey(Settings, on_delete=models.CASCADE, null=False)
 
-    persistence = models.TextField(default="", max_length=100000)
+    _persistence = models.TextField(default="", max_length=100000)
 
     @property
-    def previous_tests(self):
-        return json.loads(self.persistence)["session"]["previous_tests"]
+    def persistence(self):
+        if type(self._persistence) != dict:
+            per = json.loads(self._persistence)
+        else:
+            per = self._persistence
+        per["machine"] = self.machine.__json__
+        per["material"] = self.material.__json__
+        per["session"] = self.__json__
+        per["settings"] = self.settings.__json__
+        self._persistence = json.dumps(per, cls=DjangoJSONEncoder)
+        return per
+
+    @persistence.setter
+    def persistence(self, value):
+        self._persistence = value
 
     def save(self, **kwargs):
         super(Session, self).save(**kwargs)
@@ -203,28 +218,20 @@ class Session(models.Model):
     @property
     def __json__(self):
         output = {
-            "machine": self.machine.__json__,
-            "material": self.material.__json__,
-            "session": {
-                "uid": 211,
-                "target": self.target,
-                "test_number": "03",
-                "min_max_parameter_one": [],
-                "min_max_parameter_two": [
-                    40,
-                    100
-                ],
-                "min_max_parameter_three": [],
-                "test_type": "A",
-                "user_id": "user name",
-                "offset": [
-                    0,
-                    0
-                ],
-                "slicer": self.slicer,
-                "previous_tests": []
-            },
-            "settings": self.settings.__json__
+            "uid": self.pk,
+            "target": self.target,
+            "test_number": self.test_number,
+            "min_max_parameter_one": [],
+            "min_max_parameter_two": [],
+            "min_max_parameter_three": [],
+            "test_type": "A",
+            "user_id": "user name",
+            "offset": [
+                0,
+                0
+            ],
+            "slicer": self.slicer,
+            "previous_tests": []
         }
         return output
 
@@ -254,4 +261,3 @@ class TestInfo(models.Model):
     datetime_info = models.DateTimeField(default=datetime.now, blank=True)
     extruded_filament_mm = 841.53
     estimated_printing_time = "0:09:28"
-
