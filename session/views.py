@@ -172,7 +172,7 @@ def new_session(request):
             messages.info(request, 'The session has been created!')
             session = form.save(commit=False)
 
-            session.persistence = ApiClient(config["OPTIMIZER_DNS"], port=80).get_template()
+            session.persistence = json.dumps(ApiClient(config["OPTIMIZER_DNS"], port=80).get_template())
 
             session.settings = Settings.objects.create(name=session.name)
             session.save()
