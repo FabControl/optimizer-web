@@ -3,7 +3,7 @@ from .choices import TEST_NUMBER_CHOICES
 from .models import Session, Material, Machine, Settings
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Row, Column
-
+from optimizer_api import api_client
 
 class NewTestForm(forms.Form):
     session_name = forms.CharField(label='Session name', max_length=20, error_messages={'required': 'Please enter session name'})
@@ -39,10 +39,6 @@ class SettingForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(SettingForm, self).__init__(*args, **kwargs)
-        self.fields['min_max_parameter_one_min'].label = 'First layer track height min. value (mm)'
-        self.fields['min_max_parameter_one_max'].label = 'First layer track height max. value (mm)'
-        self.fields['min_max_parameter_two_min'].label = 'First layer printing speed min. value (mm/s)'
-        self.fields['min_max_parameter_two_max'].label = 'First layer printing speed max. value (mm/s)'
 
         self.fields['track_height_raft'].label = "First layer track height (mm)"
         self.fields['track_height_raft'].field_class = "field-horizontal"
@@ -64,6 +60,54 @@ class SettingForm(forms.ModelForm):
             #     Column('password', css_class='form-group col-md-6 mb-0'),
             #     css_class='form-row'
             # ),
+            # Row(
+            #     Column('min_max_parameter_one_min', css_class='form-group col-md-6 mb-0'),
+            #     Column('min_max_parameter_one_max', css_class='form-group col-md-6 mb-0'),
+            #     css_class='form-row'
+            # ),
+            # Row(
+            #     Column('min_max_parameter_two_min', css_class='form-group col-md-6 mb-0'),
+            #     Column('min_max_parameter_two_max', css_class='form-group col-md-6 mb-0'),
+            #     css_class='form-row'
+            # ),
+            Row(
+                Column('track_height_raft',
+                       'speed_printing_raft',
+                       'temperature_extruder_raft',
+                       'temperature_printbed_setpoint',
+                       'track_width_raft',
+                       css_class='form-group col-md-12 mb-0'),
+            )
+        )
+
+    class Meta:
+        model = Settings
+        fields = ('track_height_raft',
+                  'speed_printing_raft',
+                  'temperature_extruder_raft',
+                  'temperature_printbed_setpoint',
+                  'track_width_raft')
+
+
+class TestGenerateForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(TestGenerateForm, self).__init__(*args, **kwargs)
+        _id = self.instance.get('session', None)
+        if _id:
+            self.initial['address'] = Location.objects.get(id=_id).address
+        self.fields['min_max_parameter_one_min'].label = 'First layer track height min. value (mm)'
+        self.fields['min_max_parameter_one_max'].label = 'First layer track height max. value (mm)'
+        self.fields['min_max_parameter_two_min'].label = 'First layer printing speed min. value (mm/s)'
+        self.fields['min_max_parameter_two_max'].label = 'First layer printing speed max. value (mm/s)'
+
+
+        self.helper = FormHelper()
+        # self.helper.form_class = 'form-horizontal'
+        # self.helper.field_class = 'col-lg-3'
+        # self.helper.label_class = 'col-lg-6'
+        self.helper.form_tag = False
+
+        self.helper.layout = Layout(
             Row(
                 Column('min_max_parameter_one_min', css_class='form-group col-md-6 mb-0'),
                 Column('min_max_parameter_one_max', css_class='form-group col-md-6 mb-0'),
@@ -85,20 +129,9 @@ class SettingForm(forms.ModelForm):
         )
 
     class Meta:
-        model = Settings
-        fields = ('min_max_parameter_one_min',
-                  'min_max_parameter_one_max',
-                  'min_max_parameter_two_min',
-                  'min_max_parameter_two_max',
-                  'track_height_raft',
-                  'speed_printing_raft',
-                  'temperature_extruder_raft',
-                  'temperature_printbed_setpoint',
-                  'track_width_raft')
-
-# Target: str from drop-down menu (m, f, a)
-# First layer track height (mm): float from min to max or default
-# First layer printing speed (mm/s): float from min to max
-# First layer extrusion temperature (°C): float
-# Print bed temperature (°C): float
-# First layer track width (mm): float
+        model = Session
+        # fields = ('min_max_parameter_one_min',
+        #           'min_max_parameter_one_max',
+        #           'min_max_parameter_two_min',
+        #           'min_max_parameter_two_max',
+        #           'settings')
