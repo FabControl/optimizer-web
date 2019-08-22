@@ -1,8 +1,7 @@
 from django.db import models
 from datetime import datetime
 from .choices import TEST_NUMBER_CHOICES, TARGET_CHOICES, SLICER_CHOICES, TOOL_CHOICES, FORM_CHOICES, UNITS
-from django.conf import settings
-from optimizer_api import ApiClient
+import ast
 import json
 from django.core.serializers.json import DjangoJSONEncoder
 
@@ -118,12 +117,6 @@ class Machine(models.Model):
 class Settings(models.Model):
     name = models.CharField(max_length=20, blank=True)
     pub_date = models.DateTimeField(default=datetime.now, blank=True)
-
-    min_max_parameter_one_min = models.DecimalField(default=0, max_digits=3, decimal_places=2)
-    min_max_parameter_one_max = models.DecimalField(default=0, max_digits=3, decimal_places=2)
-    min_max_parameter_two_min = models.IntegerField(default=0)
-    min_max_parameter_two_max = models.IntegerField(default=0)
-
     speed_travel = models.IntegerField(default=140)
     raft_density = models.IntegerField(default=100)
     speed_printing_raft = models.IntegerField(default=25)
@@ -190,6 +183,10 @@ class Session(models.Model):
     material = models.ForeignKey(Material, on_delete=models.CASCADE, null=False)
     settings = models.ForeignKey(Settings, on_delete=models.CASCADE, null=False)
 
+    # Fields that cannot be stored in a DB in any other format
+    _min_max_parameter_one = models.CharField(max_length=20, default="[]")
+    _min_max_parameter_two = models.CharField(max_length=20, default="[]")
+    _min_max_parameter_three = models.CharField(max_length=20, default="[]")
     _persistence = models.TextField(default="", max_length=100000)
 
     @property
@@ -208,6 +205,30 @@ class Session(models.Model):
     @persistence.setter
     def persistence(self, value):
         self._persistence = value
+
+    @property
+    def min_max_parameter_one(self):
+        return ast.literal_eval(self._min_max_parameter_one)
+
+    @min_max_parameter_one.setter
+    def min_max_parameter_one(self, value):
+        self._min_max_parameter_one = str(value)
+
+    @property
+    def min_max_parameter_two(self):
+        return ast.literal_eval(self._min_max_parameter_two)
+
+    @min_max_parameter_two.setter
+    def min_max_parameter_two(self, value):
+        self._min_max_parameter_two = str(value)
+
+    @property
+    def min_max_parameter_three(self):
+        return ast.literal_eval(self._min_max_parameter_three)
+
+    @min_max_parameter_three.setter
+    def min_max_parameter_three(self, value):
+        self._min_max_parameter_three = str(value)
 
     def save(self, **kwargs):
         super(Session, self).save(**kwargs)
