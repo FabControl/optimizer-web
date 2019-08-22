@@ -13,14 +13,14 @@
         {% include "session/session_test_selection.html" %}
       </div>
       <div class="col-sm-6">
-        <div class="card p-3">
-          {% csrf_token %}
-          {% if not executed %}
-          {% include "session/session_generate.html" %}
-          {% else %}
-          {% include "session/session_validate.html" %}
-          {% endif %}
-        </div>
+
+        {% csrf_token %}
+        {% if not executed %}
+        {% include "session/session_generate.html" %}
+        {% else %}
+        {% include "session/session_validate.html" %}
+        {% endif %}
+
 
 
       </div>
