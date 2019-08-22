@@ -239,20 +239,26 @@ class Session(models.Model):
     @property
     def __json__(self):
         output = {
-            "uid": self.pk,
-            "target": self.target,
-            "test_number": self.test_number,
-            "min_max_parameter_one": [],
-            "min_max_parameter_two": [],
-            "min_max_parameter_three": [],
-            "test_type": "A",
-            "user_id": "user name",
-            "offset": [
-                0,
-                0
-            ],
-            "slicer": self.slicer,
-            "previous_tests": []
+            "machine": self.machine.__json__,
+            "material": self.material.__json__,
+            "settings": self.settings.__json__,
+            "session":
+                {
+                    "uid": self.pk,
+                    "target": self.target,
+                    "test_number": self.test_number,
+                    "min_max_parameter_one": [],
+                    "min_max_parameter_two": [],
+                    "min_max_parameter_three": [],
+                    "test_type": "A",
+                    "user_id": "user name",
+                    "offset": [
+                        0,
+                        0
+                    ],
+                    "slicer": self.slicer,
+                    "previous_tests": []
+                }
         }
         return output
 
