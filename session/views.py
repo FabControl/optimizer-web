@@ -271,7 +271,7 @@ def new_session(request):
             messages.success(request, 'The session has been created!')
             session = form.save(commit=False)
 
-            session.persistence = json.dumps(api_client.get_template())
+            session._persistence = json.dumps(api_client.get_template())
 
             session.settings = Settings.objects.create(name=session.name)
             session.save()
