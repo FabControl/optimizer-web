@@ -2,8 +2,9 @@ from django.db import models
 from datetime import datetime
 from .choices import TEST_NUMBER_CHOICES, TARGET_CHOICES, SLICER_CHOICES, TOOL_CHOICES, FORM_CHOICES, UNITS
 import ast
-import json
+import simplejson as json
 from django.core.serializers.json import DjangoJSONEncoder
+from optimizer_api import api_client
 
 
 # Create your models here.
@@ -106,10 +107,10 @@ class Machine(models.Model):
             "buildarea_maxdim2": self.buildarea_maxdim2,
             "form": self.form,
             "temperature_controllers": {
-                "extruder": self.extruder.__json__
+                "extruder": self.extruder.__json__,
+                "chamber": self.chamber.__json__,
+                "printbed": self.printbed.__json__
             },
-            "chamber": self.chamber.__json__,
-            "printbed": self.printbed.__json__
         }
         return output
 
@@ -166,7 +167,7 @@ class Settings(models.Model):
             "coasting_distance": self.coasting_distance,
             "critical_overhang_angle": self.critical_overhang_angle,
             "temperature_printbed_setpoint": self.temperature_printbed_setpoint,
-            "temperature_chamber_setpoint": self.temperature_printbed_setpoint,
+            "temperature_chamber_setpoint": self.temperature_chamber_setpoint,
             "part_cooling_setpoint": self.part_cooling_setpoint
         }
         return output
@@ -184,31 +185,56 @@ class Session(models.Model):
     settings = models.ForeignKey(Settings, on_delete=models.CASCADE, null=False)
 
     # Fields that cannot be stored in a DB in any other format
-    _min_max_parameter_one = models.CharField(max_length=20, default="[]")
-    _min_max_parameter_two = models.CharField(max_length=20, default="[]")
-    _min_max_parameter_three = models.CharField(max_length=20, default="[]")
-    _persistence = models.TextField(default="", max_length=100000)
+    _min_max_parameter_one = models.CharField(max_length=20, default="[0,0]")
+    _min_max_parameter_two = models.CharField(max_length=20, default="[0,0]")
+    _min_max_parameter_three = models.CharField(max_length=20, default="[0,0]")
+    _persistence = models.TextField(default="", max_length=1000000)
+    _previous_tests = models.TextField(default="", max_length=1000000)
+
+    def update_persistence(self):
+        per = json.loads(self._persistence)
+        per["session"] = self.__json__
+        per["machine"] = self.machine.__json__
+        per["material"] = self.material.__json__
+        per["settings"] = self.settings.__json__
+        self._persistence = json.dumps(per)
+        return json.loads(self._persistence)
+
+    def clean_min_max(self, to_zero: bool = False):
+        if to_zero:
+            output = [0, 0]
+        else:
+            output = []
+        self.min_max_parameter_one = output
+        # self.min_max_parameter_two = output
+        # self.min_max_parameter_three = output
+
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        self.update_persistence()
+        super(Session, self).save(force_insert, force_update, using, update_fields)
+
 
     @property
     def persistence(self):
-        if type(self._persistence) != dict:
-            per = json.loads(self._persistence)
-        else:
-            per = self._persistence
-        per["machine"] = self.machine.__json__
-        per["material"] = self.material.__json__
-        per["session"] = self.__json__
-        per["settings"] = self.settings.__json__
-        self._persistence = json.dumps(per, cls=DjangoJSONEncoder)
-        return per
+        return self.update_persistence()
 
     @persistence.setter
     def persistence(self, value):
-        self._persistence = value
+        if type(value) == dict:
+            self._persistence = json.dumps(value)
+        # elif type(ast.literal_eval(value)) == dict:
+        #     self._persistence = ast.literal_eval(value)
+        else:
+            self._persistence = value
+        self._previous_tests = self.persistence["session"]["previous_tests"]
 
     @property
     def min_max_parameter_one(self):
-        return ast.literal_eval(self._min_max_parameter_one)
+        if type(self._min_max_parameter_one) == list:
+            return self._min_max_parameter_one
+        else:
+            return ast.literal_eval(self._min_max_parameter_one)
 
     @min_max_parameter_one.setter
     def min_max_parameter_one(self, value):
@@ -230,8 +256,76 @@ class Session(models.Model):
     def min_max_parameter_three(self, value):
         self._min_max_parameter_three = str(value)
 
+    @property
+    def test_info(self):
+        return api_client.get_test_info(self.persistence)
+
     def save(self, **kwargs):
         super(Session, self).save(**kwargs)
+
+    @property
+    def get_gcode(self):
+        gcode = api_client.return_data(self.persistence, output="gcode")
+        self.persistence = api_client.persistence
+        return gcode
+
+    @property
+    def previous_tests(self):
+        return self.persistence["session"]["previous_tests"]
+
+    @property
+    def min_max_parameters(self):
+        parameters = []
+        for item, content in self.test_info.items():
+            if item.startswith("parameter_"):
+                if type(content) == dict:
+                    parameters.append({"name": content["name"], "units": content["units"], "iterable_values": list(enumerate(content["values"])),
+                                       "values": content["values"], "parameter": item,
+                                       "programmatic_name": content["programmatic_name"]})
+        return parameters
+
+    @property
+    def completed_tests(self):
+        return len(self.previous_tests)
+
+    @property
+    def executed(self):
+        try:
+
+            if self.test_number == self.previous_tests[-1]["test_number"]:
+                if self.previous_tests[-1]["test_number"]:
+                    return True
+            else:
+                return False
+
+        except IndexError:
+            return False
+
+    @property
+    def tested_values(self):
+        return [self.previous_tests[-1]["tested_parameter_one_values"][::-1], self.previous_tests[-1]["tested_parameter_two_values"]]
+
+    @property
+    def tested_values_representative(self):
+        one = self.tested_values[0]
+        two = self.tested_values[1]
+
+        top_row = [" "]
+        top_row.extend(one)
+        output = [top_row]
+        for value in two:
+            row = [value]
+            for space in one:
+                row.append("*")
+            output.append(row)
+        return output
+
+
+    def remove_last_test(self):
+        temp_persistence = self.persistence
+        del temp_persistence["session"]["previous_tests"][-1]
+        self.persistence = temp_persistence
+        self.update_persistence()
 
     def __str__(self):
         return "{} (target: {})".format(self.name, self.target)
@@ -239,26 +333,20 @@ class Session(models.Model):
     @property
     def __json__(self):
         output = {
-            "machine": self.machine.__json__,
-            "material": self.material.__json__,
-            "settings": self.settings.__json__,
-            "session":
-                {
-                    "uid": self.pk,
-                    "target": self.target,
-                    "test_number": self.test_number,
-                    "min_max_parameter_one": [],
-                    "min_max_parameter_two": [],
-                    "min_max_parameter_three": [],
-                    "test_type": "A",
-                    "user_id": "user name",
-                    "offset": [
-                        0,
-                        0
-                    ],
-                    "slicer": self.slicer,
-                    "previous_tests": []
-                }
+            "uid": self.pk,
+            "target": self.target,
+            "test_number": self.test_number,
+            "min_max_parameter_one": self.min_max_parameter_one,
+            "min_max_parameter_two": self.min_max_parameter_two,
+            "min_max_parameter_three": self.min_max_parameter_three,
+            "test_type": "A",
+            "user_id": "user name",
+            "offset": [
+                0,
+                0
+            ],
+            "slicer": self.slicer,
+            "previous_tests": json.loads(self._persistence)["session"]["previous_tests"]
         }
         return output
 

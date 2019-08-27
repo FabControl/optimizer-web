@@ -1,0 +1,11 @@
+{% spaceless %}
+<div class="col-sm">
+  <div class="row" id="linspace-row">
+    {% for widget in widget.subwidgets %}
+    <div class="col-sm p-1">
+      {% include widget.template_name %}
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endspaceless %}

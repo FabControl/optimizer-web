@@ -1,0 +1,51 @@
+{% load crispy_forms_tags %}
+
+<div class="alert alert-warning pt-3" role="alert">
+  <h3>
+    Page under construction!
+  </h3>
+  <p>
+    These are the tested values:
+  </p>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col"> </th>
+        {% for column in object.tested_values.0 %}
+        <th scope="col">{{column}}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in object.tested_values.1 %}
+      <tr>
+        <th scope="row">{{row}}</th>
+        {% for _ in object.tested_values.0 %}
+        <td>*</td>
+        {% endfor %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<form class="" action="" method="POST">
+  {% if form.errors %}
+  <div class="alert alert-error">
+    <ul>
+      {% for error in form.non_field_errors %}
+      <li>{{ error }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+  {% crispy form %}
+
+  <div class="row pt-3 justify-content-end">
+    <div class="col text-right">
+      <button class="btn btn-outline-secondary" onclick="location.href='{% url 'gcode' object.pk %}'" type="button" name="button">Download G-Code</button>
+      <button class="btn btn-secondary" onclick="location.href='{% url 'session_validate_back' object.pk %}'" type="button" name="button">Back</button>
+      <button type="submit" class="btn btn-primary">Submit Results</button>
+    </div>
+  </div>
+</form>

@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <title>3DOptimizer</title>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="{% url 'index' %}">3D Optimizer</a>
+    <a class="navbar-brand" href="{% url 'dashboard' %}">3DOptimizer</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -29,9 +29,9 @@
             Resources
           </a>
           <div class="dropdown-menu" aria-labelledby="resourcesDropdown">
-            <a class="dropdown-item" href="{% url 'materials' %}">Materials</a>
-            <a class="dropdown-item" href="{% url 'machines' %}">Machines</a>
-            <a class="dropdown-item" href="{% url 'settings' %}">Settings</a>
+            <a class="dropdown-item" href="{% url 'material_manager' %}">Materials</a>
+            <a class="dropdown-item" href="{% url 'machine_manager' %}">Machines</a>
+            <a class="dropdown-item" href="{% url 'setting_manager' %}">Settings</a>
           </div>
         </li>
         <li class="nav-item {% if "/help/" in request.path %}active{% endif %} dropdown">
@@ -51,6 +51,27 @@
   </nav>
 </head>
 <body class="d-flex flex-column h-100">
+
+  <!-- Messange notification -->
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        {% if messages %}
+        <ul class="messages">
+          {% for message in messages %}
+          <div class="alert-dismissible fade show alert alert-success {{ message.tags }}" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          {% endfor %}
+        </ul>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
   {% block content %}{% endblock %}
   <!-- Optional JavaScript -->
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->

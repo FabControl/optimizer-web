@@ -1,8 +1,8 @@
 <ul class="nav nav-tabs">
   <li class="nav-item">
-    <a class="nav-link {% if not executed %}active{% endif %} disabled">Generate</a>
+    <a class="nav-link {% if not object.executed %}active{% endif %} disabled">Generate</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link {% if executed %}active{% endif %} disabled" href="#">Validate</a>
+    <a class="nav-link {% if object.executed %}active{% endif %} disabled" href="#">Validate</a>
   </li>
 </ul>

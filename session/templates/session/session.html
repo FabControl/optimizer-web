@@ -2,7 +2,6 @@
 
 {% block content %}
 <div class="container-fluid" style="max-width:1366px">
-  <form class="" action="" method="post">
     <div class="row pt-3">
       <div class="col-sm-12">
         {% include "session/session_nav.html" %}
@@ -15,13 +14,11 @@
       <div class="col-sm-6">
 
         {% csrf_token %}
-        {% if not executed %}
+        {% if not object.executed %}
         {% include "session/session_generate.html" %}
         {% else %}
         {% include "session/session_validate.html" %}
         {% endif %}
-
-
 
       </div>
       <div class="col-sm-3">
@@ -30,14 +27,42 @@
         </div>
       </div>
     </div>
-    <div class="row pt-3 justify-content-end">
-      <div class="col text-right">
-        <button class="btn btn-secondary" type="submit">Back</button>
-        <button class="btn btn-secondary" type="submit">Skip this test</button>
-        <button type="submit" class="btn btn-primary">Next></button>
-      </div>
-    </div>
-
-  </form>
 </div>
+
+<script type="text/javascript">
+  function lerp(value1, value2, amount) {
+    // Calculate what the interpolation step will be.
+    step = (value2 - value1) / amount;
+    // Create an array where all the interpolated values will be added. Add the first value.
+    output = [value1];
+    var i;
+    // Start with 1 = 1 so that the last element would not be added.
+    for (i = 1; i < amount; i++) {
+      output.push(output[output.length - 1] + step);
+    }
+    // The last element is added here, because this way it is certain that the last value will match value2 in arguments.
+    output.push(value2);
+    // Round all elements before returning
+    output_round = [];
+    output.forEach(function(item) {
+      output_round.push(item.toFixed(2));
+    });
+    return output_round;
+  }
+
+  function change_fields(item) {
+    // Create an array with all the "linspace-field" elements.
+    var id = item.id
+    var group_id = id.match(/^.*(?=_)/)[0];
+    var fields = $(`*[id^="${group_id}"]`);
+    // Create another array with the new set of values. They are stored as strings and need to be parsed.
+    var lerp_values = lerp(parseFloat(fields[0].value), parseFloat(fields[fields.length - 1].value), fields.length - 1)
+    var i;
+    for (i = 0; i < fields.length; i++) {
+      // Replace each of the values in "linspace-field" elements.
+      fields[i].value = lerp_values[i];
+    }
+    // window.alert(fields.length)
+  }
+</script>
 {% endblock %}

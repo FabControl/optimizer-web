@@ -4,18 +4,6 @@
 {% load crispy_forms_tags %}
 
 <div class="container pt-3">
-  {% if messages %}
-  <ul class="messages">
-    {% for message in messages %}
-    <div class="alert-dismissible fade show alert alert-success {{ message.tags }}" role="alert">
-      {{ message }}
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    {% endfor %}
-  </ul>
-  {% endif %}
   <form action="{% url 'material_form' %}" method="post" novalidate>
     {% csrf_token %}
     <div class="row">

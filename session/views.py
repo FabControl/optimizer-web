@@ -1,16 +1,19 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect, HttpResponseRedirect
 from django.contrib import messages
 from django.contrib.staticfiles import finders
 from django.urls import reverse_lazy
 from .utilities import load_json, optimizer_info
-from django.http import FileResponse, Http404
+from django.http import FileResponse, Http404, HttpResponse
+from json import JSONDecodeError
+from django.forms import inlineformset_factory
+import logging
 
 from .models import *
 from django.views import generic
-from .forms import NewTestForm, SessionForm, MaterialForm, MachineForm, SettingForm
+from .forms import *
 
 from config import config
-from optimizer_api import ApiClient
+from optimizer_api import api_client
 
 # Create your views here.
 
@@ -53,6 +56,7 @@ def material_form(request):
         if form.is_valid():
             messages.info(request, 'The material has been created!')
             form.save()
+            return redirect("material_manager")
     else:
         form = MaterialForm()
     context = {"form": form}
@@ -107,19 +111,108 @@ class SessionListView(generic.ListView):
 
 class SessionView(generic.UpdateView):
     model = Session
-    form_class = SettingForm
+    form_class = TestGenerateForm
     template_name = 'session/session.html'
 
     def get_context_data(self, **kwargs):
+
         context = super().get_context_data(**kwargs)
-        context['executed'] = False
-        context['routine'] = ApiClient(config["OPTIMIZER_DNS"], port=80).get_routine()
+        context['routine'] = api_client.get_routine()
         return context
+
+    def form_valid(self, form):
+        session = form.save(commit=False)
+        logging.getLogger("views").info("Form valid!")
+        # Do any custom stuff here
+        session.persistence = api_client.return_data(session.persistence, "persistence")
+        session.save()
+        return redirect('session_detail', pk=session.pk)
+
+
+class SessionValidateView(SessionView):
+    form_class = TestValidateForm
+
+    def form_valid(self, form):
+        session = form.save()
+        return redirect('session_next_test', pk=session.pk, priority="primary")
+
+    def form_invalid(self, form):
+        import pdb;
+        pdb.set_trace()
+        session = form.save(commit=False)
+        return redirect('session_validate_back', pk=session.pk)
+
+
+def generate_or_validate(request, pk):
+    session = Session.objects.get(pk=pk)
+    slug_url_kwarg = 'pk'
+
+    executed = True
+
+    if session.executed:
+        logging.getLogger("views").info("Initializing Session validate view!")
+        return SessionValidateView.as_view()(request, pk=pk)
+    else:
+        logging.getLogger("views").info("Initializing Sessionview!")
+        return SessionView.as_view()(request, pk=pk)
 
 
 class SessionDelete(generic.DeleteView):
     model = Session
     success_url = reverse_lazy('session_manager')
+
+
+def session_validate_undo(request, pk):
+    session = Session.objects.get(pk=pk)
+    session.remove_last_test()
+    session.save()
+
+    return redirect('session_detail', pk=pk)
+
+
+def test_switch(request, pk, number):
+    session = Session.objects.get(pk=pk)
+    session.test_number = number
+    session.clean_min_max()
+    session.save()
+    return redirect('session_detail', pk=pk)
+
+
+def next_test_switch(request, pk, priority: str):
+    session = Session.objects.get(pk=pk)
+    routine = api_client.get_routine()
+
+    test_names = [name for name, _ in routine.items()]
+
+    next_test = None
+    next_primary_test = None
+
+    current_found = False
+    for i, test_info in enumerate(routine.items()):
+        if current_found:
+            if test_info[1]["priority"] == "primary":
+                next_primary_test = test_names[i]
+                continue
+        if test_info[0] == session.test_number:
+            next_test = test_names[i+1]
+            current_found = True
+
+    if priority == "primary":
+        session.test_number = next_primary_test
+    elif priority == "any":
+        session.test_number = next_test
+
+    session.clean_min_max()
+    session.save()
+    return redirect('session_detail', pk=pk)
+
+
+def serve_gcode(request, pk):
+    session = Session.objects.get(pk=pk)
+    response = FileResponse(session.get_gcode, content_type='text/plain')
+    response['Content-Type'] = 'text/plain'
+    response['Content-Disposition'] = 'attachment; filename={}'.format(session.name.replace(" ", "_") + "_" + session.test_number)
+    return response
 
 
 class SessionUpdateView(generic.UpdateView):
@@ -175,10 +268,10 @@ def new_session(request):
         form = SessionForm(request.POST)
 
         if form.is_valid():
-            messages.info(request, 'The session has been created!')
+            messages.success(request, 'The session has been created!')
             session = form.save(commit=False)
 
-            session.persistence = json.dumps(ApiClient(config["OPTIMIZER_DNS"], port=80).get_template())
+            session.persistence = json.dumps(api_client.get_template())
 
             session.settings = Settings.objects.create(name=session.name)
             session.save()
@@ -187,7 +280,6 @@ def new_session(request):
         form = SessionForm()
 
     context = {"form": form, "target_descriptions": load_json('session/json/target_descriptions.json')}
-
     return render(request, 'session/new_session.html', context)
 
 
