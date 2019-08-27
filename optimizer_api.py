@@ -81,7 +81,7 @@ class ApiClient(object):
         return "http://" + self.url + ":{}".format(str(self.port))
 
 
-api_client = ApiClient("127.0.0.1", port=5000)
+api_client = ApiClient(config["OPTIMIZER_DNS"], port=80)
 
 
 if __name__ == "__main__":
