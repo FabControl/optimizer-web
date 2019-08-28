@@ -41,9 +41,11 @@
   {% endif %}
   {% crispy form %}
 
-  <div class="row pt-3 justify-content-end">
-    <div class="col text-right">
+  <div class="row pt-3">
+    <div class="col">
       <button class="btn btn-outline-secondary" onclick="location.href='{% url 'gcode' object.pk %}'" type="button" name="button">Download G-Code</button>
+    </div>
+    <div class="col text-right">
       <button class="btn btn-secondary" onclick="location.href='{% url 'session_validate_back' object.pk %}'" type="button" name="button">Back</button>
       <button type="submit" class="btn btn-primary">Submit Results</button>
     </div>
