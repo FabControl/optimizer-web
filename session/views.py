@@ -238,7 +238,7 @@ def serve_gcode(request, pk):
     session = Session.objects.get(pk=pk)
     response = FileResponse(session.get_gcode, content_type='text/plain')
     response['Content-Type'] = 'text/plain'
-    response['Content-Disposition'] = 'attachment; filename={}'.format(session.name.replace(" ", "_") + "_" + session.test_number)
+    response['Content-Disposition'] = 'attachment; filename={}.gcode'.format(session.name.replace(" ", "_") + "_" + session.test_number)
     return response
 
 
