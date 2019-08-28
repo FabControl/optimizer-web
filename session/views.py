@@ -192,7 +192,7 @@ def next_test_switch(request, pk, priority: str):
         if current_found:
             if test_info[1]["priority"] == "primary":
                 next_primary_test = test_names[i]
-                continue
+                break
         if test_info[0] == session.test_number:
             next_test = test_names[i+1]
             current_found = True
