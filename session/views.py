@@ -134,7 +134,10 @@ class SessionValidateView(SessionView):
 
     def form_valid(self, form):
         session = form.save()
-        return redirect('session_next_test', pk=session.pk, priority="primary")
+        if self.request.method == "POST" and "btnprimary" in self.request.POST:
+            return redirect('session_next_test', pk=session.pk, priority="primary")
+        else:
+            return redirect('session_next_test', pk=session.pk, priority="any")
 
     def form_invalid(self, form):
         import pdb;
