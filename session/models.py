@@ -39,7 +39,6 @@ class Nozzle(models.Model):
 
 
 class Extruder(models.Model):
-    name = models.CharField(max_length=20)
     pub_date = models.DateTimeField(default=datetime.now, blank=True)
 
     tool = models.CharField(choices=TOOL_CHOICES, max_length=3, blank=True, default="T0")

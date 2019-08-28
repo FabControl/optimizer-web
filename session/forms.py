@@ -271,7 +271,7 @@ class NewExtruderForm(forms.ModelForm):
 
     class Meta:
         model = Extruder
-        fields = ["name", "tool", "temperature_max", "part_cooling"]
+        fields = ["tool", "temperature_max", "part_cooling"]
 
 
 class NewNozzleForm(forms.ModelForm):
