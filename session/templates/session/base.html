@@ -10,45 +10,7 @@
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <title>3DOptimizer</title>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="{% url 'dashboard' %}">3DOptimizer</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item {% if "/dashboard/" in request.path %}active{% endif %}">
-          <a class="nav-link" href="{% url 'dashboard' %}">Dashboard <span class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item {% if "/sessions/" in request.path %}active{% endif %}">
-          <a class="nav-link" href="{% url 'session_manager' %}">Session manager</a>
-        </li>
-        <li class="nav-item {% if "/resources/" in request.path %}active{% endif %} dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="resourcesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Resources
-          </a>
-          <div class="dropdown-menu" aria-labelledby="resourcesDropdown">
-            <a class="dropdown-item" href="{% url 'material_manager' %}">Materials</a>
-            <a class="dropdown-item" href="{% url 'machine_manager' %}">Machines</a>
-            <a class="dropdown-item" href="{% url 'setting_manager' %}">Settings</a>
-          </div>
-        </li>
-        <li class="nav-item {% if "/help/" in request.path %}active{% endif %} dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="helpDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Help
-          </a>
-          <div class="dropdown-menu" aria-labelledby="helpDropdown">
-            <a class="dropdown-item" href="{% url 'quickstart' %}">Quickstart guide</a>
-            <a class="dropdown-item" href="mailto:support@fabcontrol.com">Support</a>
-            <a class="dropdown-item" href="{% url 'faq' %}">FAQ</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="{% url 'guide' %}">Optimizer User Guide PDF</a>
-          </div>
-        </li>
-      </ul>
-    </div>
-  </nav>
+  {% include "session/navbar.html" %}
 </head>
 <body class="d-flex flex-column h-100">
 
