@@ -77,6 +77,7 @@ class Chamber(models.Model):
 
 class Printbed(models.Model):
     printbed_heatable = models.BooleanField(default=True)
+    temperature_max = models.IntegerField(default=120)
 
     @property
     def __json__(self):
