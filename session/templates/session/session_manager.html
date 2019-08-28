@@ -4,7 +4,7 @@
 {% load static %}
 <script src="{% static 'session/js/sortable.min.js' %}"></script>
 <link rel="stylesheet" href="{% static 'session/css/sortable-theme-bootstrap.css' %}" />
-<div class="container p-5">
+<div class="container pt-3">
   <div class="row">
     <div class="col-sm-9"><button type="button" onclick="location.href='{% url 'new_session' %}'" class="btn btn-primary btn">+ New Testing Session</button></div>
     <div class="col-sm-3">
@@ -55,7 +55,6 @@
               </td>
             </tr>
             {% endfor %}
-
           </tbody>
         </table>
       </div>
