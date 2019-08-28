@@ -1,32 +1,28 @@
 {% extends "session/base.html" %}
 
 {% block content %}
-<div class="container-fluid" style="max-width:1366px">
-    <div class="row pt-3">
-      <div class="col-sm-12">
-        {% include "session/session_nav.html" %}
+<div class="container">
+  <div class="row pt-5">
+
+    <div class="col-sm-4">
+      <div class="card p-3">
+        {% include "session/session_info.html" %}
       </div>
-    </div>
-    <div class="row p-3">
-      <div class="col-sm-3">
+      <div class="pt-3">
         {% include "session/session_test_selection.html" %}
       </div>
-      <div class="col-sm-6">
-
-        {% csrf_token %}
-        {% if not object.executed %}
-        {% include "session/session_generate.html" %}
-        {% else %}
-        {% include "session/session_validate.html" %}
-        {% endif %}
-
-      </div>
-      <div class="col-sm-3">
-        <div class="card p-3">
-          {% include "session/session_info.html" %}
-        </div>
-      </div>
     </div>
+    <div class="col-sm">
+      {% include "session/session_nav.html" %}
+      {% csrf_token %}
+      {% if not object.executed %}
+      {% include "session/session_generate.html" %}
+      {% else %}
+      {% include "session/session_validate.html" %}
+      {% endif %}
+
+    </div>
+  </div>
 </div>
 
 <script type="text/javascript">

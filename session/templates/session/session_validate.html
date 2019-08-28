@@ -1,32 +1,33 @@
 {% load crispy_forms_tags %}
-
-<div class="alert alert-warning pt-3" role="alert">
-  <h3>
-    Page under construction!
-  </h3>
-  <p>
-    These are the tested values:
-  </p>
-  <table class="table">
-    <thead>
-      <tr>
-        <th scope="col"> </th>
-        {% for column in object.tested_values.0 %}
-        <th scope="col">{{column}}</th>
+<div class="pt-2">
+  <div class="alert alert-warning pt-3" role="alert">
+    <h3>
+      Page under construction!
+    </h3>
+    <p>
+      These are the tested values:
+    </p>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col"> </th>
+          {% for column in object.tested_values.0 %}
+          <th scope="col">{{column}}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in object.tested_values.1 %}
+        <tr>
+          <th scope="row">{{row}}</th>
+          {% for _ in object.tested_values.0 %}
+          <td>*</td>
+          {% endfor %}
+        </tr>
         {% endfor %}
-      </tr>
-    </thead>
-    <tbody>
-      {% for row in object.tested_values.1 %}
-      <tr>
-        <th scope="row">{{row}}</th>
-        {% for _ in object.tested_values.0 %}
-        <td>*</td>
-        {% endfor %}
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+      </tbody>
+    </table>
+  </div>
 </div>
 
 <form class="" action="" method="POST">
