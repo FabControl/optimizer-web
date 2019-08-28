@@ -1,6 +1,6 @@
 from django import forms
 from .choices import TEST_NUMBER_CHOICES
-from .models import Session, Material, Machine, Settings
+from .models import *
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Row, Column
 from django.template import loader
@@ -85,6 +85,7 @@ class SettingForm(forms.ModelForm):
         self.fields['track_width_raft'].label = 'First layer track width (mm)'
 
         self.helper = FormHelper()
+        self.helper.form_tag = False
         # self.helper.form_class = 'form-horizontal'
         # self.helper.field_class = 'col-lg-3'
         # self.helper.label_class = 'col-lg-6'
@@ -249,3 +250,58 @@ class TestGenerateForm(forms.ModelForm):
     class Meta:
         model = Session
         fields = []
+
+
+class NewMachineForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(NewMachineForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_tag = False
+
+    class Meta:
+        model = Machine
+        fields = ["model", "buildarea_maxdim1", "buildarea_maxdim2", "form"]
+
+
+class NewExtruderForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(NewExtruderForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_tag = False
+
+    class Meta:
+        model = Extruder
+        fields = ["name", "tool", "temperature_max", "part_cooling"]
+
+
+class NewNozzleForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(NewNozzleForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_tag = False
+
+    class Meta:
+        model = Nozzle
+        fields = ["size_id"]
+
+
+class NewChamberForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(NewChamberForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_tag = False
+
+    class Meta:
+        model = Chamber
+        fields = ["chamber_heatable", "tool", "gcode_command", "temperature_max"]
+
+
+class NewPrintbedForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(NewPrintbedForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_tag = False
+
+    class Meta:
+        model = Printbed
+        fields = ["printbed_heatable", "temperature_max"]

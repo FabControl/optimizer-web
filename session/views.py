@@ -78,13 +78,37 @@ class MachinesView(generic.ListView):
 
 def machine_form(request):
     if request.method == 'POST':
-        form = MachineForm(request.POST)
-        if form.is_valid():
+        self_form = NewMachineForm(request.POST)
+        extruder_form = NewExtruderForm(request.POST)
+        nozzle_form = NewNozzleForm(request.POST)
+        chamber_form = NewChamberForm(request.POST)
+        printbed_form = NewPrintbedForm(request.POST)
+        extruder = None
+        if self_form.is_valid():
+            machine = self_form.save(commit=False)
+            if extruder_form.is_valid():
+                extruder = extruder_form.save(commit=False)
+                extruder.nozzle = nozzle_form.save()
+                extruder.save()
+            if chamber_form.is_valid():
+                machine.chamber = chamber_form.save()
+            if printbed_form.is_valid():
+                machine.printbed = printbed_form.save()
             messages.info(request, 'The machine has been created!')
-            form.save()
+            machine.extruder = extruder
+            machine.save()
+            return redirect('machine_manager')
     else:
-        form = MachineForm()
-    context = {"form": form}
+        self_form = NewMachineForm()
+        extruder_form = NewExtruderForm()
+        nozzle_form = NewNozzleForm()
+        chamber_form = NewChamberForm()
+        printbed_form = NewPrintbedForm()
+    context = {"self_form": self_form,
+               "extruder_form": extruder_form,
+               "nozzle_form": nozzle_form,
+               "chamber_form": chamber_form,
+               "printbed_form": printbed_form}
     return render(request, 'session/machine_form.html', context)
 
 
