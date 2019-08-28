@@ -7,54 +7,16 @@
   <form action="" method="post">
     {% csrf_token %}
     <div class="row">
-      <div class="col-sm-6">
+      <div class="col-sm-3">
         {{ form|crispy }}
       </div>
-      <div class="col-sm-6">
-        Sed neque eros, pulvinar in diam id, tempus auctor sem. Fusce dapibus quam sapien, ut auctor purus tempor ut. Vivamus fermentum egestas tellus sit amet tempor. Donec vitae porttitor urna. Lorem ipsum dolor sit amet, consectetur adipiscing
-        elit. Quisque quis efficitur tellus, sed sollicitudin ex. Nam pharetra et tortor sit amet blandit. Curabitur facilisis volutpat sapien, quis euismod nibh ultricies eget. Etiam venenatis porta viverra. Nullam quis laoreet nulla, a lobortis
-        quam. Donec vel sapien id eros commodo condimentum non rutrum magna. Pellentesque sed nisl pretium, vehicula orci quis, dictum mauris. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nullam orci ex, sollicitudin quis orci sed,
-        finibus varius ante. Praesent iaculis accumsan eros quis vestibulum. Aliquam id leo ac risus accumsan placerat.
-      </div>
-    </div>
-    <div class="row pt-3">
-      <div class="col-3">
-        <div class="list-group" id="list-tab" role="tablist">
-          <button class="list-group-item list-group-item-action active" onclick="selectTarget()" id="list-mechanical-strength-list" data-toggle="list" href="#list-mechanical-strength" role="tab" aria-controls="mechanical-strength">Mechanical
-            strength</button>
-          <button class="list-group-item list-group-item-action" onclick="selectTarget()" id="list-aesthetics-list" data-toggle="list" href="#list-aesthetics" role="tab" aria-controls="aesthetics">Aesthetics</button>
-          <button class="list-group-item list-group-item-action" onclick="selectTarget()" id="list-fast-printing-list" data-toggle="list" href="#list-fast-printing" role="tab" aria-controls="fast-printing">Fast printing</button>
+      <div class="col-sm">
+        <div class="card p-3">
+          Sed neque eros, pulvinar in diam id, tempus auctor sem. Fusce dapibus quam sapien, ut auctor purus tempor ut. Vivamus fermentum egestas tellus sit amet tempor. Donec vitae porttitor urna. Lorem ipsum dolor sit amet, consectetur adipiscing
+          elit. Quisque quis efficitur tellus, sed sollicitudin ex. Nam pharetra et tortor sit amet blandit. Curabitur facilisis volutpat sapien, quis euismod nibh ultricies eget. Etiam venenatis porta viverra. Nullam quis laoreet nulla, a lobortis
+          quam. Donec vel sapien id eros commodo condimentum non rutrum magna. Pellentesque sed nisl pretium, vehicula orci quis, dictum mauris. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nullam orci ex, sollicitudin quis orci sed,
+          finibus varius ante. Praesent iaculis accumsan eros quis vestibulum. Aliquam id leo ac risus accumsan placerat.
         </div>
-      </div>
-      <div class="col-8">
-        <div class="tab-content" id="nav-tabContent">
-          <div class="tab-pane fade show active" id="list-mechanical-strength" role="tabpanel" aria-labelledby="list-mechanical-strength-list">{{ target_descriptions.mechanical_strength }}</div>
-          <div class="tab-pane fade" id="list-aesthetics" role="tabpanel" aria-labelledby="list-aesthetics-list">{{ target_descriptions.aesthetics }}</div>
-          <div class="tab-pane fade" id="list-fast-printing" role="tabpanel" aria-labelledby="list-fast-printing-list">{{ target_descriptions.fast_printing }}</div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <script type="text/javascript">
-        //Hide the actual choice selector
-        target_selector_div = document.getElementById("div_id_target")
-        target_selector_div.style.display = "none";
-        target_selector = document.getElementById("id_target")
-        //Use the active list item to select target
-        function selectTarget() {
-            //get the id of the active tab item
-            var target = document.getElementsByClassName('list-group-item active')[0].getAttribute("id");
-            //check if it contains any of the target names and change the selected target to it, if it does.
-            if (target.includes("MS")) target_selector.value = "mechanical_strength";
-            if (target.includes("aesthetics")) target_selector.value = "aesthetics";
-            if (target.includes("fast")) target_selector.value = "fast_printing";
-        }
-      </script>
-    </div>
-    <div class="row pt-3">
-      <div class="col-sm-4"></div>
-      <div class="col-sm-4 text-center">
-        <button type="submit" onclick="selectTarget()" class="btn btn-primary">Initialize Testing Session</button>
       </div>
     </div>
   </form>
