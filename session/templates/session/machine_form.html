@@ -3,24 +3,36 @@
 {% block content %}
 {% load crispy_forms_tags %}
 <div class="container">
-  <form class="" action="" method="post">
-    {% csrf_token %}
-    <div class="card p-3">
-      {{self_form|crispy}}
-    </div>
-    <div class="card p-3">
-      {{extruder_form|crispy}}
-    </div>
-    <div class="card p-3">
-      {{nozzle_form|crispy}}
-    </div>
-    <div class="card p-3">
-      {{chamber_form|crispy}}
-    </div>
-    <div class="card p-3">
-      {{printbed_form|crispy}}
-    </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
-  </form>
+  <div class="col-md-6">
+    <form class="" action="" method="post">
+      {% csrf_token %}
+      <p>
+        <h4></h4>
+      </p>
+      <p>
+        {% crispy self_form %}
+      </p>
+      <p>
+        <h4> Extruder parameters </h4>
+        <div class="card p-3">
+          {% crispy extruder_form %}
+          {% crispy nozzle_form %}
+        </div>
+      </p>
+      <p>
+        <h4>Heating chamber parameters</h4>
+        <div class="card p-3">
+          {% crispy chamber_form %}
+        </div>
+      </p>
+      <p>
+        <h4>Printbed parameters</h4>
+        <div class="card p-3">
+          {% crispy printbed_form %}
+        </div>
+      </p>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
 </div>
 {% endblock %}

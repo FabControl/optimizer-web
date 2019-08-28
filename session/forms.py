@@ -258,6 +258,25 @@ class NewMachineForm(forms.ModelForm):
         self.helper = FormHelper()
         self.helper.form_tag = False
 
+        self.fields["model"].label = "Printer model"
+        self.fields["buildarea_maxdim1"].label = "Build area maximum dimension on X axis (mm)"
+        self.fields["buildarea_maxdim2"].label = "Build area maximum dimension on Y axis (mm)"
+        self.fields["form"].label = "Build area form factor"
+
+        self.helper.layout = Layout(
+            Row(
+                Column("model", css_class='form-group col-md'),
+                css_class='form-row'
+            ),
+            Row(
+                Column("buildarea_maxdim1", css_class='form-group col-md'),
+                Column("buildarea_maxdim2", css_class='form-group col-md')
+            ),
+            Row(
+                Column("form", css_class='form-group col-md')
+            )
+        )
+
     class Meta:
         model = Machine
         fields = ["model", "buildarea_maxdim1", "buildarea_maxdim2", "form"]
@@ -268,6 +287,9 @@ class NewExtruderForm(forms.ModelForm):
         super(NewExtruderForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_tag = False
+
+        self.fields["tool"].label = "Extruder's Gcode tool index"
+        self.fields["temperature_max"].label = "Extruder's maximum temperature (°C)"
 
     class Meta:
         model = Extruder
@@ -280,6 +302,8 @@ class NewNozzleForm(forms.ModelForm):
         self.helper = FormHelper()
         self.helper.form_tag = False
 
+        self.fields["size_id"].label = "Nozzle's inner diameter (mm)"
+
     class Meta:
         model = Nozzle
         fields = ["size_id"]
@@ -291,6 +315,10 @@ class NewChamberForm(forms.ModelForm):
         self.helper = FormHelper()
         self.helper.form_tag = False
 
+        self.fields["tool"].label = "Heating chamber's Gcode tool index"
+        self.fields["gcode_command"].label = "Heating chamber's Gcode syntax"
+        self.fields["temperature_max"].label = "Heating chamber's maximum temperature (°C)"
+
     class Meta:
         model = Chamber
         fields = ["chamber_heatable", "tool", "gcode_command", "temperature_max"]
@@ -301,6 +329,8 @@ class NewPrintbedForm(forms.ModelForm):
         super(NewPrintbedForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_tag = False
+
+        self.fields["temperature_max"].label = "Printbed's maximum temperature (°C)"
 
     class Meta:
         model = Printbed
