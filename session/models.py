@@ -279,6 +279,8 @@ class Session(models.Model):
         for item, content in self.test_info.items():
             if item.startswith("parameter_"):
                 if type(content) == dict:
+                    if content["name"] is None:
+                        continue
                     parameters.append({"name": content["name"], "units": content["units"], "iterable_values": list(enumerate(content["values"])),
                                        "values": content["values"], "parameter": item,
                                        "programmatic_name": content["programmatic_name"]})
@@ -304,22 +306,6 @@ class Session(models.Model):
     @property
     def tested_values(self):
         return [self.previous_tests[-1]["tested_parameter_one_values"][::-1], self.previous_tests[-1]["tested_parameter_two_values"]]
-
-    @property
-    def tested_values_representative(self):
-        one = self.tested_values[0]
-        two = self.tested_values[1]
-
-        top_row = [" "]
-        top_row.extend(one)
-        output = [top_row]
-        for value in two:
-            row = [value]
-            for space in one:
-                row.append("*")
-            output.append(row)
-        return output
-
 
     def remove_last_test(self):
         temp_persistence = self.persistence
