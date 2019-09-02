@@ -350,6 +350,10 @@ class NewChamberForm(forms.ModelForm):
         self.fields["gcode_command"].label = "Gcode syntax"
         self.fields["temperature_max"].label = "Maximum temperature (°C)"
 
+        self.fields["tool"].id = "Gcode tool index"
+        self.fields["gcode_command"].label = "Gcode syntax"
+        self.fields["temperature_max"].label = "Maximum temperature (°C)"
+
     class Meta:
         model = Chamber
         fields = ["chamber_heatable", "tool", "gcode_command", "temperature_max"]
