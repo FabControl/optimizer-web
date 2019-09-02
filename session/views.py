@@ -172,9 +172,6 @@ class SessionValidateView(SessionView):
 
 def generate_or_validate(request, pk):
     session = Session.objects.get(pk=pk)
-    slug_url_kwarg = 'pk'
-
-    executed = True
 
     if session.executed:
         logging.getLogger("views").info("Initializing Session validate view!")
@@ -280,15 +277,6 @@ def guide(request):
 
     return FileResponse(open(finders.find('session/doc/manual.pdf'), 'rb'), content_type='application/pdf')
 
-
-# class FormsTestView(generic.TemplateView):
-#     template_name = "session/form_test.html"
-#     form = NewTestForm(request.POST)
-#
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context['latest_articles'] = Article.objects.all()[:5]
-#         return context
 
 def new_session(request):
     if request.method == 'POST':

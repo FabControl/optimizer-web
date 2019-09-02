@@ -2,12 +2,9 @@ from django import forms
 from .choices import TEST_NUMBER_CHOICES
 from .models import *
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit, Layout, Row, Column
-from django.template import loader
-from django.utils.safestring import mark_safe
+from crispy_forms.layout import Submit, Layout, Row, Column, Field
 import logging
-from optimizer_api import api_client
-import json
+from ast import literal_eval
 
 
 class MinMaxWidget(forms.widgets.MultiWidget):
@@ -243,6 +240,7 @@ class TestGenerateForm(forms.ModelForm):
                 self.fields[parameter["programmatic_name"]] = forms.DecimalField()
             self.fields[parameter["programmatic_name"]].label = "{} ({})".format(parameter["name"].capitalize(),
                                                                                  parameter["units"])
+            self.fields[parameter["programmatic_name"]].min_value = 0
             self.secondary_parameters_programmatic_names.append(parameter["programmatic_name"])
 
         # Layout primary and secondary_parameters
