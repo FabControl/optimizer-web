@@ -1,0 +1,24 @@
+{% spaceless %}
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col"> </th>
+      {% for column in tested_values.0 %}
+      <th scope="col">{{column}}</th>
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in bundled_values.1 %}
+    <tr>
+      <th scope="row">{{row.1}}</th>
+      {% for paramter1 in bundled_values.0 %}
+      <td>
+        <input type="radio" name="{{ widget.name }}" value="[{{paramter1.0}},{{row.0}}]">
+      </td>
+      {% endfor %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endspaceless %}

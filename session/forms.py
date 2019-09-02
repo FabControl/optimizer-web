@@ -40,6 +40,43 @@ class MinMaxField(forms.MultiValueField):
             return []
 
 
+class TestValidationWidget(forms.widgets.Input):
+    def __init__(self, tested_values, attrs=None):
+        # tested_values[0] is column, tested_values[1] is row
+
+        super(TestValidationWidget, self).__init__(attrs)
+        self.tested_values = tested_values
+        self.bundled_values = [[(x, _) for x, _ in enumerate(tested_values[0])],
+                               [(y, _) for y, _ in enumerate(tested_values[1])]]
+
+        self.template_name = "session/widgets/test_validation_widget.html"
+
+    def get_context(self, name, value, attrs):
+        context = super().get_context(name, value, attrs)
+        context["tested_values"] = self.tested_values
+        context["bundled_values"] = self.bundled_values
+        context["units"] = ["mm", "mm/s"]
+        return context
+
+    def decompress(self, value):
+        if value:
+            return str(value)
+        else:
+            return ['', '']
+
+
+class TestValidationField(forms.Field):
+    def __init__(self, tested_values, *args, **kwargs):
+        super(TestValidationField, self).__init__(*args, **kwargs)
+        self.widget = TestValidationWidget(tested_values=tested_values)
+        self.tested_values = tested_values
+
+    def to_python(self, value):
+        indices = [int(x) for x in value.strip("[]").split(",")]
+        import pdb; pdb.set_trace()
+        return [self.tested_values[0][indices[0]], self.tested_values[1][indices[1]]]
+
+
 class NewTestForm(forms.Form):
     session_name = forms.CharField(label='Session name', max_length=20,
                                    error_messages={'required': 'Please enter session name'})
@@ -131,22 +168,18 @@ class TestValidateForm(forms.ModelForm):
         super(TestValidateForm, self).__init__(*args, **kwargs)
 
         session = self.instance
-        # previous_test = session.previous_tests[-1]["test_name"]
 
-        self.fields["selected_value_one"] = forms.DecimalField()
-        self.fields["selected_value_two"] = forms.DecimalField()
-
-        self.fields["selected_value_one"].label = str(session.test_info["parameter_one"]["name"])
-        self.fields["selected_value_two"].label = str(session.test_info["parameter_two"]["name"])
+        self.fields["validation"] = TestValidationField(tested_values=session.tested_values)
+        self.fields["validation"].label = "Select the best sub-structure:"
 
         self.helper = FormHelper()
         self.helper.form_tag = False
 
     def save(self, commit=True):
         self.instance.__getattribute__("previous_tests")[-1]["selected_parameter_one_value"] = self.cleaned_data[
-            "selected_value_one"]
+            "validation"][0]
         self.instance.__getattribute__("previous_tests")[-1]["selected_parameter_two_value"] = self.cleaned_data[
-            "selected_value_two"]
+            "validation"][1]
         return super(TestValidateForm, self).save(commit=commit)
 
     class Meta:
