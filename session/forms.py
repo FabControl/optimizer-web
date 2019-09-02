@@ -70,7 +70,6 @@ class TestValidationField(forms.Field):
 
     def to_python(self, value):
         indices = [int(x) for x in value.strip("[]").split(",")]
-        import pdb; pdb.set_trace()
         return [self.tested_values[0][indices[0]], self.tested_values[1][indices[1]]]
 
 
