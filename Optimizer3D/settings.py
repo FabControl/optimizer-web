@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'session.apps.SessionConfig',
+    'authentication.apps.AuthenticationConfig',
     'crispy_forms'
 ]
 
@@ -54,6 +55,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'Optimizer3D.urls'
+
+LOGIN_URL = "/login/"
 
 TEMPLATES = [
     {
@@ -107,6 +110,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTH_USER_MODEL = 'authentication.User'
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
