@@ -1,12 +1,11 @@
-from django.shortcuts import render, get_object_or_404, redirect, HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.contrib.staticfiles import finders
 from django.urls import reverse_lazy
 from .utilities import load_json, optimizer_info
-from django.http import FileResponse, Http404, HttpResponse
-from json import JSONDecodeError
-from django.forms import inlineformset_factory
-import logging
+from django.http import FileResponse, Http404
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import *
 from django.views import generic
@@ -23,12 +22,14 @@ def index(request):
     raise Http404("Page not found")
 
 
+@login_required
 def dashboard(request):
     latest_sessions = Session.objects.order_by('number')[:5]
     context = {'latest_sessions': latest_sessions}
     return render(request, 'session/dashboard.html', context)
 
 
+@login_required
 def material(request, name):
     material = get_object_or_404(Material, name=name)
     context = {'material_name': material.name,
@@ -37,7 +38,7 @@ def material(request, name):
     return render(request, 'session/material.html', context)
 
 
-class MaterialsView(generic.ListView):
+class MaterialsView(LoginRequiredMixin, generic.ListView):
     template_name = "session/material_manager.html"
     context_object_name = 'materials'
 
@@ -45,11 +46,12 @@ class MaterialsView(generic.ListView):
         return Material.objects.order_by('pub_date')
 
 
-class MaterialView(generic.DetailView):
+class MaterialView(LoginRequiredMixin, generic.DetailView):
     model = Material
     template_name = 'session/material_detail.html'
 
 
+@login_required
 def material_form(request):
     if request.method == 'POST':
         form = MaterialForm(request.POST)
@@ -63,12 +65,12 @@ def material_form(request):
     return render(request, 'session/material_form.html', context)
 
 
-class MachineView(generic.DetailView):
+class MachineView(LoginRequiredMixin, generic.DetailView):
     model = Machine
     template_name = 'session/machine_detail.html'
 
 
-class MachinesView(generic.ListView):
+class MachinesView(LoginRequiredMixin, generic.ListView):
     template_name = "session/machine_manager.html"
     context_object_name = 'machines'
 
@@ -76,6 +78,7 @@ class MachinesView(generic.ListView):
         return Machine.objects.order_by('pub_date')
 
 
+@login_required
 def machine_form(request):
     if request.method == 'POST':
         self_form = NewMachineForm(request.POST)
@@ -112,12 +115,12 @@ def machine_form(request):
     return render(request, 'session/machine_form.html', context)
 
 
-class SettingView(generic.DetailView):
+class SettingView(LoginRequiredMixin, generic.DetailView):
     model = Settings
     template_name = 'session/settings_detail.html'
 
 
-class SettingsView(generic.ListView):
+class SettingsView(LoginRequiredMixin, generic.ListView):
     template_name = "session/settings_manager.html"
     context_object_name = 'settings'
 
@@ -125,7 +128,7 @@ class SettingsView(generic.ListView):
         return Settings.objects.order_by('pub_date')
 
 
-class SessionListView(generic.ListView):
+class SessionListView(LoginRequiredMixin, generic.ListView):
     template_name = "session/session_manager.html"
     context_object_name = 'sessions'
 
@@ -133,7 +136,7 @@ class SessionListView(generic.ListView):
         return Session.objects.order_by('pub_date')
 
 
-class SessionView(generic.UpdateView):
+class SessionView(LoginRequiredMixin, generic.UpdateView):
     model = Session
     form_class = TestGenerateForm
     template_name = 'session/session.html'
@@ -170,6 +173,7 @@ class SessionValidateView(SessionView):
         return redirect('session_validate_back', pk=session.pk)
 
 
+@login_required
 def generate_or_validate(request, pk):
     session = Session.objects.get(pk=pk)
 
@@ -181,11 +185,12 @@ def generate_or_validate(request, pk):
         return SessionView.as_view()(request, pk=pk)
 
 
-class SessionDelete(generic.DeleteView):
+class SessionDelete(LoginRequiredMixin, generic.DeleteView):
     model = Session
     success_url = reverse_lazy('session_manager')
 
 
+@login_required
 def session_validate_undo(request, pk):
     session = Session.objects.get(pk=pk)
     session.remove_last_test()
@@ -194,6 +199,7 @@ def session_validate_undo(request, pk):
     return redirect('session_detail', pk=pk)
 
 
+@login_required
 def test_switch(request, pk, number):
     session = Session.objects.get(pk=pk)
     session.test_number = number
@@ -202,6 +208,7 @@ def test_switch(request, pk, number):
     return redirect('session_detail', pk=pk)
 
 
+@login_required
 def next_test_switch(request, pk, priority: str):
     session = Session.objects.get(pk=pk)
     routine = api_client.get_routine()
@@ -231,6 +238,7 @@ def next_test_switch(request, pk, priority: str):
     return redirect('session_detail', pk=pk)
 
 
+@login_required
 def serve_gcode(request, pk):
     session = Session.objects.get(pk=pk)
     response = FileResponse(session.get_gcode, content_type='text/plain')
@@ -239,7 +247,7 @@ def serve_gcode(request, pk):
     return response
 
 
-class SessionUpdateView(generic.UpdateView):
+class SessionUpdateView(LoginRequiredMixin, generic.UpdateView):
     template_name = 'session/session.html'
     form_class = SettingForm
     model = Session
@@ -258,26 +266,30 @@ class SessionUpdateView(generic.UpdateView):
         return redirect('session_detail', pk=settings.pk)
 
 
+@login_required
 def faq(request):
     context = {}
     return render(request, 'session/faq.html', context)
 
 
+@login_required
 def quick_start(request):
     context = {}
     return render(request, 'session/quick_start.html', context)
 
 
+@login_required
 def support(request):
     context = {}
     return render(request, 'session/support.html', context)
 
-
+@login_required
 def guide(request):
 
     return FileResponse(open(finders.find('session/doc/manual.pdf'), 'rb'), content_type='application/pdf')
 
 
+@login_required
 def new_session(request):
     if request.method == 'POST':
         form = SessionForm(request.POST)
@@ -298,6 +310,7 @@ def new_session(request):
     return render(request, 'session/new_session.html', context)
 
 
+@login_required
 def testing_session(request):
     target_descriptions = load_json("session/json/target_descriptions.json")
     print(target_descriptions)
