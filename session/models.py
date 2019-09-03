@@ -177,7 +177,7 @@ class Session(models.Model):
     name = models.CharField(default="Untitled", max_length=20)
     pub_date = models.DateTimeField(default=datetime.now, blank=True)
     target = models.CharField(max_length=20, choices=TARGET_CHOICES, default="mechanical_strength")
-    test_number = models.CharField(max_length=20, choices=TEST_NUMBER_CHOICES, default="01")
+    _test_number = models.CharField(max_length=20, choices=TEST_NUMBER_CHOICES, default="01")
     slicer = models.CharField(max_length=20, choices=SLICER_CHOICES, default="Prusa")
     machine = models.ForeignKey(Machine, on_delete=models.CASCADE, null=False)
     material = models.ForeignKey(Material, on_delete=models.CASCADE, null=False)
@@ -190,7 +190,14 @@ class Session(models.Model):
     _persistence = models.TextField(default="", max_length=1000000)
     _previous_tests = models.TextField(default="", max_length=1000000)
 
+    # Temporary storage for persistent printing speed selection
+    _printing_speed = models.CharField(default="[0,0]", max_length=20)
+
     def update_persistence(self):
+        """
+        Update persistence to represent the current state of child objects.
+        :return:
+        """
         per = json.loads(self._persistence)
         per["session"] = self.__json__
         per["machine"] = self.machine.__json__
@@ -199,14 +206,21 @@ class Session(models.Model):
         self._persistence = json.dumps(per)
         return json.loads(self._persistence)
 
-    def clean_min_max(self, to_zero: bool = False):
+    def clean_min_max(self, all_parameters: bool = False, to_zero: bool = False):
+        """
+        Set min_max_parameter to a nominal value so that they wouldn't be carried over to other tests.
+        :param all_parameters:
+        :param to_zero:
+        :return:
+        """
         if to_zero:
             output = [0, 0]
         else:
             output = []
         self.min_max_parameter_one = output
-        # self.min_max_parameter_two = output
-        # self.min_max_parameter_three = output
+        if all_parameters:
+            self.min_max_parameter_two = output
+            self.min_max_parameter_three = output
 
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
@@ -297,6 +311,17 @@ class Session(models.Model):
 
         except IndexError:
             return False
+
+    @property
+    def test_number(self):
+        return self._test_number
+
+    @test_number.setter
+    def test_number(self, value):
+        if self.test_info["parameter_two"]["name"] == "printing speed":
+            self._printing_speed = self.min_max_parameter_two
+        self.clean_min_max()
+        self._test_number = value
 
     @property
     def tested_values(self):
