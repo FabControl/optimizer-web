@@ -185,7 +185,7 @@ class Session(models.Model):
     settings = models.ForeignKey(Settings, on_delete=models.CASCADE, null=False)
 
     # Fields that cannot be stored in a DB in any other format
-    _min_max_parameter_one = models.CharField(max_length=20, default="[0,0]")
+    _min_max_parameter_one = models.CharField(max_length=20, default="[]")
     _min_max_parameter_two = models.CharField(max_length=20, default="[0,0]")
     _min_max_parameter_three = models.CharField(max_length=20, default="[0,0]")
     _persistence = models.TextField(default="", max_length=1000000)
