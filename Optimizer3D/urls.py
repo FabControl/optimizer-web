@@ -22,7 +22,8 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('', include('session.urls')),
-    path('admin/', admin.site.urls),
-    # path('', index, name='index')
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+                  path('', include('session.urls')),
+                  path('', include('authentication.urls')),
+                  path('admin/', admin.site.urls),
+                  # path('', index, name='index')
+              ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
