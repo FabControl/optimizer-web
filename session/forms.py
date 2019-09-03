@@ -240,6 +240,7 @@ class TestGenerateForm(forms.ModelForm):
             self.fields[parameter["programmatic_name"]].label = "{} ({})".format(parameter["name"].capitalize(),
                                                                                  parameter["units"])
             self.fields[parameter["programmatic_name"]].min_value = 0
+            self.fields[parameter["programmatic_name"]].initial = parameter["values"]
             self.secondary_parameters_programmatic_names.append(parameter["programmatic_name"])
 
         # Layout primary and secondary_parameters
