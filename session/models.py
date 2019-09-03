@@ -3,7 +3,6 @@ from datetime import datetime
 from .choices import TEST_NUMBER_CHOICES, TARGET_CHOICES, SLICER_CHOICES, TOOL_CHOICES, FORM_CHOICES, UNITS
 import ast
 import simplejson as json
-from django.core.serializers.json import DjangoJSONEncoder
 from optimizer_api import api_client
 
 
@@ -214,7 +213,6 @@ class Session(models.Model):
         self.update_persistence()
         super(Session, self).save(force_insert, force_update, using, update_fields)
 
-
     @property
     def persistence(self):
         return self.update_persistence()
@@ -223,8 +221,6 @@ class Session(models.Model):
     def persistence(self, value):
         if type(value) == dict:
             self._persistence = json.dumps(value)
-        # elif type(ast.literal_eval(value)) == dict:
-        #     self._persistence = ast.literal_eval(value)
         else:
             self._persistence = value
         self._previous_tests = self.persistence["session"]["previous_tests"]
@@ -293,7 +289,6 @@ class Session(models.Model):
     @property
     def executed(self):
         try:
-
             if self.test_number == self.previous_tests[-1]["test_number"]:
                 if self.previous_tests[-1]["test_number"]:
                     return True

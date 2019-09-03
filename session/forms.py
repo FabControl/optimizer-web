@@ -257,11 +257,6 @@ class TestGenerateForm(forms.ModelForm):
             row = Row(col)
             min_max_rows.append(row)
 
-        secondary_parameter_row = Row(
-            Column(css_class='form-group col-md-6 mb-0', *self.secondary_parameters_programmatic_names))
-
-        # self.helper.layout = Layout(*min_max_rows, secondary_parameter_row)
-
     def save(self, commit: bool = True):
         settings = self.instance.__getattribute__("settings")
         for parameter, info in self.parameters:
