@@ -203,7 +203,6 @@ def session_validate_undo(request, pk):
 def test_switch(request, pk, number):
     session = Session.objects.get(pk=pk)
     session.test_number = number
-    session.clean_min_max()
     session.save()
     return redirect('session_detail', pk=pk)
 

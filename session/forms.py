@@ -179,10 +179,8 @@ class TestValidateForm(forms.ModelForm):
         self.helper.form_tag = False
 
     def save(self, commit=True):
-        self.instance.__getattribute__("previous_tests")[-1]["selected_parameter_one_value"] = self.cleaned_data[
-            "validation"][0]
-        self.instance.__getattribute__("previous_tests")[-1]["selected_parameter_two_value"] = self.cleaned_data[
-            "validation"][1]
+        self.instance.selected_parameter_value("selected_parameter_one_value", self.cleaned_data["validation"][0])
+        self.instance.selected_parameter_value("selected_parameter_two_value", self.cleaned_data["validation"][1])
         return super(TestValidateForm, self).save(commit=commit)
 
     class Meta:

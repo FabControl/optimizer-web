@@ -189,6 +189,7 @@ class Session(models.Model):
     _min_max_parameter_three = models.CharField(max_length=20, default="[0,0]")
     _persistence = models.TextField(default="", max_length=1000000)
     _previous_tests = models.TextField(default="", max_length=1000000)
+    _test_info = models.TextField(default="", max_length=1000000)
 
     # Temporary storage for persistent printing speed selection
     _printing_speed = models.CharField(default="[0,0]", max_length=20)
@@ -225,6 +226,7 @@ class Session(models.Model):
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
         self.update_persistence()
+        self.settings.save()
         super(Session, self).save(force_insert, force_update, using, update_fields)
 
     @property
@@ -266,12 +268,28 @@ class Session(models.Model):
     def min_max_parameter_three(self, value):
         self._min_max_parameter_three = str(value)
 
+    def selected_parameter_value(self, value_key, new_value):
+        if new_value is not None:
+            parameter_numbers = ["parameter_one", "parameter_two", "parameter_three"]
+            for number in parameter_numbers:
+                if number in value_key:
+                    programmatic_name = self.test_info[number]["programmatic_name"]
+                    self.settings.__setattr__(programmatic_name, new_value)
+            self.save()
+
     @property
     def test_info(self):
-        return api_client.get_test_info(self.persistence)
+        if self._test_info != "":
+            temp_info = json.loads(self._test_info)
+            if temp_info["test_number"] != self.test_number:
+                temp_info = api_client.get_test_info(self.persistence)
+            self._test_info = json.dumps(temp_info)
+        else:
+            temp_info = api_client.get_test_info(self.persistence)
+            self._test_info = json.dumps(temp_info)
+        self.save()
+        return temp_info
 
-    def save(self, **kwargs):
-        super(Session, self).save(**kwargs)
 
     @property
     def get_gcode(self):
@@ -282,6 +300,10 @@ class Session(models.Model):
     @property
     def previous_tests(self):
         return self.persistence["session"]["previous_tests"]
+
+    @previous_tests.setter
+    def previous_tests(self, value):
+        self.persistence["session"]["previous_tests"] = value
 
     @property
     def min_max_parameters(self):
