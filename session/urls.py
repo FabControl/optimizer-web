@@ -20,6 +20,7 @@ urlpatterns = [
 
     path('sessions/', views.SessionListView.as_view(), name="session_manager"),
     path('sessions/<int:pk>/', views.generate_or_validate, name='session_detail'),
+    path('sessions/<int:pk>/json', views.session_json, name='session_json'),
     path('sessions/<int:pk>/back/', views.session_validate_undo, name='session_validate_back'),
     path('sessions/<int:pk>/next/<str:priority>', views.next_test_switch, name='session_next_test'),
     path('sessions/<int:pk>/gcode/', views.serve_gcode, name='gcode'),

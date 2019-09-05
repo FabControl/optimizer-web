@@ -315,3 +315,11 @@ def testing_session(request):
     print(target_descriptions)
     context = {"target_descriptions": target_descriptions}
     return render(request, 'session/testing_session.html', context)
+
+
+@login_required
+def session_json(request, pk):
+    if request.method == "GET":
+        session = Session.objects.get(pk=pk)
+        context = {"json": json.dumps(session.persistence, indent=4)}
+        return render(request, "session/json.html", context=context)
