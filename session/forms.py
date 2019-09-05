@@ -43,8 +43,11 @@ class TestValidationWidget(forms.widgets.Input):
 
         super(TestValidationWidget, self).__init__(attrs)
         self.tested_values = tested_values
-        self.bundled_values = [[(x, _) for x, _ in enumerate(tested_values[0])],
-                               [(y, _) for y, _ in enumerate(tested_values[1])]]
+        if tested_values[1] is not None:
+            self.bundled_values = [[(x, _) for x, _ in enumerate(tested_values[0])],
+                                   [(y, _) for y, _ in enumerate(tested_values[1])]]
+        else:
+            self.bundled_values = [[(x, _) for x, _ in enumerate(tested_values[0])], []]
 
         self.template_name = "session/widgets/test_validation_widget.html"
 
@@ -69,8 +72,12 @@ class TestValidationField(forms.Field):
         self.tested_values = tested_values
 
     def to_python(self, value):
-        indices = [int(x) for x in value.strip("[]").split(",")]
-        return [self.tested_values[0][indices[0]], self.tested_values[1][indices[1]]]
+        try:
+            indices = [int(x) for x in value.strip("[]").split(",")]
+            return [self.tested_values[0][indices[0]], self.tested_values[1][indices[1]]]
+        except ValueError:
+            indices = [int(x) for x in value.strip("[]").split(",")[0]]
+            return [self.tested_values[0][indices[0]], None]
 
 
 class NewTestForm(forms.Form):

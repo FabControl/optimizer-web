@@ -9,6 +9,7 @@
     </tr>
   </thead>
   <tbody>
+    {% if bundled_values.1 %}
     {% for row in bundled_values.1 %}
     <tr>
       <th scope="row">{{row.1}}</th>
@@ -19,6 +20,16 @@
       {% endfor %}
     </tr>
     {% endfor %}
+    {% else %}
+    <tr>
+      <th scope="row"></th>
+      {% for paramter1 in bundled_values.0 %}
+      <td>
+        <input type="radio" name="{{ widget.name }}" value="[{{paramter1.0}},{{row.0}}]">
+      </td>
+      {% endfor %}
+    </tr>
+    {% endif %}
   </tbody>
 </table>
 {% endspaceless %}
