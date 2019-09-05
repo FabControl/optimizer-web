@@ -160,7 +160,9 @@ class SessionValidateView(SessionView):
     form_class = TestValidateForm
 
     def form_valid(self, form):
-        session = form.save()
+        session = form.save(commit=False)
+        session.alter_previous_tests(-1, "validated", True)
+        session = form.save(commit=True)
         if self.request.method == "POST" and "btnprimary" in self.request.POST:
             return redirect('session_next_test', pk=session.pk, priority="primary")
         else:
@@ -176,7 +178,6 @@ class SessionValidateView(SessionView):
 @login_required
 def generate_or_validate(request, pk):
     session = Session.objects.get(pk=pk)
-
     if session.executed:
         logging.getLogger("views").info("Initializing Session validate view!")
         return SessionValidateView.as_view()(request, pk=pk)

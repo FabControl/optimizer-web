@@ -17,6 +17,8 @@
       {% csrf_token %}
       {% if not object.executed %}
       {% include "session/session_generate.html" %}
+      {% elif object.test_number in object.get_validated_tests %}
+      {% include "session/session_validated.html" %}
       {% else %}
       {% include "session/session_validate.html" %}
       {% endif %}

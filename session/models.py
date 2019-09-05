@@ -275,6 +275,8 @@ class Session(models.Model):
                 if number in value_key:
                     programmatic_name = self.test_info[number]["programmatic_name"]
                     self.settings.__setattr__(programmatic_name, new_value)
+
+                self.alter_previous_tests(-1, value_key, value=new_value)
             self.save()
 
     @property
@@ -301,9 +303,15 @@ class Session(models.Model):
     def previous_tests(self):
         return self.persistence["session"]["previous_tests"]
 
-    @previous_tests.setter
-    def previous_tests(self, value):
-        self.persistence["session"]["previous_tests"] = value
+    def alter_previous_tests(self, index, key, value):
+        temp_persistence = self.persistence
+        temp_persistence["session"]["previous_tests"][index][key] = value
+        self.persistence = temp_persistence
+
+    def get_previous_test(self):
+        for test in self.previous_tests:
+            if test["test_number"] == self.test_number:
+                return test
 
     @property
     def min_max_parameters(self):
@@ -333,6 +341,13 @@ class Session(models.Model):
 
         except IndexError:
             return False
+
+    def get_validated_tests(self):
+        validated_tests = []
+        for test in self.previous_tests:
+            if test["validated"]:
+                validated_tests.append(test["test_number"])
+        return validated_tests
 
     @property
     def test_number(self):

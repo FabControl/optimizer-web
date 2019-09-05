@@ -1,6 +1,6 @@
 <div class="list-group">
   {% for test in routine.items %}
   <a href="{%url 'test_switch' object.pk test.0 %}"
-    class="list-group-item list-group-item-action list-group-item-{% if test.1.priority == 'primary' %}primary{% endif %}  {% if test.0 == object.persistence.session.test_number %}active{% endif %}">{{ test.1.name|capfirst }}</a>
+    class="list-group-item list-group-item-action list-group-item{% if test.0 in object.get_validated_tests %}-success{% endif %} {% if test.0 == object.persistence.session.test_number %}active{% endif %}">{% if test.1.priority == 'primary' %}<b>{{ test.1.name|capfirst }}</b>{% else %}{{ test.1.name|capfirst }}{% endif %}</a>
   {% endfor %}
 </div>
