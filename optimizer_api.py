@@ -20,6 +20,8 @@ class ApiClient(object):
         :return:
         """
         response = requests.post(self.base_url, json=kwargs)
+        if response.status_code == 500:
+            raise ConnectionError("Optimizer API encountered an error while processing the request.")
         self.response = response
 
     def get_template(self):
