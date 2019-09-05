@@ -201,7 +201,8 @@ class TestGenerateForm(forms.ModelForm):
         for item in test_info.items():
             if item[0].startswith("parameter"):
                 if item[1] is not None:
-                    self.parameters.append(('min_max_{}'.format(item[0]), item[1]))
+                    if item[1]["name"] is not None:
+                        self.parameters.append(('min_max_{}'.format(item[0]), item[1]))
 
         # Creating custom form fields for min_max
         for parameter in session.min_max_parameters:
