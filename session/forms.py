@@ -247,6 +247,8 @@ class TestGenerateForm(forms.ModelForm):
                                                                                  parameter["units"])
             self.fields[parameter["programmatic_name"]].min_value = 0
             self.fields[parameter["programmatic_name"]].initial = parameter["values"]
+            if not parameter["active"]:
+                self.fields[parameter["programmatic_name"]].widget.attrs['readonly'] = True
             self.secondary_parameters_programmatic_names.append(parameter["programmatic_name"])
 
         # Layout primary and secondary_parameters
