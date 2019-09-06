@@ -333,12 +333,10 @@ class Session(models.Model):
     @property
     def executed(self):
         try:
-            if self.test_number == self.previous_tests[-1]["test_number"]:
-                if self.previous_tests[-1]["test_number"]:
+            for test in self.previous_tests:
+                if self.test_number == test["test_number"] and test["executed"]:
                     return True
-            else:
-                return False
-
+            return False
         except IndexError:
             return False
 
