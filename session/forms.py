@@ -296,8 +296,11 @@ class NewExtruderForm(forms.ModelForm):
         self.helper = FormHelper()
         self.helper.form_tag = False
 
+        self.fields["temperature_max_extruder"] = self.fields["temperature_max"]
+        del self.fields["temperature_max"]
+
         self.fields["tool"].label = "Gcode tool index"
-        self.fields["temperature_max"].label = "Maximum temperature (°C)"
+        self.fields["temperature_max_extruder"].label = "Maximum temperature (°C)"
 
     class Meta:
         model = Extruder
