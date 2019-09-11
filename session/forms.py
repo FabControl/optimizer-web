@@ -107,7 +107,7 @@ class MaterialForm(forms.ModelForm):
 class SessionForm(forms.ModelForm):
     class Meta:
         model = Session
-        fields = ('name', 'material', 'machine', 'slicer', 'target')
+        fields = ('name', 'material', 'machine', 'target')
 
     def __init__(self, *args, **kwargs):
         # first call parent's constructor
