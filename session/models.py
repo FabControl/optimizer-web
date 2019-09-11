@@ -211,6 +211,14 @@ class Session(models.Model):
         self._persistence = json.dumps(per)
         return json.loads(self._persistence)
 
+    def init_settings(self):
+        for name, value in self.persistence["settings"].items():
+            self.settings.__setattr__(name, value)
+        self.settings.track_width_raft = self.machine.extruder.nozzle.size_id
+        self.settings.track_width = self.machine.extruder.nozzle.size_id
+        self.settings.track_height_raft = float(self.machine.extruder.nozzle.size_id) * 0.6
+        self.settings.speed_printing_raft = 15
+
     def clean_min_max(self, all_parameters: bool = False, to_zero: bool = False):
         """
         Set min_max_parameter to a nominal value so that they wouldn't be carried over to other tests.
