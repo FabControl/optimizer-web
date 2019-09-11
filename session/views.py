@@ -317,7 +317,6 @@ def new_session(request):
             session.init_settings()
             session.update_persistence()
 
-            session.settings = Settings.objects.create(name=session.name)
             session.save()
             return redirect('session_detail', pk=session.pk)
     else:
