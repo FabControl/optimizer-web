@@ -10,10 +10,12 @@ urlpatterns = [
     path('resources/materials/', views.MaterialsView.as_view(), name='material_manager'),
     path('resources/materials/new/', views.material_form, name='material_form'),
     path('resources/materials/<pk>/', views.MaterialView.as_view(), name='material_detail'),
+    path('resources/materials/<pk>/delete', views.MaterialDelete.as_view(), name='material_delete'),
 
     path('resources/machines/', views.MachinesView.as_view(), name='machine_manager'),
     path('resources/machines/new/', views.machine_form, name='machine_form'),
     path('resources/machines/<pk>/', views.MachineView.as_view(), name='machine_detail'),
+    path('resources/machines/<pk>/delete', views.MachineDelete.as_view(), name='machine_delete'),
 
     path('resources/settings/', views.SettingsView.as_view(), name='setting_manager'),
     path('resources/settings/<pk>/', views.SettingView.as_view(), name='settings_detail'),

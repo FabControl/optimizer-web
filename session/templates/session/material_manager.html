@@ -38,9 +38,12 @@
                     Action
                   </button>
                   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item" href="#">Open</a>
+                    <a class="dropdown-item" href="{% url 'material_detail' material.pk %}">Open</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Delete</a>
+                    <form class="" action="{% url 'material_delete' material.pk %}" method="post">
+                      {% csrf_token %}
+                      <button class="dropdown-item" type="submit" href="{% url 'material_delete' material.pk %}">Delete</button>
+                    </form>
                   </div>
                 </div>
               </td>
