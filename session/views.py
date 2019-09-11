@@ -314,6 +314,8 @@ def new_session(request):
             session.settings = Settings.objects.create(name=session.name)
 
             session._persistence = json.dumps(api_client.get_template())
+            session.init_settings()
+            session.update_persistence()
 
             session.settings = Settings.objects.create(name=session.name)
             session.save()
