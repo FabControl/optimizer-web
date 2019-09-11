@@ -193,6 +193,16 @@ class SessionDelete(LoginRequiredMixin, generic.DeleteView):
     success_url = reverse_lazy('session_manager')
 
 
+class MachineDelete(LoginRequiredMixin, generic.DeleteView):
+    model = Machine
+    success_url = reverse_lazy('machine_manager')
+
+
+class MaterialDelete(LoginRequiredMixin, generic.DeleteView):
+    model = Material
+    success_url = reverse_lazy('material_manager')
+
+
 @login_required
 def session_validate_undo(request, pk):
     session = Session.objects.get(pk=pk)
