@@ -226,7 +226,11 @@ class TestGenerateForm(forms.ModelForm):
             self.fields[parameter["programmatic_name"]].initial = parameter["values"]
             if not parameter["active"]:
                 self.fields[parameter["programmatic_name"]].widget.attrs['readonly'] = True
+            if parameter["programmatic_name"] in session.get_previously_tested_parameters():
+                self.fields[parameter["programmatic_name"]].widget.attrs['readonly'] = True
             self.secondary_parameters_programmatic_names.append(parameter["programmatic_name"])
+
+        session.previously_tested_parameters = self.secondary_parameters_programmatic_names + [parameter["programmatic_name"] for parameter in session.min_max_parameters]
 
         # Layout primary and secondary_parameters
         self.helper = FormHelper()
