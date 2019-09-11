@@ -113,7 +113,6 @@ class SessionForm(forms.ModelForm):
         # first call parent's constructor
         super(SessionForm, self).__init__(*args, **kwargs)
         # there's a `fields` property now
-        self.fields['slicer'].required = False
 
 
 class SettingForm(forms.ModelForm):
@@ -134,33 +133,6 @@ class SettingForm(forms.ModelForm):
         # self.helper.form_class = 'form-horizontal'
         # self.helper.field_class = 'col-lg-3'
         # self.helper.label_class = 'col-lg-6'
-        self.helper.form_tag = False
-
-        # self.helper.layout = Layout(
-        #     # Row(
-        #     #     Column('email', css_class='form-group col-md-6 mb-0'),
-        #     #     Column('password', css_class='form-group col-md-6 mb-0'),
-        #     #     css_class='form-row'
-        #     # ),
-        #     # Row(
-        #     #     Column('min_max_parameter_one_min', css_class='form-group col-md-6 mb-0'),
-        #     #     Column('min_max_parameter_one_max', css_class='form-group col-md-6 mb-0'),
-        #     #     css_class='form-row'
-        #     # ),
-        #     # Row(
-        #     #     Column('min_max_parameter_two_min', css_class='form-group col-md-6 mb-0'),
-        #     #     Column('min_max_parameter_two_max', css_class='form-group col-md-6 mb-0'),
-        #     #     css_class='form-row'
-        #     # ),
-        #     Row(
-        #         Column('track_height_raft',
-        #                'speed_printing_raft',
-        #                'temperature_extruder_raft',
-        #                'temperature_printbed_setpoint',
-        #                'track_width_raft',
-        #                css_class='form-group col-md-12 mb-0'),
-        #     )
-        # )
 
     class Meta:
         model = Settings
@@ -263,13 +235,6 @@ class TestGenerateForm(forms.ModelForm):
         # self.helper.label_class = 'col-lg-6'
         self.helper.form_tag = False
 
-        # Create Row and Column for each min_max parameter
-        min_max_rows = []
-        for parameter in self.parameters:
-            col = Column(parameter, css_class='form-group col-md-6 mb-0')
-            row = Row(col)
-            min_max_rows.append(row)
-
     def save(self, commit: bool = True):
         settings = self.instance.__getattribute__("settings")
         for parameter, info in self.parameters:
@@ -357,11 +322,6 @@ class NewChamberForm(forms.ModelForm):
         self.fields["tool"].label = "Gcode tool index"
         self.fields["gcode_command"].label = "Gcode syntax"
         self.fields["temperature_max"].label = "Maximum temperature (°C)"
-
-        self.fields["tool"].id = "Gcode tool index"
-        self.fields["gcode_command"].label = "Gcode syntax"
-        self.fields["temperature_max"].label = "Maximum temperature (°C)"
-
     class Meta:
         model = Chamber
         fields = ["chamber_heatable", "tool", "gcode_command", "temperature_max"]
