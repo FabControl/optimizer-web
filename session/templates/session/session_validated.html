@@ -1,7 +1,8 @@
 <div class="pt-3">
 
   <div class="alert alert-success" role="alert">
-    Test validated!
+    Test validated with the values:
+    <br> {{object.get_previous_test.parameter_one_name}}: <b>{{object.get_previous_test.selected_parameter_one_value}}</b>
+    <br> {{object.get_previous_test.parameter_two_name}}: <b>{{object.get_previous_test.selected_parameter_two_value}}</b>
   </div>
-  {{ object.get_previous_test }}
 </div>
