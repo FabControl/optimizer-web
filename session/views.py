@@ -24,7 +24,7 @@ def index(request):
 
 @login_required
 def dashboard(request):
-    latest_sessions = Session.objects.order_by('number')[:5]
+    latest_sessions = Session.objects.filter(owner=request.user).order_by('pk')[:5]
     context = {'latest_sessions': latest_sessions}
     return render(request, 'session/dashboard.html', context)
 
@@ -133,7 +133,9 @@ class SessionListView(LoginRequiredMixin, generic.ListView):
     context_object_name = 'sessions'
 
     def get_queryset(self):
-        return Session.objects.order_by('pub_date')
+        # queryset = super(SessionListView, self).get_queryset()
+        queryset = Session.objects.filter(owner=self.request.user).order_by('pub_date')
+        return queryset
 
 
 class SessionView(LoginRequiredMixin, generic.UpdateView):
@@ -297,6 +299,9 @@ def new_session(request):
         if form.is_valid():
             messages.success(request, 'The session has been created!')
             session = form.save(commit=False)
+            session.owner = request.user
+
+            session.settings = Settings.objects.create(name=session.name)
 
             session._persistence = json.dumps(api_client.get_template())
 

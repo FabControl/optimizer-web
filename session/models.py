@@ -4,6 +4,8 @@ from .choices import TEST_NUMBER_CHOICES, TARGET_CHOICES, SLICER_CHOICES, TOOL_C
 import ast
 import simplejson as json
 from optimizer_api import api_client
+from authentication.models import User
+import logging
 
 
 # Create your models here.
@@ -176,6 +178,7 @@ class Session(models.Model):
     number = models.IntegerField(default=0)
     name = models.CharField(default="Untitled", max_length=20)
     pub_date = models.DateTimeField(default=datetime.now, blank=True)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     target = models.CharField(max_length=20, choices=TARGET_CHOICES, default="mechanical_strength")
     _test_number = models.CharField(max_length=20, choices=TEST_NUMBER_CHOICES, default="01")
     slicer = models.CharField(max_length=20, choices=SLICER_CHOICES, default="Prusa")
