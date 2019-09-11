@@ -193,6 +193,7 @@ class Session(models.Model):
     _persistence = models.TextField(default="", max_length=1000000)
     _previous_tests = models.TextField(default="", max_length=1000000)
     _test_info = models.TextField(default="", max_length=1000000)
+    _previously_tested_parameters = models.TextField(default="{}", max_length=1000000)
 
     # Temporary storage for persistent printing speed selection
     _printing_speed = models.CharField(default="[0,0]", max_length=20)
@@ -364,6 +365,25 @@ class Session(models.Model):
     @property
     def tested_values(self):
         return [self.previous_tests[-1]["tested_parameter_one_values"][::-1], self.previous_tests[-1]["tested_parameter_two_values"]]
+
+    @property
+    def previously_tested_parameters(self):
+        return json.loads(self._previously_tested_parameters)
+
+    @previously_tested_parameters.setter
+    def previously_tested_parameters(self, value):
+        parameters = self.previously_tested_parameters
+        parameters[self.test_number] = value
+        self._previously_tested_parameters = json.dumps(parameters)
+
+    def get_previously_tested_parameters(self):
+        parameters = self.previously_tested_parameters
+        output = []
+        for test, param_list in parameters.items():
+            for param in param_list:
+                if param not in output:
+                    output.append(param)
+        return output
 
     def remove_last_test(self):
         temp_persistence = self.persistence
