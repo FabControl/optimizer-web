@@ -98,6 +98,11 @@ class MaterialForm(forms.ModelForm):
         model = Material
         fields = ('name', 'size_od')
 
+    def __init__(self, *args, **kwargs):
+        super(MaterialForm, self).__init__(*args, **kwargs)
+        self.fields['name'].label = "Name"
+        self.fields['size_od'].label = "Filament diameter (mm)"
+
 
 class SessionForm(forms.ModelForm):
     class Meta:
