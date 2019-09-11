@@ -33,7 +33,7 @@
             {% for session in sessions %}
             <tr>
               <td><a href="{% url 'session_detail' session.pk %}">{{ session.name }}</a></td>
-              <td>{{ session.target }}</td>
+              <td>{{ session.get_target_display }}</td>
               <td><a class="text-secondary" href="{% url 'machine_detail' session.machine.pk %}">{{ session.machine.model }}</a></td>
               <td><a class="text-secondary" href="{% url 'material_detail' session.material.pk %}">{{ session.material.name }}</a></td>
               <td>{{ session.completed_tests }}</td>
