@@ -213,6 +213,30 @@ def session_validate_undo(request, pk):
 
 
 @login_required
+def session_validate_revert(request, pk):
+    session = Session.objects.get(pk=pk)
+
+    routine = api_client.get_routine()
+    test_names = [name for name, _ in routine.items()]
+    removable_test_names = []
+    current_found = False
+    for name in test_names:
+        if name == session.test_number:
+            current_found = True
+        if current_found:
+            removable_test_names.append(name)
+    previously_tested_parameters = session.previously_tested_parameters
+    for previous_test, _ in session.previously_tested_parameters.items():
+        if previous_test in removable_test_names:
+            del previously_tested_parameters[previous_test]
+            session.delete_previous_test(previous_test)
+    session._previously_tested_parameters = json.dumps(previously_tested_parameters)
+    session.save()
+
+    return redirect('session_detail', pk=pk)
+
+
+@login_required
 def test_switch(request, pk, number):
     session = Session.objects.get(pk=pk)
     session.test_number = number

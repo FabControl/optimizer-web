@@ -1,8 +1,32 @@
 <div class="pt-3">
 
   <div class="alert alert-success" role="alert">
-    Test validated with the values:
+    Validated values:
     <br> {{object.get_previous_test.parameter_one_name}}: <b>{{object.get_previous_test.selected_parameter_one_value}}</b>
     <br> {{object.get_previous_test.parameter_two_name}}: <b>{{object.get_previous_test.selected_parameter_two_value}}</b>
+  </div>
+  <button class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Revert to this test</button>
+
+
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Are you sure you want to proceed?</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          Reverting to this test will discard all progress achieved after it.
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <form class="" action="{% url 'revert_to_test' object.pk %}" method="get">
+            <button type="submit" class="btn btn-danger">Revert</button>
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

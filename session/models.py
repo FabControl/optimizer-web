@@ -320,6 +320,15 @@ class Session(models.Model):
         temp_persistence["session"]["previous_tests"][index][key] = value
         self.persistence = temp_persistence
 
+    def delete_previous_test(self, number):
+        persistence = self.persistence
+        temp_tests = self.previous_tests
+        for test in temp_tests:
+            if test["test_number"] == number:
+                temp_tests.remove(test)
+        persistence["session"]["previous_tests"] = temp_tests
+        self.persistence = persistence
+
     def get_previous_test(self):
         for test in self.previous_tests:
             if test["test_number"] == self.test_number:
@@ -381,7 +390,10 @@ class Session(models.Model):
     @previously_tested_parameters.setter
     def previously_tested_parameters(self, value):
         parameters = self.previously_tested_parameters
-        parameters[self.test_number] = value
+        if value is not None:
+            parameters[self.test_number] = value
+        else:
+            del parameters[self.test_number]
         self._previously_tested_parameters = json.dumps(parameters)
 
     def get_previously_tested_parameters(self):
