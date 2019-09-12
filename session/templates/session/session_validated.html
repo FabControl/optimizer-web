@@ -2,10 +2,21 @@
 
   <div class="alert alert-success" role="alert">
     Validated values:
-    <br> {{object.get_previous_test.parameter_one_name}}: <b>{{object.get_previous_test.selected_parameter_one_value}}</b>
-    <br> {{object.get_previous_test.parameter_two_name}}: <b>{{object.get_previous_test.selected_parameter_two_value}}</b>
+    <br> {{object.get_previous_test.parameter_one_name}}:
+    <b>{{object.get_previous_test.selected_parameter_one_value}} {{object.test_info.parameter_one.units}}</b>
+
+    {% if object.get_previous_test.parameter_two_name %}
+    <br> {{object.get_previous_test.parameter_two_name}}:
+    <b>{{object.get_previous_test.selected_parameter_two_value}} {{object.test_info.parameter_two.units}}</b>
+    {% endif %}
+
+    {% if object.get_previous_test.parameter_three_name %}
+    <br> {{object.get_previous_test.parameter_three_name}}:
+    <b>{{object.get_previous_test.selected_parameter_three_value}} {{object.test_info.parameter_three.units}}</b>
+    {% endif %}
+
   </div>
-  <button class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Revert to this test</button>
+  <button class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal">Revert to this test</button>
 
 
   <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
