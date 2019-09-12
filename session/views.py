@@ -207,6 +207,10 @@ class MaterialDelete(LoginRequiredMixin, generic.DeleteView):
 def session_validate_undo(request, pk):
     session = Session.objects.get(pk=pk)
     session.remove_last_test()
+
+    previously_tested_parameters = session.previously_tested_parameters
+    del previously_tested_parameters[session.test_number]
+    session._previously_tested_parameters = json.dumps(previously_tested_parameters)
     session.save()
 
     return redirect('session_detail', pk=pk)
