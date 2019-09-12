@@ -19,9 +19,9 @@
         {% endfor %}
       </ul>
       {% else %}
-
+      <p><span class="text-muted">You currently have no active testing sessions.</span></p>
       {% endif %}
-      <button type="button" onclick="location.href='{% url 'new_session' %}'" class="btn btn-primary btn-sm">+ New Testing Session</button>
+      <button type="button" onclick="location.href='{% url 'new_session' %}'" class="btn btn-primary btn-sm">New Testing Session</button>
     </div>
   </div>
 </div>
