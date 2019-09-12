@@ -114,7 +114,7 @@ LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'Europe/Riga'
 
-DATETIME_FORMAT = 'd/m/y H:i'
+DATETIME_FORMAT = 'N j Y H:i'
 
 USE_I18N = True
 
