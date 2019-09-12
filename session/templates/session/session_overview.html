@@ -1,0 +1,29 @@
+<div class="row">
+  <div class="col-sm">
+    <div class="pt-3">
+      <h3>Previous tests:</h3>
+      {% for test in object.previous_tests%}
+      <div class="pt-1">
+        <div class="card p-3">
+          <a>Test name: <b>{{ test.test_name }}</b></a>
+          <p>
+            <br><a>Tested <b>{{ test.parameter_one_name }}</b> values ({{test.parameter_one_units}}):</a>
+            <br><a>{% for value in test.tested_parameter_one_values %}{% if value == test.selected_parameter_one_value %}<b>{{ value }}</b>{% else %}{{ value }}{% endif %}, {% endfor %}</a>
+          </p>
+          <p>
+            <a>Tested <b>{{ test.parameter_two_name }}</b> values ({{test.parameter_two_units}}):</a>
+            <br><a>{% for value in test.tested_parameter_two_values %}{% if value == test.selected_parameter_two_value %}<b>{{ value }}</b>{% else %}{{ value }}{% endif %}, {% endfor %}</a>
+          </p>
+
+        </div>
+      </div>
+      {% endfor %}
+      <div class="pt-3">
+        <h3>Current settings:</h3>
+        {% for setting in object.persistence.settings %}
+        {{setting}}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
