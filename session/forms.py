@@ -217,9 +217,9 @@ class TestGenerateForm(forms.ModelForm):
         # Create fields for secondary_parameters
         for parameter in secondary_parameters:
             if parameter["units"] != 'mm':
-                self.fields[parameter["programmatic_name"]] = forms.IntegerField()
+                self.fields[parameter["programmatic_name"]] = forms.IntegerField(min_value=parameter["min_max"][0], max_value=parameter["min_max"][1])
             else:
-                self.fields[parameter["programmatic_name"]] = forms.DecimalField()
+                self.fields[parameter["programmatic_name"]] = forms.DecimalField(min_value=parameter["min_max"][0], max_value=parameter["min_max"][1])
             self.fields[parameter["programmatic_name"]].label = "{} ({})".format(parameter["name"].capitalize(),
                                                                                  parameter["units"])
             self.fields[parameter["programmatic_name"]].min_value = 0
