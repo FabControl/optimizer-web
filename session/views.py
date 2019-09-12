@@ -177,6 +177,16 @@ class SessionValidateView(SessionView):
         return redirect('session_validate_back', pk=session.pk)
 
 
+class SessionOverview(LoginRequiredMixin, generic.DetailView):
+    model = Session
+    template_name = "session/session.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['routine'] = api_client.get_routine()
+        return context
+
+
 @login_required
 def generate_or_validate(request, pk):
     session = Session.objects.get(pk=pk)

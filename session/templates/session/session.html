@@ -15,7 +15,9 @@
     <div class="col-sm">
       {% include "session/session_nav.html" %}
       {% csrf_token %}
-      {% if not object.executed %}
+      {% if "/overview" in request.path %}
+      {% include "session/session_overview.html" %}
+      {% elif not object.executed %}
       {% include "session/session_generate.html" %}
       {% elif object.test_number in object.get_validated_tests %}
       {% include "session/session_validated.html" %}
