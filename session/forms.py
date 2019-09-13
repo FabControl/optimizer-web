@@ -224,7 +224,7 @@ class TestGenerateForm(forms.ModelForm):
             else:
                 param = forms.DecimalField(min_value=parameter["min_max"][0], max_value=parameter["min_max"][1])
             param.label = "{} ({})".format(parameter["name"].capitalize(), parameter["units"])
-            param.widget.attrs["class"] = "col-sm-6"
+            param.widget.attrs["class"] = "col-sm-2"
             param.initial = parameter["values"]
             if not parameter["active"]:
                 param.widget.attrs['readonly'] = True
