@@ -130,9 +130,6 @@ class SettingForm(forms.ModelForm):
 
         self.helper = FormHelper()
         self.helper.form_tag = False
-        # self.helper.form_class = 'form-horizontal'
-        # self.helper.field_class = 'col-lg-3'
-        # self.helper.label_class = 'col-lg-6'
 
     class Meta:
         model = Settings
@@ -251,24 +248,17 @@ class TestGenerateForm(forms.ModelForm):
             previously_tested.remove("part_cooling_setpoint")
         session.previously_tested_parameters = previously_tested
 
-        # Layout primary and secondary_parameters
+        # Disable form tags
         self.helper = FormHelper()
-        # self.helper.form_class = 'form-horizontal'
-        # self.helper.field_class = 'col-lg-3'
-        # self.helper.label_class = 'col-lg-6'
         self.helper.form_tag = False
 
     def save(self, commit: bool = True):
         settings = self.instance.__getattribute__("settings")
         for parameter, info in self.parameters:
-            # import pdb;
-            # pdb.set_trace()
             logging.getLogger("views").info("Currently saving {}: {}".format(parameter, self.cleaned_data[parameter]))
             self.instance.__setattr__(parameter, self.cleaned_data[parameter])
         for setting in self.secondary_parameters_programmatic_names:
             logging.getLogger("views").info("Currently saving {}: {}".format(setting, self.cleaned_data[setting]))
-            # import pdb;
-            # pdb.set_trace()
             settings.__setattr__(setting, self.cleaned_data[setting])
         settings.save()
 
