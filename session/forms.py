@@ -216,8 +216,10 @@ class TestGenerateForm(forms.ModelForm):
 
         # Create fields for secondary_parameters
         for parameter in secondary_parameters:
-            if parameter["units"] != 'mm':
+            if parameter["units"] != 'mm' and parameter["programmatic_name"] != "extrusion_multiplier":
                 self.fields[parameter["programmatic_name"]] = forms.IntegerField(min_value=parameter["min_max"][0], max_value=parameter["min_max"][1])
+            elif parameter["programmatic_name"] == "extrusion_multiplier":
+                self.fields[parameter["programmatic_name"]] = forms.DecimalField(min_value=parameter["min_max"][0], max_value=parameter["min_max"][1])
             else:
                 self.fields[parameter["programmatic_name"]] = forms.DecimalField(min_value=parameter["min_max"][0], max_value=parameter["min_max"][1])
             self.fields[parameter["programmatic_name"]].label = "{} ({})".format(parameter["name"].capitalize(),
