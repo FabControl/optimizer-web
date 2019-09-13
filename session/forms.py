@@ -214,23 +214,37 @@ class TestGenerateForm(forms.ModelForm):
         for secondary_parameter in test_info["other_parameters"]:
             secondary_parameters.append(secondary_parameter)
 
+        # Containers for active and inactive (readonly) fields
+        actives = {}
+        inactives = {}
+
         # Create fields for secondary_parameters
         for parameter in secondary_parameters:
             if parameter["units"] != 'mm' and parameter["programmatic_name"] != "extrusion_multiplier":
-                self.fields[parameter["programmatic_name"]] = forms.IntegerField(min_value=parameter["min_max"][0], max_value=parameter["min_max"][1])
+                param = forms.IntegerField(min_value=parameter["min_max"][0], max_value=parameter["min_max"][1])
             elif parameter["programmatic_name"] == "extrusion_multiplier":
-                self.fields[parameter["programmatic_name"]] = forms.DecimalField(min_value=parameter["min_max"][0], max_value=parameter["min_max"][1])
+                param = forms.DecimalField(min_value=parameter["min_max"][0], max_value=parameter["min_max"][1])
             else:
-                self.fields[parameter["programmatic_name"]] = forms.DecimalField(min_value=parameter["min_max"][0], max_value=parameter["min_max"][1])
-            self.fields[parameter["programmatic_name"]].label = "{} ({})".format(parameter["name"].capitalize(),
-                                                                                 parameter["units"])
-            self.fields[parameter["programmatic_name"]].min_value = 0
-            self.fields[parameter["programmatic_name"]].initial = parameter["values"]
+                param = forms.DecimalField(min_value=parameter["min_max"][0], max_value=parameter["min_max"][1])
+            param.label = "{} ({})".format(parameter["name"].capitalize(), parameter["units"])
+            param.widget.attrs["class"] = "col-sm-6"
+            param.initial = parameter["values"]
             if not parameter["active"]:
-                self.fields[parameter["programmatic_name"]].widget.attrs['readonly'] = True
-            if parameter["programmatic_name"] in session.get_previously_tested_parameters():
-                self.fields[parameter["programmatic_name"]].widget.attrs['readonly'] = True
+                param.widget.attrs['readonly'] = True
+                inactives[parameter["programmatic_name"]] = param
+            elif parameter["programmatic_name"] in session.get_previously_tested_parameters():
+                param.widget.attrs['readonly'] = True
+                inactives[parameter["programmatic_name"]] = param
+            else:
+                actives[parameter["programmatic_name"]] = param
             self.secondary_parameters_programmatic_names.append(parameter["programmatic_name"])
+
+        #  Instantiate active fields first, so that they would appear on top
+        for name, field in actives.items():
+            self.fields[name] = field
+
+        for name, field in inactives.items():
+            self.fields[name] = field
 
         previously_tested = self.secondary_parameters_programmatic_names + [parameter["programmatic_name"] for parameter in session.min_max_parameters]
         if session.test_number == "01" or session.test_number == "02":
