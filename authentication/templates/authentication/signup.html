@@ -1,0 +1,15 @@
+{% extends "session/base.html" %}
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-sm-6">
+      <form class="" action="" method="post">
+        {% load crispy_forms_tags %}
+        {% csrf_token %}
+        {% crispy form%}
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

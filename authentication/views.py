@@ -1,10 +1,14 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
+from .forms import SignUpForm
+from django.views import generic
 
 
 # Create your views here.
 def user_login(request):
+    if request.user.is_authenticated:
+        return redirect('dashboard')
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
@@ -24,6 +28,25 @@ def user_login(request):
             return redirect("login")
     else:
         return render(request, 'authentication/login.html', {})
+
+
+def user_signup(request):
+    context = {"form": SignUpForm}
+    if request.user.is_authenticated:
+        return redirect('dashboard')
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            if "next" in request.GET:
+                return redirect(request.GET["next"])
+            else:
+                return redirect('dashboard')
+        else:
+            return render(request, 'authentication/signup.html', context)
+    else:
+        return render(request, 'authentication/signup.html', context)
 
 
 def user_logout(request):
