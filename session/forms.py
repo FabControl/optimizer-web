@@ -193,6 +193,8 @@ class TestGenerateForm(forms.ModelForm):
                             "value": round(value, (2 if parameter["units"] == "mm" else 0)),
                             "step": ("0.01" if parameter["units"] == "mm" else "1"),
                             "onchange": "change_fields(this)",
+                            "min": parameter["min_max"][0],
+                            "max": parameter["min_max"][1]
                         })
                     if iterable not in [0, highest_iterable]:
                         subwidget.attrs["type"] = "text"

@@ -344,7 +344,7 @@ class Session(models.Model):
                         continue
                     parameters.append({"name": content["name"], "units": content["units"], "iterable_values": list(enumerate(content["values"])),
                                        "values": content["values"], "parameter": item,
-                                       "programmatic_name": content["programmatic_name"]})
+                                       "programmatic_name": content["programmatic_name"], "min_max": content["min_max"]})
         return parameters
 
     @property
