@@ -7,17 +7,12 @@
   <form action="" method="post">
     {% csrf_token %}
     <div class="row">
-      <div class="col-sm-3">
+      <div class="col-sm-6">
         {{ form|crispy }}
-      </div>
-      <div class="col-sm">
-        <div class="card p-3">
-        </div>
       </div>
     </div>
     <div class="row pt-3">
-      <div class="col-sm-4"></div>
-      <div class="col-sm-4 text-center">
+      <div class="col-sm-4">
         <button type="submit" class="btn btn-primary">Start Testing Session</button>
       </div>
     </div>
