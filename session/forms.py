@@ -207,7 +207,8 @@ class TestGenerateForm(forms.ModelForm):
                     widget=MinMaxWidget(
                         widgets=widgets))
 
-                self.fields[field_id].label = "{} ({})".format(parameter["name"].capitalize(), parameter["units"])
+                self.fields[field_id].label = "{} ({})".format(parameter["name"].capitalize(), (
+                    "°C" if parameter["units"] == "degC" else parameter["units"]))
 
         for secondary_parameter in test_info["other_parameters"]:
             secondary_parameters.append(secondary_parameter)
@@ -224,7 +225,8 @@ class TestGenerateForm(forms.ModelForm):
                 param = forms.DecimalField(min_value=parameter["min_max"][0], max_value=parameter["min_max"][1])
             else:
                 param = forms.DecimalField(min_value=parameter["min_max"][0], max_value=parameter["min_max"][1])
-            param.label = "{} ({})".format(parameter["name"].capitalize(), parameter["units"])
+            param.label = "{} ({})".format(parameter["name"].capitalize(), (
+                    "°C" if parameter["units"] == "degC" else parameter["units"]))
             param.widget.attrs["class"] = "col-sm-2"
             param.initial = parameter["values"]
             if not parameter["active"]:
