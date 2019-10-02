@@ -5,6 +5,7 @@ import ast
 import simplejson as json
 from optimizer_api import api_client
 from authentication.models import User
+from django.core.exceptions import PermissionDenied
 import logging
 
 
@@ -16,6 +17,17 @@ class Material(models.Model):
     size_od = models.DecimalField(default=1.75, max_digits=3, decimal_places=2)
     name = models.CharField(max_length=60)
     pub_date = models.DateTimeField(default=datetime.now, blank=True)
+
+    def is_owner(self, user: User):
+        """
+            Checks whether instance.owner is a supplied user. Returns 403 if it isn't.
+            :param user:
+            :return:
+            """
+        if self.owner != user:
+            raise PermissionDenied("Current user is not the owner of {}".format(self))
+        else:
+            return True
 
     def __str__(self):
         return "{} ({} mm)".format(self.name, str(self.size_od))
@@ -101,6 +113,17 @@ class Machine(models.Model):
 
     def __str__(self):
         return "{} ({} mm)".format(self.model, str(self.extruder.nozzle.size_id))
+
+    def is_owner(self, user: User):
+        """
+            Checks whether instance.owner is a supplied user. Returns 403 if it isn't.
+            :param user:
+            :return:
+            """
+        if self.owner != user:
+            raise PermissionDenied("Current user is not the owner of {}".format(self))
+        else:
+            return True
 
     @property
     def __json__(self):
@@ -212,6 +235,17 @@ class Session(models.Model):
         per["settings"] = self.settings.__json__
         self._persistence = json.dumps(per)
         return json.loads(self._persistence)
+
+    def is_owner(self, user: User):
+        """
+            Checks whether instance.owner is a supplied user. Returns 403 if it isn't.
+            :param user:
+            :return:
+            """
+        if self.owner != user:
+            raise PermissionDenied("Current user is not the owner of {}".format(self))
+        else:
+            return True
 
     def init_settings(self):
         for name, value in self.persistence["settings"].items():

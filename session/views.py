@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.contrib.staticfiles import finders
 from django.urls import reverse_lazy
 from .utilities import load_json, optimizer_info
-from django.http import FileResponse, Http404
+from django.http import FileResponse, HttpResponseRedirect, Http404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -51,6 +51,11 @@ class MaterialView(LoginRequiredMixin, generic.DetailView):
     model = Material
     template_name = 'session/material_detail.html'
 
+    def get_context_data(self, **kwargs):
+        material = self.object
+        material.is_owner(self.request.user)
+        super(MaterialView, self).get_context_data(**kwargs)
+
 
 @login_required
 def material_form(request):
@@ -71,6 +76,11 @@ def material_form(request):
 class MachineView(LoginRequiredMixin, generic.DetailView):
     model = Machine
     template_name = 'session/machine_detail.html'
+
+    def get_context_data(self, **kwargs):
+        machine = self.object
+        machine.is_owner(self.request.user)
+        super(MachineView, self).get_context_data(**kwargs)
 
 
 class MachinesView(LoginRequiredMixin, generic.ListView):
@@ -186,6 +196,8 @@ class SessionOverview(LoginRequiredMixin, generic.DetailView):
     template_name = "session/session.html"
 
     def get_context_data(self, **kwargs):
+        session = self.object
+        session.is_owner(self.request.user)
         context = super().get_context_data(**kwargs)
         context['routine'] = api_client.get_routine()
         return context
@@ -194,6 +206,7 @@ class SessionOverview(LoginRequiredMixin, generic.DetailView):
 @login_required
 def generate_or_validate(request, pk):
     session = Session.objects.get(pk=pk)
+    session.is_owner(request.user)
     if session.executed:
         logging.getLogger("views").info("Initializing Session validate view!")
         return SessionValidateView.as_view()(request, pk=pk)
@@ -206,20 +219,57 @@ class SessionDelete(LoginRequiredMixin, generic.DeleteView):
     model = Session
     success_url = reverse_lazy('session_manager')
 
+    def delete(self, request, *args, **kwargs):
+        """
+        Call the delete() method on the fetched object and then redirect to the
+        success URL.
+        """
+        if Session.objects.get(pk=self.kwargs["pk"]).owner != self.request.user:
+            raise Exception('Session not owned by user.')
+        self.object = self.get_object()
+        success_url = self.get_success_url()
+        self.object.delete()
+        return HttpResponseRedirect(success_url)
+
 
 class MachineDelete(LoginRequiredMixin, generic.DeleteView):
     model = Machine
     success_url = reverse_lazy('machine_manager')
+
+    def delete(self, request, *args, **kwargs):
+        """
+        Call the delete() method on the fetched object and then redirect to the
+        success URL.
+        """
+        if Machine.objects.get(pk=self.kwargs["pk"]).owner != self.request.user:
+            raise Exception('Machine not owned by user.')
+        self.object = self.get_object()
+        success_url = self.get_success_url()
+        self.object.delete()
+        return HttpResponseRedirect(success_url)
 
 
 class MaterialDelete(LoginRequiredMixin, generic.DeleteView):
     model = Material
     success_url = reverse_lazy('material_manager')
 
+    def delete(self, request, *args, **kwargs):
+        """
+        Call the delete() method on the fetched object and then redirect to the
+        success URL.
+        """
+        if Material.objects.get(pk=self.kwargs["pk"]).owner != self.request.user:
+            raise Exception('Material not owned by user.')
+        self.object = self.get_object()
+        success_url = self.get_success_url()
+        self.object.delete()
+        return HttpResponseRedirect(success_url)
+
 
 @login_required
 def session_validate_undo(request, pk):
     session = Session.objects.get(pk=pk)
+    session.is_owner(request.user)
     session.remove_last_test()
 
     previously_tested_parameters = session.previously_tested_parameters
@@ -233,6 +283,7 @@ def session_validate_undo(request, pk):
 @login_required
 def session_validate_revert(request, pk):
     session = Session.objects.get(pk=pk)
+    session.is_owner(request.user)
 
     routine = api_client.get_routine()
     test_names = [name for name, _ in routine.items()]
@@ -257,6 +308,7 @@ def session_validate_revert(request, pk):
 @login_required
 def test_switch(request, pk, number):
     session = Session.objects.get(pk=pk)
+    session.is_owner(request.user)
     session.test_number = number
     session.save()
     return redirect('session_detail', pk=pk)
@@ -265,6 +317,7 @@ def test_switch(request, pk, number):
 @login_required
 def next_test_switch(request, pk, priority: str):
     session = Session.objects.get(pk=pk)
+    session.is_owner(request.user)
     routine = api_client.get_routine()
 
     test_names = [name for name, _ in routine.items()]
@@ -295,6 +348,7 @@ def next_test_switch(request, pk, priority: str):
 @login_required
 def serve_gcode(request, pk):
     session = Session.objects.get(pk=pk)
+    session.is_owner(request.user)
     response = FileResponse(session.get_gcode, content_type='text/plain')
     response['Content-Type'] = 'text/plain'
     response['Content-Disposition'] = 'attachment; filename={}.gcode'.format(session.name.replace(" ", "_") + "_" + session.test_number)
@@ -378,6 +432,8 @@ def testing_session(request):
 
 @login_required
 def session_json(request, pk):
+    if not request.user.is_staff:
+        raise Http404()
     if request.method == "GET":
         session = Session.objects.get(pk=pk)
         context = {"json": json.dumps(session.persistence, indent=4)}
