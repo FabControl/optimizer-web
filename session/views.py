@@ -30,7 +30,7 @@ def dashboard(request):
 
 
 @login_required
-def material(request, name):
+def material_detail(request, name):
     material = get_object_or_404(Material, name=name)
     context = {'material_name': material.name,
                'size_od': material.size_od,
@@ -57,9 +57,10 @@ def material_form(request):
     if request.method == 'POST':
         form = MaterialForm(request.POST)
         if form.is_valid():
+            material = form.save(commit=False)
             material.owner = request.user
             messages.info(request, 'The material has been created!')
-            form.save()
+            material.save()
             return redirect("material_manager")
     else:
         form = MaterialForm()
