@@ -346,7 +346,7 @@ def guide(request):
 @login_required
 def new_session(request):
     if request.method == 'POST':
-        form = SessionForm(request.POST)
+        form = SessionForm(request.POST, user=request.user)
 
         if form.is_valid():
             messages.success(request, 'The session has been created!')
@@ -362,7 +362,7 @@ def new_session(request):
             session.save()
             return redirect('session_detail', pk=session.pk)
     else:
-        form = SessionForm()
+        form = SessionForm(user=request.user)
 
     context = {"form": form, "target_descriptions": load_json('session/json/target_descriptions.json')}
     return render(request, 'session/new_session.html', context)
