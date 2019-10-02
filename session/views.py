@@ -43,7 +43,8 @@ class MaterialsView(LoginRequiredMixin, generic.ListView):
     context_object_name = 'materials'
 
     def get_queryset(self):
-        return Material.objects.order_by('pub_date')
+        queryset = Material.objects.filter(owner=self.request.user).order_by('pub_date')
+        return queryset
 
 
 class MaterialView(LoginRequiredMixin, generic.DetailView):
@@ -56,6 +57,7 @@ def material_form(request):
     if request.method == 'POST':
         form = MaterialForm(request.POST)
         if form.is_valid():
+            material.owner = request.user
             messages.info(request, 'The material has been created!')
             form.save()
             return redirect("material_manager")
@@ -75,7 +77,8 @@ class MachinesView(LoginRequiredMixin, generic.ListView):
     context_object_name = 'machines'
 
     def get_queryset(self):
-        return Machine.objects.order_by('pub_date')
+        queryset = Machine.objects.filter(owner=self.request.user).order_by('pub_date')
+        return queryset
 
 
 @login_required
@@ -89,6 +92,7 @@ def machine_form(request):
         extruder = None
         if self_form.is_valid():
             machine = self_form.save(commit=False)
+            machine.owner = request.user
             if extruder_form.is_valid():
                 extruder = extruder_form.save(commit=False)
                 extruder.nozzle = nozzle_form.save()
@@ -133,7 +137,6 @@ class SessionListView(LoginRequiredMixin, generic.ListView):
     context_object_name = 'sessions'
 
     def get_queryset(self):
-        # queryset = super(SessionListView, self).get_queryset()
         queryset = Session.objects.filter(owner=self.request.user).order_by('pub_date')
         return queryset
 

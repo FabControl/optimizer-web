@@ -12,6 +12,7 @@ import logging
 
 
 class Material(models.Model):
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     size_od = models.DecimalField(default=1.75, max_digits=3, decimal_places=2)
     name = models.CharField(max_length=60)
     pub_date = models.DateTimeField(default=datetime.now, blank=True)
@@ -88,6 +89,7 @@ class Printbed(models.Model):
 
 
 class Machine(models.Model):
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     pub_date = models.DateTimeField(default=datetime.now, blank=True)
     model = models.CharField(max_length=30, default="Unknown")
     buildarea_maxdim1 = models.IntegerField(default=0)
