@@ -108,10 +108,11 @@ class SessionForm(forms.ModelForm):
         model = Session
         fields = ('name', 'material', 'machine', 'target')
 
-    def __init__(self, *args, **kwargs):
-        # first call parent's constructor
+    def __init__(self, user, *args, **kwargs):
+        self.user = user
         super(SessionForm, self).__init__(*args, **kwargs)
-        # there's a `fields` property now
+        self.fields["material"] = forms.ModelChoiceField(queryset=Material.objects.filter(owner=self.user).order_by('pk')[:5])
+        self.fields["machine"] = forms.ModelChoiceField(queryset=Machine.objects.filter(owner=self.user).order_by('pk')[:5])
 
 
 class SettingForm(forms.ModelForm):
