@@ -187,7 +187,6 @@ class TestGenerateForm(forms.ModelForm):
                 for iterable, value in parameter["iterable_values"]:
                     subwidget = forms.NumberInput(attrs={
                             "class": "form-control",
-                            "name": "somename",
                             "type": ("text" if iterable not in [0, highest_iterable] else "number"),
                             "id": "linspace-field-{}".format(str(iterable)),
                             "value": round(value, (2 if parameter["units"] in ["mm", "-"] else 0)),

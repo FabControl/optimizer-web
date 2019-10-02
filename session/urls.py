@@ -38,4 +38,4 @@ urlpatterns = [
     path('help/guide/', views.guide, name="guide"),
 
     path('testing_session', views.testing_session, name="testing_session")
-    ]
+]
