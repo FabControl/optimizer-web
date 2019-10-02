@@ -21,7 +21,6 @@
           <div class="dropdown-menu" aria-labelledby="resourcesDropdown">
             <a class="dropdown-item" href="{% url 'material_manager' %}">Materials</a>
             <a class="dropdown-item" href="{% url 'machine_manager' %}">Machines</a>
-            <a class="dropdown-item" href="{% url 'setting_manager' %}">Settings</a>
           </div>
         </li>
         <li class="nav-item {% if "/help/" in request.path %}active{% endif %} dropdown">
