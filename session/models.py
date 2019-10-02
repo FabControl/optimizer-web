@@ -347,6 +347,8 @@ class Session(models.Model):
                     parameters.append({"name": content["name"], "units": content["units"], "iterable_values": list(enumerate(content["values"])),
                                        "values": content["values"], "parameter": item,
                                        "programmatic_name": content["programmatic_name"], "min_max": content["min_max"]})
+        if len(parameters) == 3:
+            parameters = [parameters[i] for i in [0, 2, 1]]
         return parameters
 
     @property
