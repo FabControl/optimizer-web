@@ -100,7 +100,7 @@ class Machine(models.Model):
     printbed = models.ForeignKey(Printbed, on_delete=models.CASCADE, blank=True)
 
     def __str__(self):
-        return self.model
+        return "{} ({} mm)".format(self.model, str(self.extruder.nozzle.size_id))
 
     @property
     def __json__(self):
