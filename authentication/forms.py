@@ -17,8 +17,8 @@ from django.forms import ModelForm
 class SignUpForm(UserCreationForm):
     username = None
     email = forms.EmailField(max_length=254, help_text='We will not share your email address with 3rd parties.')
-    first_name = forms.CharField(max_length=30, required=False)
-    last_name = forms.CharField(max_length=30, required=False)
+    first_name = forms.CharField(max_length=30, required=True)
+    last_name = forms.CharField(max_length=30, required=True)
     company = forms.CharField(max_length=30, required=False)
 
     helper = FormHelper()
