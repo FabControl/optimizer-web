@@ -108,11 +108,11 @@ class SessionForm(forms.ModelForm):
         model = Session
         fields = ('name', 'material', 'machine', 'target')
 
-    def __init__(self, user, *args, **kwargs):
-        self.user = user
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop("user", None)
         super(SessionForm, self).__init__(*args, **kwargs)
-        self.fields["material"] = forms.ModelChoiceField(queryset=Material.objects.filter(owner=self.user).order_by('pk')[:5])
-        self.fields["machine"] = forms.ModelChoiceField(queryset=Machine.objects.filter(owner=self.user).order_by('pk')[:5])
+        self.fields["material"] = forms.ModelChoiceField(queryset=Material.objects.filter(owner=self.user))
+        self.fields["machine"] = forms.ModelChoiceField(queryset=Machine.objects.filter(owner=self.user))
 
 
 class SettingForm(forms.ModelForm):
