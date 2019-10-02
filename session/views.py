@@ -18,8 +18,8 @@ from optimizer_api import api_client
 
 
 def index(request):
-    # return redirect('dashboard')
-    raise Http404("Page not found")
+    return redirect('dashboard')
+    # raise Http404("Page not found")
 
 
 @login_required
