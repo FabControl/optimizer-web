@@ -255,21 +255,28 @@ class Session(models.Model):
         self.settings.track_height_raft = float(self.machine.extruder.nozzle.size_id) * 0.6
         self.settings.speed_printing_raft = 15
 
-    def clean_min_max(self, all_parameters: bool = False, to_zero: bool = False):
+    def clean_min_max(self, to_zero: bool = False):
         """
         Set min_max_parameter to a nominal value so that they wouldn't be carried over to other tests.
-        :param all_parameters:
         :param to_zero:
         :return:
         """
-        if to_zero:
-            output = [0, 0]
-        else:
-            output = []
-        self.min_max_parameter_one = output
-        if all_parameters:
-            self.min_max_parameter_two = output
-            self.min_max_parameter_three = output
+
+        for parameter in self.min_max_parameters:
+            if "speed_printing" not in parameter["programmatic_name"]:
+                if to_zero:
+                    output = [0, 0]
+                else:
+                    output = []
+            else:
+                output = self.get_last_min_max_speed()
+            names = [param["programmatic_name"] for param in self.min_max_parameters]
+            if parameter["parameter"].endswith("one"):
+                self.min_max_parameter_one = output
+            elif parameter["parameter"].endswith("two"):
+                self.min_max_parameter_two = output
+            elif parameter["parameter"].endswith("three"):
+                self.min_max_parameter_three = output
 
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
@@ -329,17 +336,21 @@ class Session(models.Model):
 
     @property
     def test_info(self):
+        temp_info = None
         if self._test_info != "":
             temp_info = json.loads(self._test_info)
             if temp_info["test_number"] != self.test_number:
-                temp_info = api_client.get_test_info(self.persistence)
+                self.update_test_info()
             self._test_info = json.dumps(temp_info)
         else:
-            temp_info = api_client.get_test_info(self.persistence)
-            self._test_info = json.dumps(temp_info)
+            self.update_test_info()
         self.save()
         return temp_info
 
+    def update_test_info(self):
+        temp_info = api_client.get_test_info(self.persistence)
+        self._test_info = json.dumps(temp_info)
+        return temp_info
 
     @property
     def get_gcode(self):
@@ -385,6 +396,18 @@ class Session(models.Model):
             parameters = [parameters[i] for i in [0, 2, 1]]
         return parameters
 
+    def get_last_min_max_speed(self):
+        """
+        Attempts to return the previously used min_max speed, returns [0,0] if doesn't find any.
+        :return:
+        """
+        for test in self.previous_tests[::-1]:
+            for parameter in test["tested_parameters"]:
+                if "speed_printing" in parameter["programmatic_name"]:
+                    values = parameter["values"]
+                    return [values[0], values[-1]]
+        return [0, 0]
+
     @property
     def completed_tests(self):
         return len(self.previous_tests)
@@ -412,10 +435,10 @@ class Session(models.Model):
 
     @test_number.setter
     def test_number(self, value):
-        if self.test_info["parameter_two"]["name"] == "printing speed":
-            self._printing_speed = self.min_max_parameter_two
-        self.clean_min_max()
+        self._test_info = ""
         self._test_number = value
+        self.update_test_info()
+        self.clean_min_max()
 
     @property
     def tested_values(self):

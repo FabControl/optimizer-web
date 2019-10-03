@@ -166,7 +166,7 @@ class TestGenerateForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(TestGenerateForm, self).__init__(*args, **kwargs)
         session = self.instance
-        test_info = session.test_info
+        test_info = session.update_test_info()
         self.parameters = []
         secondary_parameters = []
         self.secondary_parameters_programmatic_names = []
@@ -249,7 +249,9 @@ class TestGenerateForm(forms.ModelForm):
         previously_tested = self.secondary_parameters_programmatic_names + [parameter["programmatic_name"] for parameter in session.min_max_parameters]
         if session.test_number == "01" or session.test_number == "02":
             previously_tested.remove("part_cooling_setpoint")
-        session.previously_tested_parameters = previously_tested
+
+        if self.is_valid():
+            session.previously_tested_parameters = previously_tested
 
         # Disable form tags
         self.helper = FormHelper()
