@@ -438,3 +438,14 @@ def session_json(request, pk):
         session = Session.objects.get(pk=pk)
         context = {"json": json.dumps(session.persistence, indent=4)}
         return render(request, "session/json.html", context=context)
+
+
+@login_required
+def session_test_info(request, pk):
+    if not request.user.is_staff:
+        raise Http404()
+    if request.method == "GET":
+        session = Session.objects.get(pk=pk)
+        context = {"test_info": json.dumps(session.test_info, indent=4)}
+        return render(request, "session/test_info.html", context=context)
+
