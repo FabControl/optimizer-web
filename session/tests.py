@@ -19,7 +19,8 @@ class SessionModelTests(TestCase):
         self.assertTrue(Session.objects.get(pk=18))
 
     def test_session_view_exists(self):
-        self.assertEqual(self.client.get('/session/18/').status_code, 200)
+        response = self.client.get('/sessions/18/')
+        self.assertEqual(response.status_code, 200)
 
     def test_session_test_switch(self):
         test_list = ["01", "03", "08", "05", "13"]
