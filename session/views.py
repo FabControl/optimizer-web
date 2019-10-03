@@ -165,7 +165,7 @@ class SessionView(LoginRequiredMixin, generic.UpdateView):
 
     def form_valid(self, form):
         session = form.save(commit=False)
-        logging.getLogger("views").info("Form valid!")
+        logging.getLogger("views").info("New session form valid!")
         # Do any custom stuff here
         session.persistence = api_client.return_data(session.persistence, "persistence")
         session.save()
@@ -206,10 +206,10 @@ def generate_or_validate(request, pk):
     session = Session.objects.get(pk=pk)
     session.is_owner(request.user)
     if session.executed:
-        logging.getLogger("views").info("Initializing Session validate view!")
+        logging.getLogger("views").info("{} is initializing Session validation view!".format(request.user))
         return SessionValidateView.as_view()(request, pk=pk)
     else:
-        logging.getLogger("views").info("Initializing Sessionview!")
+        logging.getLogger("views").info("{} is initializing Session generation view!".format(request.user))
         return SessionView.as_view()(request, pk=pk)
 
 
