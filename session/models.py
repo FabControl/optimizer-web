@@ -1,5 +1,5 @@
 from django.db import models
-from datetime import datetime
+from django.utils import timezone
 from .choices import TEST_NUMBER_CHOICES, TARGET_CHOICES, SLICER_CHOICES, TOOL_CHOICES, FORM_CHOICES, UNITS
 import ast
 import simplejson as json
@@ -16,7 +16,7 @@ class Material(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     size_od = models.DecimalField(default=1.75, max_digits=3, decimal_places=2)
     name = models.CharField(max_length=60)
-    pub_date = models.DateTimeField(default=datetime.now, blank=True)
+    pub_date = models.DateTimeField(default=timezone.now(), blank=True)
 
     def is_owner(self, user: User):
         """
@@ -53,7 +53,7 @@ class Nozzle(models.Model):
 
 
 class Extruder(models.Model):
-    pub_date = models.DateTimeField(default=datetime.now, blank=True)
+    pub_date = models.DateTimeField(default=timezone.now, blank=True)
 
     tool = models.CharField(choices=TOOL_CHOICES, max_length=3, blank=True, default="T0")
     temperature_max = models.IntegerField(default=350)
@@ -102,7 +102,7 @@ class Printbed(models.Model):
 
 class Machine(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    pub_date = models.DateTimeField(default=datetime.now, blank=True)
+    pub_date = models.DateTimeField(default=timezone.now(), blank=True)
     model = models.CharField(max_length=30, default="Unknown")
     buildarea_maxdim1 = models.IntegerField(default=0)
     buildarea_maxdim2 = models.IntegerField(default=0)
@@ -143,7 +143,7 @@ class Machine(models.Model):
 
 class Settings(models.Model):
     name = models.CharField(max_length=20, blank=True)
-    pub_date = models.DateTimeField(default=datetime.now, blank=True)
+    pub_date = models.DateTimeField(default=timezone.now, blank=True)
     speed_travel = models.IntegerField(default=140)
     raft_density = models.IntegerField(default=100)
     speed_printing_raft = models.IntegerField(default=0)
@@ -202,7 +202,7 @@ class Settings(models.Model):
 class Session(models.Model):
     number = models.IntegerField(default=0)
     name = models.CharField(default="Untitled", max_length=20)
-    pub_date = models.DateTimeField(default=datetime.now, blank=True)
+    pub_date = models.DateTimeField(default=timezone.now, blank=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     target = models.CharField(max_length=20, choices=TARGET_CHOICES, default="mechanical_strength")
     _test_number = models.CharField(max_length=20, choices=TEST_NUMBER_CHOICES, default="01")
@@ -495,6 +495,6 @@ class TestInfo(models.Model):
     parameter_one_precision = "{:.3f}"
     parameter_two_precision = "{:.1f}"
     comments = 0
-    datetime_info = models.DateTimeField(default=datetime.now, blank=True)
+    datetime_info = models.DateTimeField(default=timezone.now, blank=True)
     extruded_filament_mm = 841.53
     estimated_printing_time = "0:09:28"
