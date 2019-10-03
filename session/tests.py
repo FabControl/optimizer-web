@@ -1,5 +1,6 @@
 from django.test import TestCase
 from .models import Session, Machine, Material
+from .forms import SessionForm
 from django.urls import reverse
 from .views import test_switch
 from authentication.models import User
@@ -7,13 +8,13 @@ from authentication.models import User
 # Create your tests here.
 
 
-class SessionModelTests(TestCase):
+class SessionTests(TestCase):
     fixtures = ['test_data.json', ]
 
     def setUp(self) -> None:
         self.client.login(email="someuser2@somedomain.com", password="CU&7rPE=(SCg:Zx{")
 
-    def test_fixtures_loaded(self):
+    def test_models_loaded(self):
         self.assertTrue(Material.objects.get(pk=2))
         self.assertTrue(Machine.objects.get(pk=1))
         self.assertTrue(Session.objects.get(pk=18))
@@ -27,3 +28,11 @@ class SessionModelTests(TestCase):
         for test in test_list:
             response = self.client.get(reverse('test_switch', kwargs={"pk": 18, "number": test}))
             self.assertRedirects(response, "/sessions/18/")
+
+    def test_create_new_session(self):
+        machine = Machine.objects.get(pk=1)
+        material = Material.objects.get(pk=2)
+        response = self.client.post(reverse("new_session"),
+                                    {'name': "Untitled", "material": material, "machine": machine,
+                                     "target": "mechanical_strength"})
+        self.assertRedirects(response, "/sessions/20/")
