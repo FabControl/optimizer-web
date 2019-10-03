@@ -365,7 +365,7 @@ class Session(models.Model):
         persistence["session"]["previous_tests"] = temp_tests
         self.persistence = persistence
 
-    def get_previous_test(self):
+    def get_test_with_current_number(self):
         for test in self.previous_tests:
             if test["test_number"] == self.test_number:
                 return test

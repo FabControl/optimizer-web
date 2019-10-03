@@ -2,17 +2,17 @@
 
   <div class="alert alert-success" role="alert">
     Validated values:
-    <br> {{object.get_previous_test.parameter_one_name}}:
-    <b>{{object.get_previous_test.selected_parameter_one_value}} {{object.test_info.parameter_one.units}}</b>
+    <br> {{object.get_test_with_current_number.parameter_one_name}}:
+    <b>{{object.get_test_with_current_number.selected_parameter_one_value}} {{object.test_info.parameter_one.units}}</b>
 
     {% if object.get_previous_test.parameter_two_name %}
-    <br> {{object.get_previous_test.parameter_two_name}}:
-    <b>{{object.get_previous_test.selected_parameter_two_value}} {{object.test_info.parameter_two.units}}</b>
+    <br> {{object.get_test_with_current_number.parameter_two_name}}:
+    <b>{{object.get_test_with_current_number.selected_parameter_two_value}} {{object.test_info.parameter_two.units}}</b>
     {% endif %}
 
     {% if object.get_previous_test.parameter_three_name %}
-    <br> {{object.get_previous_test.parameter_three_name}}:
-    <b>{{object.get_previous_test.selected_parameter_three_value}} {{object.test_info.parameter_three.units}}</b>
+    <br> {{object.get_test_with_current_number.parameter_three_name}}:
+    <b>{{object.get_test_with_current_number.selected_parameter_three_value}} {{object.test_info.parameter_three.units}}</b>
     {% endif %}
 
   </div>
