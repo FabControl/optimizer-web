@@ -185,8 +185,6 @@ class SessionValidateView(SessionView):
             return redirect('session_next_test', pk=session.pk, priority="any")
 
     def form_invalid(self, form):
-        import pdb;
-        pdb.set_trace()
         session = form.save(commit=False)
         return redirect('session_validate_back', pk=session.pk)
 
@@ -339,7 +337,6 @@ def next_test_switch(request, pk, priority: str):
         session.test_number = next_primary_test
     elif priority == "any":
         session.test_number = next_test
-
     session.clean_min_max()
     session.save()
     return redirect('session_detail', pk=pk)
@@ -390,6 +387,7 @@ def quick_start(request):
 def support(request):
     context = {}
     return render(request, 'session/support.html', context)
+
 
 @login_required
 def guide(request):
