@@ -17,9 +17,6 @@ urlpatterns = [
     path('resources/machines/<pk>/', views.MachineView.as_view(), name='machine_detail'),
     path('resources/machines/<pk>/delete', views.MachineDelete.as_view(), name='machine_delete'),
 
-    path('resources/settings/', views.SettingsView.as_view(), name='setting_manager'),
-    path('resources/settings/<pk>/', views.SettingView.as_view(), name='settings_detail'),
-
     path('sessions/', views.SessionListView.as_view(), name="session_manager"),
     path('sessions/<int:pk>/', views.generate_or_validate, name='session_detail'),
     path('sessions/<int:pk>/json', views.session_json, name='session_json'),
