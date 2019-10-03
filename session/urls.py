@@ -32,7 +32,7 @@ urlpatterns = [
     path('help/FAQ/', views.faq, name="faq"),
     path('help/quick_start/', views.quick_start, name="quickstart"),
     path('help/support/', views.support, name="support"),
-    path('help/guide/', views.guide, name="guide"),
+    path('help/terms_of_use/', views.terms_of_use, name="terms_of_use"),
 
     path('testing_session', views.testing_session, name="testing_session")
 ]

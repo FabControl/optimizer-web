@@ -2,6 +2,7 @@ from django import forms
 from .models import User
 from django.contrib.auth.forms import UserCreationForm
 from crispy_forms.helper import FormHelper
+from django.utils import safestring
 from crispy_forms.layout import Submit, Layout, Row, Column, Field
 from django.forms import ModelForm
 
@@ -20,6 +21,9 @@ class SignUpForm(UserCreationForm):
     first_name = forms.CharField(max_length=30, required=True)
     last_name = forms.CharField(max_length=30, required=True)
     company = forms.CharField(max_length=30, required=False)
+    termsofuse = forms.BooleanField()
+    termsofuse.label = safestring.mark_safe(
+        '<label class="small">I agree to <a href="/help/terms_of_use" target="blank">terms of use</a></label>')
 
     helper = FormHelper()
     helper.form_tag = False

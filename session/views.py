@@ -395,6 +395,10 @@ def guide(request):
     return FileResponse(open(finders.find('session/doc/manual.pdf'), 'rb'), content_type='application/pdf')
 
 
+def terms_of_use(request):
+    return FileResponse(open(finders.find('session/doc/3doptimizer_TU.pdf'), 'rb'), content_type='application/pdf')
+
+
 @login_required
 def new_session(request):
     if request.method == 'POST':
