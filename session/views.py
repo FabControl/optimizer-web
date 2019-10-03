@@ -167,6 +167,7 @@ class SessionView(LoginRequiredMixin, generic.UpdateView):
         logging.getLogger("views").info("New session form valid!")
         # Do any custom stuff here
         session.persistence = api_client.return_data(session.persistence, "persistence")
+        session.update_test_info()
         session.save()
         return redirect('session_detail', pk=session.pk)
 

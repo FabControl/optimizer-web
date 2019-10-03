@@ -234,7 +234,7 @@ class Session(models.Model):
         per["material"] = self.material.__json__
         per["settings"] = self.settings.__json__
         self._persistence = json.dumps(per)
-        return json.loads(self._persistence)
+        return per
 
     def is_owner(self, user: User):
         """

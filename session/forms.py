@@ -79,6 +79,27 @@ class TestValidationField(forms.Field):
             return [self.tested_values[0][indices[0]], None]
 
 
+class RangeSliderWidget(forms.widgets.Input):
+    def __init__(self, value_range, units, attrs=None):
+        # tested_values[0] is column, tested_values[1] is row
+        super(RangeSliderWidget, self).__init__(attrs)
+        self.value_range = value_range
+        self.units = units
+        self.template_name = "session/widgets/range_slider_widget.html"
+
+    def get_context(self, name, value, attrs):
+        context = super().get_context(name, value, attrs)
+        context["range"] = self.value_range
+        context["units"] = self.units
+        return context
+
+    def decompress(self, value):
+        if value:
+            return value
+        else:
+            return None
+
+
 class NewTestForm(forms.Form):
     session_name = forms.CharField(label='Session name', max_length=20,
                                    error_messages={'required': 'Please enter session name'})
@@ -146,8 +167,18 @@ class TestValidateForm(forms.ModelForm):
 
         session = self.instance
 
-        self.fields["validation"] = TestValidationField(tested_values=session.tested_values)
+        self.fields["validation"] = TestValidationField(tested_values=session.tested_values, required=True)
         self.fields["validation"].label = "Select the best sub-structure:"
+
+        if len(session.min_max_parameters) == 3:
+            parameter = session.min_max_parameters[-1]
+            param = None
+            if parameter["units"] != 'mm' and parameter["programmatic_name"] != "extrusion_multiplier":
+                param = forms.IntegerField(min_value=parameter["values"][0], max_value=parameter["values"][1], widget=RangeSliderWidget([parameter["values"][0], parameter["values"][1]], parameter["units"]))
+            elif parameter["programmatic_name"] == "extrusion_multiplier":
+                param = forms.DecimalField(min_value=parameter["values"][0], max_value=parameter["values"][1], widget=RangeSliderWidget([parameter["values"][0], parameter["values"][1]], parameter["units"]))
+            param.label = "Please select the best {} along the width of the selected substructure ({} {} - {} {}):".format(parameter["name"], str(parameter["values"][0]), parameter["units"], str(parameter["values"][-1]), parameter["units"])
+            self.fields["min_max_parameter_three"] = param
 
         self.helper = FormHelper()
         self.helper.form_tag = False
@@ -155,6 +186,8 @@ class TestValidateForm(forms.ModelForm):
     def save(self, commit=True):
         self.instance.selected_parameter_value("selected_parameter_one_value", self.cleaned_data["validation"][0])
         self.instance.selected_parameter_value("selected_parameter_two_value", self.cleaned_data["validation"][1])
+        if "min_max_parameter_three" in self.cleaned_data:
+            self.instance.selected_parameter_value("selected_parameter_three_value", self.cleaned_data["min_max_parameter_three"])
         return super(TestValidateForm, self).save(commit=commit)
 
     class Meta:
