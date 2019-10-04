@@ -1,3 +1,11 @@
+<div class="row justify-content-between pt-3">
+  <div class="col-sm">
+    <h3>Previous tests:</h3>
+  </div>
+  <div class="col-sm text-right">
+    <a type="button" href="{% url 'report' object.pk %}" class="btn btn-outline-secondary">Download Test Report (PDF)</a>
+  </div>
+</div>
 <div class="row">
   <div class="col-sm">
     {% for test in object.previous_tests%}
