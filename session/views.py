@@ -352,6 +352,20 @@ def serve_gcode(request, pk):
     return response
 
 
+@login_required
+def serve_config(request, pk, slicer):
+    supported_slicers = ["simplify3d", "slic3r_pe"]
+    assert slicer in supported_slicers
+    session = get_object_or_404(Session, pk=pk)
+    session.is_owner(request.user)
+    configuration_file, configuration_file_format = api_client.get_config(slicer, session.persistence)
+    response = FileResponse(configuration_file.decode(), content_type='text/plain')
+    response['Content-Type'] = 'text/xml'
+    response['Content-Disposition'] = 'attachment; filename={}.{}'.format(
+        session.name.replace(" ", "_") + "_" + session.material.name, configuration_file_format)
+    return response
+
+
 class SessionUpdateView(LoginRequiredMixin, generic.UpdateView):
     template_name = 'session/session.html'
     form_class = SettingForm

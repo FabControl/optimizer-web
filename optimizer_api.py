@@ -74,6 +74,14 @@ class ApiClient(object):
         """
         return json.loads(requests.get(self.base_url + "/routine").text)
 
+    def get_config(self, slicer: str, persistence: dict):
+        response = requests.post(self.base_url + "/config/" + slicer, json=persistence)
+        if response.status_code == 500:
+            raise ConnectionError("Optimizer API encountered an error while processing the request.")
+        imported_json = json.loads(response.text)
+        assert "content" in imported_json and "format" in imported_json
+        return b64decode(imported_json["content"]), imported_json["format"]
+
     @property
     def base_url(self):
         """

@@ -25,6 +25,7 @@ urlpatterns = [
     path('sessions/<int:pk>/revert/', views.session_validate_revert, name='revert_to_test'),
     path('sessions/<int:pk>/next/<str:priority>', views.next_test_switch, name='session_next_test'),
     path('sessions/<int:pk>/gcode/', views.serve_gcode, name='gcode'),
+    path('sessions/<int:pk>/config/<str:slicer>', views.serve_config, name='config'),
     path('sessions/<int:pk>/delete/', views.SessionDelete.as_view(), name='session_delete'),
     path('sessions/<int:pk>/overview/', views.SessionOverview.as_view(), name='session_overview'),
     path('sessions/<int:pk>/<str:number>/', views.test_switch, name='test_switch'),
