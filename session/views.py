@@ -366,6 +366,18 @@ def serve_config(request, pk, slicer):
     return response
 
 
+@login_required
+def serve_report(request, pk):
+    from io import BytesIO
+    session = get_object_or_404(Session, pk=pk)
+    session.is_owner(request.user)
+    report_file, report_file_format = api_client.get_report(session.persistence)
+    f = BytesIO(report_file)
+    response = FileResponse(f, content_type='application/pdf')
+    return response
+
+
+
 class SessionUpdateView(LoginRequiredMixin, generic.UpdateView):
     template_name = 'session/session.html'
     form_class = SettingForm

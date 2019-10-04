@@ -82,6 +82,14 @@ class ApiClient(object):
         assert "content" in imported_json and "format" in imported_json
         return b64decode(imported_json["content"]), imported_json["format"]
 
+    def get_report(self, persistence: dict):
+        response = requests.post(self.base_url + "/report/", json=persistence)
+        if response.status_code == 500:
+            raise ConnectionError("Optimizer API encountered an error while processing the request.")
+        imported_json = json.loads(response.text)
+        assert "content" in imported_json and "format" in imported_json
+        return b64decode(imported_json["content"]), imported_json["format"]
+
     @property
     def base_url(self):
         """
