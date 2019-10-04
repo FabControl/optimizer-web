@@ -203,7 +203,7 @@ class SessionOverview(LoginRequiredMixin, generic.DetailView):
 
 @login_required
 def generate_or_validate(request, pk):
-    session = Session.objects.get(pk=pk)
+    session = get_object_or_404(Session, pk=pk)
     session.is_owner(request.user)
     if session.executed:
         logging.getLogger("views").info("{} is initializing Session validation view!".format(request.user))
@@ -375,7 +375,6 @@ def serve_report(request, pk):
     f = BytesIO(report_file)
     response = FileResponse(f, content_type='application/pdf')
     return response
-
 
 
 class SessionUpdateView(LoginRequiredMixin, generic.UpdateView):
