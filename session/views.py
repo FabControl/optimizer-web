@@ -314,7 +314,7 @@ def test_switch(request, pk, number):
 
 @login_required
 def next_test_switch(request, pk, priority: str):
-    session = Session.objects.get(pk=pk)
+    session = get_object_or_404(Session, pk=pk)
     session.is_owner(request.user)
     routine = api_client.get_routine()
 
@@ -330,7 +330,12 @@ def next_test_switch(request, pk, priority: str):
                 next_primary_test = test_names[i]
                 break
         if test_info[0] == session.test_number:
-            next_test = test_names[i+1]
+            try:
+                next_test = test_names[i+1]
+            except IndexError:
+                next_primary_test = next_test = session.test_number
+                messages.success(request, "The last test has been completed!")
+                return redirect('session_overview', pk=pk)
             current_found = True
 
     if priority == "primary":
