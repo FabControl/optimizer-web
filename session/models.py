@@ -5,9 +5,7 @@ import ast
 import simplejson as json
 from optimizer_api import api_client
 from authentication.models import User
-from django.core.exceptions import PermissionDenied
-import logging
-
+from django.http import Http404
 
 # Create your models here.
 
@@ -25,7 +23,7 @@ class Material(models.Model):
             :return:
             """
         if self.owner != user:
-            raise PermissionDenied("Current user is not the owner of {}".format(self))
+            raise Http404
         else:
             return True
 
@@ -121,7 +119,8 @@ class Machine(models.Model):
             :return:
             """
         if self.owner != user:
-            raise PermissionDenied("Current user is not the owner of {}".format(self))
+
+            raise Http404
         else:
             return True
 
@@ -243,7 +242,7 @@ class Session(models.Model):
             :return:
             """
         if self.owner != user:
-            raise PermissionDenied("Current user is not the owner of {}".format(self))
+            raise Http404
         else:
             return True
 
