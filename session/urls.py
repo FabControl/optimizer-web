@@ -29,7 +29,7 @@ urlpatterns = [
     path('sessions/<int:pk>/report/', views.serve_report, name='report'),
     path('sessions/<int:pk>/delete/', views.SessionDelete.as_view(), name='session_delete'),
     path('sessions/<int:pk>/overview/', views.SessionOverview.as_view(), name='session_overview'),
-    path('sessions/<int:pk>/<str:number>/', views.test_switch, name='test_switch'),
+    path('sessions/<int:pk>/switch/<str:number>/', views.test_switch, name='test_switch'),
     path('sessions/new/', views.new_session, name='new_session'),
 
     path('help/FAQ/', views.faq, name="faq"),
