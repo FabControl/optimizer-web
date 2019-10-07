@@ -27,3 +27,6 @@ urlpatterns = [
                   path('admin/', admin.site.urls),
                   # path('', index, name='index')
               ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+handler404 = 'session.views.error_404_view'
+handler500 = 'session.views.error_500_view'

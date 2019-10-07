@@ -6,6 +6,7 @@ from .utilities import load_json, optimizer_info
 from django.http import FileResponse, HttpResponseRedirect, Http404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import render_to_response
 
 from .models import *
 from django.views import generic
@@ -480,3 +481,14 @@ def session_test_info(request, pk):
         context = {"test_info": json.dumps(session.test_info, indent=4)}
         return render(request, "session/test_info.html", context=context)
 
+
+def error_404_view(request, exception):
+    response = render_to_response('session/404.html')
+    response.status_code = 404
+    return response
+
+
+def error_500_view(request):
+    response = render_to_response('session/404.html')
+    response.status_code = 404
+    return response
