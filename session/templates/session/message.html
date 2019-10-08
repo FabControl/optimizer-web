@@ -1,0 +1,18 @@
+{% block content %}
+<div class="container fixed-top">
+  <div class="row justify-content-md-center pt-5">
+    <div class="col-sm-6">
+      <ul class="messages">
+        {% for message in messages %}
+        <div class="alert-dismissible fade show alert alert-success {{ message.tags }}" role="alert">
+          {{ message }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock %}

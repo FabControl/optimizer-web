@@ -28,25 +28,10 @@
 
 <body class="d-flex flex-column h-100">
 
-  <!-- Messange notification -->
-  <div class="container">
-    <div class="row">
-      <div class="col-sm-12">
-        {% if messages %}
-        <ul class="messages">
-          {% for message in messages %}
-          <div class="alert-dismissible fade show alert alert-success {{ message.tags }}" role="alert">
-            {{ message }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          {% endfor %}
-        </ul>
-        {% endif %}
-      </div>
-    </div>
-  </div>
+  <!-- Message notification -->
+  {% if messages %}
+  {% include "session/message.html" %}
+  {% endif %}
   {% block content %}{% endblock %}
 
   <style>
