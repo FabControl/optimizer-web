@@ -44,6 +44,7 @@ class User(AbstractUser):
     email = models.EmailField('email address', unique=True)
     PLAN_CHOICES = [("basic", "Basic"), ("premium", "Premium")]
     plan = models.CharField(max_length=32, choices=PLAN_CHOICES, default="basic")
+    onboarding = models.BooleanField(default=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []

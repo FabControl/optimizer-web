@@ -15,3 +15,58 @@
     </div>
   </div>
 </form>
+{% if request.user.onboarding %}
+{% spaceless %}
+<script src="https://cdn.jsdelivr.net/npm/shepherd.js@5.0.1/dist/js/shepherd.js"></script>
+<script type="text/javascript">
+const tour = new Shepherd.Tour({
+  useModalOverlay: true,
+  defaultStepOptions: {
+    cancelIcon: {
+      enabled: true
+    },
+    classes: 'class-1 class-2',
+    scrollTo: { behavior: 'smooth', block: 'center' }
+  }
+});
+
+tour.addStep({
+  text: 'Now you can download, print and validate the paremeters you selected in the previous step',
+  classes: 'example-step-extra-class',
+  buttons: [
+    {
+      text: 'Next',
+      action: tour.next
+    }
+  ]
+});
+
+tour.addStep({
+  title: 'Validation table',
+  text: 'This table represents the array of different setting combinations used in the test.<br>\
+  Once you have printed the test G-Code, you may select the best test structure on this table.<br>',
+  canClickTarget: false,
+  attachTo: {
+    element: '.table',
+    on: 'left'
+  },
+  classes: 'example-step-extra-class',
+  buttons: [
+    {
+      action() {
+        return this.back();
+      },
+      classes: 'shepherd-button-secondary',
+      text: 'Back'
+    },
+    {
+      text: 'Next',
+      action: tour.next
+    }
+  ]
+});
+
+tour.start();
+</script>
+{% endspaceless %}
+{% endif %}

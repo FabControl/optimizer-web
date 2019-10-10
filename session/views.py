@@ -206,6 +206,13 @@ class SessionOverview(LoginRequiredMixin, generic.DetailView):
 def generate_or_validate(request, pk):
     session = get_object_or_404(Session, pk=pk)
     session.is_owner(request.user)
+
+    # Check if user still is onboarding
+    if request.user.onboarding:
+        if session.test_number not in ["01", "03"]:
+            request.user.onboarding = False
+            request.user.save()
+    
     if session.executed:
         logging.getLogger("views").info("{} is initializing Session validation view!".format(request.user))
         return SessionValidateView.as_view()(request, pk=pk)
@@ -480,6 +487,17 @@ def session_test_info(request, pk):
         session = Session.objects.get(pk=pk)
         context = {"test_info": json.dumps(session.test_info, indent=4)}
         return render(request, "session/test_info.html", context=context)
+
+
+@login_required
+def onboarding_disable(request):
+    path = reverse_lazy("dashboard")
+    if "next" in request.GET:
+        path = request.GET["next"]
+    user = request.user
+    user.onboarding = False
+    user.save()
+    return redirect(path)
 
 
 def error_404_view(request, exception):

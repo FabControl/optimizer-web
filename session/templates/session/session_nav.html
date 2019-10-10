@@ -6,6 +6,6 @@
     <a class="nav-link {% if object.executed and not '/overview' in request.path %}active{% endif %} disabled" href="#">Validate</a>
   </li>
   <li class="nav-item ml-auto">
-    <a class="nav-link {% if '/overview' in request.path %}active disabled{% endif %}{% if not object.previous_tests %}disabled{% endif %}" name="overview" href="{% url 'session_overview' object.pk %}">Overview</a>
+    <a class="nav-link {% if '/overview' in request.path %}active disabled{% endif %}{% if not object.previous_tests %}disabled{% endif %}" id="overview" name="overview" href="{% url 'session_overview' object.pk %}">Overview</a>
   </li>
 </ul>
