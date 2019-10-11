@@ -25,7 +25,8 @@ SECRET_KEY = config["SECRET_KEY"]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["dev.3doptimizer.com", "test.3doptimizer.com", "cloud.3doptimizer.com", "3.122.252.11", "127.0.0.1", "3.121.217.28"]
+ALLOWED_HOSTS = config["ALLOWED_HOSTS"].split(";")
+#ALLOWED_HOSTS = ["dev.3doptimizer.com", "test.3doptimizer.com", "cloud.3doptimizer.com", "3.122.252.11", "127.0.0.1", "3.121.217.28"]
 
 # Application definition
 
@@ -80,12 +81,24 @@ WSGI_APPLICATION = 'Optimizer3D.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+if 'DB_HOST' in config:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.' + config['DB_ENGINE'],
+            'HOST': config['DB_HOST'],
+            'PORT': config['DB_PORT'],
+            'USER': config['DB_USERNAME'],
+            'PASSWORD': config['DB_PASSWORD'],
+            'NAME': config['DB_NAME']
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
