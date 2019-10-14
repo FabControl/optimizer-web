@@ -25,7 +25,9 @@ SECRET_KEY = config["SECRET_KEY"]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = config["ALLOWED_HOSTS"].split(";")
+ALLOWED_HOSTS = [config['APP_HOST']]
+if 'DB_HOST' in config:
+    ALLOWED_HOSTS.append(config['DB_HOST'])
 #ALLOWED_HOSTS = ["dev.3doptimizer.com", "test.3doptimizer.com", "cloud.3doptimizer.com", "3.122.252.11", "127.0.0.1", "3.121.217.28"]
 
 # Application definition
