@@ -1,5 +1,5 @@
 {% block content %}
-<div class="container fixed-top">
+<div id="message-container" class="container fixed-top">
   <div class="row justify-content-md-center pt-5">
     <div class="col-sm-6">
       <ul class="messages">
@@ -15,4 +15,9 @@
     </div>
   </div>
 </div>
+<script type="text/javascript">
+  $('.close').click(function() {
+    $('#message-container').remove()
+  })
+</script>
 {% endblock %}
