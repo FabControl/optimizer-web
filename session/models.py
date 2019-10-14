@@ -14,7 +14,7 @@ class Material(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     size_od = models.DecimalField(default=1.75, max_digits=3, decimal_places=2)
     name = models.CharField(max_length=60)
-    pub_date = models.DateTimeField(default=timezone.now(), blank=True)
+    pub_date = models.DateTimeField(default=timezone.now, blank=True)
 
     def is_owner(self, user: User):
         """
