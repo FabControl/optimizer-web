@@ -246,6 +246,11 @@ class Session(models.Model):
         else:
             return True
 
+    def delete(self, using=None, keep_parents=False):
+        if self.settings:
+            self.settings.delete()
+        super(Session, self).delete(using, keep_parents)
+
     def init_settings(self):
         for name, value in self.persistence["settings"].items():
             self.settings.__setattr__(name, value)
