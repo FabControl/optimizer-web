@@ -11,9 +11,6 @@
         <li class="nav-item {% if "/dashboard/" in request.path %}active{% endif %}">
           <a class="nav-link" href="{% url 'dashboard' %}">Dashboard <span class="sr-only">(current)</span></a>
         </li>
-        <li class="nav-item {% if "/sessions/" in request.path %}active{% endif %}">
-          <a class="nav-link" href="{% url 'session_manager' %}">Testing Sessions</a>
-        </li>
         <li class="nav-item {% if "/resources/" in request.path %}active{% endif %} dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="resourcesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Resources
@@ -22,6 +19,9 @@
             <a class="dropdown-item" href="{% url 'material_manager' %}">Materials</a>
             <a class="dropdown-item" href="{% url 'machine_manager' %}">Machines</a>
           </div>
+        </li>
+        <li class="nav-item {% if "/sessions/" in request.path %}active{% endif %}">
+          <a class="nav-link" href="{% url 'session_manager' %}">Testing Sessions</a>
         </li>
         <li class="nav-item {% if "/help/" in request.path %}active{% endif %} dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="helpDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
