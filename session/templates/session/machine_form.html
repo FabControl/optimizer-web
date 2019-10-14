@@ -37,4 +37,24 @@
     </div>
   </div>
 </div>
+<script>
+  $(function() {
+    $.fn.customSlideToggler = function(show) {
+      if (show) {
+        $(this).slideDown();
+      } else {
+        $(this).slideUp();
+      }
+    }
+    $('#id_chamber_heatable').change(function() {
+      $('#div_id_chamber_tool').customSlideToggler(this.checked);
+      $('#div_id_chamber_gcode_command').customSlideToggler(this.checked);
+      $('#div_id_temperature_max_chamber').customSlideToggler(this.checked);
+    }).change(); //ensure visible state matches initially
+
+    $('#id_printbed_heatable').change(function() {
+      $('#div_id_temperature_max_printbed').customSlideToggler(this.checked);
+    }).change(); //ensure visible state matches initially
+  });
+</script>
 {% endblock %}
