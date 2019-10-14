@@ -100,12 +100,12 @@ class Printbed(models.Model):
 
 class Machine(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    pub_date = models.DateTimeField(default=timezone.now(), blank=True)
+    pub_date = models.DateTimeField(default=timezone.now, blank=True)
     model = models.CharField(max_length=30, default="Unknown")
     buildarea_maxdim1 = models.IntegerField(default=0)
     buildarea_maxdim2 = models.IntegerField(default=0)
     form = models.CharField(max_length=20, choices=FORM_CHOICES, default="cartesian")
-    extruder = models.ForeignKey(Extruder, on_delete=models.PROTECT)
+    extruder = models.ForeignKey(Extruder, on_delete=models.CASCADE)
     chamber = models.ForeignKey(Chamber, on_delete=models.CASCADE, blank=True)
     printbed = models.ForeignKey(Printbed, on_delete=models.CASCADE, blank=True)
 
