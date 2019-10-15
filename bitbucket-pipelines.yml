@@ -27,7 +27,7 @@ definitions:
           - python deploy-aws.py release.zip '((?!(develop|test)).+|(develop|test).+|)$'
 pipelines:
   branches:
-    aws:
+    development:
       - step: *compress
       - step:
           <<: *deploy
