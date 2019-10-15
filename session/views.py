@@ -67,9 +67,15 @@ def material_form(request):
             material.owner = request.user
             messages.info(request, 'The material has been created!')
             material.save()
-            return redirect("material_manager")
+            if "next" in request.POST:
+                request.session["material"] = material.pk
+                return redirect(request.POST["next"])
+            else:
+                return redirect("material_manager")
     else:
         form = MaterialForm()
+        if "next" in request.GET:
+            form.next = request.GET["next"]
     context = {"form": form}
     return render(request, 'session/material_form.html', context)
 
@@ -117,9 +123,15 @@ def machine_form(request):
             messages.info(request, 'The machine has been created!')
             machine.extruder = extruder
             machine.save()
-            return redirect('machine_manager')
+            if "next" in request.POST:
+                request.session["machine"] = machine.pk
+                return redirect(request.POST["next"])
+            else:
+                return redirect('machine_manager')
     else:
         self_form = NewMachineForm()
+        if "next" in request.GET:
+            self_form.next = request.GET["next"]
         extruder_form = NewExtruderForm()
         nozzle_form = NewNozzleForm()
         chamber_form = NewChamberForm()
@@ -457,6 +469,11 @@ def new_session(request):
             return redirect('session_detail', pk=session.pk)
     else:
         form = SessionForm(user=request.user)
+        if "machine" in request.session:
+            form.fields["machine"].initial = request.session["machine"]
+
+        if "material" in request.session:
+            form.fields["material"].initial = request.session["material"]
 
     context = {"form": form, "target_descriptions": load_json('session/json/target_descriptions.json')}
     return render(request, 'session/new_session.html', context)
