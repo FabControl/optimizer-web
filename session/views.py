@@ -33,9 +33,8 @@ def dashboard(request):
 @login_required
 def material_detail(request, name):
     material = get_object_or_404(Material, name=name)
-    context = {'material_name': material.name,
-               'size_od': material.size_od,
-               'pub_date': material.pub_date}
+    context = {'material': material,
+               'someinfo': "someinfo"}
     return render(request, 'session/material.html', context)
 
 
@@ -55,7 +54,8 @@ class MaterialView(LoginRequiredMixin, generic.DetailView):
     def get_context_data(self, **kwargs):
         material = self.object
         material.is_owner(self.request.user)
-        super(MaterialView, self).get_context_data(**kwargs)
+        context = super(MaterialView, self).get_context_data(**kwargs)
+        return context
 
 
 @login_required
@@ -81,7 +81,8 @@ class MachineView(LoginRequiredMixin, generic.DetailView):
     def get_context_data(self, **kwargs):
         machine = self.object
         machine.is_owner(self.request.user)
-        super(MachineView, self).get_context_data(**kwargs)
+        context = super(MachineView, self).get_context_data(**kwargs)
+        return context
 
 
 class MachinesView(LoginRequiredMixin, generic.ListView):
