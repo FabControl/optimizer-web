@@ -47,6 +47,7 @@ r = beanstalk.create_application_version(
             Process=True
         )['ApplicationVersion']
 
+sleep(0.2)
 while r['Status'].upper() == 'PROCESSING':
     log('\nProcessing...')
     sleep(0.5)
