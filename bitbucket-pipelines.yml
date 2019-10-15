@@ -14,7 +14,6 @@ definitions:
           name: 'Compress package'
           image: 'atlassian/default-image:2'
           script:
-            - mv .ebextensions/aws.env .env
             - zip -r release.zip ./ -x ./.git
           artifacts: 
             - release.zip
