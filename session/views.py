@@ -60,6 +60,7 @@ class MaterialView(LoginRequiredMixin, generic.DetailView):
 
 @login_required
 def material_form(request):
+    context = {}
     if request.method == 'POST':
         form = MaterialForm(request.POST)
         if form.is_valid():
@@ -75,8 +76,8 @@ def material_form(request):
     else:
         form = MaterialForm()
         if "next" in request.GET:
-            form.next = request.GET["next"]
-    context = {"form": form}
+            context["next"] = request.GET["next"]
+    context["form"] = form
     return render(request, 'session/material_form.html', context)
 
 
@@ -102,6 +103,7 @@ class MachinesView(LoginRequiredMixin, generic.ListView):
 
 @login_required
 def machine_form(request):
+    context = {}
     if request.method == 'POST':
         self_form = NewMachineForm(request.POST)
         extruder_form = NewExtruderForm(request.POST)
@@ -131,16 +133,17 @@ def machine_form(request):
     else:
         self_form = NewMachineForm()
         if "next" in request.GET:
-            self_form.next = request.GET["next"]
+            context["next"] = request.GET["next"]
         extruder_form = NewExtruderForm()
         nozzle_form = NewNozzleForm()
         chamber_form = NewChamberForm()
         printbed_form = NewPrintbedForm()
-    context = {"self_form": self_form,
+    form_context = {"self_form": self_form,
                "extruder_form": extruder_form,
                "nozzle_form": nozzle_form,
                "chamber_form": chamber_form,
                "printbed_form": printbed_form}
+    context = {**context, **form_context}
     return render(request, 'session/machine_form.html', context)
 
 

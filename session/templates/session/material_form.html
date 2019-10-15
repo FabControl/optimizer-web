@@ -14,8 +14,8 @@
     <div class="row pt-3">
       <div class="col-sm-4"></div>
       <div class="col-sm-4 text-center">
-        {% if form.next %}
-        <input type="hidden" value="{{ form.next }}" name="next">
+        {% if next %}
+        <input type="hidden" value="{{ next }}" name="next">
         {% endif %}
         <button type="submit" class="btn btn-primary">Submit</button>
       </div>
