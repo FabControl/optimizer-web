@@ -47,9 +47,14 @@ class MaterialsView(LoginRequiredMixin, generic.ListView):
         return queryset
 
 
-class MaterialView(LoginRequiredMixin, generic.DetailView):
+class MaterialView(LoginRequiredMixin, generic.UpdateView):
     model = Material
-    template_name = 'session/material_detail.html'
+    template_name = 'session/material_form.html'
+    form_class = MaterialForm
+    success_url = reverse_lazy("material_manager")
+
+    def __init__(self):
+        super(MaterialView, self).__init__()
 
     def get_context_data(self, **kwargs):
         material = self.object
