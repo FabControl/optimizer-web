@@ -527,12 +527,12 @@ def onboarding_disable(request):
 
 
 def error_404_view(request, exception):
-    response = render_to_response('session/404.html')
+    response = render_to_response('session/404.html', {"user": request.user})
     response.status_code = 404
     return response
 
 
 def error_500_view(request):
-    response = render_to_response('session/500.html')
+    response = render_to_response('session/500.html', {"user": request.user})
     response.status_code = 500
     return response
