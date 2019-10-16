@@ -533,6 +533,6 @@ def error_404_view(request, exception):
 
 
 def error_500_view(request):
-    response = render_to_response('session/404.html')
-    response.status_code = 404
+    response = render_to_response('session/500.html')
+    response.status_code = 500
     return response
