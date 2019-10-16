@@ -139,11 +139,10 @@ class SessionForm(forms.ModelForm):
 
         self.fields["name"].label = "Session name"
         self.fields["material"].label = 'Material'
-        self.fields["material"].help_text = mark_safe('Please select the material you wish to optimize settings for!<br><a href="{}?next={}">+ New Material</a>'.format(reverse_lazy('material_form'), reverse_lazy('new_session')))
+        self.fields["material"].help_text = mark_safe('<a href="{}?next={}">+ New Material</a>'.format(reverse_lazy('material_form'), reverse_lazy('new_session')))
         self.fields["machine"].label = "Machine"
-        self.fields["machine"].help_text = mark_safe('Please select the machine you wish to use for this testing session!<br><a href="{}?next={}">+ New Machine</a>'.format(reverse_lazy('machine_form'), reverse_lazy('new_session')))
+        self.fields["machine"].help_text = mark_safe('<a href="{}?next={}">+ New Machine</a>'.format(reverse_lazy('machine_form'), reverse_lazy('new_session')))
         self.fields["target"].label = "Target"
-        self.fields["target"].help_text = "Please select the characteristic you wish to optimize for!"
 
         self.helper = FormHelper()
         self.helper.form_tag = False
