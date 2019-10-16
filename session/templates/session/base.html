@@ -26,7 +26,9 @@
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="{% static 'session/css/index.css' %}">
   <link rel="shortcut icon" type="image/png" href="{% static 'session/img/favicon.ico' %}"/>
+  {% if 'session_detail' not in request.resolver_match.url_name %}
   <title>3DOptimizer</title>
+  {% endif %}
   {% include "session/navbar.html" %}
 </head>
 
