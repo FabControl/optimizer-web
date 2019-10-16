@@ -1,0 +1,7 @@
+{% extends "email/base.txt" %}
+
+{% block content %}
+Hi, {{ receiving_user }}!
+You have successfully created account.
+{% endblock content %}
+

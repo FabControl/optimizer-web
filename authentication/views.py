@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from .forms import SignUpForm
 from django.views import generic
+from messaging import email
 
 
 # Create your views here.
@@ -38,6 +39,10 @@ def user_signup(request):
         form = SignUpForm(request.POST)
         if form.is_valid():
             user = form.save()
+            email.send_to_single(form.cleaned_data.get('email'), 'register_complete',
+                    receiving_user=' '.join((form.cleaned_data.get('first_name'),
+                                            form.cleaned_data.get('last_name')))
+                    )
             login(request, user)
             if "next" in request.GET:
                 return redirect(request.GET["next"])
