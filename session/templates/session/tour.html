@@ -1,7 +1,342 @@
 {% block content %}
 {% spaceless %}
-{% if object.test_number == "01" %}
 <script src="https://cdn.jsdelivr.net/npm/shepherd.js@5.0.1/dist/js/shepherd.js"></script>
+{% if 'dashboard' in request.path and 'dashboard' in request.user.onboarding_sections %}
+<script type="text/javascript">
+  const tour = new Shepherd.Tour({
+    useModalOverlay: true,
+    defaultStepOptions: {
+      cancelIcon: {
+        enabled: true
+      },
+      classes: 'class-1 class-2',
+      scrollTo: {
+        behavior: 'smooth',
+        block: 'center'
+      }
+    }
+  });
+
+  tour.addStep({
+    title: 'Welcome to 3DOptimizer!',
+    text: 'This is a quick introduction tour which should get you started on your first optimization session.',
+    classes: 'example-step-extra-class',
+    buttons: [{
+      text: 'Next',
+      action: tour.next
+    }]
+  });
+
+  tour.addStep({
+    text: 'Go ahead and create your first testing session by clicking "New Testing Session"!',
+    canClickTarget: true,
+    attachTo: {
+      element: '#newSessionButton',
+      on: 'bottom'
+    },
+    classes: 'example-step-extra-class',
+    buttons: [{
+        action() {
+          return this.back();
+        },
+        classes: 'shepherd-button-secondary',
+        text: 'Back'
+      }
+    ]
+  });
+
+  tour.start();
+</script>
+{% elif 'sessions/new' in request.path and 'new_session' in request.user.onboarding_sections %}
+
+<script type="text/javascript">
+  const tour = new Shepherd.Tour({
+    useModalOverlay: true,
+    defaultStepOptions: {
+      cancelIcon: {
+        enabled: true
+      },
+      classes: 'class-1 class-2',
+      scrollTo: {
+        behavior: 'smooth',
+        block: 'center'
+      }
+    }
+  });
+
+  tour.addStep({
+    text: 'You may choose or <b>create a material</b> for this optimization session here.',
+    canClickTarget: false,
+    attachTo: {
+      element: '#div_id_material',
+      on: 'bottom'
+    },
+    classes: 'example-step-extra-class',
+    buttons: [{
+        action() {
+          return this.back();
+        },
+        classes: 'shepherd-button-secondary',
+        text: 'Back'
+      },
+      {
+        text: 'Next',
+        action: tour.next
+      }
+    ]
+  });
+
+  tour.addStep({
+    text: 'You may choose or <b>create a 3D printer</b> for this optimization session here.',
+    canClickTarget: false,
+    attachTo: {
+      element: '#div_id_machine',
+      on: 'bottom'
+    },
+    classes: 'example-step-extra-class',
+    buttons: [{
+        action() {
+          return this.back();
+        },
+        classes: 'shepherd-button-secondary',
+        text: 'Back'
+      },
+      {
+        text: 'Next',
+        action: tour.next
+      }
+    ]
+  });
+
+  tour.addStep({
+    text: 'You may choose an <b>optimization strategy</b> for this optimization session here.',
+    canClickTarget: false,
+    attachTo: {
+      element: '#div_id_target',
+      on: 'bottom'
+    },
+    classes: 'example-step-extra-class',
+    buttons: [{
+        action() {
+          return this.back();
+        },
+        classes: 'shepherd-button-secondary',
+        text: 'Back'
+      },
+      {
+        text: 'Next',
+        action: tour.next
+      }
+    ]
+  });
+
+  tour.addStep({
+    text: '3D Printers and Materials can be managed under the resources tab.',
+    canClickTarget: true,
+    attachTo: {
+      element: '#resourcesDropdown',
+      on: 'bottom'
+    },
+    classes: 'example-step-extra-class',
+    buttons: [{
+        action() {
+          return this.back();
+        },
+        classes: 'shepherd-button-secondary',
+        text: 'Back'
+      },
+      {
+        text: 'Next',
+        action: tour.next
+      }
+    ]
+  });
+
+  tour.start();
+</script>
+{% else %}
+{% if object.test_number == "01" and object.executed is False and 'session_generate_1' in request.user.onboarding_sections %}
+
+<script type="text/javascript">
+  const tour = new Shepherd.Tour({
+    useModalOverlay: true,
+    defaultStepOptions: {
+      cancelIcon: {
+        enabled: true
+      },
+      classes: 'class-1 class-2',
+      scrollTo: {
+        behavior: 'smooth',
+        block: 'center'
+      }
+    }
+  });
+
+  tour.addStep({
+    title: 'Welcome to your first testing session!',
+    text: 'The wizard will guide you through the tests to optimize selected processing parameters for the selected 3D printer/material combination.',
+    classes: 'example-step-extra-class',
+    buttons: [{
+      text: 'Next',
+      action: tour.next
+    }]
+  });
+
+  tour.addStep({
+    text: 'Here you can see the list with the available tests.',
+    canClickTarget: false,
+    attachTo: {
+      element: '#test_selector',
+      on: 'right'
+    },
+    classes: 'example-step-extra-class',
+    buttons: [{
+        action() {
+          return this.back();
+        },
+        classes: 'shepherd-button-secondary',
+        text: 'Back'
+      },
+      {
+        text: 'Next',
+        action: tour.next
+      }
+    ]
+  });
+
+  tour.addStep({
+    text: 'The wizard will automatically guide you through the main tests.',
+    canClickTarget: false,
+    attachTo: {
+      element: '#test_selector',
+      on: 'right'
+    },
+    classes: 'example-step-extra-class',
+    buttons: [{
+        action() {
+          return this.back();
+        },
+        classes: 'shepherd-button-secondary',
+        text: 'Back'
+      },
+      {
+        text: 'Next',
+        action: tour.next
+      }
+    ]
+  });
+
+  tour.addStep({
+    text: 'If you want to perform some of the optional tests or return to the previous tests, navigate through them by clicking on the test name.',
+    canClickTarget: false,
+    attachTo: {
+      element: '#test_selector',
+      on: 'right'
+    },
+    classes: 'example-step-extra-class',
+    buttons: [{
+        action() {
+          return this.back();
+        },
+        classes: 'shepherd-button-secondary',
+        text: 'Back'
+      },
+      {
+        text: 'Next',
+        action: tour.next
+      }
+    ]
+  });
+
+  tour.addStep({
+    title: 'Processing parameter to be tested',
+    text: 'Here you can see and change the range of the values to be tested.',
+    attachTo: {
+      element: '#div_id_min_max_parameter_one',
+      on: 'bottom'
+    },
+    classes: 'example-step-extra-class',
+    buttons: [{
+        action() {
+          return this.back();
+        },
+        classes: 'shepherd-button-secondary',
+        text: 'Back'
+      },
+      {
+        text: 'Next',
+        action: tour.next
+      }
+    ]
+  });
+
+  tour.addStep({
+    title: 'Processing parameter to be defined',
+    text: 'The value of this processing parameter is required to generate the .GCODE file.',
+    attachTo: {
+      element: '#div_id_track_width_raft',
+      on: 'top'
+    },
+    classes: 'example-step-extra-class',
+    buttons: [{
+        action() {
+          return this.back();
+        },
+        classes: 'shepherd-button-secondary',
+        text: 'Back'
+      },
+      {
+        text: 'Next',
+        action: tour.next
+      }
+    ]
+  });
+
+  tour.addStep({
+    title: 'Predefined processing parameter',
+    text: 'If a processing parameter has already been tested or it is locked for this test type its field will be inactive.',
+    attachTo: {
+      element: '#div_id_part_cooling_setpoint',
+      on: 'top'
+    },
+    classes: 'example-step-extra-class',
+    buttons: [{
+        action() {
+          return this.back();
+        },
+        classes: 'shepherd-button-secondary',
+        text: 'Back'
+      },
+      {
+        text: 'Next',
+        action: tour.next
+      }
+    ]
+  });
+
+  tour.addStep({
+    text: `Once you have filled the required fields, press "Generate .GCODE file" to continue!`,
+    canClickTarget: false,
+    buttons: [{
+        action() {
+          return this.back();
+        },
+        classes: 'shepherd-button-secondary',
+        text: 'Back'
+      },
+      {
+        action() {
+          return this.next();
+        },
+        text: 'Next'
+      }
+    ],
+  });
+
+  tour.start();
+</script>
+{% elif object.test_number == "01" and object.executed is True and 'session_validate' in request.user.onboarding_sections %}
+
 <script type="text/javascript">
 const tour = new Shepherd.Tour({
   useModalOverlay: true,
@@ -15,9 +350,7 @@ const tour = new Shepherd.Tour({
 });
 
 tour.addStep({
-  id: 'welcome',
-  title: 'Welcome to your first testing session!',
-  text: 'Here you can progress through a series of tests during which you will discover which settings are <b>most optimal</b> for your printer and material combination.',
+  text: 'Now you can download, print and validate the paremeters you selected in the previous step',
   classes: 'example-step-extra-class',
   buttons: [
     {
@@ -28,12 +361,10 @@ tour.addStep({
 });
 
 tour.addStep({
-  id: 'test_selector',
-  title: 'Test switch panel',
-  text: 'Here you can see and change parameters to be tested.',
+  text: 'Download and run the .GCODE file on your 3D printer.',
   canClickTarget: false,
   attachTo: {
-    element: '#test_selector',
+    element: '.btn-outline-secondary',
     on: 'right'
   },
   classes: 'example-step-extra-class',
@@ -53,80 +384,15 @@ tour.addStep({
 });
 
 tour.addStep({
-  id: 'shep_min_max_parameter_one',
-  title: 'Parameter interval selector',
-  text: 'You can specify the range of values to be tested here:',
-  attachTo: {
-    element: '#div_id_min_max_parameter_one',
-    on: 'bottom'
-  },
-  classes: 'example-step-extra-class',
-  buttons: [
-    {
-      action() {
-        return this.back();
-      },
-      classes: 'shepherd-button-secondary',
-      text: 'Back'
-    },
-    {
-      text: 'Next',
-      action: tour.next
-    }
-  ]
-});
-
-tour.addStep({
-  id: 'shep_min_max_parameter_one',
-  title: 'Parameter interval selector',
-  text: 'This is an accessory parameter. It is required to successfully print the test structure but it is not tested during this test.',
-  attachTo: {
-    element: '#div_id_temperature_printbed_setpoint',
-    on: 'bottom'
-  },
-  classes: 'example-step-extra-class',
-  buttons: [
-    {
-      action() {
-        return this.back();
-      },
-      classes: 'shepherd-button-secondary',
-      text: 'Back'
-    },
-    {
-      text: 'Next',
-      action: tour.next
-    }
-  ]
-});
-
-tour.addStep({
-  id: 'shep_min_max_parameter_one',
-  title: 'Parameter interval selector',
-  text: 'If a parameter has already been tested or is locked for this type of test, it will be greyed out.',
-  attachTo: {
-    element: '#div_id_part_cooling_setpoint',
-    on: 'top'
-  },
-  classes: 'example-step-extra-class',
-  buttons: [
-    {
-      action() {
-        return this.back();
-      },
-      classes: 'shepherd-button-secondary',
-      text: 'Back'
-    },
-    {
-      text: 'Next',
-      action: tour.next
-    }
-  ]
-});
-
-tour.addStep({
-  text: `Once you have filled the required fields, press "Generate G-Code" to continue!`,
+  title: 'Validation table',
+  text: 'This table represents the array of different setting combinations used in the test.<br>\
+  Once you have printed the test G-Code, you may select the best test structure on this table.<br>',
   canClickTarget: false,
+  attachTo: {
+    element: '.table',
+    on: 'left'
+  },
+  classes: 'example-step-extra-class',
   buttons: [
     {
       action() {
@@ -136,93 +402,93 @@ tour.addStep({
       text: 'Back'
     },
     {
-      action() {
-        return this.next();
-      },
-      text: 'Next'
+      text: 'Next',
+      action: tour.next
     }
-  ],
+  ]
 });
 
 tour.start();
 </script>
-{% elif object.test_number == "03" %}
-<script src="https://cdn.jsdelivr.net/npm/shepherd.js@5.0.1/dist/js/shepherd.js"></script>
+{% elif object.test_number == "03" and 'session_generate_2' in request.user.onboarding_sections %}
+
 <script type="text/javascript">
-const tour = new Shepherd.Tour({
-  useModalOverlay: true,
-  defaultStepOptions: {
-    cancelIcon: {
-      enabled: true
+  const tour = new Shepherd.Tour({
+    useModalOverlay: true,
+    defaultStepOptions: {
+      cancelIcon: {
+        enabled: true
+      },
+      classes: 'class-1 class-2',
+      scrollTo: {
+        behavior: 'smooth',
+        block: 'center'
+      }
+    }
+  });
+
+  tour.addStep({
+
+    title: 'Test switch panel',
+    text: 'You can now see that the previous test has been completed.',
+    canClickTarget: false,
+    attachTo: {
+      element: '#test_selector',
+      on: 'right'
     },
-    classes: 'class-1 class-2',
-    scrollTo: { behavior: 'smooth', block: 'center' }
-  }
-});
-
-tour.addStep({
-
-  title: 'Test switch panel',
-  text: 'You can now see that the previous test has been completed.',
-  canClickTarget: false,
-  attachTo: {
-    element: '#test_selector',
-    on: 'right'
-  },
-  classes: 'example-step-extra-class',
-  buttons: [
-    {
+    classes: 'example-step-extra-class',
+    buttons: [{
       text: 'Next',
       action: tour.next
-    }
-  ]
-});
+    }]
+  });
 
-tour.addStep({
-  title: 'Parameter interval selector',
-  text: 'You can see information about previous tests, generate a test report and slicing configuration here in the overview.',
-  attachTo: {
-    element: '#overview',
-    on: 'bottom'
-  },
-  classes: 'example-step-extra-class',
-  buttons: [
-    {
-      action() {
-        return this.back();
-      },
-      classes: 'shepherd-button-secondary',
-      text: 'Back'
+  tour.addStep({
+    title: 'Overview pane',
+    text: 'Here you can see a summary about the previous tests, generate a test report, and slicing configuration files.',
+    attachTo: {
+      element: '#overview',
+      on: 'bottom'
     },
-    {
-      text: 'Next',
-      action: tour.next
-    }
-  ]
-});
-
-tour.addStep({
-  text: 'This concludes the introduction. If you have any further questions, do not hesitate to consult our "Help" section, found at the top of the page!',
-
-  classes: 'example-step-extra-class',
-  buttons: [
-    {
-      action() {
-        return this.back();
+    classes: 'example-step-extra-class',
+    buttons: [{
+        action() {
+          return this.back();
+        },
+        classes: 'shepherd-button-secondary',
+        text: 'Back'
       },
-      classes: 'shepherd-button-secondary',
-      text: 'Back'
-    },
-    {
-      text: 'Finish',
-      action: function(){window.location.replace("{% url 'disable_onboarding' %}?next={{ request.path }}");}
-    }
-  ]
-});
+      {
+        text: 'Next',
+        action: tour.next
+      }
+    ]
+  });
+
+  tour.addStep({
+    text: 'This concludes the introduction. If you have any further questions, do not hesitate to consult our "Help" section, found at the top of the page!',
+
+    classes: 'example-step-extra-class',
+    buttons: [{
+        action() {
+          return this.back();
+        },
+        classes: 'shepherd-button-secondary',
+        text: 'Back'
+      },
+      {
+        text: 'Finish',
+        action: function() {
+          window.location.replace("{% url 'disable_onboarding' %}?next={{ request.path }}");
+        }
+      }
+    ]
+  });
 
 
-tour.start();
+  tour.start();
 </script>
+{% endif %}
 {% endif %}
 {% endspaceless %}
 {% endblock %}

@@ -1,3 +1,4 @@
+import ast
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 # Create your models here.
@@ -45,8 +46,19 @@ class User(AbstractUser):
     PLAN_CHOICES = [("basic", "Basic"), ("premium", "Premium")]
     plan = models.CharField(max_length=32, choices=PLAN_CHOICES, default="basic")
     onboarding = models.BooleanField(default=True)
+    _onboarding_sections = models.CharField(max_length=32,
+                                            default="['dashboard', 'new_session', 'session_generate_1',\
+                                             'session_validate', 'session_generate_2']")
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
     objects = UserManager()
+
+    @property
+    def onboarding_sections(self):
+        return ast.literal_eval(self._onboarding_sections)
+
+    @onboarding_sections.setter
+    def onboarding_sections(self, value: list):
+        self._onboarding_sections = str(value)
