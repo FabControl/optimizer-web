@@ -47,8 +47,7 @@ class User(AbstractUser):
     plan = models.CharField(max_length=32, choices=PLAN_CHOICES, default="basic")
     onboarding = models.BooleanField(default=True)
     _onboarding_sections = models.CharField(max_length=32,
-                                            default="['dashboard', 'new_session', 'session_generate_1',\
-                                             'session_validate', 'session_generate_2']")
+                                            default="['dashboard', 'new_session', 'session_generate_1', 'session_validate', 'session_generate_2']")
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
