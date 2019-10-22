@@ -46,7 +46,7 @@ class User(AbstractUser):
     PLAN_CHOICES = [("basic", "Basic"), ("premium", "Premium")]
     plan = models.CharField(max_length=32, choices=PLAN_CHOICES, default="basic")
     onboarding = models.BooleanField(default=True)
-    _onboarding_sections = models.CharField(max_length=32,
+    _onboarding_sections = models.CharField(max_length=256,
                                             default="['dashboard', 'new_session', 'session_generate_1', 'session_validate', 'session_generate_2']")
 
     USERNAME_FIELD = 'email'
