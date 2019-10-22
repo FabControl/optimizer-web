@@ -1,4 +1,4 @@
-{% block content %}
+{% block javascript %}
 {% spaceless %}
 <script src="https://cdn.jsdelivr.net/npm/shepherd.js@5.0.1/dist/js/shepherd.js"></script>
 {% if 'dashboard' in request.path and 'dashboard' in request.user.onboarding_sections %}
@@ -45,7 +45,9 @@
     ]
   });
 
-  tour.start();
+  window.addEventListener('load', function () {
+    tour.start();
+  })
 </script>
 {% elif 'sessions/new' in request.path and 'new_session' in request.user.onboarding_sections %}
 
@@ -151,8 +153,9 @@
       }
     ]
   });
-
-  tour.start();
+  window.addEventListener('load', function () {
+    tour.start();
+  })
 </script>
 {% else %}
 {% if object.test_number == "01" and object.executed is False and 'session_generate_1' in request.user.onboarding_sections %}
@@ -337,7 +340,9 @@
     ],
   });
 
-  tour.start();
+  window.addEventListener('load', function () {
+    tour.start();
+  })
 </script>
 {% elif object.test_number == "01" and object.executed is True and 'session_validate' in request.user.onboarding_sections %}
 
@@ -412,7 +417,9 @@ tour.addStep({
   ]
 });
 
-tour.start();
+window.addEventListener('load', function () {
+  tour.start();
+})
 </script>
 {% elif object.test_number == "03" and 'session_generate_2' in request.user.onboarding_sections %}
 
@@ -490,7 +497,9 @@ tour.start();
   });
 
 
-  tour.start();
+  window.addEventListener('load', function () {
+    tour.start();
+  })
 </script>
 {% endif %}
 {% endif %}
