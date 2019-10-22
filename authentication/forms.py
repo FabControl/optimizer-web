@@ -36,9 +36,10 @@ class SignUpForm(UserCreationForm):
         model = User
         fields = ('email', 'first_name', 'last_name', 'password1', 'password2',)
 
-    def save_and_notify(self):
+    def save_and_notify(self, request):
         result = self.save()
         email.send_to_single(self.cleaned_data.get('email'), 'register_complete',
+                request,
                 receiving_user=' '.join((self.cleaned_data.get('first_name'),
                                         self.cleaned_data.get('last_name')))
                 )
@@ -46,7 +47,7 @@ class SignUpForm(UserCreationForm):
 
 
 class ResetPasswordForm(PasswordResetForm):
-    def save(self):
+    def save(self, request):
         """
         Generate a one-use only link for resetting password and send it to the
         user.
@@ -55,6 +56,7 @@ class ResetPasswordForm(PasswordResetForm):
         email_valid = False
         for user in self.get_users(user_email):
             email.send_to_single(user_email, 'password_recovery',
+                    request,
                     receiving_user=' '.join((user.first_name, user.last_name)),
                     token=default_token_generator.make_token(user),
                     uid=urlsafe_base64_encode(force_bytes(user.pk))

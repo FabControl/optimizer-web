@@ -18,7 +18,7 @@
   {% block content %}{% endblock %}
   <hr />
   Automated email from
-  <a href="{{ application_url }}">{{ application_url }}</a>
+  <a href="{{ application_url }}{% url 'index' %}">{{ application_url }}{% url 'index' %}</a>
 </body>
 </html>
 
