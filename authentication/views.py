@@ -1,8 +1,14 @@
+import simplejson as json
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
+from django.utils.datastructures import MultiValueDictKeyError
 from .forms import SignUpForm, ResetPasswordForm
 from django.views import generic
+
+from django.contrib.auth.decorators import login_required
+from django.urls import reverse_lazy
+from .forms import SignUpForm
 
 
 # Create your views here.
@@ -24,7 +30,7 @@ def user_login(request):
                 return HttpResponse("Your account was inactive.")
         else:
             print("Someone tried to login and failed.")
-            print("They used username: {} and password: {}".format(email, password))
+            print("They used username: {}".format(email))
             return redirect("login")
     else:
         return render(request, 'authentication/login.html', {})
@@ -49,6 +55,56 @@ def user_signup(request):
         return render(request, 'authentication/signup.html', context)
 
 
+@login_required
+def onboarding_toggler(request):
+    if request.method == "POST":
+        try:
+            sections = request.POST["section"]
+        except MultiValueDictKeyError:
+            sections = request.POST["section[]"]
+        if type(sections) != list:
+            sections = [sections]
+        mode = request.POST["mode"]
+        user = request.user
+        temp_sections = user.onboarding_sections
+
+        result = {'success': True, 'section_added': [], 'section_removed': []}
+
+        if mode == 'true':
+            for section in sections:
+                if section not in user.onboarding_sections:
+                    temp_sections.append(section)
+                    result["section_added"].append(section)
+        else:
+            for section in sections:
+                if section in user.onboarding_sections:
+                    temp_sections.remove(section)
+                    result["section_removed"].append(section)
+
+        user.onboarding_sections = temp_sections
+        user.save()
+        return HttpResponse(result, content_type='application/json')
+
+
+@login_required
+def onboarding_disable(request):
+    path = reverse_lazy("dashboard")
+    if "next" in request.GET:
+        path = request.GET["next"]
+    user = request.user
+    user.onboarding = False
+    user.save()
+    result = {"success": True}
+    return HttpResponse(json.dumps(result), content_type='application/json')
+
+
+@login_required
+def onboarding_reset(request):
+    user = request.user
+    user.onboarding_reset()
+
+
+@login_required
 def user_logout(request):
     logout(request)
     return redirect("login")

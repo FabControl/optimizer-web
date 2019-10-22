@@ -61,3 +61,8 @@ class User(AbstractUser):
     @onboarding_sections.setter
     def onboarding_sections(self, value: list):
         self._onboarding_sections = str(value)
+
+    def onboarding_reset(self):
+        self.onboarding = self._meta.get_field("onboarding").get_default()
+        self._onboarding_sections = self._meta.get_field("_onboarding_sections").get_default()
+        self.save()

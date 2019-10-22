@@ -7,8 +7,6 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('dashboard/', views.dashboard, name='dashboard'),
 
-    path('onboarding/', views.onboarding_disable, name='disable_onboarding'),
-
     path('resources/materials/', views.MaterialsView.as_view(), name='material_manager'),
     path('resources/materials/new/', views.material_form, name='material_form'),
     path('resources/materials/<pk>/', views.MaterialView.as_view(), name='material_detail'),

@@ -22,6 +22,15 @@ class UserAdmin(DjangoUserAdmin):
             'fields': ('email', 'password1', 'password2'),
         }),
     )
+
+    actions = ['reset_onboarding']
+
+    def reset_onboarding(self, request, queryset):
+        for user in queryset:
+            user.onboarding_reset()
+
+    reset_onboarding.short_description = "Reenable onboarding tour"
+
     list_display = ('email', 'first_name', 'last_name', 'plan', 'last_login', 'date_joined', 'is_staff')
     search_fields = ('email', 'first_name', 'last_name')
     ordering = ('email',)
