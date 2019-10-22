@@ -39,15 +39,24 @@ class SignUpForm(UserCreationForm):
     def save_and_notify(self, request):
         result = self.save()
         email.send_to_single(self.cleaned_data.get('email'), 'register_complete',
-                request,
-                receiving_user=' '.join((self.cleaned_data.get('first_name'),
-                                        self.cleaned_data.get('last_name')))
-                )
+                             request,
+                             receiving_user=' '.join((self.cleaned_data.get('first_name'),
+                                                      self.cleaned_data.get('last_name')))
+                             )
         return result
 
 
 class ResetPasswordForm(PasswordResetForm):
-    def save(self, request):
+    def __init__(self):
+        super(ResetPasswordForm, self).__init__()
+        self.fields["email"].help_text = "Password recovery instructions will be sent to this email."
+
+    def save(self, domain_override=None,
+             subject_template_name='registration/password_reset_subject.txt',
+             email_template_name='registration/password_reset_email.html',
+             use_https=False, token_generator=default_token_generator,
+             from_email=None, request=None, html_email_template_name=None,
+             extra_email_context=None):
         """
         Generate a one-use only link for resetting password and send it to the
         user.
@@ -56,13 +65,13 @@ class ResetPasswordForm(PasswordResetForm):
         email_valid = False
         for user in self.get_users(user_email):
             email.send_to_single(user_email, 'password_recovery',
-                    request,
-                    receiving_user=' '.join((user.first_name, user.last_name)),
-                    token=default_token_generator.make_token(user),
-                    uid=urlsafe_base64_encode(force_bytes(user.pk))
-                    )
+                                 request,
+                                 receiving_user=' '.join((user.first_name, user.last_name)),
+                                 token=default_token_generator.make_token(user),
+                                 uid=urlsafe_base64_encode(force_bytes(user.pk))
+                                 )
             email_valid = True
 
         if not email_valid:
             email.send_to_single(user_email, 'password_recovery_failure',
-                    requested_email=user_email)
+                                 requested_email=user_email)

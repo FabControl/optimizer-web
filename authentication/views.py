@@ -63,5 +63,5 @@ def password_reset(request):
             form.save(request)
             return redirect('password_reset_done')
 
-    return render(request, 'authentication/password_reset.html', {'form':ResetPasswordForm})
+    return render(request, 'authentication/password_reset.html', {'form': ResetPasswordForm})
 
