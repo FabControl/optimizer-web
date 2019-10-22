@@ -65,7 +65,7 @@
   });
 
   tour.addStep({
-    text: 'You may choose or <b>create a material</b> for this optimization session here.',
+    text: 'Choose or create a material for the optimization session here.',
     canClickTarget: false,
     attachTo: {
       element: '#div_id_material',
@@ -87,7 +87,7 @@
   });
 
   tour.addStep({
-    text: 'You may choose or <b>create a 3D printer</b> for this optimization session here.',
+    text: 'Choose or create a 3D printer for the optimization session here.',
     canClickTarget: false,
     attachTo: {
       element: '#div_id_machine',
@@ -109,7 +109,7 @@
   });
 
   tour.addStep({
-    text: 'You may choose an <b>optimization strategy</b> for this optimization session here.',
+    text: 'Choose an optimization strategy for the optimization session here.',
     canClickTarget: false,
     attachTo: {
       element: '#div_id_target',
@@ -131,7 +131,7 @@
   });
 
   tour.addStep({
-    text: '3D Printers and Materials can be managed under the resources tab.',
+    text: 'Manage 3D Printers and Materials under the resources tab.',
     canClickTarget: true,
     attachTo: {
       element: '#resourcesDropdown',
@@ -317,6 +317,10 @@
   tour.addStep({
     text: `Once you have filled the required fields, press "Generate .GCODE file" to continue!`,
     canClickTarget: false,
+    attachTo: {
+      element: '#gcode_button',
+      on: 'top'
+    },
     buttons: [{
         action() {
           return this.back();
