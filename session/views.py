@@ -47,9 +47,14 @@ class MaterialsView(LoginRequiredMixin, generic.ListView):
         return queryset
 
 
-class MaterialView(LoginRequiredMixin, generic.DetailView):
+class MaterialView(LoginRequiredMixin, generic.UpdateView):
     model = Material
-    template_name = 'session/material_detail.html'
+    template_name = 'session/material_form.html'
+    form_class = MaterialForm
+    success_url = reverse_lazy("material_manager")
+
+    def __init__(self):
+        super(MaterialView, self).__init__()
 
     def get_context_data(self, **kwargs):
         material = self.object
@@ -60,6 +65,7 @@ class MaterialView(LoginRequiredMixin, generic.DetailView):
 
 @login_required
 def material_form(request):
+    context = {}
     if request.method == 'POST':
         form = MaterialForm(request.POST)
         if form.is_valid():
@@ -67,10 +73,16 @@ def material_form(request):
             material.owner = request.user
             messages.info(request, 'The material has been created!')
             material.save()
-            return redirect("material_manager")
+            if "next" in request.POST:
+                request.session["material"] = material.pk
+                return redirect(request.POST["next"])
+            else:
+                return redirect("material_manager")
     else:
         form = MaterialForm()
-    context = {"form": form}
+        if "next" in request.GET:
+            context["next"] = request.GET["next"]
+    context["form"] = form
     return render(request, 'session/material_form.html', context)
 
 
@@ -96,6 +108,7 @@ class MachinesView(LoginRequiredMixin, generic.ListView):
 
 @login_required
 def machine_form(request):
+    context = {}
     if request.method == 'POST':
         self_form = NewMachineForm(request.POST)
         extruder_form = NewExtruderForm(request.POST)
@@ -117,18 +130,25 @@ def machine_form(request):
             messages.info(request, 'The machine has been created!')
             machine.extruder = extruder
             machine.save()
-            return redirect('machine_manager')
+            if "next" in request.POST:
+                request.session["machine"] = machine.pk
+                return redirect(request.POST["next"])
+            else:
+                return redirect('machine_manager')
     else:
         self_form = NewMachineForm()
+        if "next" in request.GET:
+            context["next"] = request.GET["next"]
         extruder_form = NewExtruderForm()
         nozzle_form = NewNozzleForm()
         chamber_form = NewChamberForm()
         printbed_form = NewPrintbedForm()
-    context = {"self_form": self_form,
+    form_context = {"self_form": self_form,
                "extruder_form": extruder_form,
                "nozzle_form": nozzle_form,
                "chamber_form": chamber_form,
                "printbed_form": printbed_form}
+    context = {**context, **form_context}
     return render(request, 'session/machine_form.html', context)
 
 
@@ -457,6 +477,11 @@ def new_session(request):
             return redirect('session_detail', pk=session.pk)
     else:
         form = SessionForm(user=request.user)
+        if "machine" in request.session:
+            form.fields["machine"].initial = request.session["machine"]
+
+        if "material" in request.session:
+            form.fields["material"].initial = request.session["material"]
 
     context = {"form": form, "target_descriptions": load_json('session/json/target_descriptions.json')}
     return render(request, 'session/new_session.html', context)
@@ -502,12 +527,12 @@ def onboarding_disable(request):
 
 
 def error_404_view(request, exception):
-    response = render_to_response('session/404.html')
+    response = render_to_response('session/404.html', {"user": request.user})
     response.status_code = 404
     return response
 
 
 def error_500_view(request):
-    response = render_to_response('session/404.html')
-    response.status_code = 404
+    response = render_to_response('session/500.html', {"user": request.user})
+    response.status_code = 500
     return response

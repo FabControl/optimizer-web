@@ -32,6 +32,9 @@
             {% crispy printbed_form %}
           </div>
         </p>
+        {% if next %}
+        <input type="hidden" value="{{ next }}" name="next">
+        {% endif %}
         <button type="submit" class="btn btn-primary">Submit</button>
       </form>
     </div>

@@ -1,6 +1,7 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+{% load staticfiles %}
+<nav class="navbar navbar-expand-lg navbar-light shadow-sm bg-light">
   <div class="container">
-    <a class="navbar-brand" href="{% url 'dashboard' %}">3DOptimizer</a>
+    <a class="navbar-brand" href="{% url 'dashboard' %}"><img width="40px" src="{% static 'session/img/logo.svg' %}" alt="Logo"></a>
     {% if user.is_authenticated %}
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -21,7 +22,7 @@
           </div>
         </li>
         <li class="nav-item {% if "/sessions/" in request.path %}active{% endif %}">
-          <a class="nav-link" href="{% url 'session_manager' %}">Testing Sessions</a>
+          <a id="testing_sessions" class="nav-link" href="{% url 'session_manager' %}">Testing Sessions</a>
         </li>
         <li class="nav-item {% if "/help/" in request.path %}active{% endif %} dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="helpDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

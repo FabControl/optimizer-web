@@ -1,9 +1,11 @@
-from django import forms
-from .choices import TEST_NUMBER_CHOICES
-from .models import *
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit, Layout, Row, Column, Field
 import logging
+from django import forms
+from django.urls import reverse_lazy
+from django.utils.safestring import mark_safe
+from crispy_forms.layout import Submit, Layout, Row, Column, Field
+from crispy_forms.helper import FormHelper
+from .models import *
+from .choices import TEST_NUMBER_CHOICES
 
 
 class MinMaxWidget(forms.widgets.MultiWidget):
@@ -135,6 +137,16 @@ class SessionForm(forms.ModelForm):
         self.fields["material"] = forms.ModelChoiceField(queryset=Material.objects.filter(owner=self.user))
         self.fields["machine"] = forms.ModelChoiceField(queryset=Machine.objects.filter(owner=self.user))
 
+        self.fields["name"].label = "Session name"
+        self.fields["material"].label = 'Material'
+        self.fields["material"].help_text = mark_safe('<a href="{}?next={}">+ New Material</a>'.format(reverse_lazy('material_form'), reverse_lazy('new_session')))
+        self.fields["machine"].label = "Machine"
+        self.fields["machine"].help_text = mark_safe('<a href="{}?next={}">+ New Machine</a>'.format(reverse_lazy('machine_form'), reverse_lazy('new_session')))
+        self.fields["target"].label = "Optimization Strategy"
+
+        self.helper = FormHelper()
+        self.helper.form_tag = False
+
 
 class SettingForm(forms.ModelForm):
 
@@ -146,7 +158,7 @@ class SettingForm(forms.ModelForm):
 
         self.fields['speed_printing_raft'].label = 'First layer printing spped (mm/s)'
         self.fields['temperature_extruder_raft'].label = 'First layer extrusion temperature (°C)'
-        self.fields['temperature_printbed_setpoint'].label = 'Pritbed temperature (°C)'
+        self.fields['temperature_printbed_setpoint'].label = 'Print bed temperature (°C)'
         self.fields['track_width_raft'].label = 'First layer track width (mm)'
 
         self.helper = FormHelper()
