@@ -142,7 +142,7 @@ class SessionForm(forms.ModelForm):
         self.fields["material"].help_text = mark_safe('<a href="{}?next={}">+ New Material</a>'.format(reverse_lazy('material_form'), reverse_lazy('new_session')))
         self.fields["machine"].label = "Machine"
         self.fields["machine"].help_text = mark_safe('<a href="{}?next={}">+ New Machine</a>'.format(reverse_lazy('machine_form'), reverse_lazy('new_session')))
-        self.fields["target"].label = "Target"
+        self.fields["target"].label = "Optimization Strategy"
 
         self.helper = FormHelper()
         self.helper.form_tag = False
@@ -158,7 +158,7 @@ class SettingForm(forms.ModelForm):
 
         self.fields['speed_printing_raft'].label = 'First layer printing spped (mm/s)'
         self.fields['temperature_extruder_raft'].label = 'First layer extrusion temperature (°C)'
-        self.fields['temperature_printbed_setpoint'].label = 'Pritbed temperature (°C)'
+        self.fields['temperature_printbed_setpoint'].label = 'Print bed temperature (°C)'
         self.fields['track_width_raft'].label = 'First layer track width (mm)'
 
         self.helper = FormHelper()
