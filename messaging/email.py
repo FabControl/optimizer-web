@@ -21,7 +21,7 @@ This will send single message to all recipients
 Remember that recipients will see each others email address
 """
 def send_to_multi(recipients:list, message_type:str, request:HttpRequest, **context):
-    context['application_url'] = request.scheme + ':' + request.META['HTTP_HOST']
+    context['application_url'] = 'https://' + request.META['HTTP_HOST']
 #    context = Context(context_kw)
     plain = get_template(_PLAIN_TEMPLATE.format(message_type)).render(context)
     html = get_template(_HTML_TEMPLATE.format(message_type)).render(context)
