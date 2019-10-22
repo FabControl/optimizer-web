@@ -1,10 +1,14 @@
 from django import forms
 from .models import User
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, PasswordResetForm
 from crispy_forms.helper import FormHelper
 from django.utils import safestring
 from crispy_forms.layout import Submit, Layout, Row, Column, Field
 from django.forms import ModelForm
+from messaging import email
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
 
 
 # class UserForm(forms.ModelForm):
@@ -32,3 +36,23 @@ class SignUpForm(UserCreationForm):
         model = User
         fields = ('email', 'first_name', 'last_name', 'password1', 'password2',)
 
+
+class ResetPasswordForm(PasswordResetForm):
+    def save(self):
+        """
+        Generate a one-use only link for resetting password and send it to the
+        user.
+        """
+        user_email = self.cleaned_data["email"]
+        email_valid = False
+        for user in self.get_users(user_email):
+            email.send_to_single(user_email, 'password_recovery',
+                    receiving_user=' '.join((user.first_name, user.last_name)),
+                    token=default_token_generator.make_token(user),
+                    uid=urlsafe_base64_encode(force_bytes(user.pk))
+                    )
+            email_valid = True
+
+        if not email_valid:
+            email.send_to_single(user_email, 'password_recovery_failure',
+                    requested_email=user_email)

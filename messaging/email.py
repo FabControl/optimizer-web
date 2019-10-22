@@ -6,6 +6,8 @@ from django.conf import settings
 _HTML_TEMPLATE = 'email/{0}.html'
 _PLAIN_TEMPLATE = 'email/{0}.txt'
 _SUBJECTS = {
+        'password_recovery_failure': 'Password recovery',
+        'password_recovery': 'Password recovery',
         'register_complete': 'Account registration'
         }
 

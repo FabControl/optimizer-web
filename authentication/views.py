@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
-from .forms import SignUpForm
+from .forms import SignUpForm, ResetPasswordForm
 from django.views import generic
 from messaging import email
 
@@ -57,3 +57,16 @@ def user_signup(request):
 def user_logout(request):
     logout(request)
     return redirect("login")
+
+
+def password_reset(request):
+    if request.user.is_authenticated:
+        return redirect('dashboard')
+    if request.method == 'POST':
+        form = ResetPasswordForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('password_reset_done')
+
+    return render(request, 'authentication/password_reset.html', {'form':ResetPasswordForm})
+

@@ -165,3 +165,5 @@ EMAIL_HOST_USER = config['EMAIL_HOST_USER']
 EMAIL_HOST = config['EMAIL_HOST']
 EMAIL_SENDER_ADDRESS = 'noreply@' + config['APP_HOST']
 APP_DEPLOYMENT_URL = config.get('APP_DEPLOYMENT_URL', 'http://not.deployed')
+
+PASSWORD_RESET_TIMEOUT_DAYS = 1
