@@ -36,6 +36,14 @@ class SignUpForm(UserCreationForm):
         model = User
         fields = ('email', 'first_name', 'last_name', 'password1', 'password2',)
 
+    def save_and_notify(self):
+        result = self.save()
+        email.send_to_single(self.cleaned_data.get('email'), 'register_complete',
+                receiving_user=' '.join((self.cleaned_data.get('first_name'),
+                                        self.cleaned_data.get('last_name')))
+                )
+        return result
+
 
 class ResetPasswordForm(PasswordResetForm):
     def save(self):
