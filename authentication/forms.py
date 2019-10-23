@@ -47,8 +47,8 @@ class SignUpForm(UserCreationForm):
 
 
 class ResetPasswordForm(PasswordResetForm):
-    def __init__(self):
-        super(ResetPasswordForm, self).__init__()
+    def __init__(self, *a, **k):
+        super(ResetPasswordForm, self).__init__(*a, **k)
         self.fields["email"].help_text = "Password recovery instructions will be sent to this email."
 
     def save(self, domain_override=None,

@@ -116,7 +116,7 @@ def password_reset(request):
     if request.method == 'POST':
         form = ResetPasswordForm(request.POST)
         if form.is_valid():
-            form.save(request)
+            form.save(request=request)
             return redirect('password_reset_done')
 
     return render(request, 'authentication/password_reset.html', {'form': ResetPasswordForm})

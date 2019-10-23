@@ -54,7 +54,7 @@ class ResetPasswordFormTest(TestCase):
             })
 
         form.full_clean()
-        form.save(self.req)
+        form.save(request=self.req)
 
         # should send single message to single recipent
         self.assertEqual(len(mail.outbox), 1)
@@ -77,7 +77,7 @@ class ResetPasswordFormTest(TestCase):
             })
 
         form.full_clean()
-        form.save(self.req)
+        form.save(request=self.req)
 
         # should send single message to single recipent
         self.assertEqual(len(mail.outbox), 1)
