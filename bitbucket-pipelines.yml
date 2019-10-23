@@ -9,7 +9,7 @@ definitions:
           - pip install -r requirements.txt
             # update all deplyments, except test and develop
             # regex is mached from beginning of string
-          - ./manage.py test -v 2
+          - SELECTED_SETTINGS=TESTING ./manage.py test -v 2
     - step: &compress
           name: 'Compress package'
           image: 'atlassian/default-image:2'

@@ -11,24 +11,21 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
-from config import config
+from os import environ
+
+_selected_settings = environ.get('SELECTED_SETTINGS', 'PRODUCTION')
+if _selected_settings == 'PRODUCTION':
+    from .configuration_settings.settings_production import *
+elif _selected_settings == 'TESTING':
+    from .configuration_settings.settings_test import *
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config["SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-
-ALLOWED_HOSTS = [config['APP_HOST']]
-if 'DB_HOST' in config:
-    ALLOWED_HOSTS.append(config['DB_HOST'])
-#ALLOWED_HOSTS = ["dev.3doptimizer.com", "test.3doptimizer.com", "cloud.3doptimizer.com", "3.122.252.11", "127.0.0.1", "3.121.217.28"]
 
 # Application definition
 
@@ -79,28 +76,6 @@ TEMPLATES = [
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 WSGI_APPLICATION = 'Optimizer3D.wsgi.application'
-
-# Database
-# https://docs.djangoproject.com/en/2.2/ref/settings/#databases
-
-if 'DB_HOST' in config:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.' + config['DB_ENGINE'],
-            'HOST': config['DB_HOST'],
-            'PORT': config['DB_PORT'],
-            'USER': config['DB_USERNAME'],
-            'PASSWORD': config['DB_PASSWORD'],
-            'NAME': config['DB_NAME']
-        }
-    }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        }
-    }
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -159,10 +134,5 @@ LOGGING = {
         },
     },
 }
-
-EMAIL_HOST_PASSWORD = config['EMAIL_HOST_PASSWORD']
-EMAIL_HOST_USER = config['EMAIL_HOST_USER']
-EMAIL_HOST = config['EMAIL_HOST']
-EMAIL_SENDER_ADDRESS = 'noreply@' + config['APP_HOST']
 
 PASSWORD_RESET_TIMEOUT_DAYS = 1
