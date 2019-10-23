@@ -28,6 +28,7 @@ definitions:
 pipelines:
   branches:
     development:
+      - step: *test
       - step: *compress
       - step:
           <<: *deploy

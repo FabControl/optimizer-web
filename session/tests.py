@@ -8,7 +8,7 @@ from authentication.models import User
 # Create your tests here.
 
 
-class SessionTests(TestCase):
+class SessionTests():
     fixtures = ['test_data.json', ]
 
     def setUp(self) -> None:
