@@ -1,7 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.contrib.staticfiles import finders
-from django.urls import reverse_lazy
 from .utilities import load_json, optimizer_info
 from django.http import FileResponse, HttpResponseRedirect, Http404
 from django.contrib.auth.decorators import login_required
@@ -513,17 +512,6 @@ def session_test_info(request, pk):
         session = Session.objects.get(pk=pk)
         context = {"test_info": json.dumps(session.test_info, indent=4)}
         return render(request, "session/test_info.html", context=context)
-
-
-@login_required
-def onboarding_disable(request):
-    path = reverse_lazy("dashboard")
-    if "next" in request.GET:
-        path = request.GET["next"]
-    user = request.user
-    user.onboarding = False
-    user.save()
-    return redirect(path)
 
 
 def error_404_view(request, exception):
