@@ -65,4 +65,5 @@ class ResetPasswordForm(PasswordResetForm):
 
         if not email_valid:
             email.send_to_single(user_email, 'password_recovery_failure',
+                    request,
                     requested_email=user_email)
