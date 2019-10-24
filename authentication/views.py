@@ -43,7 +43,7 @@ def user_signup(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
-            user = form.save_and_notify()
+            user = form.save_and_notify(request)
             login(request, user)
             if "next" in request.GET:
                 return redirect(request.GET["next"])
