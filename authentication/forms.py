@@ -1,6 +1,6 @@
 from django import forms
 from .models import User
-from django.contrib.auth.forms import UserCreationForm, PasswordResetForm
+from django.contrib.auth.forms import UserCreationForm, PasswordResetForm, PasswordChangeForm
 from crispy_forms.helper import FormHelper
 from django.utils import safestring
 from crispy_forms.layout import Submit, Layout, Row, Column, Field
@@ -78,3 +78,9 @@ class ResetPasswordForm(PasswordResetForm):
             email.send_to_single(user_email, 'password_recovery_failure',
                                  request,
                                  requested_email=user_email)
+
+class ChangePasswordForm(PasswordChangeForm):
+    def __init__(self, *a, **k):
+        super(PasswordChangeForm, self).__init__(*a, **k)
+        self.helper = FormHelper()
+        self.helper.form_tag = False
