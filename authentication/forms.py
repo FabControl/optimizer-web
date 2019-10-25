@@ -19,6 +19,20 @@ from django.utils.http import urlsafe_base64_encode
 #         fields = ('username', 'password', 'email')
 
 
+class LoginForm(forms.Form):
+
+    email = forms.EmailField()
+    password = forms.CharField(max_length=16, widget=forms.PasswordInput)
+
+    def __init__(self, *args, **kwargs):
+        super(LoginForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_tag = False
+
+    class Meta:
+        fields = ['email', 'password']
+
+
 class SignUpForm(UserCreationForm):
     username = None
     email = forms.EmailField(max_length=254, help_text='We will not share your email address with 3rd parties.')
