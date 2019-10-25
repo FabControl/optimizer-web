@@ -6,6 +6,28 @@ from django.core import mail
 import re
 
 
+class PasswordChangeViewTest(TestCase):
+    test_url = reverse('password_change')
+    @classmethod
+    def setUpClass(self):
+        self.user = get_user_model().objects.create_user(email='known_user@somewhere.com',
+                                 password='SomeSecretPassword')
+
+    @classmethod
+    def tearDownClass(self):
+        self.user.delete()
+
+    def test_only_logged_in_users(self):
+        # make sure client is logged out
+        self.client.logout()
+        resp = self.client.get(self.test_url, follow=True)
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertTrue(len(resp.redirect_chain) > 0)
+        redirected = re.match(r'((?:[/\w-])+)\??', resp.redirect_chain[-1][0])
+        self.assertEqual(redirected.group(1), reverse('login'))
+
+
 class PasswordResetViewsTest(TestCase):
     @classmethod
     def setUpClass(self):
