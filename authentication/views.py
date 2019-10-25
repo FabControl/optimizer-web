@@ -1,14 +1,12 @@
 import simplejson as json
-from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from django.utils.datastructures import MultiValueDictKeyError
-from .forms import SignUpForm, ResetPasswordForm
-from django.views import generic
-
 from django.contrib.auth.decorators import login_required
+from django.utils.datastructures import MultiValueDictKeyError
 from django.urls import reverse_lazy
-from .forms import SignUpForm
+from django.shortcuts import render, redirect
+from .forms import ResetPasswordForm, SignUpForm, LoginForm
 
 
 # Create your views here.
