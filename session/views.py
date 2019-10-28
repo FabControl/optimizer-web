@@ -85,7 +85,55 @@ def material_form(request):
     return render(request, 'session/material_form.html', context)
 
 
-class MachineView(LoginRequiredMixin, generic.DetailView):
+@login_required
+def machine_edit_view(request, pk):
+    context = {}
+    machine = get_object_or_404(Machine, pk=pk)
+    if request.method == 'POST':
+        self_form = NewMachineForm(request.POST, instance=machine)
+        extruder_form = NewExtruderForm(request.POST, instance=machine.extruder)
+        nozzle_form = NewNozzleForm(request.POST, instance=machine.extruder.nozzle)
+        chamber_form = NewChamberForm(request.POST, instance=machine.chamber)
+        printbed_form = NewPrintbedForm(request.POST, instance=machine.printbed)
+        extruder = None
+        if self_form.is_valid():
+            machine = self_form.save(commit=False)
+            machine.owner = request.user
+            if extruder_form.is_valid():
+                extruder = extruder_form.save(commit=False)
+                extruder.nozzle = nozzle_form.save()
+                extruder.save()
+            if chamber_form.is_valid():
+                machine.chamber = chamber_form.save()
+            if printbed_form.is_valid():
+                machine.printbed = printbed_form.save()
+            messages.info(request, 'The machine has been updated!')
+            machine.extruder = extruder
+            machine.save()
+            if "next" in request.POST:
+                request.session["machine"] = machine.pk
+                return redirect(request.POST["next"])
+            else:
+                return redirect('machine_manager')
+    else:
+        self_form = NewMachineForm(instance=machine)
+        if "next" in request.GET:
+            context["next"] = request.GET["next"]
+        extruder_form = NewExtruderForm(instance=machine.extruder)
+        nozzle_form = NewNozzleForm(instance=machine.extruder.nozzle)
+        chamber_form = NewChamberForm(instance=machine.chamber)
+        printbed_form = NewPrintbedForm(instance=machine.printbed)
+    form_context = {"self_form": self_form,
+                    "extruder_form": extruder_form,
+                    "nozzle_form": nozzle_form,
+                    "chamber_form": chamber_form,
+                    "printbed_form": printbed_form}
+    context = {**context, **form_context}
+    return render(request, 'session/machine_form.html', context)
+
+
+class MachineView(LoginRequiredMixin, generic.UpdateView):
+    form_class = NewMachineForm
     model = Machine
     template_name = 'session/machine_detail.html'
 

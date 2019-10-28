@@ -14,7 +14,7 @@ urlpatterns = [
 
     path('resources/machines/', views.MachinesView.as_view(), name='machine_manager'),
     path('resources/machines/new/', views.machine_form, name='machine_form'),
-    path('resources/machines/<pk>/', views.MachineView.as_view(), name='machine_detail'),
+    path('resources/machines/<pk>/', views.machine_edit_view, name='machine_detail'),
     path('resources/machines/<pk>/delete', views.MachineDelete.as_view(), name='machine_delete'),
 
     path('sessions/', views.SessionListView.as_view(), name="session_manager"),
