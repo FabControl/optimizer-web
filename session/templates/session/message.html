@@ -1,11 +1,11 @@
-{% block content %}
+{% block message %}
 <div id="message-container" class="container fixed-top">
   <div class="row justify-content-md-center pt-5">
     <div class="col-sm-6">
       <ul class="messages">
         {% for message in messages %}
-        <div class="alert-dismissible fade show alert alert-success {{ message.tags }}" role="alert">
-          {{ message }}
+        <div class="alert-dismissible fade show alert alert-{% if message.tags == 'error' %}danger{% elif message.tags == 'info' %}primary{% else %}{{ message.tags }}{% endif %}" role="alert">
+          {% if form_errors %}{{ form_errors }}{% else %}{{ message }}{% endif %}
           <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>

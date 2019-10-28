@@ -1,6 +1,5 @@
 from django.contrib.auth import views as auth_views
 import simplejson as json
-from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.utils.datastructures import MultiValueDictKeyError
@@ -13,8 +12,10 @@ from django.views.decorators.csrf import csrf_protect
 from django.contrib import messages
 
 from django.contrib.auth.decorators import login_required
+from django.utils.datastructures import MultiValueDictKeyError
 from django.urls import reverse_lazy
-from .forms import SignUpForm, ChangePasswordForm
+from django.shortcuts import render, redirect
+from .forms import ResetPasswordForm, SignUpForm, LoginForm, ChangePasswordForm
 
 
 # Create your views here.
@@ -22,24 +23,30 @@ def user_login(request):
     if request.user.is_authenticated:
         return redirect('dashboard')
     if request.method == 'POST':
-        email = request.POST.get('email')
-        password = request.POST.get('password')
-        user = authenticate(email=email, password=password)
-        if user:
-            if user.is_active:
-                login(request, user)
-                if "next" in request.GET:
-                    return redirect(request.GET["next"])
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            email = request.POST.get('email')
+            password = request.POST.get('password')
+            user = authenticate(email=email, password=password)
+            if user:
+                if user.is_active:
+                    login(request, user)
+                    if "next" in request.GET:
+                        return redirect(request.GET["next"])
+                    else:
+                        return redirect('dashboard')
                 else:
-                    return redirect('dashboard')
+                    messages.error(request, "Your account has been deactivated.")
+                    return render(request, 'authentication/login.html', {'form': LoginForm()})
             else:
-                return HttpResponse("Your account was inactive.")
+                messages.error(request, "Failed to log in!")
+                return redirect("login")
         else:
-            print("Someone tried to login and failed.")
-            print("They used username: {}".format(email))
-            return redirect("login")
+            print(form.errors)
+            messages.error(request, "Failed to log in!")
+            return render(request, 'authentication/login.html', {'form': LoginForm(), 'form_errors': form.errors})
     else:
-        return render(request, 'authentication/login.html', {})
+        return render(request, 'authentication/login.html', {'form': LoginForm()})
 
 
 def user_signup(request):
