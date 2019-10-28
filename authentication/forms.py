@@ -46,6 +46,13 @@ class SignUpForm(UserCreationForm):
     helper = FormHelper()
     helper.form_tag = False
 
+    def __init__(self, *args, **kwargs):
+        super(SignUpForm, self).__init__(*args, **kwargs)
+        self.fields['password1'].widget.attrs["maxlength"] = 32
+        self.fields['password2'].widget.attrs["maxlength"] = 32
+        self.fields['password1'].widget.attrs["minlength"] = 8
+        self.fields['password2'].widget.attrs["minlength"] = 8
+
     class Meta:
         model = User
         fields = ('email', 'first_name', 'last_name', 'password1', 'password2',)
