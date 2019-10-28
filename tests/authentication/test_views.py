@@ -41,6 +41,27 @@ class PasswordChangeViewTest(TestCase):
         self.assertEqual(resp.status_code, 200)
 
 
+    def test_password_is_actually_changed(self):
+        self.assertTrue(self.client.login(email='known_user@somewhere.com', password='SomeSecretPassword'))
+        resp = self.client.post(self.test_url, {
+                    'old_password':'SomeSecretPassword',
+                    'new_password1':'somenewpass',
+                    'new_password2':'somenewpass'
+                },
+                follow=True)
+        self.assertEqual(resp.status_code, 200)
+        # Successful password change should redirect
+        self.assertTrue(len(resp.redirect_chain) > 0)
+        # make sure old password no longer valid
+        self.client.logout()
+        self.assertFalse(self.client.login(email='known_user@somewhere.com', password='SomeSecretPassword'))
+        # make sure new password works
+        self.assertTrue(self.client.login(email='known_user@somewhere.com', password='somenewpass'))
+        # restore previous password for other tests
+        self.user.set_password('SomeSecretPassword')
+        self.user.save()
+
+
 class PasswordResetViewsTest(TestCase):
     @classmethod
     def setUpClass(self):
