@@ -22,7 +22,7 @@ from django.utils.http import urlsafe_base64_encode
 class LoginForm(forms.Form):
 
     email = forms.EmailField()
-    password = forms.CharField(max_length=16, widget=forms.PasswordInput)
+    password = forms.CharField(max_length=32, widget=forms.PasswordInput)
 
     def __init__(self, *args, **kwargs):
         super(LoginForm, self).__init__(*args, **kwargs)
