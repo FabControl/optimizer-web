@@ -27,6 +27,19 @@ class PasswordChangeViewTest(TestCase):
         redirected = re.match(r'((?:[/\w-])+)\??', resp.redirect_chain[-1][0])
         self.assertEqual(redirected.group(1), reverse('login'))
 
+    def test_confirm_with_current_password(self):
+        self.assertTrue(self.client.login(email='known_user@somewhere.com', password='SomeSecretPassword'))
+        # Password change must be confirmed with current password
+        resp = self.client.post(self.test_url, {
+                    'old_password':'ThisIsNotCurrentPassword',
+                    'new_password1':'somenewpass',
+                    'new_password2':'somenewpass'
+                },
+                follow=True)
+        # Failed password change does not redirect
+        self.assertEqual(len(resp.redirect_chain), 0)
+        self.assertEqual(resp.status_code, 200)
+
 
 class PasswordResetViewsTest(TestCase):
     @classmethod
