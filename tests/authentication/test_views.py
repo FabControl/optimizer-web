@@ -121,3 +121,31 @@ class PasswordResetViewsTest(TestCase):
         pw_reset_page = self.test_client.get(recovery_url)
         # invalid links doesn't redirect
         self.assertEqual(pw_reset_page.status_code, 200)
+
+
+class LoginViewTest(TestCase):
+    test_url = reverse('login')
+
+    @classmethod
+    def setUpClass(self):
+        self.user = get_user_model().objects.create_user(email='known_user@somewhere.com',
+                                 password='SomeSecretPassword')
+
+    @classmethod
+    def tearDownClass(self):
+        self.user.delete()
+
+
+    def test_recovery_and_register_in_login_page(self):
+        # login page should conatain links to password recovery and registration
+        resp = self.client.get(self.test_url)
+
+        self.assertEqual(resp.status_code, 200)
+
+        signup_link = '<a href="{}">Sign up</a>'.format(reverse('signup'))
+        self.assertTrue(bytes(signup_link, 'utf-8') in resp.content)
+
+        recovery_link = '<a href="{}">Recover password</a>'.format(reverse('password_reset'))
+        self.assertTrue(bytes(recovery_link, 'utf-8') in resp.content)
+
+
