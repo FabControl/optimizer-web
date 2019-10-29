@@ -4,6 +4,11 @@
     <button class="btn btn-outline-secondary" onclick="location.href='{% url 'gcode' object.pk %}'" type="button" name="button">Download .GCODE file</button>
   </div>
 </div>
+<div class="row pt-3">
+  <div class="col-sm">
+    {{ object.test_info.hint_valid|safe }}
+  </div>
+</div>
 <form class="" action="" method="POST">
   <div class="pt-3">
     {% crispy form %}
