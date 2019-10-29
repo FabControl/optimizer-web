@@ -180,7 +180,7 @@ class TestValidateForm(forms.ModelForm):
         session = self.instance
 
         self.fields["validation"] = TestValidationField(tested_values=session.tested_values, required=True)
-        self.fields["validation"].label = "Select the best sub-structure:"
+        self.fields["validation"].label = ""
 
         if len(session.min_max_parameters) == 3:
             parameter = session.min_max_parameters[-1]
@@ -282,6 +282,8 @@ class TestGenerateForm(forms.ModelForm):
                 inactives[parameter["programmatic_name"]] = param
             else:
                 actives[parameter["programmatic_name"]] = param
+                if parameter["hint_active"]:
+                    param.help_text = "{}".format(parameter["hint_active"])
             self.secondary_parameters_programmatic_names.append(parameter["programmatic_name"])
 
         #  Instantiate active fields first, so that they would appear on top
