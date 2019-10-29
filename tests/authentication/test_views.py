@@ -149,3 +149,27 @@ class LoginViewTest(TestCase):
         self.assertTrue(bytes(recovery_link, 'utf-8') in resp.content)
 
 
+    def test_only_registred_users(self):
+        # only valid users should be able to log in
+        self.client.logout()
+        resp = self.client.post(self.test_url, {
+                                    'email': 'known_user@somewhere.com',
+                                    'password' : 'ThisShouldFail'
+                                }, follow=True)
+
+        # failed logins redirect back to login page
+        self.assertEqual(resp.status_code, 200)
+        self.assertTrue(len(resp.redirect_chain) > 0)
+        self.assertEqual(resp.redirect_chain[-1][0], self.test_url)
+
+        resp = self.client.post(self.test_url, {
+                                    'email': 'known_user@somewhere.com',
+                                    'password' : 'SomeSecretPassword'
+                                }, follow=True)
+
+        # successful logins redirect to dashboard
+        self.assertEqual(resp.status_code, 200)
+        self.assertTrue(len(resp.redirect_chain) > 0)
+        self.assertEqual(resp.redirect_chain[-1][0], reverse('dashboard'))
+
+
