@@ -121,3 +121,113 @@ class PasswordResetViewsTest(TestCase):
         pw_reset_page = self.test_client.get(recovery_url)
         # invalid links doesn't redirect
         self.assertEqual(pw_reset_page.status_code, 200)
+
+
+class LoginViewTest(TestCase):
+    test_url = reverse('login')
+
+    @classmethod
+    def setUpClass(self):
+        self.user = get_user_model().objects.create_user(email='known_user@somewhere.com',
+                                 password='SomeSecretPassword')
+
+    @classmethod
+    def tearDownClass(self):
+        self.user.delete()
+
+
+    def test_recovery_and_register_in_login_page(self):
+        # login page should conatain links to password recovery and registration
+        resp = self.client.get(self.test_url)
+
+        self.assertEqual(resp.status_code, 200)
+
+        signup_link = '<a href="{}">Sign up</a>'.format(reverse('signup'))
+        self.assertTrue(bytes(signup_link, 'utf-8') in resp.content)
+
+        recovery_link = '<a href="{}">Recover password</a>'.format(reverse('password_reset'))
+        self.assertTrue(bytes(recovery_link, 'utf-8') in resp.content)
+
+
+    def test_only_registred_users(self):
+        # only valid users should be able to log in
+        self.client.logout()
+        resp = self.client.post(self.test_url, {
+                                    'email': 'known_user@somewhere.com',
+                                    'password' : 'ThisShouldFail'
+                                }, follow=True)
+
+        # failed logins redirect back to login page
+        self.assertEqual(resp.status_code, 200)
+        self.assertTrue(len(resp.redirect_chain) > 0)
+        self.assertEqual(resp.redirect_chain[-1][0], self.test_url)
+
+        resp = self.client.post(self.test_url, {
+                                    'email': 'known_user@somewhere.com',
+                                    'password' : 'SomeSecretPassword'
+                                }, follow=True)
+
+        # successful logins redirect to dashboard
+        self.assertEqual(resp.status_code, 200)
+        self.assertTrue(len(resp.redirect_chain) > 0)
+        self.assertEqual(resp.redirect_chain[-1][0], reverse('dashboard'))
+
+
+    def test_view_only_logged_out(self):
+        # login page should be available only for logged out sessions
+        self.assertTrue(self.client.login(email='known_user@somewhere.com',
+                                            password='SomeSecretPassword'))
+
+        resp = self.client.get(self.test_url, follow=True)
+        # logged in users get redirected to dashboard
+        self.assertEqual(resp.status_code, 200)
+        self.assertTrue(len(resp.redirect_chain) > 0)
+        self.assertEqual(resp.redirect_chain[-1][0], reverse('dashboard'))
+
+
+        self.client.logout()
+        resp = self.client.get(self.test_url)
+
+        # unknown sessions are not redirected from login page
+        self.assertEqual(resp.status_code, 200)
+
+
+class SignupViewTest(TestCase):
+    test_url = reverse('signup')
+
+    def test_equal_passwords(self):
+    # Passwords must be equal
+        req = self.client.post(self.test_url, {
+                            'email':'someone@somewhere.com',
+                            'first_name':'a',
+                            'last_name':'sd',
+                            'password1':'someonesdfgfd',
+                            'password2':'anothersdf',
+                            'company':'',
+                            'termsofuse':'on'
+                        })
+
+        # failed requests does not redirect
+        self.assertEqual(req.status_code, 200)
+
+    def test_view_only_logged_out(self):
+        usr = get_user_model().objects.create_user(email='known_user@somewhere.com',
+                                 password='SomeSecretPassword')
+        # register page should be available only for logged out sessions
+        self.assertTrue(self.client.login(email='known_user@somewhere.com',
+                                            password='SomeSecretPassword'))
+
+        resp = self.client.get(self.test_url, follow=True)
+        # logged in users get redirected to dashboard
+        self.assertEqual(resp.status_code, 200)
+        self.assertTrue(len(resp.redirect_chain) > 0)
+        self.assertEqual(resp.redirect_chain[-1][0], reverse('dashboard'))
+
+
+        self.client.logout()
+        resp = self.client.get(self.test_url)
+
+        # unknown sessions are not redirected from register page
+        self.assertEqual(resp.status_code, 200)
+
+        usr.delete()
