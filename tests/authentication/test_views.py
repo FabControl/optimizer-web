@@ -192,3 +192,42 @@ class LoginViewTest(TestCase):
         self.assertEqual(resp.status_code, 200)
 
 
+class SignupViewTest(TestCase):
+    test_url = reverse('signup')
+
+    def test_equal_passwords(self):
+    # Passwords must be equal
+        req = self.client.post(self.test_url, {
+                            'email':'someone@somewhere.com',
+                            'first_name':'a',
+                            'last_name':'sd',
+                            'password1':'someonesdfgfd',
+                            'password2':'anothersdf',
+                            'company':'',
+                            'termsofuse':'on'
+                        })
+
+        # failed requests does not redirect
+        self.assertEqual(req.status_code, 200)
+
+    def test_view_only_logged_out(self):
+        usr = get_user_model().objects.create_user(email='known_user@somewhere.com',
+                                 password='SomeSecretPassword')
+        # register page should be available only for logged out sessions
+        self.assertTrue(self.client.login(email='known_user@somewhere.com',
+                                            password='SomeSecretPassword'))
+
+        resp = self.client.get(self.test_url, follow=True)
+        # logged in users get redirected to dashboard
+        self.assertEqual(resp.status_code, 200)
+        self.assertTrue(len(resp.redirect_chain) > 0)
+        self.assertEqual(resp.redirect_chain[-1][0], reverse('dashboard'))
+
+
+        self.client.logout()
+        resp = self.client.get(self.test_url)
+
+        # unknown sessions are not redirected from register page
+        self.assertEqual(resp.status_code, 200)
+
+        usr.delete()
