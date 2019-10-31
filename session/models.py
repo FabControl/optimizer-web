@@ -295,6 +295,8 @@ class Session(models.Model):
     @persistence.setter
     def persistence(self, value):
         if type(value) == dict:
+            self.settings.critical_overhang_angle = value["settings"]["critical_overhang_angle"]
+            self.settings.save()
             self._persistence = json.dumps(value)
         else:
             self._persistence = value
