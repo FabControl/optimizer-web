@@ -442,8 +442,7 @@ def serve_config(request, pk, slicer):
     configuration_file, configuration_file_format = api_client.get_config(slicer, session.persistence)
     response = FileResponse(configuration_file.decode(), content_type='text/plain')
     response['Content-Type'] = 'text/xml'
-    response['Content-Disposition'] = 'attachment; filename={}.{}'.format(
-        session.name.replace(" ", "_") + "_" + session.material.name, configuration_file_format)
+    response['Content-Disposition'] = 'attachment; ' + 'filename={}_{}'.format(str(session.material), str(session.machine)).replace(" ", "_").replace(".", "-") + '.{}'.format(configuration_file_format)
     return response
 
 
