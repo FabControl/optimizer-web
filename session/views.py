@@ -70,7 +70,7 @@ def material_form(request):
         if form.is_valid():
             material = form.save(commit=False)
             material.owner = request.user
-            messages.info(request, 'The material has been created!')
+            messages.success(request, 'Material "{}" has been created!'.format(material.name))
             material.save()
             if "next" in request.POST:
                 request.session["material"] = material.pk
@@ -107,7 +107,7 @@ def machine_edit_view(request, pk):
                 machine.chamber = chamber_form.save()
             if printbed_form.is_valid():
                 machine.printbed = printbed_form.save()
-            messages.info(request, 'The machine has been updated!')
+            messages.success(request, '{} has been updated!'.format(machine.model))
             machine.extruder = extruder
             machine.save()
             if "next" in request.POST:
@@ -174,7 +174,7 @@ def machine_form(request):
                 machine.chamber = chamber_form.save()
             if printbed_form.is_valid():
                 machine.printbed = printbed_form.save()
-            messages.info(request, 'The machine has been created!')
+            messages.info(request, 'Machine "{}" has been created!'.format(machine.model))
             machine.extruder = extruder
             machine.save()
             if "next" in request.POST:
@@ -510,7 +510,6 @@ def new_session(request):
         form = SessionForm(request.POST, user=request.user)
 
         if form.is_valid():
-            messages.success(request, 'The session has been created!')
             session = form.save(commit=False)
             session.owner = request.user
 
