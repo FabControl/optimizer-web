@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.contrib.staticfiles import finders
 from .utilities import load_json, optimizer_info
-from django.http import FileResponse, HttpResponseRedirect, Http404
+from django.http import FileResponse, HttpResponseRedirect, Http404, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render_to_response
@@ -561,6 +561,12 @@ def session_test_info(request, pk):
         context = {"test_info": json.dumps(session.test_info, indent=4)}
         return render(request, "session/test_info.html", context=context)
 
+
+def session_health_check(request):
+    resp = api_client.get_template()
+    if resp is not None:
+        return HttpResponse('')
+    raise Http404()
 
 def error_404_view(request, exception):
     response = render_to_response('session/404.html', {"user": request.user})
