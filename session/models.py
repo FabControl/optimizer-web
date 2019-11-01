@@ -1,11 +1,12 @@
+import ast
+import logging
+import simplejson as json
 from django.db import models
 from django.utils import timezone
-from .choices import TEST_NUMBER_CHOICES, TARGET_CHOICES, SLICER_CHOICES, TOOL_CHOICES, FORM_CHOICES, UNITS
-import ast
-import simplejson as json
-from optimizer_api import api_client
-from authentication.models import User
 from django.http import Http404
+from authentication.models import User
+from optimizer_api import api_client
+from .choices import TEST_NUMBER_CHOICES, TARGET_CHOICES, SLICER_CHOICES, TOOL_CHOICES, FORM_CHOICES, UNITS
 
 # Create your models here.
 
