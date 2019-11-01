@@ -452,7 +452,37 @@ class Session(models.Model):
             self.update_test_info()
             self.clean_min_max()
         else:
-            raise ValueError("{} tried to set a disallowed test_number".format(self.owner))
+            self.test_number = self.test_number_next()
+            self.save()
+            logging.getLogger("views").info("{} tried to set a disallowed test_number".format(self.owner))
+
+    def test_number_next(self, primary: bool = True):
+        """
+        Method for advancing test_number according to testing session routine, retrieved from backend
+        :return:
+        """
+        routine = api_client.get_routine()
+        test_names = [name for name, _ in routine.items()]
+
+        next_test = None
+        next_primary_test = None
+
+        current_found = False
+        for i, test_info in enumerate(routine.items()):
+            if current_found:
+                if test_info[1]["priority"] == "primary":
+                    next_primary_test = test_names[i]
+                    break
+            if test_info[0] == self.test_number:
+                try:
+                    next_test = test_names[i + 1]
+                except IndexError:
+                    next_primary_test = next_test = self.test_number
+                current_found = True
+        if primary:
+            return next_primary_test
+        else:
+            return next_test
 
     @property
     def tested_values(self):

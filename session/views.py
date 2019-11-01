@@ -392,32 +392,10 @@ def test_switch(request, pk, number):
 def next_test_switch(request, pk, priority: str):
     session = get_object_or_404(Session, pk=pk)
     session.is_owner(request.user)
-    routine = api_client.get_routine()
-
-    test_names = [name for name, _ in routine.items()]
-
-    next_test = None
-    next_primary_test = None
-
-    current_found = False
-    for i, test_info in enumerate(routine.items()):
-        if current_found:
-            if test_info[1]["priority"] == "primary":
-                next_primary_test = test_names[i]
-                break
-        if test_info[0] == session.test_number:
-            try:
-                next_test = test_names[i+1]
-            except IndexError:
-                next_primary_test = next_test = session.test_number
-                messages.success(request, "The last test has been completed!")
-                return redirect('session_overview', pk=pk)
-            current_found = True
-
     if priority == "primary":
-        session.test_number = next_primary_test
+        session.test_number = session.test_number_next()
     elif priority == "any":
-        session.test_number = next_test
+        session.test_number = session.test_number_next(primary=False)
     session.clean_min_max()
     session.save()
     return redirect('session_detail', pk=pk)

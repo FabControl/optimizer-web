@@ -1,7 +1,8 @@
 import ast
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
-# Create your models here.
+from django.utils import timezone
+from datetime import timedelta
 
 
 class UserManager(BaseUserManager):
@@ -49,6 +50,8 @@ class User(AbstractUser):
     _onboarding_sections = models.CharField(max_length=256,
                                             default="['dashboard', 'new_session', 'session_generate_1', 'session_validate', 'session_generate_2']")
 
+    subscription_expiration = models.DateTimeField(null=True)
+
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
@@ -65,4 +68,31 @@ class User(AbstractUser):
     def onboarding_reset(self):
         self.onboarding = self._meta.get_field("onboarding").get_default()
         self._onboarding_sections = self._meta.get_field("_onboarding_sections").get_default()
+        self.save()
+
+    def renew_subscription(self, mode: str = 'day'):
+        """
+        Method for extending subscription period
+        :mode length: Can be 'day', 'week', 'month', 'year'
+        :return:
+        """
+        now = timezone.now()
+        if mode == 'day':
+            self.subscription_expiration = now + timedelta(days=1)
+        if mode == 'week':
+            self.subscription_expiration = now + timedelta(days=7)
+        if mode == 'month':
+            self.subscription_expiration = now + timedelta(days=31)
+        if mode == 'year':
+            self.subscription_expiration = now + timedelta(days=365)
+        else:
+            raise ValueError('{} is an invalid mode. Valid modes are "day", "week", "month", "year"'.format(mode))
+        self.save()
+
+    def expire(self):
+        """
+        Method for changing user plan from premium to basic
+        :return:
+        """
+        self.plan = 'basic'
         self.save()
