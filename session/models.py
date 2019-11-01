@@ -441,10 +441,18 @@ class Session(models.Model):
 
     @test_number.setter
     def test_number(self, value):
-        self._test_info = ""
-        self._test_number = value
-        self.update_test_info()
-        self.clean_min_max()
+        allowed_numbers = []
+        if self.owner.plan == 'basic':
+            allowed_numbers = [number for number in api_client.get_routine(mode='primary')]
+        elif self.owner.plan == 'premium':
+            allowed_numbers = [number for number in api_client.get_routine(mode='full')]
+        if value in allowed_numbers:
+            self._test_info = ""
+            self._test_number = value
+            self.update_test_info()
+            self.clean_min_max()
+        else:
+            raise ValueError("{} tried to set a disallowed test_number".format(self.owner))
 
     @property
     def tested_values(self):
