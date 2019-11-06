@@ -46,11 +46,12 @@ class User(AbstractUser):
     email = models.EmailField('email address', unique=True)
     PLAN_CHOICES = [("basic", "Basic"), ("premium", "Premium")]
     plan = models.CharField(max_length=32, choices=PLAN_CHOICES, default="basic")
+    last_active = models.DateTimeField(null=True )
     onboarding = models.BooleanField(default=True)
     _onboarding_sections = models.CharField(max_length=256,
                                             default="['dashboard', 'new_session', 'session_generate_1', 'session_validate', 'session_generate_2']")
 
-    subscription_expiration = models.DateTimeField(null=True)
+    subscription_expiration = models.DateTimeField(null=False, default=timezone.now)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []

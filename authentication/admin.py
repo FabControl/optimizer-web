@@ -32,6 +32,6 @@ class UserAdmin(DjangoUserAdmin):
 
     reset_onboarding.short_description = "Reenable onboarding tour"
 
-    list_display = ('email', 'first_name', 'last_name', 'plan', 'last_login', 'date_joined', 'is_staff')
+    list_display = ('email', 'first_name', 'last_name', 'plan', 'last_active', 'date_joined', 'is_staff')
     search_fields = ('email', 'first_name', 'last_name')
     ordering = ('email',)
