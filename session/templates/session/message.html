@@ -17,7 +17,7 @@
 </div>
 <script type="text/javascript">
   $('.close').click(function() {
-    $('#message-container').remove()
+    $('#message-container').hide('slow', function(){ ('#message-container').remove(); });
   })
 </script>
 {% endblock %}
