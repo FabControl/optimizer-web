@@ -12,7 +12,7 @@
         </div>
       </div>
     </div>
-    {% endif %}
+    {% else %}
 
     {% if request.user.plan == 'premium' %}
     <div class="row pt-5 text-center justify-content-center">
@@ -20,6 +20,7 @@
         <h1 class="display-4"><b>{{expiration}} days</b> of full access remaining.</h1>
       </div>
     </div>
+    {% endif %}
     {% endif %}
 
     <div class="row pt-5 text-center">
