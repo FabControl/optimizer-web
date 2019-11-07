@@ -23,7 +23,7 @@
               <th data-sortable="true">Form factor</th>
               <th data-sortable="true">Nozzle diameter (mm)</th>
               <th data-sorted="true" data-sortable="true">Created</th>
-              <th data-sortable="false">Action</th>
+              <th data-sortable="false"></th>
             </tr>
           </thead>
           <tbody>
@@ -36,9 +36,9 @@
               <td>{{ machine.pub_date }}</td>
               <td>
                 <div class="dropdown">
-                  <button class="btn-sm btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Action
-                  </button>
+                  <a class="" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="text-primary"><i class="fas fa-bars"></i></span>
+                  </a>
                   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <a class="dropdown-item" href="{% url 'machine_detail' machine.pk %}">Open</a>
                     <div class="dropdown-divider"></div>
