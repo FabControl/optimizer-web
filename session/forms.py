@@ -182,6 +182,8 @@ class TestValidateForm(forms.ModelForm):
         self.fields["validation"] = TestValidationField(tested_values=session.tested_values, required=True)
         self.fields["validation"].label = ""
 
+        self.fields["comments"] = forms.CharField(max_length=200, widget=forms.Textarea(attrs={'placeholder': 'Comments'}), required=False, label='')
+
         if len(session.min_max_parameters) == 3:
             parameter = session.min_max_parameters[-1]
             param = None
@@ -200,6 +202,8 @@ class TestValidateForm(forms.ModelForm):
         self.instance.selected_parameter_value("selected_parameter_two_value", self.cleaned_data["validation"][1])
         if "min_max_parameter_three" in self.cleaned_data:
             self.instance.selected_parameter_value("selected_parameter_three_value", self.cleaned_data["min_max_parameter_three"])
+        if "comments" in self.cleaned_data:
+            self.instance.alter_previous_tests(-1, 'comments', self.cleaned_data["comments"] or 0)
         return super(TestValidateForm, self).save(commit=commit)
 
     class Meta:
