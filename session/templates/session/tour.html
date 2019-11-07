@@ -28,7 +28,7 @@
 
   tour.addStep({
     title: 'Welcome to 3DOptimizer!',
-    text: 'This is a quick introduction tour which should get you started on your first optimization session.',
+    text: 'This introduction wizard will guide you through your first optimization session.',
     classes: 'example-step-extra-class',
     buttons: [{
       text: 'Next',
@@ -37,7 +37,7 @@
   });
 
   tour.addStep({
-    text: 'Go ahead and create your first testing session by clicking "New Testing Session"!',
+    text: 'Create your first testing session by clicking "New Testing Session"!',
     canClickTarget: true,
     attachTo: {
       element: '#newSessionButton',
@@ -78,7 +78,7 @@
   });
 
   tour.addStep({
-    text: 'Choose or create a material for the optimization session here.',
+    text: 'Choose or create a material.',
     canClickTarget: false,
     attachTo: {
       element: '#div_id_material',
@@ -100,7 +100,7 @@
   });
 
   tour.addStep({
-    text: 'Choose or create a 3D printer for the optimization session here.',
+    text: 'Choose or create a 3D printer.',
     canClickTarget: false,
     attachTo: {
       element: '#div_id_machine',
@@ -122,7 +122,7 @@
   });
 
   tour.addStep({
-    text: 'Choose an optimization strategy for the optimization session here.',
+    text: 'Choose an optimization strategy.',
     canClickTarget: false,
     attachTo: {
       element: '#div_id_target',
@@ -144,7 +144,7 @@
   });
 
   tour.addStep({
-    text: 'Manage 3D Printers and Materials under the resources tab.',
+    text: 'Manage your 3D Printers and Materials here.',
     canClickTarget: true,
     attachTo: {
       element: '#resourcesDropdown',
@@ -194,79 +194,17 @@
   });
 
   tour.addStep({
-    title: 'Welcome to your first testing session!',
-    text: 'The wizard will guide you through the tests to optimize selected processing parameters for the selected 3D printer/material combination.',
+    text: 'The wizard will automatically guide you through the main tests (marked in bold).',
+    canClickTarget: false,
+    attachTo: {
+      element: '#test_selector',
+      on: 'right'
+    },
     classes: 'example-step-extra-class',
     buttons: [{
       text: 'Next',
       action: tour.next
     }]
-  });
-
-  tour.addStep({
-    text: 'Here you can see the list with the available tests.',
-    canClickTarget: false,
-    attachTo: {
-      element: '#test_selector',
-      on: 'right'
-    },
-    classes: 'example-step-extra-class',
-    buttons: [{
-        action() {
-          return this.back();
-        },
-        classes: 'shepherd-button-secondary',
-        text: 'Back'
-      },
-      {
-        text: 'Next',
-        action: tour.next
-      }
-    ]
-  });
-
-  tour.addStep({
-    text: 'The wizard will automatically guide you through the main tests.',
-    canClickTarget: false,
-    attachTo: {
-      element: '#test_selector',
-      on: 'right'
-    },
-    classes: 'example-step-extra-class',
-    buttons: [{
-        action() {
-          return this.back();
-        },
-        classes: 'shepherd-button-secondary',
-        text: 'Back'
-      },
-      {
-        text: 'Next',
-        action: tour.next
-      }
-    ]
-  });
-
-  tour.addStep({
-    text: 'If you want to perform some of the optional tests or return to the previous tests, navigate through them by clicking on the test name.',
-    canClickTarget: false,
-    attachTo: {
-      element: '#test_selector',
-      on: 'right'
-    },
-    classes: 'example-step-extra-class',
-    buttons: [{
-        action() {
-          return this.back();
-        },
-        classes: 'shepherd-button-secondary',
-        text: 'Back'
-      },
-      {
-        text: 'Next',
-        action: tour.next
-      }
-    ]
   });
 
   tour.addStep({
@@ -293,9 +231,9 @@
 
   tour.addStep({
     title: 'Processing parameter to be defined',
-    text: 'The value of this processing parameter is required to generate the .GCODE file.',
+    text: 'Set values of processing parameters to generate the .GCODE file.',
     attachTo: {
-      element: '#div_id_track_width_raft',
+      element: '#div_id_temperature_extruder_raft',
       on: 'top'
     },
     classes: 'example-step-extra-class',
@@ -336,7 +274,7 @@
   });
 
   tour.addStep({
-    text: `Once you have filled the required fields, press "Generate .GCODE file" to continue!`,
+    text: `Click "Generate .GCODE file" to continue!`,
     canClickTarget: false,
     attachTo: {
       element: '#gcode_button',
@@ -384,15 +322,6 @@
   });
 
   tour.addStep({
-    text: 'Now you can download, print and validate the paremeters you selected in the previous step',
-    classes: 'example-step-extra-class',
-    buttons: [{
-      text: 'Next',
-      action: tour.next
-    }]
-  });
-
-  tour.addStep({
     text: 'Download and run the .GCODE file on your 3D printer.',
     canClickTarget: false,
     attachTo: {
@@ -416,8 +345,8 @@
 
   tour.addStep({
     title: 'Validation table',
-    text: 'This table represents the array of different setting combinations used in the test.<br>\
-  Once you have printed the test G-Code, you may select the best test structure on this table.<br>',
+    text: 'This table schematically represents the test geometry from the generated .GCODE file.<br>\
+Select the best test structure from this table, i.e. the best processing parameter combinations.',
     canClickTarget: false,
     attachTo: {
       element: '.table',
@@ -466,10 +395,10 @@
   tour.addStep({
 
     title: 'Test switch panel',
-    text: 'You can now see that the previous test has been completed.',
+    text: 'You can now see that the previous test has been performed.',
     canClickTarget: false,
     attachTo: {
-      element: '#test_selector',
+      element: '.list-group-item-success',
       on: 'right'
     },
     classes: 'example-step-extra-class',
@@ -480,8 +409,30 @@
   });
 
   tour.addStep({
+    text: 'If you want to perform some of the optional tests or return to the previous tests, navigate through them by clicking on the test name.',
+    canClickTarget: false,
+    attachTo: {
+      element: '#test_selector',
+      on: 'right'
+    },
+    classes: 'example-step-extra-class',
+    buttons: [{
+        action() {
+          return this.back();
+        },
+        classes: 'shepherd-button-secondary',
+        text: 'Back'
+      },
+      {
+        text: 'Next',
+        action: tour.next
+      }
+    ]
+  });
+
+  tour.addStep({
     title: 'Overview pane',
-    text: 'Here you can see a summary about the previous tests, generate a test report, and slicing configuration files.',
+    text: 'Click here to see a summary of the previous tests, generate a test report and/or slicer configuration files.',
     attachTo: {
       element: '#overview',
       on: 'bottom'
@@ -502,8 +453,11 @@
   });
 
   tour.addStep({
-    text: 'This concludes the introduction. If you have any further questions, do not hesitate to consult our "Help" section, found at the top of the page!',
-
+    text: 'In case you have any further questions, contact our support team!',
+    attachTo: {
+      element: '#helpDropdown',
+      on: 'bottom'
+    },
     classes: 'example-step-extra-class',
     buttons: [{
         action() {
