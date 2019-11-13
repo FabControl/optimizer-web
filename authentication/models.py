@@ -71,31 +71,14 @@ class User(AbstractUser):
         self._onboarding_sections = self._meta.get_field("_onboarding_sections").get_default()
         self.save()
 
-    def renew_subscription(self, mode: str = 'day', **kwargs):
+    def extend_subscription(self, delta:timedelta):
         """
         Method for extending subscription period
-        :param mode: Can be 'day', 'week', 'month', 'year'
-        :param kwargs: 'datetime' to specify a time to which the subscription should be valid.
+        :param delta: Time period that will be added to subscription
         :return:
         """
-        if not 'datetime' in kwargs:
-            now = timezone.now()
-            if self.plan == 'basic':
-                base = now
-            else:
-                base = self.subscription_expiration
-            if mode == 'day':
-                self.subscription_expiration = base + timedelta(days=1)
-            elif mode == 'week':
-                self.subscription_expiration = base + timedelta(days=7)
-            elif mode == 'month':
-                self.subscription_expiration = base + timedelta(days=31)
-            elif mode == 'year':
-                self.subscription_expiration = base + timedelta(days=365)
-            else:
-                raise ValueError('{} is an invalid mode. Valid modes are "day", "week", "month", "year"'.format(mode))
-        else:
-            self.subscription_expiration = kwargs['datetime']
+        base = max(self.subscription_expiration, timezone.now())
+        self.subscription_expiration = base + delta
         self.save()
 
     def expire(self):

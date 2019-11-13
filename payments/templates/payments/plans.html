@@ -1,32 +1,33 @@
 {% extends "session/base.html" %}
 {% block content %}
 <div class="container">
-  <form class="" action="" method="post">
-    {% csrf_token %}
-    {% if not request.user.is_authenticated %}
-    <div class="row pt-5 text-center">
-      <div class="col">
-        <div class="jumbotron">
-          <p class="lead">{{core}}</p>
-          <button type="submit" class="btn btn-primary" name="signup">Sign up for free</button>
-        </div>
+  {% if not request.user.is_authenticated %}
+  <div class="row pt-5 text-center">
+    <div class="col">
+      <div class="jumbotron">
+        <p class="lead">{{core}}</p>
+        <button onclick="window.location.href = '{% url 'signup' %}';" class="btn btn-primary" name="signup">Sign up for free</button>
       </div>
     </div>
-    {% else %}
+  </div>
+  {% else %}
 
-    {% if request.user.plan == 'premium' %}
-    <div class="row pt-5 text-center justify-content-center">
-      <div class="col-sm">
-        <h1 class="display-4"><b>{{expiration}} days</b> of full access remaining.</h1>
-      </div>
+  {% if request.user.plan == 'premium' %}
+  <div class="row pt-5 text-center justify-content-center">
+    <div class="col-sm">
+      <h1 class="display-4"><b>{{expiration}} days</b> of full access remaining.</h1>
     </div>
-    {% endif %}
-    {% endif %}
+  </div>
+  {% endif %}
+  {% endif %}
 
-    <div class="row pt-5 text-center">
-      {% for plan in plans %}
-      <div class="col">
-        <div class="card p-4">
+  <div class="row pt-5 text-center">
+    {% for plan in plans %}
+    <div class="col">
+      <div class="card p-4">
+        <form class="" action="" method="post">
+          {% csrf_token %}
+          <input type="hidden" name="plan_id" value="{{ plan.pk }}">
           <div class="row justify-content-center">
             <div class="col-sm-12 text-left">
               <h1 class="display-4">{{plan.name}}</h1>
@@ -35,11 +36,13 @@
               <p>Complete access to all features</p>
             </div>
           </div>
-          <button type="submit" class="btn btn-primary" name="{{plan.name}}button">Purchase</button>
-        </div>
+          {% if request.user.is_authenticated %}
+            <button type="submit" class="btn btn-primary" name="{{plan.name}}button">Purchase</button>
+          {% endif %}
+        </form>
       </div>
-      {% endfor %}
     </div>
-  </form>
+    {% endfor %}
+  </div>
 </div>
 {% endblock %}
