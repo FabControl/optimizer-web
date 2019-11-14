@@ -19,6 +19,9 @@ class CheckoutModelAdmin(admin.ModelAdmin):
     actions = [mark_checkout_paid]
     list_display_links = None
 
+    def has_add_permission(self, request):
+        return False
+
     def current_state(self, c):
         if c.is_paid:
             return 'paid'
