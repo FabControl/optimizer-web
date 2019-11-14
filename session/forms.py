@@ -182,8 +182,6 @@ class TestValidateForm(forms.ModelForm):
         self.fields["validation"] = TestValidationField(tested_values=session.tested_values, required=True)
         self.fields["validation"].label = ""
 
-        self.fields["comments"] = forms.CharField(max_length=200, widget=forms.Textarea(attrs={'placeholder': 'Comments'}), required=False, label='')
-
         if len(session.min_max_parameters) == 3:
             parameter = session.min_max_parameters[-1]
             param = None
@@ -191,8 +189,12 @@ class TestValidateForm(forms.ModelForm):
                 param = forms.IntegerField(min_value=parameter["values"][0], max_value=parameter["values"][1], widget=RangeSliderWidget([parameter["values"][0], parameter["values"][1]], parameter["units"]))
             elif parameter["programmatic_name"] == "extrusion_multiplier":
                 param = forms.DecimalField(min_value=parameter["values"][0], max_value=parameter["values"][1], widget=RangeSliderWidget([parameter["values"][0], parameter["values"][1]], parameter["units"]))
-            param.label = "Please select the best {} along the width of the selected substructure ({} {} - {} {}):".format(parameter["name"], str(parameter["values"][0]), parameter["units"], str(parameter["values"][-1]), parameter["units"])
+            param.label = "{}".format(parameter["name"].capitalize())
+            param.help_text = "Please select the best {} along the width of the selected substructure ({} {} - {} {}):".format(parameter["name"], str(parameter["values"][0]), parameter["units"], str(parameter["values"][-1]), parameter["units"])
             self.fields["min_max_parameter_three"] = param
+
+        self.fields["comments"] = forms.CharField(max_length=74,
+                                                  required=False, label='Comment')
 
         self.helper = FormHelper()
         self.helper.form_tag = False

@@ -19,6 +19,7 @@
         <table class="table sortable-theme-bootstrap" data-sortable>
           <thead>
             <tr>
+              <th data-sortable="true">Name</th>
               <th data-sortable="true">Material</th>
               <th data-sortable="true">Printer</th>
               <th data-sortable="true">Target</th>
@@ -31,6 +32,7 @@
             {# ROW CONTENTS #}
             {% for session in sessions %}
             <tr>
+              <td><a class="text-secondary" href="{% url 'session_detail' session.pk %}">{{ session.name }}</a></td>
               <td><a class="text-secondary" href="{% url 'material_detail' session.material.pk %}">{{ session.material.name }}</a></td>
               <td><a class="text-secondary" href="{% url 'machine_detail' session.machine.pk %}">{{ session.machine.model }}</a></td>
               <td>{{ session.get_target_display }}</td>
@@ -38,9 +40,9 @@
               <td>{{ session.pub_date }}</td>
               <td>
                 <div class="dropdown">
-                  <a class="" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span class="text-primary"><i class="fas fa-bars"></i></span>
-                  </a>
+                  <button class="btn-sm btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Action
+                  </button>
                   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <a class="dropdown-item" href="{% url 'session_detail' session.pk %}">Open</a>
                     <div class="dropdown-divider"></div>
