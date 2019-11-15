@@ -212,6 +212,7 @@ class SignupViewTest(TestCase):
 
     def test_view_only_logged_out(self):
         usr = get_user_model().objects.create_user(email='known_user@somewhere.com',
+                                 is_active=True,
                                  password='SomeSecretPassword')
         # register page should be available only for logged out sessions
         self.assertTrue(self.client.login(email='known_user@somewhere.com',
