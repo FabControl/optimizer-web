@@ -3,5 +3,6 @@
 {% block content %}
 Hi, {{ receiving_user }}!
 You have successfully created account.
+Use link below to activate your account. This link is only valid for 24 hours.
+{{ application_url }}{% url 'activate_account' uidb64=uid token=token %}
 {% endblock content %}
-

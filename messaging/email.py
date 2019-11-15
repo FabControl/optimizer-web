@@ -9,7 +9,7 @@ _PLAIN_TEMPLATE = 'email/{0}.txt'
 _SUBJECTS = {
         'password_recovery_failure': 'Password recovery',
         'password_recovery': 'Password recovery',
-        'register_complete': 'Account registration'
+        'register_complete': 'Account activation'
         }
 
 

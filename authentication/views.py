@@ -1,7 +1,7 @@
 from django.contrib.auth import views as auth_views
 import simplejson as json
 from django.http import HttpResponse
-from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash, get_user_model
 from django.utils.datastructures import MultiValueDictKeyError
 from .forms import SignUpForm, ResetPasswordForm
 from django.views import generic
@@ -17,6 +17,9 @@ from django.utils.datastructures import MultiValueDictKeyError
 from django.urls import reverse_lazy
 from django.shortcuts import render, redirect
 from .forms import ResetPasswordForm, SignUpForm, LoginForm, ChangePasswordForm
+from .tokens import account_activation_token
+from django.utils.encoding import force_text
+from django.utils.http import urlsafe_base64_decode
 
 
 # Create your views here.
@@ -57,12 +60,8 @@ def user_signup(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
-            user = form.save_and_notify(request)
-            login(request, user)
-            if "next" in request.GET:
-                return redirect(request.GET["next"])
-            else:
-                return redirect('dashboard')
+            form.save_and_notify(request)
+            return render(request, 'authentication/check_email.html', context)
         else:
             message = "<br>".join([str(message[1].as_text()).lstrip('* ') for message in dict(form.errors).items()])
             messages.error(request, mark_safe(message))
@@ -162,3 +161,20 @@ class PasswordChangeView(auth_views.PasswordContextMixin, FormView):
         update_session_auth_hash(self.request, form.user)
         messages.success(self.request, 'Password changed')
         return super().form_valid(form)
+
+def activate_account(request, uidb64, token):
+    u_model = get_user_model()
+    try:
+        uid = force_text(urlsafe_base64_decode(uidb64))
+        user = u_model.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, u_model.DoesNotExist):
+        user = None
+
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+        login(request, user)
+        messages.success(request, 'Your email address was confirmed and account activated.')
+        return redirect('dashboard')
+
+    return render(request, 'authentication/invalid_activation_link.html')

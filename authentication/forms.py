@@ -9,6 +9,7 @@ from messaging import email
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
+from .tokens import account_activation_token
 
 
 # class UserForm(forms.ModelForm):
@@ -58,13 +59,14 @@ class SignUpForm(UserCreationForm):
         fields = ('email', 'first_name', 'last_name', 'password1', 'password2',)
 
     def save_and_notify(self, request):
-        result = self.save()
+        user = self.save()
         email.send_to_single(self.cleaned_data.get('email'), 'register_complete',
                              request,
                              receiving_user=' '.join((self.cleaned_data.get('first_name'),
-                                                      self.cleaned_data.get('last_name')))
+                                                      self.cleaned_data.get('last_name'))),
+                             uid=urlsafe_base64_encode(force_bytes(user.pk)),
+                             token=account_activation_token.make_token(user)
                              )
-        return result
 
 
 class ResetPasswordForm(PasswordResetForm):
