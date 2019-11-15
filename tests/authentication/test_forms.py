@@ -29,7 +29,7 @@ class SignUpFormTest(TestCase):
         self.assertEqual(len(mail.outbox), 1)
         m = mail.outbox[-1]
         self.assertEqual(m.to, ['someone@somewhere.com'])
-        self.assertEqual(m.subject, 'Account registration')
+        self.assertEqual(m.subject, 'Account activation')
         # message should contain plain body and html alternative
         self.assertEqual(len(m.alternatives), 1)
         self.assertEqual(m.alternatives[0][1], 'text/html')
