@@ -11,6 +11,7 @@ class PasswordChangeViewTest(TestCase):
     @classmethod
     def setUpClass(self):
         self.user = get_user_model().objects.create_user(email='known_user@somewhere.com',
+                                 is_active=True,
                                  password='SomeSecretPassword')
 
     @classmethod
@@ -129,6 +130,7 @@ class LoginViewTest(TestCase):
     @classmethod
     def setUpClass(self):
         self.user = get_user_model().objects.create_user(email='known_user@somewhere.com',
+                                 is_active=True,
                                  password='SomeSecretPassword')
 
     @classmethod
