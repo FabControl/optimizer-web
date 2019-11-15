@@ -1,7 +1,6 @@
 <!-- Loads static files -->
 {% load staticfiles %}
 <!doctype html>
-{% spaceless %}
 <html lang="en" class="h-100">
 
 <head>
@@ -13,11 +12,12 @@
   </style>
   <!-- Optional JavaScript -->
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-  <script
-  			  src="https://code.jquery.com/jquery-3.4.1.min.js"
-  			  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-  			  crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+
   <script src="{% static 'session/js/index.js' %}"></script>
+  {% block extra_resources %}{% endblock %}
   <!-- Unhide content after it has been styled -->
   <!-- Required meta tags -->
   <meta charset="utf-8">
@@ -25,7 +25,7 @@
 
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="{% static 'session/css/index.css' %}">
-  <link rel="shortcut icon" type="image/png" href="{% static 'session/img/favicon.ico' %}"/>
+  <link rel="shortcut icon" type="image/png" href="{% static 'session/img/favicon.ico' %}" />
   {% if 'session_detail' not in request.resolver_match.url_name %}
   <title>3DOptimizer</title>
   {% endif %}
@@ -54,4 +54,3 @@
 </body>
 
 </html>
-{% endspaceless %}

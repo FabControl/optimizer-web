@@ -9,6 +9,7 @@ from django.views.generic.edit import FormView
 from django.utils.decorators import method_decorator
 from django.views.decorators.debug import sensitive_post_parameters
 from django.views.decorators.csrf import csrf_protect
+from django.utils.safestring import mark_safe
 from django.contrib import messages
 
 from django.contrib.auth.decorators import login_required
@@ -63,6 +64,9 @@ def user_signup(request):
             else:
                 return redirect('dashboard')
         else:
+            message = "<br>".join([str(message[1].as_text()).lstrip('* ') for message in dict(form.errors).items()])
+            messages.error(request, mark_safe(message))
+            context["errors"] = form.error_messages
             return render(request, 'authentication/signup.html', context)
     else:
         return render(request, 'authentication/signup.html', context)
@@ -156,5 +160,5 @@ class PasswordChangeView(auth_views.PasswordContextMixin, FormView):
         # Updating the password logs out all other sessions for the user
         # except the current one.
         update_session_auth_hash(self.request, form.user)
-        messages.info(self.request, 'Password changed')
+        messages.success(self.request, 'Password changed')
         return super().form_valid(form)

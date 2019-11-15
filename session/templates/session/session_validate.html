@@ -1,21 +1,27 @@
 {% load crispy_forms_tags %}
-<div class="row pt-3">
-  <div class="col-sm-4">
-    <button class="btn btn-outline-secondary" onclick="location.href='{% url 'gcode' object.pk %}'" type="button" name="button">Download .GCODE file</button>
+<div class="row pt-4 text-center">
+  <div class="col-sm-12">
+    <button class="btn btn-primary" onclick="location.href='{% url 'gcode' object.pk %}'" type="button" name="button">Download .GCODE file</button>
   </div>
 </div>
-<div class="row pt-3">
+<div class="row pt-4">
   <div class="col-sm">
-    {{ object.test_info.hint_valid|safe }}
+    {% if object.test_info.hint_valid %}
+    <div class="card p-3" style="background: #ffe6ba">
+      {{ object.test_info.hint_valid|safe }}
+    </div>
+    {% endif %}
   </div>
 </div>
 <form class="" action="" method="POST">
   <div class="pt-3">
     {% crispy form %}
   </div>
-  <div class="row pt-3">
-    <div class="col text-right">
+  <div class="row pt-2">
+    <div class="col">
       <button class="btn btn-secondary" onclick="location.href='{% url 'session_validate_back' object.pk %}'" type="button" name="button">Back</button>
+    </div>
+    <div class="col text-right">
       <button type="submit" name="btnprimary" class="btn btn-primary">Submit</button>
     </div>
   </div>

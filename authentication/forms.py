@@ -100,6 +100,7 @@ class ResetPasswordForm(PasswordResetForm):
                                  request,
                                  requested_email=user_email)
 
+
 class ChangePasswordForm(PasswordChangeForm):
     def __init__(self, *a, **k):
         super(PasswordChangeForm, self).__init__(*a, **k)

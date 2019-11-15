@@ -46,11 +46,12 @@ class User(AbstractUser):
     email = models.EmailField('email address', unique=True)
     PLAN_CHOICES = [("basic", "Basic"), ("premium", "Premium")]
     plan = models.CharField(max_length=32, choices=PLAN_CHOICES, default="basic")
+    last_active = models.DateTimeField(null=True )
     onboarding = models.BooleanField(default=True)
     _onboarding_sections = models.CharField(max_length=256,
                                             default="['dashboard', 'new_session', 'session_generate_1', 'session_validate', 'session_generate_2']")
 
-    subscription_expiration = models.DateTimeField(null=True)
+    subscription_expiration = models.DateTimeField(null=False, default=timezone.now)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
@@ -70,23 +71,14 @@ class User(AbstractUser):
         self._onboarding_sections = self._meta.get_field("_onboarding_sections").get_default()
         self.save()
 
-    def renew_subscription(self, mode: str = 'day'):
+    def extend_subscription(self, delta:timedelta):
         """
         Method for extending subscription period
-        :mode length: Can be 'day', 'week', 'month', 'year'
+        :param delta: Time period that will be added to subscription
         :return:
         """
-        now = timezone.now()
-        if mode == 'day':
-            self.subscription_expiration = now + timedelta(days=1)
-        if mode == 'week':
-            self.subscription_expiration = now + timedelta(days=7)
-        if mode == 'month':
-            self.subscription_expiration = now + timedelta(days=31)
-        if mode == 'year':
-            self.subscription_expiration = now + timedelta(days=365)
-        else:
-            raise ValueError('{} is an invalid mode. Valid modes are "day", "week", "month", "year"'.format(mode))
+        base = max(self.subscription_expiration, timezone.now())
+        self.subscription_expiration = base + delta
         self.save()
 
     def expire(self):

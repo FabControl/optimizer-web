@@ -1,7 +1,7 @@
 {% load staticfiles %}
 <nav class="navbar navbar-expand-lg navbar-light shadow-sm bg-light">
   <div class="container">
-    <a class="navbar-brand" href="{% url 'dashboard' %}"><img width="40px" src="{% static 'session/img/logo.svg' %}" alt="Logo"></a>
+    <a class="navbar-brand lead" href="{% url 'dashboard' %}"><img width="40px" src="{% static 'session/img/logo.svg' %}" alt="Logo"> 3DOptimizer</a>
     {% if user.is_authenticated %}
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -36,6 +36,9 @@
         </li>
       </ul>
       <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'plans' %}">Subscription</a>
+        </li>
         {% if user.is_staff %}
         <li class="nav-item">
           <a class="nav-link" href="/admin">admin</a>

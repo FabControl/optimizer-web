@@ -18,6 +18,8 @@ def enforce_subscription_middleware(get_response):
             else:
                 if request.user.subscription_expiration > now:
                     request.user.plan = 'premium'
+            request.user.last_active = timezone.now()
+            request.user.save()
 
         response = get_response(request)
 

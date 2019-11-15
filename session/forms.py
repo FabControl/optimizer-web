@@ -189,8 +189,12 @@ class TestValidateForm(forms.ModelForm):
                 param = forms.IntegerField(min_value=parameter["values"][0], max_value=parameter["values"][1], widget=RangeSliderWidget([parameter["values"][0], parameter["values"][1]], parameter["units"]))
             elif parameter["programmatic_name"] == "extrusion_multiplier":
                 param = forms.DecimalField(min_value=parameter["values"][0], max_value=parameter["values"][1], widget=RangeSliderWidget([parameter["values"][0], parameter["values"][1]], parameter["units"]))
-            param.label = "Please select the best {} along the width of the selected substructure ({} {} - {} {}):".format(parameter["name"], str(parameter["values"][0]), parameter["units"], str(parameter["values"][-1]), parameter["units"])
+            param.label = "{}".format(parameter["name"].capitalize())
+            param.help_text = "Please select the best {} along the width of the selected substructure ({} {} - {} {}):".format(parameter["name"], str(parameter["values"][0]), parameter["units"], str(parameter["values"][-1]), parameter["units"])
             self.fields["min_max_parameter_three"] = param
+
+        self.fields["comments"] = forms.CharField(max_length=74,
+                                                  required=False, label='Comment')
 
         self.helper = FormHelper()
         self.helper.form_tag = False
@@ -200,6 +204,8 @@ class TestValidateForm(forms.ModelForm):
         self.instance.selected_parameter_value("selected_parameter_two_value", self.cleaned_data["validation"][1])
         if "min_max_parameter_three" in self.cleaned_data:
             self.instance.selected_parameter_value("selected_parameter_three_value", self.cleaned_data["min_max_parameter_three"])
+        if "comments" in self.cleaned_data:
+            self.instance.alter_previous_tests(-1, 'comments', self.cleaned_data["comments"] or 0)
         return super(TestValidateForm, self).save(commit=commit)
 
     class Meta:

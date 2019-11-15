@@ -26,6 +26,7 @@ urlpatterns = [
                   path('', include('authentication.urls')),
                   path('admin/', admin.site.urls),
                   # path('', index, name='index')
+                  path('', include('payments.urls')),
               ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 handler404 = 'session.views.error_404_view'

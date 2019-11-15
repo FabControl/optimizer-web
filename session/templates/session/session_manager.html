@@ -20,22 +20,22 @@
           <thead>
             <tr>
               <th data-sortable="true">Name</th>
-              <th data-sortable="true">Target</th>
-              <th data-sortable="true">Printer</th>
               <th data-sortable="true">Material</th>
+              <th data-sortable="true">Printer</th>
+              <th data-sortable="true">Target</th>
               <th data-sortable="true">Tests</th>
               <th data-sorted="true" data-sortable="true">Created</th>
-              <th data-sortable="false">Action</th>
+              <th data-sortable="false"></th>
             </tr>
           </thead>
           <tbody>
             {# ROW CONTENTS #}
             {% for session in sessions %}
             <tr>
-              <td><a href="{% url 'session_detail' session.pk %}">{{ session.name }}</a></td>
-              <td>{{ session.get_target_display }}</td>
-              <td><a class="text-secondary" href="{% url 'machine_detail' session.machine.pk %}">{{ session.machine.model }}</a></td>
+              <td><a class="text-secondary" href="{% url 'session_detail' session.pk %}">{{ session.name }}</a></td>
               <td><a class="text-secondary" href="{% url 'material_detail' session.material.pk %}">{{ session.material.name }}</a></td>
+              <td><a class="text-secondary" href="{% url 'machine_detail' session.machine.pk %}">{{ session.machine.model }}</a></td>
+              <td>{{ session.get_target_display }}</td>
               <td>{{ session.completed_tests }}</td>
               <td>{{ session.pub_date }}</td>
               <td>

@@ -4,10 +4,7 @@
 <title>{{ object.material.name }} - 3DOptimizer</title>
 
 <div class="container">
-  <div class="pt-3">
-    <h3>{{ object.name }}</h3>
-  </div>
-  <div class="row pt-3">
+  <div class="row pt-4">
     <div class="col-sm-4">
       <div class="card p-3">
         {% include "session/session_info.html" %}
@@ -17,6 +14,9 @@
       </div>
     </div>
     <div class="col-sm">
+      <div class="pb-3">
+        <h3>{{object.test_info.name|capfirst}}</h3>
+      </div>
       {% include "session/session_nav.html" %}
       {% csrf_token %}
       {% if "/overview" in request.path %}
@@ -28,11 +28,9 @@
       {% else %}
       {% include "session/session_validate.html" %}
       {% endif %}
-
     </div>
   </div>
 </div>
-
 <script type="text/javascript">
   function lerp(value1, value2, amount) {
     // Calculate what the interpolation step will be.
