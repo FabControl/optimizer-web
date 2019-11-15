@@ -18,8 +18,10 @@ from django.urls import reverse_lazy
 from django.shortcuts import render, redirect
 from .forms import ResetPasswordForm, SignUpForm, LoginForm, ChangePasswordForm
 from .tokens import account_activation_token
-from django.utils.encoding import force_text
-from django.utils.http import urlsafe_base64_decode
+from django.utils.encoding import force_text, force_bytes
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from messaging import email
+from django.contrib.auth.tokens import default_token_generator
 
 
 # Create your views here.
@@ -63,12 +65,26 @@ def user_signup(request):
             form.save_and_notify(request)
             return render(request, 'authentication/check_email.html', context)
         else:
-            message = "<br>".join([str(message[1].as_text()).lstrip('* ') for message in dict(form.errors).items()])
+            known_email = 'Email must be unique'
+            form_errors = list(filter(lambda x: x != known_email,
+                (str(m.as_text()).lstrip('* ') for m in dict(form.errors).values())))
+            if len(form_errors) < 1:
+                # someone is attempting to register twice with same email
+                # or checking if account with email exists
+                user_email = request.POST['email'].strip()
+                user = get_user_model().objects.get(email=user_email)
+                email.send_to_single(user_email, 'register_with_known_email',
+                                     request,
+                                     receiving_user=' '.join((user.first_name, user.last_name)),
+                                     token=default_token_generator.make_token(user),
+                                     uid=urlsafe_base64_encode(force_bytes(user.pk))
+                                     )
+                return render(request, 'authentication/check_email.html', context)
+
+
+            message = "<br>".join(form_errors)
             messages.error(request, mark_safe(message))
-            context["errors"] = form.error_messages
-            return render(request, 'authentication/signup.html', context)
-    else:
-        return render(request, 'authentication/signup.html', context)
+    return render(request, 'authentication/signup.html', context)
 
 
 @login_required

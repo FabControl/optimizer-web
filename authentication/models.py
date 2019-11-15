@@ -43,7 +43,8 @@ class User(AbstractUser):
     """User model."""
 
     username = None
-    email = models.EmailField('email address', unique=True)
+    email = models.EmailField('email address', unique=True,
+            error_messages={'unique':'Email must be unique'})
     PLAN_CHOICES = [("basic", "Basic"), ("premium", "Premium")]
     plan = models.CharField(max_length=32, choices=PLAN_CHOICES, default="basic")
     last_active = models.DateTimeField(null=True )
