@@ -11,6 +11,9 @@ class FakeHttpRequest():
 
 
 class SignUpFormTest(TestCase):
+    activate_link_match = re.compile(re.escape('https://test.local.domain') +
+            '/activate_account/[0-9a-zA-Z]{2}/[0-9a-z-]{24}/')
+
     def test_sugnup_message(self):
         req = FakeHttpRequest()
         req.META = {'HTTP_HOST':'test.local.domain'}
@@ -39,6 +42,9 @@ class SignUpFormTest(TestCase):
         # Password should never be included in message
         self.assertFalse('SomeVerySecretPassword' in m.body)
         self.assertFalse('SomeVerySecretPassword' in m.alternatives[0][0])
+        # Email shold include account activateion link
+        self.assertFalse(self.activate_link_match.search(m.body) is None)
+        self.assertFalse(self.activate_link_match.search(m.alternatives[0][0]) is None)
 
 
 class ResetPasswordFormTest(TestCase):
