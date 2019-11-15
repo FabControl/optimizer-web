@@ -1,6 +1,6 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views
-
+from .forms import PasswordSetForm
 from . import views
 
 urlpatterns = [
@@ -15,6 +15,7 @@ urlpatterns = [
                 template_name='authentication/password_reset_done.html'),
             name='password_reset_done'),
     path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(
+                form_class=PasswordSetForm,
                 post_reset_login=True, # comment this line to disable automatic login
                                     # after password change
                 template_name='authentication/password_reset_confirm.html'),

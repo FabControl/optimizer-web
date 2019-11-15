@@ -1,12 +1,13 @@
 from django import forms
 from .models import User
-from django.contrib.auth.forms import UserCreationForm, PasswordResetForm, PasswordChangeForm
+from django.contrib.auth.forms import UserCreationForm, PasswordResetForm, PasswordChangeForm, SetPasswordForm
 from crispy_forms.helper import FormHelper
 from django.utils import safestring
 from crispy_forms.layout import Submit, Layout, Row, Column, Field
 from django.forms import ModelForm
 from messaging import email
 from django.contrib.auth.tokens import default_token_generator
+from django.contrib.auth import get_user_model
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from .tokens import account_activation_token
@@ -76,6 +77,14 @@ class ResetPasswordForm(PasswordResetForm):
         self.helper.form_tag = False
         self.fields["email"].help_text = "Password recovery instructions will be sent to this email."
 
+    def get_users(self, email):
+        # Reimplemented to allow activate account with expired activation token
+        usr_model = get_user_model()
+        active_users = usr_model._default_manager.filter(**{
+        '%s__iexact' % usr_model.get_email_field_name(): email,
+        })
+        return (u for u in active_users if u.has_usable_password())
+
     def save(self, domain_override=None,
              subject_template_name='registration/password_reset_subject.txt',
              email_template_name='registration/password_reset_email.html',
@@ -108,3 +117,12 @@ class ChangePasswordForm(PasswordChangeForm):
         super(PasswordChangeForm, self).__init__(*a, **k)
         self.helper = FormHelper()
         self.helper.form_tag = False
+
+class PasswordSetForm(SetPasswordForm):
+    def save(self, commit=True):
+        password = self.cleaned_data["new_password1"]
+        self.user.set_password(password)
+        self.user.is_active = True
+        if commit:
+            self.user.save()
+        return self.user
