@@ -196,6 +196,7 @@ class LoginViewTest(TestCase):
 
 class SignupViewTest(TestCase):
     test_url = reverse('signup')
+    test_client = Client(HTTP_HOST=settings.ALLOWED_HOSTS[0])
 
     def test_equal_passwords(self):
     # Passwords must be equal
@@ -234,3 +235,31 @@ class SignupViewTest(TestCase):
         self.assertEqual(resp.status_code, 200)
 
         usr.delete()
+
+    def test_email_validation_link(self):
+        resp = self.test_client.post(self.test_url,
+                                {'email':'someone@somewhere.com',
+                                'first_name':'some',
+                                'last_name':'one',
+                                'password1':'ThisShouldBeSecretPassword',
+                                'password2':'ThisShouldBeSecretPassword',
+                                'company':'',
+                                'termsofuse':'on'
+                                })
+        self.assertEqual(resp.status_code, 200)
+        # email should contain activation link
+        self.assertEqual(len(mail.outbox), 1)
+        m = mail.outbox[-1]
+        self.assertEqual(m.to, ['someone@somewhere.com'])
+        # Email shold include account activateion link
+        activation_pattern = '/activate_account/[0-9a-zA-Z]{2}/[0-9a-z-]{24}/'
+        activation_match = re.search(activation_pattern, m.body)
+        self.assertFalse(activation_match is None)
+        # Link should be valid
+        resp = self.client.get(activation_match.group(0), follow=True)
+        self.assertEqual(resp.status_code, 200)
+        # User should be automatically logged in and redirected to dashboard
+        self.assertTrue(len(resp.redirect_chain) > 0)
+        self.assertEqual(resp.redirect_chain[-1][0], reverse('dashboard'))
+        # cleanup when done
+        get_user_model().objects.get(email='someone@somewhere.com').delete()
