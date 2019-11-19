@@ -290,3 +290,49 @@ class SignupViewTest(TestCase):
         self.assertEqual(resp.redirect_chain[-1][0], reverse('dashboard'))
         # cleanup when done
         get_user_model().objects.get(email='someone@somewhere.com').delete()
+
+    def test_password_recovery_link(self):
+        # If user is already registred, he should receive password recovery link
+        usr = get_user_model().objects.create_user(email='known_user@somewhere.com',
+                                 password='SomeSecretPassword')
+
+        resp = self.test_client.post(self.test_url,
+                                {'email':'known_user@somewhere.com',
+                                'first_name':'some',
+                                'last_name':'one',
+                                'password1':'ThisShouldBeSecretPassword',
+                                'password2':'ThisShouldBeSecretPassword',
+                                'company':'',
+                                'termsofuse':'on'
+                                })
+        self.assertEqual(resp.status_code, 200)
+
+        # user should still be inactive
+        self.assertFalse(usr.is_active)
+        # email should contain activation link
+        self.assertEqual(len(mail.outbox), 1)
+        m = mail.outbox[-1]
+        self.assertEqual(m.to, ['known_user@somewhere.com'])
+        # Email shold include password recovery link
+        reset_pattern = '/reset/[0-9a-zA-Z]{2}/[0-9a-z-]{24}/'
+        reset_match = re.search(reset_pattern, m.body)
+        self.assertFalse(reset_match is None)
+        # Link should be valid
+        resp = self.client.get(reset_match.group(0), follow=True)
+        # user should be redirected to password change view
+        self.assertEqual(resp.status_code, 200)
+        self.assertTrue(len(resp.redirect_chain) > 0)
+        # after password was changed, user should be active
+        resp = self.client.post(resp.redirect_chain[-1][0],
+                                {'new_password1':'SomeVerySecretPass',
+                                    'new_password2':'SomeVerySecretPass'},
+                                follow=True)
+        self.assertEqual(resp.status_code, 200)
+        self.assertTrue(len(resp.redirect_chain) > 0)
+        self.assertEqual(resp.redirect_chain[-1][0], reverse('password_reset_complete'))
+
+        # refresh cached is_active flag
+        del usr.is_active
+        self.assertTrue(usr.is_active)
+
+        usr.delete()
