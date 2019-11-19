@@ -345,3 +345,31 @@ class SignupViewTest(TestCase):
         self.assertTrue(usr.is_active)
 
         usr.delete()
+
+
+    def test_email_address_leak(self):
+        # Nothing in response should confirm existance of an account with this email
+        resp1 = self.test_client.post(self.test_url,
+                                {'email':'someone@somewhere.com',
+                                'first_name':'some',
+                                'last_name':'one',
+                                'password1':'ThisShouldBeSecretPassword',
+                                'password2':'ThisShouldBeSecretPassword',
+                                'company':'',
+                                'termsofuse':'on'
+                                })
+
+        resp2 = self.test_client.post(self.test_url,
+                                {'email':'someone@somewhere.com',
+                                'first_name':'some',
+                                'last_name':'one',
+                                'password1':'ThisShouldBeSecretPassword',
+                                'password2':'ThisShouldBeSecretPassword',
+                                'company':'',
+                                'termsofuse':'on'
+                                })
+
+        self.assertEqual(resp1.status_code, resp2.status_code)
+        self.assertEqual(resp1.content, resp2.content)
+
+
