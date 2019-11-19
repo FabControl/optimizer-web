@@ -193,6 +193,33 @@ class LoginViewTest(TestCase):
         # unknown sessions are not redirected from login page
         self.assertEqual(resp.status_code, 200)
 
+    def test_only_active_users(self):
+        # user is active only after email validation
+        user = get_user_model().objects.create_user(email='inactive@somewhere.com',
+                                 password='SomeSecretPassword')
+        resp = self.client.post(self.test_url, {'email':'inactive@somewhere.com',
+                                                 'password':'SomeSecretPassword'},
+                                                 follow=True)
+
+        # request should succeed
+        self.assertEqual(resp.status_code, 200)
+
+        # user should be redirected back to login page
+        self.assertTrue(len(resp.redirect_chain) > 0)
+        self.assertEqual(resp.redirect_chain[-1][0], self.test_url)
+
+        # active user should be able to log in
+        resp = self.client.post(self.test_url, {'email':'known_user@somewhere.com',
+                                                 'password':'SomeSecretPassword'},
+                                                 follow=True)
+        # request should succeed
+        self.assertEqual(resp.status_code, 200)
+
+        # user should be redirected to dashboard
+        self.assertTrue(len(resp.redirect_chain) > 0)
+        self.assertEqual(resp.redirect_chain[-1][0], reverse('dashboard'))
+
+        user.delete()
 
 class SignupViewTest(TestCase):
     test_url = reverse('signup')
