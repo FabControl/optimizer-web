@@ -274,6 +274,11 @@ class SignupViewTest(TestCase):
                                 'termsofuse':'on'
                                 })
         self.assertEqual(resp.status_code, 200)
+
+        # user should not be active yet
+        usr = get_user_model().objects.get(email='someone@somewhere.com')
+        self.assertFalse(usr.is_active)
+
         # email should contain activation link
         self.assertEqual(len(mail.outbox), 1)
         m = mail.outbox[-1]
@@ -288,8 +293,12 @@ class SignupViewTest(TestCase):
         # User should be automatically logged in and redirected to dashboard
         self.assertTrue(len(resp.redirect_chain) > 0)
         self.assertEqual(resp.redirect_chain[-1][0], reverse('dashboard'))
+        # Now user should be active
+        del usr.is_active
+        self.assertTrue(usr.is_active)
         # cleanup when done
-        get_user_model().objects.get(email='someone@somewhere.com').delete()
+        usr.delete()
+
 
     def test_password_recovery_link(self):
         # If user is already registred, he should receive password recovery link
