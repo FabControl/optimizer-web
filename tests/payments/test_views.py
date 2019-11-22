@@ -214,3 +214,61 @@ class PaymentPlansViewTest(TestCase):
         self.user.refresh_from_db()
         self.assertTrue(self.user.subscription_expiration > expiration_base)
         checkout.refresh_from_db()
+
+    def test_checkout_cancellation(self):
+        test_url = reverse('confirm_payment')
+        self.user.refresh_from_db()
+        expiration_base = self.user.subscription_expiration
+        # create test checkout
+        checkout = Checkout(user=self.user,
+                            stripe_id=uuid4(),
+                            payment_plan=self.plans[2])
+
+        checkout.save()
+        test_url = reverse('checkout_cancelled', args=[checkout.checkout_id])
+
+        # check if only logged in users can cancel their checkouts
+        resp = self.client.get(test_url, follow=True)
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.redirect_chain[-1][0],
+                         '?next='.join((reverse('login'), test_url)))
+
+        # check if you can't cancel other user's checkout
+        usr = get_user_model().objects.create_user(email='other_user@somewhere.com',
+                                is_active=True,
+                                password='OtherSecretPassword')
+        self.assertTrue(self.client.login(email='other_user@somewhere.com',
+                                password='OtherSecretPassword'))
+        resp = self.client.get(test_url)
+
+        self.assertEqual(resp.status_code, 404)
+        checkout.refresh_from_db()
+        self.user.refresh_from_db()
+        self.assertFalse(checkout.is_cancelled)
+        self.assertEqual(self.user.subscription_expiration, expiration_base)
+
+        usr.delete()
+
+        # check if expired checkout can't be cancelled
+        self.assertTrue(self.client.login(email='known_user@somewhere.com',
+                                            password='SomeSecretPassword'))
+
+        def two_days_later(): return checkout.created + timedelta(days=2)
+
+        with patch('django.utils.timezone.now', side_effect=two_days_later):
+            resp = self.client.get(test_url, follow=True)
+
+        self.assertEqual(resp.status_code, 200)
+        checkout.refresh_from_db()
+        self.user.refresh_from_db()
+        self.assertFalse(checkout.is_cancelled)
+        self.assertEqual(self.user.subscription_expiration, expiration_base)
+
+        # check if checkout can be cancelled
+        resp = self.client.get(test_url, follow=True)
+
+        self.assertEqual(resp.status_code, 200)
+        checkout.refresh_from_db()
+        self.user.refresh_from_db()
+        self.assertTrue(checkout.is_cancelled)
+        self.assertEqual(self.user.subscription_expiration, expiration_base)
