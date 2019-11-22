@@ -216,7 +216,6 @@ class PaymentPlansViewTest(TestCase):
         checkout.refresh_from_db()
 
     def test_checkout_cancellation(self):
-        test_url = reverse('confirm_payment')
         self.user.refresh_from_db()
         expiration_base = self.user.subscription_expiration
         # create test checkout
@@ -263,6 +262,7 @@ class PaymentPlansViewTest(TestCase):
         self.user.refresh_from_db()
         self.assertFalse(checkout.is_cancelled)
         self.assertEqual(self.user.subscription_expiration, expiration_base)
+        self.assertTrue(b'Your checkout session has expired' in resp.content)
 
         # check if checkout can be cancelled
         resp = self.client.get(test_url, follow=True)
