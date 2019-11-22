@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.conf import settings
 from django.utils import timezone
 from uuid import uuid4
+import json
 import stripe
 from unittest.mock import Mock, patch
 from payments.models import Plan, Checkout
@@ -38,6 +39,8 @@ class PaymentPlansViewTest(TestCase):
     @classmethod
     def tearDownClass(self):
         self.user.delete()
+        for p in self.plans:
+            p.delete()
 
     @classmethod
     def setUp(self):
@@ -75,7 +78,7 @@ class PaymentPlansViewTest(TestCase):
             for k in ['amount', 'currency', 'name', 'quantity']:
                 self.assertTrue(k in keys, msg='"{0}" not in {1}'.format(k, i))
 
-        test_item = CheckoutTestItem(cancel_url, success_url, 
+        test_item = CheckoutTestItem(cancel_url, success_url,
                                      line_items, client_reference_id)
         test_item.session_value = {
                 'id': test_item.stripe_id,
@@ -139,3 +142,75 @@ class PaymentPlansViewTest(TestCase):
 
         self.assertTrue(self.user.subscription_expiration >= result_timestamp_min)
         self.assertTrue(self.user.subscription_expiration <= result_timestamp_max)
+
+    def test_webhook_validation(self):
+        test_url = reverse('confirm_payment')
+        self.user.refresh_from_db()
+        expiration_base = self.user.subscription_expiration
+        # create checkout object
+        checkout = Checkout(user=self.user,
+                            stripe_id=uuid4(),
+                            payment_plan=self.plans[2])
+
+        checkout.save()
+        # make sure header is required
+        resp = self.client.post(test_url, {'data':''})
+        self.assertEqual(resp.status_code, 400)
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.subscription_expiration, expiration_base)
+
+        # make sure errors are handled properly
+        value_err = Mock(side_effect=ValueError())
+        with patch('stripe.Webhook.construct_event', value_err):
+            resp = self.client.post(test_url, {'data':''},
+                                    content_type='application/json',
+                                    HTTP_STRIPE_SIGNATURE='SecretSignatureFromStripe')
+
+        self.assertEqual(resp.status_code, 400)
+        value_err.assert_called_once_with(bytes(json.dumps({'data': ''}), 'ascii'),
+                                          'SecretSignatureFromStripe',
+                                          settings.STRIPE_ENDPOINT_SECRET)
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.subscription_expiration, expiration_base)
+
+        stripe_err = Mock(side_effect=stripe.error.SignatureVerificationError('msg', 'header'))
+        with patch('stripe.Webhook.construct_event', stripe_err):
+            resp = self.client.post(test_url, {'data':''},
+                                    content_type='application/json',
+                                    HTTP_STRIPE_SIGNATURE='SecretSignatureFromStripe')
+
+        self.assertEqual(resp.status_code, 400)
+        stripe_err.assert_called_once_with(bytes(json.dumps({'data': ''}), 'ascii'),
+                                          'SecretSignatureFromStripe',
+                                          settings.STRIPE_ENDPOINT_SECRET)
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.subscription_expiration, expiration_base)
+
+        # make sure event type is checked
+        def wrong_event(p, s, k):
+            return {'type' : 'checkout.session.something',
+                    'data': {'object': {'client_reference_id': checkout.pk}}}
+
+        with patch('stripe.Webhook.construct_event', side_effect=wrong_event):
+            resp = self.client.post(test_url, {'data':''},
+                                    content_type='application/json',
+                                    HTTP_STRIPE_SIGNATURE='SecretSignatureFromStripe')
+
+        self.assertEqual(resp.status_code, 400)
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.subscription_expiration, expiration_base)
+
+        # make sure correct event works
+        def correct_event(p, s, k):
+            return {'type' : 'checkout.session.completed',
+                    'data': {'object': {'client_reference_id': checkout.pk}}}
+
+        with patch('stripe.Webhook.construct_event', side_effect=correct_event):
+            resp = self.client.post(test_url, {'data':''},
+                                    content_type='application/json',
+                                    HTTP_STRIPE_SIGNATURE='SecretSignatureFromStripe')
+
+        self.assertEqual(resp.status_code, 200)
+        self.user.refresh_from_db()
+        self.assertTrue(self.user.subscription_expiration > expiration_base)
+        checkout.refresh_from_db()

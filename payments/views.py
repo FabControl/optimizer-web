@@ -24,7 +24,7 @@ class PaymentPlansView(BaseFormView):
         plans = Plan.objects.filter(type='premium').order_by('price')
 
         context = {'plans': plans,
-                # Should work correctly if database contains 
+                # Should work correctly if database contains
                 #   only one instance of Plan with type 'basic'
                 'core': Plan.objects.get(type='basic')}
         if request.user.is_authenticated:
@@ -88,12 +88,14 @@ def checkout_cancelled(request, checkout):
 @csrf_exempt
 def confirm_payment(request):
     payload = request.body
-    sig_header = request.META['HTTP_STRIPE_SIGNATURE']
-    event = None
+    try:
+        sig_header = request.META['HTTP_STRIPE_SIGNATURE']
+    except KeyError:
+        return HttpResponse(status=400)
 
     try:
         event = stripe.Webhook.construct_event(payload,
-                                               sig_header, 
+                                               sig_header,
                                                settings.STRIPE_ENDPOINT_SECRET)
     except ValueError as e:
         # Invalid payload
