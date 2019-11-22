@@ -73,6 +73,14 @@ class User(AbstractUser):
         self._onboarding_sections = self._meta.get_field("_onboarding_sections").get_default()
         self.save()
 
+    @property
+    def plan_navbar_text(self):
+        if self.plan == 'basic':
+            return "Upgrade to Full Access"
+        else:
+            expiration_delta = self.subscription_expiration - timezone.now()
+            return "Full access ({} days)".format(expiration_delta.days + 1)
+
     def extend_subscription(self, delta:timedelta):
         """
         Method for extending subscription period
