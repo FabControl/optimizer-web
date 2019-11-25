@@ -2,7 +2,7 @@ from django.test import TestCase, Client
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.conf import settings
-from django.utils import timezone
+from django.utils import timezone, html
 from uuid import uuid4
 import json
 import stripe
@@ -214,3 +214,151 @@ class PaymentPlansViewTest(TestCase):
         self.user.refresh_from_db()
         self.assertTrue(self.user.subscription_expiration > expiration_base)
         checkout.refresh_from_db()
+
+    def test_checkout_cancellation(self):
+        self.user.refresh_from_db()
+        expiration_base = self.user.subscription_expiration
+        # create test checkout
+        checkout = Checkout(user=self.user,
+                            stripe_id=uuid4(),
+                            payment_plan=self.plans[2])
+
+        checkout.save()
+        test_url = reverse('checkout_cancelled', args=[checkout.checkout_id])
+
+        # check if only logged in users can cancel their checkouts
+        resp = self.client.get(test_url, follow=True)
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.redirect_chain[-1][0],
+                         '?next='.join((reverse('login'), test_url)))
+
+        # check if you can't cancel other user's checkout
+        usr = get_user_model().objects.create_user(email='other_user@somewhere.com',
+                                is_active=True,
+                                password='OtherSecretPassword')
+        self.assertTrue(self.client.login(email='other_user@somewhere.com',
+                                password='OtherSecretPassword'))
+        resp = self.client.get(test_url)
+
+        self.assertEqual(resp.status_code, 404)
+        checkout.refresh_from_db()
+        self.user.refresh_from_db()
+        self.assertFalse(checkout.is_cancelled)
+        self.assertEqual(self.user.subscription_expiration, expiration_base)
+
+        usr.delete()
+
+        # check if expired checkout can't be cancelled
+        self.assertTrue(self.client.login(email='known_user@somewhere.com',
+                                            password='SomeSecretPassword'))
+
+        def two_days_later(): return checkout.created + timedelta(days=2)
+
+        with patch('django.utils.timezone.now', side_effect=two_days_later):
+            resp = self.client.get(test_url, follow=True)
+
+        self.assertEqual(resp.status_code, 200)
+        checkout.refresh_from_db()
+        self.user.refresh_from_db()
+        self.assertFalse(checkout.is_cancelled)
+        self.assertEqual(self.user.subscription_expiration, expiration_base)
+        self.assertTrue(b'Your checkout session has expired' in resp.content)
+
+        # check if checkout can be cancelled
+        resp = self.client.get(test_url, follow=True)
+
+        self.assertEqual(resp.status_code, 200)
+        checkout.refresh_from_db()
+        self.user.refresh_from_db()
+        self.assertTrue(checkout.is_cancelled)
+        self.assertEqual(self.user.subscription_expiration, expiration_base)
+
+    def test_completed_message(self):
+        self.user.refresh_from_db()
+        expiration_base = self.user.subscription_expiration
+        # create test checkout
+        checkout = Checkout(user=self.user,
+                            stripe_id=uuid4(),
+                            payment_plan=self.plans[2])
+
+        checkout.save()
+        test_url = reverse('checkout_completed', args=[checkout.checkout_id])
+
+        # check if only logged in users can access their checkouts
+        resp = self.client.get(test_url, follow=True)
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.redirect_chain[-1][0],
+                         '?next='.join((reverse('login'), test_url)))
+
+        checkout.refresh_from_db()
+        self.user.refresh_from_db()
+        self.assertFalse(checkout.is_paid)
+        self.assertEqual(self.user.subscription_expiration, expiration_base)
+
+        # check if you can't see messages from other checkouts
+        usr = get_user_model().objects.create_user(email='other_user@somewhere.com',
+                                is_active=True,
+                                password='OtherSecretPassword')
+        self.assertTrue(self.client.login(email='other_user@somewhere.com',
+                                password='OtherSecretPassword'))
+        resp = self.client.get(test_url)
+
+        self.assertEqual(resp.status_code, 404)
+        checkout.refresh_from_db()
+        self.user.refresh_from_db()
+        self.assertFalse(checkout.is_paid)
+        self.assertEqual(self.user.subscription_expiration, expiration_base)
+
+        usr.delete()
+
+        # check if checkout links expire
+        self.assertTrue(self.client.login(email='known_user@somewhere.com',
+                                            password='SomeSecretPassword'))
+
+        def two_days_later(): return checkout.created + timedelta(days=2)
+
+        with patch('django.utils.timezone.now', side_effect=two_days_later):
+            resp = self.client.get(test_url, follow=True)
+
+        self.assertEqual(resp.status_code, 200)
+        checkout.refresh_from_db()
+        self.user.refresh_from_db()
+        self.assertFalse(checkout.is_paid)
+        self.assertEqual(self.user.subscription_expiration, expiration_base)
+        self.assertTrue(b'Your checkout session has expired' in resp.content)
+
+        # check warning message, if not confirmed
+        resp = self.client.get(test_url, follow=True)
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.redirect_chain[-1][0], reverse('plans'))
+        checkout.refresh_from_db()
+        self.user.refresh_from_db()
+        self.assertFalse(checkout.is_paid)
+        self.assertEqual(self.user.subscription_expiration, expiration_base)
+        msg = html.escape('We haven\'t received your payment yet. Please check after few minutes')
+        self.assertTrue(bytes(msg, 'ascii') in resp.content)
+
+        # notify about checkout completion
+        def correct_event(p, s, k):
+            return {'type' : 'checkout.session.completed',
+                    'data': {'object': {'client_reference_id': checkout.pk}}}
+
+        with patch('stripe.Webhook.construct_event', side_effect=correct_event):
+            resp = self.client.post(reverse('confirm_payment'), {'data':''},
+                                    content_type='application/json',
+                                    HTTP_STRIPE_SIGNATURE='SecretSignatureFromStripe')
+
+        self.assertEqual(resp.status_code, 200)
+
+        # check success message on confirmed payment
+        resp = self.client.get(test_url, follow=True)
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.redirect_chain[-1][0], reverse('plans'))
+
+        msg = html.escape('Your full access was extended for {0.days} days'.format(checkout.payment_plan.subscription_period))
+        self.assertTrue(bytes(msg, 'ascii') in resp.content)
+
+        checkout.refresh_from_db()
+        self.user.refresh_from_db()
+        self.assertTrue(checkout.is_paid)
+        self.assertTrue(self.user.subscription_expiration > expiration_base)
