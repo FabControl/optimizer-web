@@ -410,9 +410,10 @@ class Session(models.Model):
         """
         for test in self.previous_tests[::-1]:
             for parameter in test["tested_parameters"]:
-                if "speed_printing" in parameter["programmatic_name"]:
-                    values = parameter["values"]
-                    return [values[0], values[-1]]
+                if parameter["programmatic_name"] is not None:
+                    if "speed_printing" in parameter["programmatic_name"]:
+                        values = parameter["values"]
+                        return [values[0], values[-1]]
         return [0, 0]
 
     @property
