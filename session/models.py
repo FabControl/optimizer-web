@@ -248,11 +248,21 @@ class Session(models.Model):
             return True
 
     def delete(self, using=None, keep_parents=False):
+        """
+        Deletes self, as well as associated settings object.
+        :param using:
+        :param keep_parents:
+        :return:
+        """
         if self.settings:
             self.settings.delete()
         super(Session, self).delete(using, keep_parents)
 
     def init_settings(self):
+        """
+        Initializes settings and sets some initial values for certain fields with machine-specific values.
+        :return:
+        """
         for name, value in self.persistence["settings"].items():
             self.settings.__setattr__(name, value)
         self.settings.track_width_raft = self.machine.extruder.nozzle.size_id
@@ -285,16 +295,33 @@ class Session(models.Model):
 
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
+        """
+        Saves self, as well as self.settings upon saving.
+        :param force_insert:
+        :param force_update:
+        :param using:
+        :param update_fields:
+        :return:
+        """
         self.update_persistence()
         self.settings.save()
         super(Session, self).save(force_insert, force_update, using, update_fields)
 
     @property
     def persistence(self):
+        """
+        Updates and then returns a Session persistent data dictionary.
+        :return:
+        """
         return self.update_persistence()
 
     @persistence.setter
-    def persistence(self, value):
+    def persistence(self, value: dict or str):
+        """
+        Sets persistent data dictionary and self.settings fields to input value.
+        :param value:
+        :return:
+        """
         if type(value) == dict:
             self.settings.critical_overhang_angle = value["settings"]["critical_overhang_angle"]
             self.settings.save()
@@ -305,6 +332,10 @@ class Session(models.Model):
 
     @property
     def min_max_parameter_one(self):
+        """
+        Deserializes self._min_max_parameter_one to a list of two values.
+        :return:
+        """
         if type(self._min_max_parameter_one) == list:
             return self._min_max_parameter_one
         else:
@@ -312,25 +343,54 @@ class Session(models.Model):
 
     @min_max_parameter_one.setter
     def min_max_parameter_one(self, value):
+        """
+        Serializes input value to self._min_max_parameter_one as a string.
+        :return:
+        """
+        if type(value) != list:
+            raise TypeError("Given input value {} is not a list.".format(str(value)))
         self._min_max_parameter_one = str(value)
 
     @property
     def min_max_parameter_two(self):
+        """
+        Deserializes self._min_max_parameter_two to a list of two values.
+        :return:
+        """
         return ast.literal_eval(self._min_max_parameter_two)
 
     @min_max_parameter_two.setter
     def min_max_parameter_two(self, value):
+        """
+        Serializes input value to self._min_max_parameter_two as a string.
+        :return:
+        """
         self._min_max_parameter_two = str(value)
 
     @property
     def min_max_parameter_three(self):
+        """
+        Deserializes self._min_max_parameter_three to a list of two values.
+        :return:
+        """
         return ast.literal_eval(self._min_max_parameter_three)
 
     @min_max_parameter_three.setter
     def min_max_parameter_three(self, value):
+        """
+        Serializes input value to self._min_max_parameter_three as a string.
+        :return:
+        """
         self._min_max_parameter_three = str(value)
 
     def selected_parameter_value(self, value_key, new_value):
+        """
+        Assigns newly selected settings to self.settings object.
+        For example, user selects track_height of 0.15, and this will set self.settings.track_height to 0.15
+        :param value_key:
+        :param new_value:
+        :return:
+        """
         if new_value is not None:
             parameter_numbers = ["parameter_one", "parameter_two", "parameter_three"]
             for number in parameter_numbers:
@@ -343,6 +403,11 @@ class Session(models.Model):
 
     @property
     def test_info(self):
+        """
+        Checks if test_info is cached and if it is still valid for the current test.
+        If it isn't, test_info is updated.
+        :return:
+        """
         temp_info = None
         if self._test_info != "":
             temp_info = json.loads(self._test_info)
@@ -355,26 +420,50 @@ class Session(models.Model):
         return temp_info
 
     def update_test_info(self):
+        """
+        Contacts Optimizer API to retrieve test_info for the current persistence data.
+        :return:
+        """
         temp_info = api_client.get_test_info(self.persistence)
         self._test_info = json.dumps(temp_info)
         return temp_info
 
     @property
     def get_gcode(self):
+        """
+        Retrieves GCODE for the current persistence data.
+        :return:
+        """
         gcode = api_client.return_data(self.persistence, output="gcode")
         self.persistence = api_client.persistence
         return gcode
 
     @property
     def previous_tests(self):
+        """
+        A shortcut method for retrieving a list of dicts of previous test data.
+        :return:
+        """
         return self.persistence["session"]["previous_tests"]
 
     def alter_previous_tests(self, index, key, value):
+        """
+        A method which takes a test index, field key and value, to manually alter fields in formerly tested tests.
+        :param index:
+        :param key:
+        :param value:
+        :return:
+        """
         temp_persistence = self.persistence
         temp_persistence["session"]["previous_tests"][index][key] = value
         self.persistence = temp_persistence
 
     def delete_previous_test(self, number):
+        """
+        Deletes test (or tests) from self.previous_tests, if their test_number == number
+        :param number:
+        :return:
+        """
         persistence = self.persistence
         temp_tests = self.previous_tests
         for test in temp_tests:
@@ -384,12 +473,20 @@ class Session(models.Model):
         self.persistence = persistence
 
     def get_test_with_current_number(self):
+        """
+        Looks through previous tests and returns data of the first test whose number matches the current self.test_number.
+        :return:
+        """
         for test in self.previous_tests:
             if test["test_number"] == self.test_number:
                 return test
 
     @property
     def min_max_parameters(self):
+        """
+        Returns a list of dicts (or dict) of min_max parameters (one, two or three)
+        :return:
+        """
         parameters = []
         for item, content in self.test_info.items():
             if item.startswith("parameter_"):
@@ -418,10 +515,18 @@ class Session(models.Model):
 
     @property
     def completed_tests(self):
+        """
+        Returns the amount of previously conducted tests.
+        :return:
+        """
         return len(self.previous_tests)
 
     @property
     def executed(self):
+        """
+        Checks whether or not the current test is executed. Used to trigger validation view.
+        :return:
+        """
         try:
             for test in self.previous_tests:
                 if self.test_number == test["test_number"] and test["executed"]:
@@ -431,6 +536,10 @@ class Session(models.Model):
             return False
 
     def get_validated_tests(self):
+        """
+        Returns a list of test data for tests that have been validated.
+        :return:
+        """
         validated_tests = []
         for test in self.previous_tests:
             if test["validated"]:
@@ -439,10 +548,21 @@ class Session(models.Model):
 
     @property
     def test_number(self):
+        """
+        Returns the current/active test number
+        :return:
+        """
         return self._test_number
 
     @test_number.setter
     def test_number(self, value):
+        """
+        Sets the active test number to the new one, checks whether or not the test is available for the user,
+        advances to the next primary test if it isn't.
+        Flushes test_info and min_max parameters.
+        :param value:
+        :return:
+        """
         allowed_numbers = []
         if self.owner.plan == 'basic':
             allowed_numbers = [number for number in api_client.get_routine(mode='primary')]
@@ -460,7 +580,7 @@ class Session(models.Model):
 
     def test_number_next(self, primary: bool = True):
         """
-        Method for advancing test_number according to testing session routine, retrieved from backend
+        Method for advancing test_number according to testing session routine retrieved from backend
         :return:
         """
         routine = api_client.get_routine()
@@ -492,10 +612,21 @@ class Session(models.Model):
 
     @property
     def previously_tested_parameters(self):
+        """
+        Returns a dict of lists of previously tested and set parameters.
+        Follows the following convention ["test_number"][parameter1, parameter2, ...]
+        :return:
+        """
         return json.loads(self._previously_tested_parameters)
 
     @previously_tested_parameters.setter
     def previously_tested_parameters(self, value):
+        """
+        Takes a list of parameters and assigns it to current test number key in self._previously_test_values
+        Used to block previously tested and assigned values in test generation view.
+        :param value:
+        :return:
+        """
         parameters = self.previously_tested_parameters
         if value is not None:
             parameters[self.test_number] = value
@@ -504,6 +635,11 @@ class Session(models.Model):
         self._previously_tested_parameters = json.dumps(parameters)
 
     def get_previously_tested_parameters(self):
+        """
+        Returns a flat list of previously tested and/or assigned parameters.
+        Follows the convention of [parameter1, parameter2, parameter3, ...]
+        :return:
+        """
         parameters = self.previously_tested_parameters
         output = []
         for test, param_list in parameters.items():
@@ -513,6 +649,10 @@ class Session(models.Model):
         return output
 
     def remove_last_test(self):
+        """
+        Delete the last test in previous_tests. Used to undo a test_generation from test validation_view.
+        :return:
+        """
         temp_persistence = self.persistence
         del temp_persistence["session"]["previous_tests"][-1]
         self.persistence = temp_persistence
@@ -522,7 +662,11 @@ class Session(models.Model):
         return "{} (target: {})".format(self.name, self.target)
 
     @property
-    def __json__(self):
+    def __json__(self) -> dict:
+        """
+        Returns ["session"] persistent data block representation of the current session state.
+        :return: type dict
+        """
         output = {
             "uid": self.pk,
             "target": self.target,
