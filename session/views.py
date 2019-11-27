@@ -418,8 +418,8 @@ def serve_config(request, pk, slicer):
     session = get_object_or_404(Session, pk=pk)
     session.is_owner(request.user)
     configuration_file, configuration_file_format = api_client.get_config(slicer, session.persistence)
-    response = FileResponse(configuration_file.decode(encoding = "ISO-8859-1"), content_type='text/plain')
-    response['Content-Type'] = 'text/xml'
+    response = HttpResponse(configuration_file, content_type='text/plain')
+    response['Content-Type'] = 'application/octet-stream'
     response['Content-Disposition'] = 'attachment; ' + 'filename={}_{}'.format(str(session.material), str(session.machine)).replace(" ", "_").replace(".", "-") + '.{}'.format(configuration_file_format)
     return response
 
