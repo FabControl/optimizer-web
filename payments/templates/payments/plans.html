@@ -9,7 +9,7 @@
         <div class="row justify-content-center">
           <div class="col-sm-12 text-left">
             <h1 class="display-4">Basic</h1>
-            <p class="lead text-primary">{{core.price}} EUR</p>
+            <p class="lead text-primary">{{core.pretty_price}} EUR</p>
             <hr>
             <p>Access to basic features</p>
             <button onclick="window.location.href = '{% url 'signup' %}'" class="btn-lg btn-primary" name="signup">Sign up for free</button>
@@ -39,7 +39,12 @@
           <div class="row justify-content-center">
             <div class="col-sm-12 text-left">
               <h1 class="display-4">{{plan.name}}</h1>
-              <p class="text-primary"><span class='lead'>{{plan.price}} EUR</span> <small>single payment</small></p>
+              <p class="text-primary"><span class='lead'>{{plan.pretty_price}} EUR</span>
+                <br>
+                <small>One-time payment</small>
+                <br>
+                <small>No subscription</small>
+              </p>
               <hr>
               <p>Complete access to all features</p>
               {% if request.user.is_authenticated %}
