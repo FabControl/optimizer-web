@@ -493,9 +493,12 @@ class Session(models.Model):
                 if type(content) == dict:
                     if content["name"] is None:
                         continue
-                    parameters.append({"name": content["name"], "units": content["units"], "iterable_values": list(enumerate(content["values"])),
+                    parameters.append({"name": content["name"], "units": content["units"],
+                                       "iterable_values": list(enumerate(content["values"])),
                                        "values": content["values"], "parameter": item,
-                                       "programmatic_name": content["programmatic_name"], "min_max": content["min_max"]})
+                                       "programmatic_name": content["programmatic_name"],
+                                       "min_max": content["min_max"],
+                                       "hint_active": content["hint_active"]})
         if len(parameters) == 3:
             parameters = [parameters[i] for i in [0, 2, 1]]
         return parameters

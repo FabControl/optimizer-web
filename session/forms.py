@@ -261,6 +261,9 @@ class TestGenerateForm(forms.ModelForm):
                 self.fields[field_id].label = "{} ({})".format(parameter["name"].capitalize(), (
                     "°C" if parameter["units"] == "degC" else parameter["units"]))
 
+                if parameter['hint_active']:
+                    self.fields[field_id].help_text = "{}".format(parameter['hint_active'])
+
         for secondary_parameter in test_info["other_parameters"]:
             secondary_parameters.append(secondary_parameter)
 
