@@ -39,3 +39,5 @@ EMAIL_SENDER_ADDRESS = 'noreply@some.test.domain'
 STRIPE_API_KEY = 'Some very secret key'
 STRIPE_PUBLIC_KEY = 'Some not so secret key'
 STRIPE_ENDPOINT_SECRET = 'Another secret key'
+
+GA_TRACKING_ID = 'UA_STEAL_ALL_YOR_DATA'
