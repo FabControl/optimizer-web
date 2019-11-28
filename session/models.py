@@ -611,7 +611,13 @@ class Session(models.Model):
 
     @property
     def tested_values(self):
-        return [self.previous_tests[-1]["tested_parameter_one_values"][::-1], self.previous_tests[-1]["tested_parameter_two_values"]]
+        """
+        Returns a list of tested_parameters (one and two). One is inverted.
+        Used in validation table.
+        :return:
+        """
+        return [self.previous_tests[-1]["tested_parameter_one_values"][::-1],
+                self.previous_tests[-1]["tested_parameter_two_values"]]
 
     @property
     def previously_tested_parameters(self):
