@@ -321,7 +321,7 @@ class TestGenerateForm(forms.ModelForm):
                 logging.getLogger("views").info("Currently saving {}: {}".format(parameter, self.cleaned_data[parameter]))
                 self.instance.__setattr__(parameter, self.cleaned_data[parameter])
             else:
-                self.instance.__setattr__(parameter, self.cleaned_data[info["programmatic_name"]])
+                self.instance.__setattr__(parameter, [self.cleaned_data[info["programmatic_name"]]])
         for setting in self.secondary_parameters_programmatic_names:
             logging.getLogger("views").info("Currently saving {}: {}".format(setting, self.cleaned_data[setting]))
             settings.__setattr__(setting, self.cleaned_data[setting])
