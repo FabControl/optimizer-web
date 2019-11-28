@@ -469,6 +469,17 @@ class Session(models.Model):
         """
         return self.persistence["session"]["previous_tests"]
 
+    def previous_tests_as_dict(self):
+        """
+        A shortcut method for retrieving a dict of dicts of previous test data.
+        Follows the convention of test_number: {test data}
+        :return:
+        """
+        output = {}
+        for test in self.previous_tests:
+            output[test["test_number"]] = test
+        return output
+
     def alter_previous_tests(self, index, key, value):
         """
         A method which takes a test index, field key and value, to manually alter fields in formerly tested tests.
@@ -674,11 +685,16 @@ class Session(models.Model):
         :return:
         """
         parameters = self.previously_tested_parameters
+        previous_tests = self.previous_tests_as_dict()
         output = []
         for test, param_list in parameters.items():
-            for param in param_list:
-                if param not in output:
-                    output.append(param)
+            print("[Debug]{}".format(test))
+            print("[Debug]{}".format(previous_tests))
+            if test in previous_tests:
+                if previous_tests[test]['validated']:
+                    for param in param_list:
+                        if param not in output:
+                            output.append(param)
         return output
 
     def remove_last_test(self):
