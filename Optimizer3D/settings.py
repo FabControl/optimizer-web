@@ -138,10 +138,4 @@ LOGGING = {
     },
 }
 
-# Load Google Analytics tracking ID, if it is present in config. For use only in production environment
-if "GA_TRACKING_ID" in config:
-    GA_TRACKING_ID = config["GA_TRACKING_ID"]
-else:
-    GA_TRACKING_ID = None
-
 PASSWORD_RESET_TIMEOUT_DAYS = 1
