@@ -27,6 +27,11 @@
   <link rel="stylesheet" href="{% static 'session/css/index.css' %}">
   <link rel="shortcut icon" type="image/png" href="{% static 'session/img/favicon.ico' %}" />
   {% if 'session_detail' not in request.resolver_match.url_name %}
+  {% if ga_tracking_id %}
+  {% block analytics %}
+    {% include "session/google_analytics.html" %}
+  {% endblock %}
+  {% endif %}
   <title>3DOptimizer</title>
   {% endif %}
   {% include "session/navbar.html" %}
@@ -36,7 +41,7 @@
 
   <!-- Message notification -->
   {% if messages %}
-  {% include "session/message.html" %}
+    {% include "session/message.html" %}
   {% endif %}
   {% block content %}{% endblock %}
 
