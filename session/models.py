@@ -152,7 +152,7 @@ class Settings(models.Model):
     track_width = models.DecimalField(max_digits=3, decimal_places=2, default=0)
     track_width_raft = models.DecimalField(max_digits=3, decimal_places=2, default=0)
     extrusion_multiplier = models.DecimalField(max_digits=3, decimal_places=2, default=1.0)
-    temperature_extruder = models.IntegerField(default=0)
+    _temperature_extruder = models.IntegerField(default=0)
     temperature_extruder_raft = models.IntegerField(default=0)
     retraction_restart_distance = models.DecimalField(max_digits=4, decimal_places=2, default=0)
     retraction_speed = models.IntegerField(default=100)
@@ -169,6 +169,26 @@ class Settings(models.Model):
 
     def __str__(self):
         return self.name
+
+    @property
+    def temperature_extruder(self):
+        """
+        If temperature_extruder is 0, default to temperature_extruder_raft
+        :return:
+        """
+        if self._temperature_extruder == 0:
+            self._temperature_extruder = self.temperature_extruder_raft
+            self.save()
+        return self._temperature_extruder
+
+    @temperature_extruder.setter
+    def temperature_extruder(self, value):
+        """
+        Stores actual value to the DB via a hidden variable
+        :param value:
+        :return:
+        """
+        self._temperature_extruder = value
 
     @property
     def __json__(self):
