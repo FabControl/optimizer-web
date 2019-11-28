@@ -688,8 +688,6 @@ class Session(models.Model):
         previous_tests = self.previous_tests_as_dict()
         output = []
         for test, param_list in parameters.items():
-            print("[Debug]{}".format(test))
-            print("[Debug]{}".format(previous_tests))
             if test in previous_tests:
                 if previous_tests[test]['validated']:
                     for param in param_list:
