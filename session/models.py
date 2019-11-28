@@ -521,7 +521,8 @@ class Session(models.Model):
                                        "values": content["values"], "parameter": item,
                                        "programmatic_name": content["programmatic_name"],
                                        "min_max": content["min_max"],
-                                       "hint_active": content["hint_active"]})
+                                       "hint_active": content["hint_active"],
+                                       "active": content["active"]})
         if len(parameters) == 3:
             parameters = [parameters[i] for i in [0, 2, 1]]
         return parameters

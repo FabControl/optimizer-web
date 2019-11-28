@@ -229,47 +229,48 @@ class TestGenerateForm(forms.ModelForm):
                     if item[1]["name"] is not None:
                         self.parameters.append(('min_max_{}'.format(item[0]), item[1]))
 
-        # Creating custom form fields for min_max
-        for parameter in session.min_max_parameters:
-            if parameter["name"] is not None:
-                field_id = "min_max_{}".format(parameter["parameter"])
-                widgets = []
-                highest_iterable = parameter["iterable_values"][-1][0]
-                for iterable, value in parameter["iterable_values"]:
-                    subwidget = forms.NumberInput(attrs={
-                            "class": "form-control",
-                            "type": ("text" if iterable not in [0, highest_iterable] else "number"),
-                            "id": "linspace-field-{}".format(str(iterable)),
-                            "value": round(value, (2 if parameter["units"] in ["mm", "-"] else 0)),
-                            "step": ("0.01" if parameter["units"] in ["mm", "-"] else "1"),
-                            "onchange": "change_fields(this)",
-                            "min": round(parameter["min_max"][0], 3),
-                            "max": round(parameter["min_max"][1], 3)
-                        })
-                    if iterable not in [0, highest_iterable]:
-                        subwidget.attrs["type"] = "text"
-                        subwidget.attrs["readonly"] = "readonly"
-                    else:
-                        subwidget.attrs["type"] = "number"
-                    widgets.append(subwidget)
-
-                self.fields[field_id] = MinMaxField(
-                    fields=([forms.DecimalField(initial=x) for x in parameter["values"]]),
-                    widget=MinMaxWidget(
-                        widgets=widgets))
-
-                self.fields[field_id].label = "{} ({})".format(parameter["name"].capitalize(), (
-                    "°C" if parameter["units"] == "degC" else parameter["units"]))
-
-                if parameter['hint_active']:
-                    self.fields[field_id].help_text = "{}".format(parameter['hint_active'])
-
-        for secondary_parameter in test_info["other_parameters"]:
-            secondary_parameters.append(secondary_parameter)
-
         # Containers for active and inactive (readonly) fields
         actives = {}
         inactives = {}
+
+        # Creating custom form fields for min_max
+        for parameter in session.min_max_parameters:
+            if parameter["active"]:
+                if parameter["name"] is not None:
+                    field_id = "min_max_{}".format(parameter["parameter"])
+                    widgets = []
+                    highest_iterable = parameter["iterable_values"][-1][0]
+                    for iterable, value in parameter["iterable_values"]:
+                        subwidget = forms.NumberInput(attrs={
+                                "class": "form-control",
+                                "type": ("text" if iterable not in [0, highest_iterable] else "number"),
+                                "id": "linspace-field-{}".format(str(iterable)),
+                                "value": round(value, (2 if parameter["units"] in ["mm", "-"] else 0)),
+                                "step": ("0.01" if parameter["units"] in ["mm", "-"] else "1"),
+                                "onchange": "change_fields(this)",
+                                "min": round(parameter["min_max"][0], 3),
+                                "max": round(parameter["min_max"][1], 3)
+                            })
+                        if iterable not in [0, highest_iterable]:
+                            subwidget.attrs["type"] = "text"
+                            subwidget.attrs["readonly"] = "readonly"
+                        else:
+                            subwidget.attrs["type"] = "number"
+                        widgets.append(subwidget)
+
+                    self.fields[field_id] = MinMaxField(
+                        fields=([forms.DecimalField(initial=x) for x in parameter["values"]]),
+                        widget=MinMaxWidget(
+                            widgets=widgets))
+
+                    self.fields[field_id].label = "{} ({})".format(parameter["name"].capitalize(), (
+                        "°C" if parameter["units"] == "degC" else parameter["units"]))
+
+                    if parameter['hint_active']:
+                        self.fields[field_id].help_text = "{}".format(parameter['hint_active'])
+
+        for secondary_parameter in test_info["other_parameters"]:
+            secondary_parameters.append(secondary_parameter)
 
         # Create fields for secondary_parameters
         for parameter in secondary_parameters:
@@ -316,8 +317,11 @@ class TestGenerateForm(forms.ModelForm):
     def save(self, commit: bool = True):
         settings = self.instance.__getattribute__("settings")
         for parameter, info in self.parameters:
-            logging.getLogger("views").info("Currently saving {}: {}".format(parameter, self.cleaned_data[parameter]))
-            self.instance.__setattr__(parameter, self.cleaned_data[parameter])
+            if info["active"]:
+                logging.getLogger("views").info("Currently saving {}: {}".format(parameter, self.cleaned_data[parameter]))
+                self.instance.__setattr__(parameter, self.cleaned_data[parameter])
+            else:
+                self.instance.__setattr__(parameter, self.cleaned_data[info["programmatic_name"]])
         for setting in self.secondary_parameters_programmatic_names:
             logging.getLogger("views").info("Currently saving {}: {}".format(setting, self.cleaned_data[setting]))
             settings.__setattr__(setting, self.cleaned_data[setting])
