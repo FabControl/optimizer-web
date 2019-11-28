@@ -156,7 +156,7 @@ class SettingForm(forms.ModelForm):
         self.fields['track_height_raft'].label = "First layer track height (mm)"
         self.fields['track_height_raft'].field_class = "field-horizontal"
 
-        self.fields['speed_printing_raft'].label = 'First layer printing spped (mm/s)'
+        self.fields['speed_printing_raft'].label = 'First layer printing speed (mm/s)'
         self.fields['temperature_extruder_raft'].label = 'First layer extrusion temperature (°C)'
         self.fields['temperature_printbed_setpoint'].label = 'Print bed temperature (°C)'
         self.fields['track_width_raft'].label = 'First layer track width (mm)'
