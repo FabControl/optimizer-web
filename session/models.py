@@ -94,7 +94,8 @@ class Printbed(models.Model):
     @property
     def __json__(self):
         output = {
-            "printbed_heatable": self.printbed_heatable
+            "printbed_heatable": self.printbed_heatable,
+            "temperature_max": self.temperature_max
         }
         return output
 
