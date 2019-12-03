@@ -110,6 +110,7 @@ class Machine(models.Model):
     extruder = models.ForeignKey(Extruder, on_delete=models.CASCADE)
     chamber = models.ForeignKey(Chamber, on_delete=models.CASCADE, blank=True)
     printbed = models.ForeignKey(Printbed, on_delete=models.CASCADE, blank=True)
+    extruder_type = models.CharField(max_length=20, choices=(('bowden', 'Bowden'), ('directdrive', 'Direct drive')), default='bowden')
 
     def __str__(self):
         return "{} ({} mm)".format(self.model, str(self.extruder.nozzle.size_id))
