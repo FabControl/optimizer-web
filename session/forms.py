@@ -357,12 +357,15 @@ class NewMachineForm(forms.ModelForm):
             ),
             Row(
                 Column("form", css_class='form-group col-md')
+            ),
+            Row(
+                Column("extruder_type", css_class='form-group col-md')
             )
         )
 
     class Meta:
         model = Machine
-        fields = ["model", "buildarea_maxdim1", "buildarea_maxdim2", "form"]
+        fields = ["model", "buildarea_maxdim1", "buildarea_maxdim2", "form", "extruder_type"]
 
 
 class NewExtruderForm(forms.ModelForm):

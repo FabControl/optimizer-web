@@ -132,6 +132,7 @@ class Machine(models.Model):
             "buildarea_maxdim1": self.buildarea_maxdim1,
             "buildarea_maxdim2": self.buildarea_maxdim2,
             "form": self.form,
+            "extruder_type": self.extruder_type,
             "temperature_controllers": {
                 "extruder": self.extruder.__json__,
                 "chamber": self.chamber.__json__,
