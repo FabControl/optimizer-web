@@ -305,7 +305,8 @@ class TestGenerateForm(forms.ModelForm):
 
         previously_tested = self.secondary_parameters_programmatic_names + [parameter["programmatic_name"] for parameter in session.min_max_parameters]
         if session.test_number == "01" or session.test_number == "02":
-            previously_tested.remove("part_cooling_setpoint")
+            if "part_cooling_setpoint" in previously_tested:
+                previously_tested.remove("part_cooling_setpoint")
 
         if self.is_valid():
             session.previously_tested_parameters = previously_tested
