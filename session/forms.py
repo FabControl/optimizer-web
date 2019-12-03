@@ -342,8 +342,8 @@ class NewMachineForm(forms.ModelForm):
         self.helper.form_tag = False
 
         self.fields["model"].label = "Printer model"
-        self.fields["buildarea_maxdim1"].label = "Build area maximum dimension on X axis (mm)"
-        self.fields["buildarea_maxdim2"].label = "Build area maximum dimension on Y axis (mm)"
+        self.fields["buildarea_maxdim1"].label = "Maximum dimension on X axis (mm)"
+        self.fields["buildarea_maxdim2"].label = "Maximum dimension on Y axis (mm)"
         self.fields["form"].label = "Build area form factor"
 
         self.helper.layout = Layout(
