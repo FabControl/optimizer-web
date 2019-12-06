@@ -158,7 +158,7 @@ class Settings(models.Model):
     _temperature_extruder = models.IntegerField(default=0)
     temperature_extruder_raft = models.IntegerField(default=0)
     retraction_restart_distance = models.DecimalField(max_digits=4, decimal_places=2, default=0)
-    retraction_speed = models.IntegerField(default=100)
+    retraction_speed = models.IntegerField(default=0)
     retraction_distance = models.DecimalField(max_digits=4, decimal_places=2, default=0)
     bridging_extrusion_multiplier = models.DecimalField(max_digits=3, decimal_places=1, default=1)
     bridging_part_cooling = models.IntegerField(default=0)
