@@ -4,9 +4,10 @@ from django.contrib import messages
 
 def enforce_subscription_middleware(get_response):
     # One-time configuration and initialization.
-    now = timezone.now()
+    # Executed when server is launched
 
     def middleware(request):
+        now = timezone.now()
         # Code to be executed for each request before
         # the view (and later middleware) are called.
         if request.user.is_authenticated:
