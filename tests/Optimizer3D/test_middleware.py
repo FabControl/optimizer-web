@@ -38,3 +38,27 @@ class SubscriptionMiddlewareTest(TestCase):
 
         # should not expire, since we have few extra seconds
         self.assertEqual(user.plan, 'premium')
+
+
+    def test_premium_assignment(self):
+        user = get_user_model().objects.create_user(email='known_user@somewhere.com',
+                                 is_active=True,
+                                 password='SomeSecretPassword')
+
+
+        self.assertTrue(self.client.login(email='known_user@somewhere.com', password='SomeSecretPassword'))
+        tst_url = reverse('dashboard')
+        self.client.get(tst_url)
+
+        user.refresh_from_db()
+        # User should have basic subscription by default
+        self.assertEqual(user.plan, 'basic')
+
+        user.subscription_expiration = timezone.now() + timedelta(seconds=2)
+        user.save()
+        self.client.get(tst_url)
+        user.refresh_from_db()
+
+        # premium should be assigned, since user has few extra seconds
+        self.assertEqual(user.plan, 'premium')
+
