@@ -65,3 +65,5 @@ class SessionViewsTest(TestCase):
         for s in test_sessions:
             self.assertTrue(bytes(s, 'utf-8') in resp.content)
 
+        self.assertTrue(bytes("location.href='{}'".format(reverse('new_session')), 'utf-8')
+                        in resp.content)
