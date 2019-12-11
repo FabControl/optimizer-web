@@ -48,25 +48,6 @@ else:
         }
     }
 
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-        },
-    },
-    'loggers': {
-        'views': {
-            'handlers': ['console'],
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
-        },
-        'django': {
-              'handlers': ['console'],
-              'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
-          },
-    },
-}
 
 EMAIL_HOST_PASSWORD = config['EMAIL_HOST_PASSWORD']
 EMAIL_HOST_USER = config['EMAIL_HOST_USER']

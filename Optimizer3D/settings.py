@@ -129,6 +129,10 @@ LOGGING = {
         'console': {
             'class': 'logging.StreamHandler',
         },
+        'logfile': {
+            'class': 'logging.FileHandler',
+            'filename': 'django.log'
+        },
     },
     'loggers': {
         'views': {
