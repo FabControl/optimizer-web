@@ -131,7 +131,7 @@ LOGGING = {
         },
         'logfile': {
             'class': 'logging.FileHandler',
-            'filename': 'django.log'
+            'filename': '/var/log/httpd/django.log'
         },
     },
     'loggers': {
