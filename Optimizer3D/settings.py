@@ -129,10 +129,10 @@ LOGGING = {
         'console': {
             'class': 'logging.StreamHandler',
         },
-        'logfile': {
-            'class': 'logging.FileHandler',
-            'filename': '/var/log/httpd/django.log'
-        },
+        # 'logfile': {
+        #     'class': 'logging.FileHandler',
+        #     'filename': '/var/log/httpd/django.log'
+        # },
     },
     'loggers': {
         'views': {
