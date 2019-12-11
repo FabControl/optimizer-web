@@ -91,10 +91,10 @@ def machine_edit_view(request, pk):
     machine = get_object_or_404(Machine, pk=pk)
     if request.method == 'POST':
         self_form = NewMachineForm(request.POST, instance=machine)
-        extruder_form = NewExtruderForm(request.POST, instance=machine.extruder)
-        nozzle_form = NewNozzleForm(request.POST, instance=machine.extruder.nozzle)
-        chamber_form = NewChamberForm(request.POST, instance=machine.chamber)
-        printbed_form = NewPrintbedForm(request.POST, instance=machine.printbed)
+        extruder_form = NewExtruderForm(request.POST, instance=machine.extruder, prefix="extruder")
+        nozzle_form = NewNozzleForm(request.POST, instance=machine.extruder.nozzle, prefix="nozzle")
+        chamber_form = NewChamberForm(request.POST, instance=machine.chamber, prefix="chamber")
+        printbed_form = NewPrintbedForm(request.POST, instance=machine.printbed, prefix="printbed")
         extruder = None
         if self_form.is_valid():
             machine = self_form.save(commit=False)
@@ -119,10 +119,10 @@ def machine_edit_view(request, pk):
         self_form = NewMachineForm(instance=machine)
         if "next" in request.GET:
             context["next"] = request.GET["next"]
-        extruder_form = NewExtruderForm(instance=machine.extruder)
-        nozzle_form = NewNozzleForm(instance=machine.extruder.nozzle)
-        chamber_form = NewChamberForm(instance=machine.chamber)
-        printbed_form = NewPrintbedForm(instance=machine.printbed)
+        extruder_form = NewExtruderForm(instance=machine.extruder, prefix="extruder")
+        nozzle_form = NewNozzleForm(instance=machine.extruder.nozzle, prefix="nozzle")
+        chamber_form = NewChamberForm(instance=machine.chamber, prefix="chamber")
+        printbed_form = NewPrintbedForm(instance=machine.printbed, prefix="printbed")
     form_context = {"self_form": self_form,
                     "extruder_form": extruder_form,
                     "nozzle_form": nozzle_form,
@@ -158,10 +158,10 @@ def machine_form(request):
     context = {}
     if request.method == 'POST':
         self_form = NewMachineForm(request.POST)
-        extruder_form = NewExtruderForm(request.POST)
-        nozzle_form = NewNozzleForm(request.POST)
-        chamber_form = NewChamberForm(request.POST)
-        printbed_form = NewPrintbedForm(request.POST)
+        extruder_form = NewExtruderForm(request.POST, prefix="extruder")
+        nozzle_form = NewNozzleForm(request.POST, prefix="nozzle")
+        chamber_form = NewChamberForm(request.POST, prefix="chamber")
+        printbed_form = NewPrintbedForm(request.POST, prefix="printbed")
         extruder = None
         if self_form.is_valid():
             machine = self_form.save(commit=False)
@@ -186,10 +186,10 @@ def machine_form(request):
         self_form = NewMachineForm()
         if "next" in request.GET:
             context["next"] = request.GET["next"]
-        extruder_form = NewExtruderForm()
-        nozzle_form = NewNozzleForm()
-        chamber_form = NewChamberForm()
-        printbed_form = NewPrintbedForm()
+        extruder_form = NewExtruderForm(prefix="extruder")
+        nozzle_form = NewNozzleForm(prefix="nozzle")
+        chamber_form = NewChamberForm(prefix="chamber")
+        printbed_form = NewPrintbedForm(prefix="printbed")
     form_context = {"self_form": self_form,
                "extruder_form": extruder_form,
                "nozzle_form": nozzle_form,
