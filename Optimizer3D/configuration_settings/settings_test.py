@@ -34,26 +34,6 @@ DATABASES = {
     }
 }
 
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-        },
-    },
-    'loggers': {
-        'views': {
-            'handlers': ['console'],
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
-        },
-        'django': {
-              'handlers': ['console'],
-              'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
-          },
-    },
-}
-
 EMAIL_SENDER_ADDRESS = 'noreply@some.test.domain'
 
 STRIPE_API_KEY = 'Some very secret key'
