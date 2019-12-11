@@ -48,6 +48,29 @@ else:
         }
     }
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+        'logfile': {
+            'class': 'logging.FileHandler',
+            'filename': '/var/log/httpd/django.log'
+        },
+    },
+    'loggers': {
+        'views': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+        },
+        'django': {
+              'handlers': ['console', 'logfile'],
+              'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+          },
+    },
+}
 
 EMAIL_HOST_PASSWORD = config['EMAIL_HOST_PASSWORD']
 EMAIL_HOST_USER = config['EMAIL_HOST_USER']
