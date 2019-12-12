@@ -425,15 +425,9 @@ class SessionViewsTest(TestCase):
                                  is_active=True,
                                  password='SomeSecretPassword')
 
-        self.staff_user = get_user_model().objects.create_user(email='other_user@somewhere.com',
-                                 is_active=True,
-                                 is_staff=True,
-                                 password='SomeSecretPassword')
-
     @classmethod
     def tearDownClass(self):
         self.user.delete()
-        self.staff_user.delete()
 
     def test_index_page(self):
         self.client.logout()
@@ -494,20 +488,26 @@ class SessionViewsTest(TestCase):
         extruder = models.Extruder.objects.create(nozzle=nozzle)
         chamber = models.Chamber.objects.create()
         printbed = models.Printbed.objects.create()
-        machine = models.Machine.objects.create(owner=self.staff_user, extruder=extruder,
+        machine = models.Machine.objects.create(owner=self.user, extruder=extruder,
                                                 chamber=chamber, printbed=printbed)
 
-        material = models.Material(owner=self.staff_user, name='material')
+        material = models.Material(owner=self.user, name='material')
         material.save()
 
         sett = models.Settings()
         sett.save()
-        test_session = models.Session.objects.create(owner=self.staff_user,
+        test_session = models.Session.objects.create(owner=self.user,
                                           name='some',
                                           machine=machine,
                                           material=material,
                                           _persistence='{"session":{"previous_tests":[]}}',
                                           settings=sett)
+
+        staff_only_urls = [
+                ('session_json', {'pk': test_session.pk}),
+                ('session__test_info', {'pk': test_session.pk})
+                ]
+        # order does matter
         login_req_urls = [
                 ('dashboard', {}),
                 ('material_manager', {}),
@@ -520,8 +520,6 @@ class SessionViewsTest(TestCase):
                 ('machine_delete', {'pk': machine.pk}),
                 ("session_manager", {}),
                 ('session_detail', {'pk': test_session.pk}),
-                ('session_json', {'pk': test_session.pk}),
-                ('session__test_info', {'pk': test_session.pk}),
                 ('session_validate_back', {'pk': test_session.pk}),
                 ('revert_to_test', {'pk': test_session.pk}),
                 ('session_next_test', {'pk': test_session.pk, 'priority': 'priority'}),
@@ -544,7 +542,7 @@ class SessionViewsTest(TestCase):
                 ]
 
         # we do not check index, since it redirects to dashboard
-        self.assertEqual(len(login_req_urls) + len(no_login_urls),
+        self.assertEqual(len(login_req_urls) + len(no_login_urls) + len(staff_only_urls),
                          len(urls.urlpatterns) - 1,
                          msg='Have You added/removed some views and forgot about tests?')
 
@@ -563,7 +561,7 @@ class SessionViewsTest(TestCase):
 
         login_url = reverse('login')
         # Login required for these views
-        for url_name, kwargs in login_req_urls:
+        for url_name, kwargs in (login_req_urls + staff_only_urls):
             resp = self.client.get(reverse(url_name, kwargs=kwargs), follow=True)
             self.assertEqual(resp.status_code, 200, msg='Url name: {}'.format(url_name))
             self.assertTrue((len(resp.redirect_chain) > 0), msg='Url name: {}'.format(url_name))
@@ -572,3 +570,82 @@ class SessionViewsTest(TestCase):
             self.assertTrue((r is not None), msg='Url name: {}'.format(url_name))
             self.assertEqual(r.group(1), login_url, msg='Url name: {}'.format(url_name))
 
+
+
+        self.assertTrue(self.client.login(email='known_user@somewhere.com', password='SomeSecretPassword'))
+        # These urls are staff only, otherwise 404
+        for url_name, kwargs in staff_only_urls:
+            resp = self.client.get(reverse(url_name, kwargs=kwargs), follow=True)
+            self.assertEqual(resp.status_code, 404, msg='Url name: {}'.format(url_name))
+
+        self.user.is_staff = True
+        self.user.save()
+
+        with patch('requests.post', return_value=MockedBackendResponse()):
+            for url_name, kwargs in staff_only_urls:
+                resp = self.client.get(reverse(url_name, kwargs=kwargs), follow=True)
+                self.assertEqual(resp.status_code, 200, msg='Url name: {}'.format(url_name))
+
+        self.user.is_staff = False
+        self.user.save()
+
+
+    def test_material_detail(self):
+        initial_name = 'Some personal test material'
+        initial_size = 1.75
+
+        material = models.Material.objects.create(name=initial_name, size_od=initial_size)
+
+        edited_name = 'Another edited Material'
+        edited_size = material.size_od + 1
+
+        # should not be accessible, since user is not owner
+        tst_url = reverse('material_detail', kwargs={'pk': material.pk})
+
+        self.assertTrue(self.client.login(email='known_user@somewhere.com', password='SomeSecretPassword'))
+
+        resp = self.client.get(tst_url)
+        self.assertEqual(404, resp.status_code)
+        # should not be editable
+        resp = self.client.post(tst_url, {'name': edited_name, 'size_od': edited_size})
+        self.assertEqual(404, resp.status_code)
+
+        material.refresh_from_db()
+        self.assertTrue(material.owner != self.user)
+        self.assertEqual(material.name, initial_name)
+        self.assertEqual(material.size_od, initial_size)
+
+        material.owner = self.user
+        material.save()
+
+        # should be accessible, since user is owner
+        resp = self.client.get(tst_url)
+        self.assertEqual(200, resp.status_code)
+        self.assertTrue(bytes(initial_name, 'utf-8') in resp.content)
+        self.assertTrue(bytes(str(initial_size), 'utf-8') in resp.content)
+
+        # should be editable
+        edited_name = 'Another edited Material'
+        edited_size = material.size_od + 1
+        resp = self.client.post(tst_url, {'name': edited_name, 'size_od': edited_size})
+        # post redirects to materials list
+        self.assertEqual(302, resp.status_code)
+
+        material.refresh_from_db()
+        self.assertEqual(material.name, edited_name)
+        self.assertEqual(material.size_od, edited_size)
+
+        # updated data should be visible
+        resp = self.client.get(tst_url)
+        self.assertEqual(200, resp.status_code)
+        self.assertTrue(bytes(edited_name, 'utf-8') in resp.content)
+        self.assertTrue(bytes(str(edited_size), 'utf-8') in resp.content)
+
+        material.delete()
+
+        # should not be accessible, since material is gone
+        resp = self.client.get(tst_url)
+        self.assertEqual(404, resp.status_code)
+
+        resp = self.client.post(tst_url, {'name': edited_name, 'size_od': edited_size})
+        self.assertEqual(404, resp.status_code)
