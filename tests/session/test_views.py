@@ -649,3 +649,47 @@ class SessionViewsTest(TestCase):
 
         resp = self.client.post(tst_url, {'name': edited_name, 'size_od': edited_size})
         self.assertEqual(404, resp.status_code)
+
+    def test_materials_view(self):
+        name = 'Some personal test material'
+        size = 1.75
+
+        material = models.Material.objects.create(name=name, size_od=size)
+        details_url = reverse('material_detail', kwargs={'pk': material.pk})
+        delete_url = reverse('material_delete', kwargs={'pk': material.pk})
+
+        # Should not show materials from other users
+        tst_url = reverse('material_manager')
+
+        self.assertTrue(self.client.login(email='known_user@somewhere.com', password='SomeSecretPassword'))
+
+        resp = self.client.get(tst_url)
+
+        self.assertEqual(200, resp.status_code)
+        self.assertFalse(bytes(name, 'utf-8') in resp.content)
+        self.assertFalse(bytes(str(size), 'utf-8') in resp.content)
+        self.assertFalse(bytes(details_url, 'utf-8') in resp.content)
+        self.assertFalse(bytes(delete_url, 'utf-8') in resp.content)
+
+        # should show materials from current user
+        material.owner = self.user
+        material.save()
+
+        resp = self.client.get(tst_url)
+
+        self.assertEqual(200, resp.status_code)
+        self.assertTrue(bytes(name, 'utf-8') in resp.content)
+        self.assertTrue(bytes(str(size), 'utf-8') in resp.content)
+        self.assertTrue(bytes(details_url, 'utf-8') in resp.content)
+        self.assertTrue(bytes(delete_url, 'utf-8') in resp.content)
+
+        # should not show material after deletion
+        material.delete()
+
+        resp = self.client.get(tst_url)
+
+        self.assertEqual(200, resp.status_code)
+        self.assertFalse(bytes(name, 'utf-8') in resp.content)
+        self.assertFalse(bytes(str(size), 'utf-8') in resp.content)
+        self.assertFalse(bytes(details_url, 'utf-8') in resp.content)
+        self.assertFalse(bytes(delete_url, 'utf-8') in resp.content)
