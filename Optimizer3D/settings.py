@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'session.apps.SessionConfig',
     'payments.apps.PaymentsConfig',
+    'django_simple_cookie_consent.apps.DjangoSimpleCookieConsentConfig',
     'authentication.apps.AuthenticationConfig',
     'crispy_forms'
 ]
