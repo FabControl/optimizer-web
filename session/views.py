@@ -28,15 +28,6 @@ def dashboard(request):
     context = {'latest_sessions': latest_sessions}
     return render(request, 'session/dashboard.html', context)
 
-
-@login_required
-def material_detail(request, name):
-    material = get_object_or_404(Material, name=name)
-    context = {'material': material,
-               'someinfo': "someinfo"}
-    return render(request, 'session/material.html', context)
-
-
 class MaterialsView(LoginRequiredMixin, generic.ListView):
     template_name = "session/material_manager.html"
     context_object_name = 'materials'
