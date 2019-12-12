@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'session.apps.SessionConfig',
     'payments.apps.PaymentsConfig',
+    'django_simple_cookie_consent.apps.DjangoSimpleCookieConsentConfig',
     'authentication.apps.AuthenticationConfig',
     'crispy_forms'
 ]
@@ -135,6 +136,10 @@ LOGGING = {
             'handlers': ['console'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
         },
+        'django': {
+              'handlers': ['console'],
+              'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+          },
     },
 }
 

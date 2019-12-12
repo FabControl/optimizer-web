@@ -1,5 +1,6 @@
 <!-- Loads static files -->
 {% load staticfiles %}
+{% load django_simple_cookie_consent_tags %}
 <!doctype html>
 <html lang="en" class="h-100">
 
@@ -35,6 +36,7 @@
   <title>3DOptimizer</title>
   {% endif %}
   {% include "session/navbar.html" %}
+  {% display_cookie_consent %}
 </head>
 
 <body class="d-flex flex-column h-100">
