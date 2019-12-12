@@ -589,3 +589,63 @@ class SessionViewsTest(TestCase):
         self.user.is_staff = False
         self.user.save()
 
+
+    def test_material_detail(self):
+        initial_name = 'Some personal test material'
+        initial_size = 1.75
+
+        material = models.Material.objects.create(name=initial_name, size_od=initial_size)
+
+        edited_name = 'Another edited Material'
+        edited_size = material.size_od + 1
+
+        # should not be accessible, since user is not owner
+        tst_url = reverse('material_detail', kwargs={'pk': material.pk})
+
+        self.assertTrue(self.client.login(email='known_user@somewhere.com', password='SomeSecretPassword'))
+
+        resp = self.client.get(tst_url)
+        self.assertEqual(404, resp.status_code)
+        # should not be editable
+        resp = self.client.post(tst_url, {'name': edited_name, 'size_od': edited_size})
+        self.assertEqual(404, resp.status_code)
+
+        material.refresh_from_db()
+        self.assertTrue(material.owner != self.user)
+        self.assertEqual(material.name, initial_name)
+        self.assertEqual(material.size_od, initial_size)
+
+        material.owner = self.user
+        material.save()
+
+        # should be accessible, since user is owner
+        resp = self.client.get(tst_url)
+        self.assertEqual(200, resp.status_code)
+        self.assertTrue(bytes(initial_name, 'utf-8') in resp.content)
+        self.assertTrue(bytes(str(initial_size), 'utf-8') in resp.content)
+
+        # should be editable
+        edited_name = 'Another edited Material'
+        edited_size = material.size_od + 1
+        resp = self.client.post(tst_url, {'name': edited_name, 'size_od': edited_size})
+        # post redirects to materials list
+        self.assertEqual(302, resp.status_code)
+
+        material.refresh_from_db()
+        self.assertEqual(material.name, edited_name)
+        self.assertEqual(material.size_od, edited_size)
+
+        # updated data should be visible
+        resp = self.client.get(tst_url)
+        self.assertEqual(200, resp.status_code)
+        self.assertTrue(bytes(edited_name, 'utf-8') in resp.content)
+        self.assertTrue(bytes(str(edited_size), 'utf-8') in resp.content)
+
+        material.delete()
+
+        # should not be accessible, since material is gone
+        resp = self.client.get(tst_url)
+        self.assertEqual(404, resp.status_code)
+
+        resp = self.client.post(tst_url, {'name': edited_name, 'size_od': edited_size})
+        self.assertEqual(404, resp.status_code)
