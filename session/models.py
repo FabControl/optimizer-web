@@ -295,6 +295,10 @@ class Session(models.Model):
         self.settings.track_width = self.machine.extruder.nozzle.size_id
         self.settings.track_height_raft = float(self.machine.extruder.nozzle.size_id) * 0.6
         self.settings.speed_printing_raft = 15
+        if self.machine.extruder_type.strip().lower() == 'bowden':
+            self.settings.retraction_speed = 100
+        else:
+            self.settings.retraction_speed = 30
 
     def clean_min_max(self, to_zero: bool = False):
         """
