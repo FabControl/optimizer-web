@@ -755,3 +755,7 @@ class SessionViewsTest(TestCase):
         # material should be deleted
         materials = models.Material.objects.filter(pk=material.pk)
         self.assertEqual(len(materials), 0)
+
+        # Should return error, since material does not exist
+        resp = self.client.post(tst_url)
+        self.assertEqual(resp.status_code, 404)
