@@ -723,3 +723,35 @@ class SessionViewsTest(TestCase):
         # chack if material was actually created
         materials = models.Material.objects.filter(name=material_name, size_od=material_size)
         self.assertEqual(len(materials), 1)
+
+    def test_material_delete(self):
+        # Create material
+        material = models.Material.objects.create()
+        tst_url = reverse('material_delete', kwargs={'pk': material.pk})
+        self.assertTrue(self.client.login(email='known_user@somewhere.com', password='SomeSecretPassword'))
+
+        # Should return error, since owner is not user
+        resp = self.client.post(tst_url)
+        self.assertEqual(resp.status_code, 404)
+        # material should still be in database
+        materials = models.Material.objects.filter(pk=material.pk)
+        self.assertEqual(len(materials), 1)
+
+        # get should return error, since there is only post endpoint
+        resp = self.client.get(tst_url)
+        self.assertEqual(resp.status_code, 404)
+        # material should still be in database
+        materials = models.Material.objects.filter(pk=material.pk)
+        self.assertEqual(len(materials), 1)
+
+        material.owner = self.user
+        material.save()
+
+        # Should redirect to material_manager and delete material
+        resp = self.client.post(tst_url, follow=True)
+        self.assertEqual(resp.status_code, 200)
+        self.assertTrue(len(resp.redirect_chain) > 0)
+        self.assertEqual(resp.redirect_chain[-1][0], reverse('material_manager'))
+        # material should be deleted
+        materials = models.Material.objects.filter(pk=material.pk)
+        self.assertEqual(len(materials), 0)
