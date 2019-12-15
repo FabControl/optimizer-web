@@ -693,3 +693,33 @@ class SessionViewsTest(TestCase):
         self.assertFalse(bytes(str(size), 'utf-8') in resp.content)
         self.assertFalse(bytes(details_url, 'utf-8') in resp.content)
         self.assertFalse(bytes(delete_url, 'utf-8') in resp.content)
+
+    def test_material_form(self):
+        tst_url = reverse('material_form')
+        material_name = 'Material form test'
+        material_size = 3.25
+
+        self.assertTrue(self.client.login(email='known_user@somewhere.com', password='SomeSecretPassword'))
+
+        # make sure, form is accessible
+        resp = self.client.get(tst_url)
+        self.assertEqual(resp.status_code, 200)
+
+        # make sure material did not existed before
+        materials = models.Material.objects.filter(name=material_name, size_od=material_size)
+        self.assertEqual(len(materials),
+                         0, 
+                         msg='Material already exists - test can not be performed')
+
+        # check if material can be created
+        resp = self.client.post(tst_url, 
+                                dict(name=material_name, size_od=material_size),
+                                follow=True)
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertTrue(len(resp.redirect_chain) > 0)
+        self.assertEqual(resp.redirect_chain[-1][0], reverse('material_manager'))
+
+        # chack if material was actually created
+        materials = models.Material.objects.filter(name=material_name, size_od=material_size)
+        self.assertEqual(len(materials), 1)
