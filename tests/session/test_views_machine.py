@@ -92,3 +92,52 @@ class SessionMaterialViewsTest(TestCase):
 
         machines = models.Machine.objects.filter(pk=machine.pk)
         self.assertTrue(len(machines) == 0)
+
+    def test_machines_view(self):
+        name = 'Machines view test machine'
+        size = 0.5
+
+        machine = models.Machine.objects.create(model=name,
+                                                chamber=models.Chamber.objects.create(),
+                                                printbed=models.Printbed.objects.create(),
+                                                extruder=models.Extruder.objects.create(
+                                                    nozzle=models.Nozzle.objects.create(size_id=size)))
+
+        details_url = reverse('machine_detail', kwargs={'pk': machine.pk})
+        delete_url = reverse('machine_delete', kwargs={'pk': machine.pk})
+
+        # Should not show machines from other users
+        tst_url = reverse('machine_manager')
+
+        self.assertTrue(self.client.login(email='known_user@somewhere.com', password='SomeSecretPassword'))
+
+        resp = self.client.get(tst_url)
+
+        self.assertEqual(200, resp.status_code)
+        self.assertFalse(bytes(name, 'utf-8') in resp.content)
+        self.assertFalse(bytes(str(size), 'utf-8') in resp.content)
+        self.assertFalse(bytes(details_url, 'utf-8') in resp.content)
+        self.assertFalse(bytes(delete_url, 'utf-8') in resp.content)
+
+        # should show machines from current user
+        machine.owner = self.user
+        machine.save()
+
+        resp = self.client.get(tst_url)
+
+        self.assertEqual(200, resp.status_code)
+        self.assertTrue(bytes(name, 'utf-8') in resp.content)
+        self.assertTrue(bytes(str(size), 'utf-8') in resp.content)
+        self.assertTrue(bytes(details_url, 'utf-8') in resp.content)
+        self.assertTrue(bytes(delete_url, 'utf-8') in resp.content)
+
+        # should not show machine after deletion
+        machine.delete()
+
+        resp = self.client.get(tst_url)
+
+        self.assertEqual(200, resp.status_code)
+        self.assertFalse(bytes(name, 'utf-8') in resp.content)
+        self.assertFalse(bytes(str(size), 'utf-8') in resp.content)
+        self.assertFalse(bytes(details_url, 'utf-8') in resp.content)
+        self.assertFalse(bytes(delete_url, 'utf-8') in resp.content)
