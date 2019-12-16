@@ -141,3 +141,49 @@ class SessionMaterialViewsTest(TestCase):
         self.assertFalse(bytes(str(size), 'utf-8') in resp.content)
         self.assertFalse(bytes(details_url, 'utf-8') in resp.content)
         self.assertFalse(bytes(delete_url, 'utf-8') in resp.content)
+
+    def test_new_machine_creation(self):
+        direct_props = {
+            "model": "New machine test model",
+            "buildarea_maxdim1": "12",
+            "buildarea_maxdim2": "11",
+            "form": "elliptic"
+            }
+
+        subprops = {
+            "extruder_type": "bowden",
+            "extruder-tool": "T0",
+            "extruder-temperature_max": "350",
+            "extruder-part_cooling": "on",
+            "nozzle-size_id": "0.4",
+            "chamber-tool": "",
+            "chamber-gcode_command": "M141+S$temp",
+            "chamber-temperature_max": "80",
+            "printbed-printbed_heatable": "on",
+            "printbed-temperature_max": "124"
+            }
+
+        tst_url = reverse('machine_form')
+
+        self.assertTrue(self.client.login(email='known_user@somewhere.com', password='SomeSecretPassword'))
+
+        # creation form should be accessible
+        resp = self.client.get(tst_url)
+        self.assertEqual(200, resp.status_code)
+
+        # make sure machine does not exist
+        machines = models.Machine.objects.filter(**direct_props)
+        self.assertEqual(len(machines), 0,
+                         msg='Can not perform test, because machine already exists')
+        # post data
+        d = {}
+        d.update(direct_props)
+        d.update(subprops)
+        resp = self.client.post(tst_url, d, follow=True)
+        self.assertEqual(resp.status_code, 200)
+        self.assertTrue(len(resp.redirect_chain) > 0)
+        self.assertEqual(resp.redirect_chain[-1][0], reverse('machine_manager'))
+
+        # check if machine was created
+        machine = models.Machine.objects.get(**direct_props)
+        self.assertEqual(machine.owner, self.user)
