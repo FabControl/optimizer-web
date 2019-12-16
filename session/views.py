@@ -78,7 +78,7 @@ def material_form(request):
 @login_required
 def machine_edit_view(request, pk):
     context = {}
-    machine = get_object_or_404(Machine, pk=pk)
+    machine = get_object_or_404(Machine, pk=pk, owner=request.user)
     if request.method == 'POST':
         self_form = NewMachineForm(request.POST, instance=machine)
         extruder_form = NewExtruderForm(request.POST, instance=machine.extruder, prefix="extruder")
@@ -88,7 +88,6 @@ def machine_edit_view(request, pk):
         extruder = None
         if self_form.is_valid():
             machine = self_form.save(commit=False)
-            machine.owner = request.user
             if extruder_form.is_valid():
                 extruder = extruder_form.save(commit=False)
                 extruder.nozzle = nozzle_form.save()
