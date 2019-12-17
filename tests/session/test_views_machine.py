@@ -187,3 +187,62 @@ class SessionMaterialViewsTest(TestCase):
         # check if machine was created
         machine = models.Machine.objects.get(**direct_props)
         self.assertEqual(machine.owner, self.user)
+
+    def test_machine_deletion(self):
+        # create machine
+        machine = models.Machine.objects.create(chamber=models.Chamber.objects.create(),
+                                                printbed=models.Printbed.objects.create(),
+                                                extruder=models.Extruder.objects.create(
+                                                    nozzle=models.Nozzle.objects.create()))
+
+        delete_url = reverse('machine_delete', kwargs={'pk': machine.pk})
+
+        self.assertTrue(self.client.login(email='known_user@somewhere.com', password='SomeSecretPassword'))
+
+        # check with other user's machine
+        resp = self.client.get(delete_url)
+        self.assertEqual(resp.status_code, 404)
+        # machine should still be in db
+        machines = models.Machine.objects.filter(pk=machine.pk, owner=None)
+        self.assertEqual(len(machines), 1)
+
+        resp = self.client.post(delete_url)
+        self.assertEqual(resp.status_code, 404)
+        # machine should still be in db
+        machines = models.Machine.objects.filter(pk=machine.pk, owner=None)
+        self.assertEqual(len(machines), 1)
+
+        # check with owned machine
+        machine.owner = self.user
+        machine.save()
+
+        resp = self.client.get(delete_url)
+        self.assertEqual(resp.status_code, 404)
+        # machine should still be in db
+        machines = models.Machine.objects.filter(pk=machine.pk, owner=self.user)
+        self.assertEqual(len(machines), 1)
+
+        # successful delete redirects to machines list
+        resp = self.client.post(delete_url, follow=True)
+        self.assertEqual(resp.status_code, 200)
+
+        self.assertTrue(len(resp.redirect_chain) > 0)
+        self.assertEqual(resp.redirect_chain[-1][0], reverse('machine_manager'))
+
+        # machine should be removed
+        machines = models.Machine.objects.filter(pk=machine.pk)
+        self.assertEqual(len(machines), 0)
+
+        # check with non-existing machine
+        resp = self.client.get(delete_url)
+        self.assertEqual(resp.status_code, 404)
+        # machine should not exist
+        machines = models.Machine.objects.filter(pk=machine.pk)
+        self.assertEqual(len(machines), 0)
+
+        resp = self.client.post(delete_url)
+        self.assertEqual(resp.status_code, 404)
+        # machine should not exist
+        machines = models.Machine.objects.filter(pk=machine.pk)
+        self.assertEqual(len(machines), 0)
+
