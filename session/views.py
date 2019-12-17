@@ -299,14 +299,17 @@ class MachineDelete(LoginRequiredMixin, generic.DeleteView):
     model = Machine
     success_url = reverse_lazy('machine_manager')
 
+    def get(self, request, *args, **kwargs):
+        raise Http404("Page not found")
+
     def delete(self, request, *args, **kwargs):
         """
         Call the delete() method on the fetched object and then redirect to the
         success URL.
         """
-        if Machine.objects.get(pk=self.kwargs["pk"]).owner != self.request.user:
-            raise Exception('Machine not owned by user.')
         self.object = self.get_object()
+        if not self.object.is_owner(self.request.user):
+            raise Http404("Page not found")
         success_url = self.get_success_url()
         self.object.delete()
         return HttpResponseRedirect(success_url)
