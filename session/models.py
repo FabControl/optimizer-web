@@ -59,6 +59,13 @@ class Extruder(models.Model):
     part_cooling = models.BooleanField(default=True)
     nozzle = models.ForeignKey(Nozzle, on_delete=models.CASCADE)
 
+
+    def delete(self, using=None):
+        # required for related property deletion
+        if self.nozzle is not None:
+            self.nozzle.delete()
+        super(Extruder, self).delete(using)
+
     @property
     def __json__(self):
         output = {
@@ -111,6 +118,14 @@ class Machine(models.Model):
     chamber = models.ForeignKey(Chamber, on_delete=models.CASCADE, blank=True)
     printbed = models.ForeignKey(Printbed, on_delete=models.CASCADE, blank=True)
     extruder_type = models.CharField(max_length=20, choices=(('bowden', 'Bowden'), ('directdrive', 'Direct drive')), default='bowden')
+
+    def delete(self, using=None):
+        # required for related property deletion
+        related = (self.extruder, self.chamber, self.printbed)
+        for f in related:
+            if f is not None:
+                f.delete()
+        super(Machine, self).delete(using)
 
     def __str__(self):
         return "{} ({} mm)".format(self.model, str(self.extruder.nozzle.size_id))
