@@ -1,0 +1,7 @@
+{% extends "email/base.txt" %}
+
+{% block content %}
+{{ user_address }} has activated his account.
+{% endblock content %}
+
+

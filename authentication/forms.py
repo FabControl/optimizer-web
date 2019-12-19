@@ -20,6 +20,18 @@ from .tokens import account_activation_token
 #         model = User
 #         fields = ('username', 'password', 'email')
 
+class FakeHttpRequest():
+    pass
+
+def notify_support(user):
+    req = FakeHttpRequest()
+    req.META = {'HTTP_HOST':'test.local.domain'}
+
+    email.send_to_single('support@fabcontrol.com',
+            'account_activated',
+            req,
+            user_address=user.email
+            )
 
 class LoginForm(forms.Form):
 
@@ -122,6 +134,8 @@ class PasswordSetForm(SetPasswordForm):
     def save(self, commit=True):
         password = self.cleaned_data["new_password1"]
         self.user.set_password(password)
+        if not self.user.is_active:
+            notify_support(self.user)
         self.user.is_active = True
         if commit:
             self.user.save()
