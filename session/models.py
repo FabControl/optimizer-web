@@ -10,8 +10,51 @@ from .choices import TEST_NUMBER_CHOICES, TARGET_CHOICES, SLICER_CHOICES, TOOL_C
 
 # Create your models here.
 
+class DependanciesCopyMixin():
+    PREVENT_DELETION_MODELS = (User,)
 
-class Material(models.Model):
+    def delete(self, using=None, keep_parents=False):
+        foreign = (x for x in self._meta.get_fields() if isinstance(x, models.ForeignKey))
+
+        for f in foreign:
+            v = getattr(self, f.name)
+            if v is not None:
+                if any(isinstance(v, x) for x in self.PREVENT_DELETION_MODELS):
+                    continue
+                v.delete()
+        models.Model.delete(self, using, keep_parents)
+    # Shoould not leak database space, because:
+    # 1. copied instances have owner set to None
+    # 2. instances with owner == None are skipped
+    def copy_dependancies(self, save=True):
+        # create copy of all ForeignKey instances
+        foreign = (x for x in self._meta.get_fields() if isinstance(x, models.ForeignKey))
+
+        for f in foreign:
+            v = getattr(self, f.name)
+            if v is not None:
+                if hasattr(v, 'owner'):
+                    if v.owner == None:
+                        continue
+                if isinstance(v, CopyableModelMixin):
+                    setattr(self, f.name, v.save_as_copy())
+
+        if save:
+            self.save()
+
+class CopyableModelMixin(DependanciesCopyMixin):
+    def save_as_copy(self):
+        # this method "hides" new copy of model instance from user
+        self.pk = None
+        if hasattr(self, 'owner'):
+            self.owner = None
+        self.copy_dependancies()
+        return self
+
+
+
+
+class Material(models.Model, CopyableModelMixin):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     size_od = models.DecimalField(default=1.75, max_digits=3, decimal_places=2)
     name = models.CharField(max_length=60)
@@ -40,7 +83,7 @@ class Material(models.Model):
         return output
 
 
-class Nozzle(models.Model):
+class Nozzle(models.Model, CopyableModelMixin):
     size_id = models.DecimalField(default=0.4, decimal_places=1, max_digits=2)
 
     @property
@@ -51,7 +94,7 @@ class Nozzle(models.Model):
         return output
 
 
-class Extruder(models.Model):
+class Extruder(models.Model, CopyableModelMixin):
     pub_date = models.DateTimeField(default=timezone.now, blank=True)
 
     tool = models.CharField(choices=TOOL_CHOICES, max_length=3, blank=True, default="T0")
@@ -77,7 +120,7 @@ class Extruder(models.Model):
         return output
 
 
-class Chamber(models.Model):
+class Chamber(models.Model, CopyableModelMixin):
     chamber_heatable = models.BooleanField(default=False)
     tool = models.CharField(max_length=3, choices=TOOL_CHOICES, blank=True)
     gcode_command = models.CharField(max_length=40, default="M141 S$temp")
@@ -94,7 +137,7 @@ class Chamber(models.Model):
         return output
 
 
-class Printbed(models.Model):
+class Printbed(models.Model, CopyableModelMixin):
     printbed_heatable = models.BooleanField(default=True)
     temperature_max = models.IntegerField(default=120)
 
@@ -107,7 +150,7 @@ class Printbed(models.Model):
         return output
 
 
-class Machine(models.Model):
+class Machine(models.Model, CopyableModelMixin):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     pub_date = models.DateTimeField(default=timezone.now, blank=True)
     model = models.CharField(max_length=30, default="Unknown")
@@ -237,7 +280,7 @@ class Settings(models.Model):
         return output
 
 
-class Session(models.Model):
+class Session(models.Model, DependanciesCopyMixin):
     """
     Used to store testing session progress, relevant assets (machine, material) and test data.
     """
@@ -288,17 +331,6 @@ class Session(models.Model):
         else:
             return True
 
-    def delete(self, using=None, keep_parents=False):
-        """
-        Deletes self, as well as associated settings object.
-        :param using:
-        :param keep_parents:
-        :return:
-        """
-        if self.settings:
-            self.settings.delete()
-        super(Session, self).delete(using, keep_parents)
-
     def init_settings(self):
         """
         Initializes settings and sets some initial values for certain fields with machine-specific values.
@@ -338,6 +370,10 @@ class Session(models.Model):
             elif parameter["parameter"].endswith("three"):
                 self.min_max_parameter_three = output
 
+    # REQUIRED Recursive deletion does not work otherwise
+    def delete(self, using=None, keep_parents=False):
+        return DependanciesCopyMixin.delete(self, using, keep_parents)
+
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
         """
@@ -348,6 +384,7 @@ class Session(models.Model):
         :param update_fields:
         :return:
         """
+        self.copy_dependancies(save=False)
         self.update_persistence()
         self.settings.save()
         super(Session, self).save(force_insert, force_update, using, update_fields)
