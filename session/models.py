@@ -10,19 +10,21 @@ from .choices import TEST_NUMBER_CHOICES, TARGET_CHOICES, SLICER_CHOICES, TOOL_C
 
 # Create your models here.
 
+PREVENT_DELETION_MODELS = (User,)
+
+def recursive_delete(instance, using=None, keep_parents=False):
+    foreign = (x for x in instance._meta.get_fields() if isinstance(x, models.ForeignKey))
+
+    for f in foreign:
+        v = getattr(instance, f.name)
+        if v is not None:
+            if any(isinstance(v, x) for x in PREVENT_DELETION_MODELS):
+                continue
+            recursive_delete(v, using, keep_parents)
+    models.Model.delete(instance, using, keep_parents)
+
+
 class DependanciesCopyMixin():
-    PREVENT_DELETION_MODELS = (User,)
-
-    def delete(self, using=None, keep_parents=False):
-        foreign = (x for x in self._meta.get_fields() if isinstance(x, models.ForeignKey))
-
-        for f in foreign:
-            v = getattr(self, f.name)
-            if v is not None:
-                if any(isinstance(v, x) for x in self.PREVENT_DELETION_MODELS):
-                    continue
-                v.delete()
-        models.Model.delete(self, using, keep_parents)
     # Shoould not leak database space, because:
     # 1. copied instances have owner set to None
     # 2. instances with owner == None are skipped
@@ -102,13 +104,6 @@ class Extruder(models.Model, CopyableModelMixin):
     part_cooling = models.BooleanField(default=True)
     nozzle = models.ForeignKey(Nozzle, on_delete=models.CASCADE)
 
-
-    def delete(self, using=None):
-        # required for related property deletion
-        if self.nozzle is not None:
-            self.nozzle.delete()
-        super(Extruder, self).delete(using)
-
     @property
     def __json__(self):
         output = {
@@ -162,13 +157,8 @@ class Machine(models.Model, CopyableModelMixin):
     printbed = models.ForeignKey(Printbed, on_delete=models.CASCADE, blank=True)
     extruder_type = models.CharField(max_length=20, choices=(('bowden', 'Bowden'), ('directdrive', 'Direct drive')), default='bowden')
 
-    def delete(self, using=None):
-        # required for related property deletion
-        related = (self.extruder, self.chamber, self.printbed)
-        for f in related:
-            if f is not None:
-                f.delete()
-        super(Machine, self).delete(using)
+    def delete(self, using=None, keep_parents=False):
+        return recursive_delete(self, using, keep_parents)
 
     def __str__(self):
         return "{} ({} mm)".format(self.model, str(self.extruder.nozzle.size_id))
@@ -370,9 +360,8 @@ class Session(models.Model, DependanciesCopyMixin):
             elif parameter["parameter"].endswith("three"):
                 self.min_max_parameter_three = output
 
-    # REQUIRED Recursive deletion does not work otherwise
     def delete(self, using=None, keep_parents=False):
-        return DependanciesCopyMixin.delete(self, using, keep_parents)
+        return recursive_delete(self, using, keep_parents)
 
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
