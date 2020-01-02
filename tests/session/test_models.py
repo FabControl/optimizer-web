@@ -4,6 +4,8 @@ from session import models
 from django.db.models import ForeignKey, ManyToOneRel
 from unittest.mock import Mock, patch
 import re
+from .testing_helpers import BLANK_PERSISTENCE
+import json
 
 class SessionModelsTest(TestCase):
     @classmethod
@@ -81,7 +83,8 @@ class SessionModelsTest(TestCase):
         machine1.owner = self.user
         machine1.save()
         # make sure deletion works recursively
-        machine1.delete()
+        machine2 = models.Machine.objects.get(pk=machine1.pk)
+        machine2.delete()
         removed_instances = (machine1,
                              machine1.chamber,
                              machine1.extruder,
@@ -104,3 +107,45 @@ class SessionModelsTest(TestCase):
             instances = type(obj).objects.filter(pk=obj.pk)
             self.assertEqual(len(instances), 1, msg='{} was deleted'.format(obj))
 
+
+    def test_session_model(self):
+        # create material
+        material = models.Material.objects.create(owner=self.user)
+        # create session
+        session = models.Session(owner=self.user,
+                                material=models.Material.objects.get(pk=material.pk),
+                                settings=models.Settings.objects.create(),
+                                machine=models.Machine.objects.get(pk=self.machine.pk))
+
+        session._persistence = json.dumps(json.loads(BLANK_PERSISTENCE)['persistence'])
+        session.init_settings()
+        session.update_persistence()
+
+        session.save()
+        # reload instances from db
+        material = models.Material.objects.get(pk=material.pk)
+        session = models.Session.objects.get(pk=session.pk)
+
+        # check if material is copied
+        self.assertTrue(material != session.material)
+        self.assertTrue(material.pk != session.material.pk)
+        self.assertTrue(material.owner != session.material.owner)
+
+        self.assertEqual(material.name, session.material.name)
+        self.assertEqual(material.size_od, session.material.size_od)
+
+        # check if machine is copied
+        self.machine.refresh_from_db()
+        self.assertCopiedMachine(self.machine, session.machine)
+
+        # delete session
+        session1 = models.Session.objects.get(pk=session.pk)
+        session1.delete()
+        # check if dependancies are deleted
+        removed_instances = (session1,
+                             session1.machine,
+                             session1.material)
+
+        for obj in removed_instances:
+            instances = type(obj).objects.filter(pk=obj.pk)
+            self.assertEqual(len(instances), 0, msg='{} was not deleted'.format(obj))
