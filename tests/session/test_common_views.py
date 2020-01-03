@@ -181,3 +181,10 @@ class SessionViewsTest(TestCase):
         self.user.is_staff = False
         self.user.save()
 
+    def test_terms_of_use(self):
+        tst_url = reverse('terms_of_use')
+        self.client.logout()
+        resp = self.client.get(tst_url)
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp['Content-Type'], 'application/pdf')
