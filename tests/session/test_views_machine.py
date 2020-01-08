@@ -4,8 +4,10 @@ from django.urls import reverse
 from session import models
 from unittest.mock import Mock, patch
 import re
+from django.conf import settings
+from .testing_helpers import assertMachinesEqual
 
-class SessionMaterialViewsTest(TestCase):
+class SessionMachineViewsTest(TestCase):
     @classmethod
     def setUpClass(self):
         self.user = get_user_model().objects.create_user(email='known_user@somewhere.com',
@@ -246,3 +248,40 @@ class SessionMaterialViewsTest(TestCase):
         machines = models.Machine.objects.filter(pk=machine.pk)
         self.assertEqual(len(machines), 0)
 
+    def test_sample_machine_data(self):
+        owner = get_user_model().objects.get(email=settings.SAMPLE_SESSIONS_OWNER)
+        sample_machine = models.Machine.objects.filter(owner=owner)[0]
+
+        machines_filter = dict(owner=self.user,
+                               model=sample_machine.model,
+                               buildarea_maxdim1=sample_machine.buildarea_maxdim1,
+                               buildarea_maxdim2=sample_machine.buildarea_maxdim2,
+                               form=sample_machine.form,
+                               extruder_type=sample_machine.extruder_type,
+                               )
+        existing_machines = models.Machine.objects.filter(**machines_filter)
+        self.assertEqual(len(existing_machines), 0, msg='User already has similar machine - change sample_machine')
+
+        self.assertTrue(self.client.login(email='known_user@somewhere.com', password='SomeSecretPassword'))
+
+
+        # check if valid json is returned
+        resp = self.client.get(reverse('machine_sample', args=(sample_machine.pk,)))
+        self.assertEqual(resp.status_code, 200)
+        self.assertTrue(resp.json() is not None)
+
+        # check if posting received data creates new machine
+        resp = self.client.post(reverse('machine_form'), resp.json())
+        created_machines = models.Machine.objects.filter(**machines_filter)
+
+        self.assertEqual(len(created_machines), 1)
+
+        created = created_machines[0]
+
+        self.assertEqual(created.owner, self.user)
+        self.assertEqual(sample_machine.owner, owner)
+        assertMachinesEqual(self, created, sample_machine)
+
+        # only specific user's machines should be accessible
+        resp = self.client.get(reverse('machine_sample', args=(created.pk,)))
+        self.assertEqual(resp.status_code, 404)
