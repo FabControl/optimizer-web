@@ -408,4 +408,33 @@ BLANK_PERSISTENCE = """
 }
 """
 
+def assertMachinesEqual(self, orig, copied):
+    self.assertEqual(orig.model, copied.model)
+    self.assertEqual(orig.buildarea_maxdim1, copied.buildarea_maxdim1)
+    self.assertEqual(orig.buildarea_maxdim2, copied.buildarea_maxdim2)
+    self.assertEqual(orig.form, copied.form)
+    self.assertEqual(orig.extruder_type, copied.extruder_type)
 
+    self.assertTrue(orig.pk != copied.pk)
+    self.assertTrue(orig.extruder != copied.extruder)
+    self.assertTrue(orig.chamber != copied.chamber)
+    self.assertTrue(orig.printbed != copied.printbed)
+
+    # compare printbeds
+    self.assertEqual(orig.printbed.printbed_heatable, copied.printbed.printbed_heatable)
+    self.assertEqual(orig.printbed.temperature_max, copied.printbed.temperature_max)
+
+    # compare chambers
+    self.assertEqual(orig.chamber.chamber_heatable, copied.chamber.chamber_heatable)
+    self.assertEqual(orig.chamber.tool, copied.chamber.tool)
+    self.assertEqual(orig.chamber.gcode_command, copied.chamber.gcode_command)
+    self.assertEqual(orig.chamber.temperature_max, copied.chamber.temperature_max)
+
+    # compare extrueders
+    self.assertTrue(orig.extruder.nozzle != copied.extruder.nozzle)
+    self.assertEqual(orig.extruder.temperature_max, copied.extruder.temperature_max)
+    self.assertEqual(orig.extruder.tool, copied.extruder.tool)
+    self.assertEqual(orig.extruder.part_cooling, copied.extruder.part_cooling)
+
+    # compare nozzles
+    self.assertEqual(orig.extruder.nozzle.size_id, copied.extruder.nozzle.size_id)
