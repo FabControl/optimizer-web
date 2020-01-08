@@ -6,6 +6,7 @@ from session import urls
 from unittest.mock import Mock, patch
 import re
 from .testing_helpers import BLANK_PERSISTENCE
+from django.conf import settings
 
 
 REDIRECT_MATCHER = re.compile(r'((?:[/\w-])+)\??')
@@ -95,6 +96,9 @@ class SessionViewsTest(TestCase):
                                           _persistence='{"session":{"previous_tests":[]}}',
                                           settings=sett)
 
+        sample_owner = get_user_model().objects.get(email=settings.SAMPLE_SESSIONS_OWNER)
+        sample_machine = models.Machine.objects.filter(owner=sample_owner)[0]
+
         staff_only_urls = [
                 ('session_json', {'pk': test_session.pk}),
                 ('session__test_info', {'pk': test_session.pk})
@@ -109,6 +113,7 @@ class SessionViewsTest(TestCase):
                 ('machine_manager', {}),
                 ('machine_form', {}),
                 ('machine_detail', {'pk': machine.pk}),
+                ('machine_sample', {'pk': sample_machine.pk}),
                 ('machine_delete', {'pk': machine.pk}),
                 ("session_manager", {}),
                 ('session_detail', {'pk': test_session.pk}),
