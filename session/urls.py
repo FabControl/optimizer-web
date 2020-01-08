@@ -16,6 +16,7 @@ urlpatterns = [
     path('resources/machines/new/', views.machine_form, name='machine_form'),
     path('resources/machines/<pk>/', views.machine_edit_view, name='machine_detail'),
     path('resources/machines/<pk>/delete', views.MachineDelete.as_view(), name='machine_delete'),
+    path('resources/machines/sample/<int:pk>/', views.sample_machine_data, name='machine_sample'),
 
     path('sessions/', views.SessionListView.as_view(), name="session_manager"),
     path('sessions/<int:pk>/', views.generate_or_validate, name='session_detail'),

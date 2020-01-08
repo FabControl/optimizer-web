@@ -2,10 +2,13 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.contrib.staticfiles import finders
 from .utilities import load_json, optimizer_info
-from django.http import FileResponse, HttpResponseRedirect, Http404, HttpResponse
+from django.http import FileResponse, HttpResponseRedirect, Http404, HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render_to_response
+from django.conf import settings
+from django.contrib.auth import get_user_model
+from django.forms.models import model_to_dict
 
 from .models import *
 from django.views import generic
@@ -179,13 +182,34 @@ def machine_form(request):
         nozzle_form = NewNozzleForm(prefix="nozzle")
         chamber_form = NewChamberForm(prefix="chamber")
         printbed_form = NewPrintbedForm(prefix="printbed")
+
     form_context = {"self_form": self_form,
                "extruder_form": extruder_form,
                "nozzle_form": nozzle_form,
                "chamber_form": chamber_form,
                "printbed_form": printbed_form}
-    context = {**context, **form_context}
+
+    sample_machines = Machine.objects.filter(owner=get_user_model().objects.get(email=settings.SAMPLE_SESSIONS_OWNER))
+    context = {'sample_machines':sample_machines,
+               **context,
+               **form_context}
     return render(request, 'session/machine_form.html', context)
+
+@login_required
+def sample_machine_data(request, pk):
+    owner = get_user_model().objects.get(email=settings.SAMPLE_SESSIONS_OWNER)
+    machine = get_object_or_404(Machine, pk=pk, owner=owner)
+    result = model_to_dict(machine, NewMachineForm.Meta.fields)
+
+    subforms = ((machine.extruder, NewExtruderForm, 'extruder'),
+                (machine.extruder.nozzle, NewNozzleForm, 'nozzle'),
+                (machine.chamber, NewChamberForm, 'chamber'),
+                (machine.printbed, NewPrintbedForm, 'printbed'))
+
+    for i, t, p in subforms:
+        for k, v in model_to_dict(i, t.Meta.fields).items():
+            result[p + '-' + k] = v
+    return JsonResponse(result)
 
 
 class SettingView(LoginRequiredMixin, generic.DetailView):
