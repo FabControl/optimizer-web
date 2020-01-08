@@ -144,3 +144,5 @@ LOGGING = {
 }
 
 PASSWORD_RESET_TIMEOUT_DAYS = 1
+
+SAMPLE_SESSIONS_OWNER = 'sample_settings_user@fabcontrol.com'
