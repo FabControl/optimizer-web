@@ -12,7 +12,7 @@ class FakeHttpRequest():
 
 class SignUpFormTest(TestCase):
     activate_link_match = re.compile(re.escape('https://test.local.domain') +
-            '/activate_account/[0-9a-zA-Z]{2}/[0-9a-z-]{24}/')
+            '/activate_account/[0-9a-zA-Z]{2,9}/[0-9a-z-]{24}/')
 
     def test_sugnup_message(self):
         req = FakeHttpRequest()
@@ -51,7 +51,7 @@ class ResetPasswordFormTest(TestCase):
     req = FakeHttpRequest()
     req.META = {'HTTP_HOST':'test.local.domain'}
     reset_link_match = re.compile(re.escape('https://test.local.domain') +
-            '/reset/[0-9a-zA-Z]{2}/[0-9a-z-]{24}/')
+            '/reset/[0-9a-zA-Z]{2,9}/[0-9a-z-]{24}/')
 
 
     def test_unknown_account_message(self):
