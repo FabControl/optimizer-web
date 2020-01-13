@@ -121,7 +121,7 @@ def machine_edit_view(request, pk):
                     "chamber_form": chamber_form,
                     "printbed_form": printbed_form}
     context = {**context, **form_context}
-    return render(request, 'session/machine_form.html', context)
+    return render(request, 'session/machine_detail.html', context)
 
 
 class MachineView(LoginRequiredMixin, generic.UpdateView):
