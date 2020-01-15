@@ -558,6 +558,11 @@ def session_test_info(request, pk):
         return render(request, "session/test_info.html", context=context)
 
 
+@login_required
+def privacy_statement(request):
+    return render(request, 'session/TOP.html')
+
+
 def session_health_check(request):
     resp = api_client.get_template()
     if resp is not None:
