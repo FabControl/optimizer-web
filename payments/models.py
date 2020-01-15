@@ -44,7 +44,7 @@ class Checkout(models.Model):
                             on_delete=models.SET(get_sentinel_user),
                             editable=False)
     payment_plan = models.ForeignKey('Plan',
-                            on_delete=models.SET(get_sentinel_user), 
+                            on_delete=models.SET(get_sentinel_plan),
                             editable=False)
 
     @property
