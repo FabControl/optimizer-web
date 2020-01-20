@@ -79,7 +79,7 @@ class User(AbstractUser):
             return "Upgrade to Full Access"
         else:
             expiration_delta = self.subscription_expiration - timezone.now()
-            return "Full access ({} days)".format(expiration_delta.days + 1)
+            return "Open beta access ({} days)".format(expiration_delta.days + 1)
 
     def extend_subscription(self, delta: timedelta):
         """
