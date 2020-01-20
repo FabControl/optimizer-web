@@ -53,7 +53,7 @@ class User(AbstractUser):
     _onboarding_sections = models.CharField(max_length=256,
                                             default="['dashboard', 'new_session', 'session_generate_1', 'session_validate', 'session_generate_2']")
 
-    subscription_expiration = models.DateTimeField(null=False, default=timezone.datetime(year=2000, day=1, month=1))
+    subscription_expiration = models.DateTimeField(null=False, default=timezone.datetime(year=2020, day=31, month=3))
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
