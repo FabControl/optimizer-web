@@ -3,6 +3,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.utils import timezone
 from datetime import timedelta
+import pytz
 
 
 class UserManager(BaseUserManager):
@@ -53,7 +54,7 @@ class User(AbstractUser):
     _onboarding_sections = models.CharField(max_length=256,
                                             default="['dashboard', 'new_session', 'session_generate_1', 'session_validate', 'session_generate_2']")
 
-    subscription_expiration = models.DateTimeField(null=False, default=timezone.datetime(year=2020, day=31, month=3))
+    subscription_expiration = models.DateTimeField(null=False, default=timezone.datetime(year=2020, day=31, month=3, tzinfo=pytz.utc))
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []

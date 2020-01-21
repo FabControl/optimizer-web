@@ -4,6 +4,7 @@ from django.utils import timezone
 from django.urls import reverse
 from datetime import timedelta
 import pytz
+from unittest.mock import patch
 
 
 class SubscriptionMiddlewareTest(TestCase):
@@ -74,4 +75,32 @@ class SubscriptionMiddlewareTest(TestCase):
 
         # premium should be assigned, since user has few extra seconds
         self.assertEqual(user.plan, 'premium')
+
+
+    def test_beta_premium_expiration(self):
+        expiration = timezone.datetime(year=2020, day=31, month=3, tzinfo=pytz.utc)
+
+        user = get_user_model().objects.create_user(email='known_user@somewhere.com',
+                                 is_active=True,
+                                 password='SomeSecretPassword')
+
+        tst_url = reverse('dashboard')
+
+        pre_expiration = expiration - timedelta(seconds=2)
+        with patch('django.utils.timezone.now', return_value=pre_expiration):
+            self.assertTrue(self.client.login(email='known_user@somewhere.com', password='SomeSecretPassword'))
+            self.client.get(tst_url)
+
+        user.refresh_from_db()
+        # User should have premium subscription if it's still beta
+        self.assertEqual(user.plan, 'premium')
+
+        post_expiration = expiration + timedelta(seconds=2)
+        with patch('django.utils.timezone.now', return_value=post_expiration):
+            self.client.get(tst_url)
+
+        user.refresh_from_db()
+
+        # premium should be assigned, since user has few extra seconds
+        self.assertEqual(user.plan, 'basic')
 
