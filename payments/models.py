@@ -3,6 +3,7 @@ from django.utils import timezone
 from datetime import timedelta
 from django.conf import settings
 import uuid
+from django.contrib.auth import get_user_model
 
 
 class Plan(models.Model):
@@ -25,7 +26,7 @@ def get_sentinel_plan():
 
 
 def get_sentinel_user():
-        return settings.AUTH_USER_MODEL.get_or_create(email='deleted@user.com')[0]
+        return get_user_model().objects.get(email='deleted@user.com')
 
 
 class Checkout(models.Model):
