@@ -9,7 +9,7 @@ class Plan(models.Model):
     name = models.CharField(max_length=32, default="Untitled Plan")
     price = models.DecimalField(default=None, null=True, decimal_places=2, max_digits=6)
     subscription_period = models.DurationField(default=timedelta(days=31))
-    type = models.CharField(max_length=32, choices=(('corporate', 'Corporate'), ('premium', 'Premium'), ('basic', 'Basic')), default='basic')
+    type = models.CharField(max_length=32, choices=(('corporate', 'Corporate'), ('premium', 'Premium'), ('basic', 'Basic'), ('deleted', 'Deleted')), default='basic')
 
     @property
     def pretty_price(self):
@@ -21,7 +21,8 @@ class Plan(models.Model):
 
 
 def get_sentinel_plan():
-        return Plan.get_or_create(name='deleted')[0]
+    return Plan.objects.filter(type='deleted')[0]
+
 
 def get_sentinel_user():
         return settings.AUTH_USER_MODEL.get_or_create(email='deleted@user.com')[0]
@@ -44,7 +45,7 @@ class Checkout(models.Model):
                             on_delete=models.SET(get_sentinel_user),
                             editable=False)
     payment_plan = models.ForeignKey('Plan',
-                            on_delete=models.SET(get_sentinel_user), 
+                            on_delete=models.SET(get_sentinel_plan),
                             editable=False)
 
     @property

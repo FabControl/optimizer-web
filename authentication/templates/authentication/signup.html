@@ -3,17 +3,31 @@
 <div class="container">
   <form class="" action="" method="post">
     <div class="row">
-      <div class="col-sm-6">
+      <div class="col-sm-5">
         {% load crispy_forms_tags %}
         {% csrf_token %}
-        {% crispy form%}
+        {% crispy form %}
+        <div class="row">
+          <div class="col">
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm">
+        <div class="card p-3" style="overflow-y: scroll; height: 810px;">
+          {% include 'session/TOS.html' %}
+        </div>
       </div>
     </div>
     <div class="row">
       <div class="col-sm">
-        <button type="submit" class="btn btn-primary">Submit</button>
       </div>
     </div>
   </form>
 </div>
+<script type="text/javascript">
+  function validate_p1() {
+
+  }
+</script>
 {% endblock %}

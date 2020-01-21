@@ -121,7 +121,7 @@ def machine_edit_view(request, pk):
                     "chamber_form": chamber_form,
                     "printbed_form": printbed_form}
     context = {**context, **form_context}
-    return render(request, 'session/machine_form.html', context)
+    return render(request, 'session/machine_detail.html', context)
 
 
 class MachineView(LoginRequiredMixin, generic.UpdateView):
@@ -556,6 +556,11 @@ def session_test_info(request, pk):
         session = Session.objects.get(pk=pk)
         context = {"test_info": json.dumps(session.test_info, indent=4)}
         return render(request, "session/test_info.html", context=context)
+
+
+@login_required
+def privacy_statement(request):
+    return render(request, 'session/TOP.html')
 
 
 def session_health_check(request):
