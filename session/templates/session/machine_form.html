@@ -3,13 +3,24 @@
 {% block content %}
 {% load crispy_forms_tags %}
 <div class="container">
+  <div class="row pt-3 pb-3">
+    <div class="col-md-6">
+      <label for="id_preset_selector" class="col-form-label">
+        Load from preset
+      </label>
+      <select class="select form-control" id="id_preset_selector" name="preset" placeholder="Printer preset">
+        {% for machine in sample_machines %}
+        <option value="{{machine.pk}}">{{machine.model}}</option>
+        {{machine}}
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+  <hr>
   <div class="row">
     <div class="col-md-6">
-      <form class="" action="" method="post">
+      <form class="" action="" method="post" id="id_form">
         {% csrf_token %}
-        <p>
-          <h4></h4>
-        </p>
         <p>
           {% crispy self_form %}
         </p>
@@ -27,16 +38,22 @@
           </div>
         </p>
         <p>
-          <h4>Printbed parameters</h4>
+          <h4>Print bed parameters</h4>
           <div class="card p-3">
             {% crispy printbed_form %}
           </div>
         </p>
+        {% if next %}
+        <input type="hidden" value="{{ next }}" name="next">
+        {% endif %}
         <button type="submit" class="btn btn-primary">Submit</button>
       </form>
     </div>
   </div>
 </div>
+{% endblock %}
+
+{% block javascript%}
 <script>
   $(function() {
     $.fn.customSlideToggler = function(show) {
@@ -46,15 +63,44 @@
         $(this).slideUp();
       }
     }
-    $('#id_chamber_heatable').change(function() {
-      $('#div_id_chamber_tool').customSlideToggler(this.checked);
-      $('#div_id_chamber_gcode_command').customSlideToggler(this.checked);
-      $('#div_id_temperature_max_chamber').customSlideToggler(this.checked);
+    $('#id_chamber-chamber_heatable').change(function() {
+      $('#div_id_chamber-tool').customSlideToggler(this.checked);
+      $('#div_id_chamber-gcode_command').customSlideToggler(this.checked);
+      $('#div_id_chamber-temperature_max').customSlideToggler(this.checked);
     }).change(); //ensure visible state matches initially
 
-    $('#id_printbed_heatable').change(function() {
-      $('#div_id_temperature_max_printbed').customSlideToggler(this.checked);
+    $('#id_printbed-printbed_heatable').change(function() {
+      $('#div_id_printbed-temperature_max').customSlideToggler(this.checked);
     }).change(); //ensure visible state matches initially
   });
+</script>
+<script type="text/javascript">
+  function getBaseUrl() {
+    var re = new RegExp(/^https?:\/\/[^\/]+/i);
+    return re.exec(window.location.href);
+  }
+
+  element = $('#id_preset_selector')
+  element.change(function() {
+    var selected_pk = element.children("option:selected").val();
+    var url = getBaseUrl() + "/resources/machines/sample/" + selected_pk
+    var api_response = $.getJSON(url, function(data) {
+      $.each(data, function(key, val) {
+        var $el = $('[name="' + key + '"]'),
+          type = $el.attr('type');
+
+        switch (type) {
+          case 'checkbox':
+            $el.attr('checked', 'checked');
+            break;
+          case 'radio':
+            $el.filter('[value="' + val + '"]').attr('checked', 'checked');
+            break;
+          default:
+            $el.val(val);
+        }
+      });
+    });
+  })
 </script>
 {% endblock %}

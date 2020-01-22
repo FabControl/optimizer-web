@@ -7,8 +7,6 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('dashboard/', views.dashboard, name='dashboard'),
 
-    path('onboarding/', views.onboarding_disable, name='disable_onboarding'),
-
     path('resources/materials/', views.MaterialsView.as_view(), name='material_manager'),
     path('resources/materials/new/', views.material_form, name='material_form'),
     path('resources/materials/<pk>/', views.MaterialView.as_view(), name='material_detail'),
@@ -16,8 +14,9 @@ urlpatterns = [
 
     path('resources/machines/', views.MachinesView.as_view(), name='machine_manager'),
     path('resources/machines/new/', views.machine_form, name='machine_form'),
-    path('resources/machines/<pk>/', views.MachineView.as_view(), name='machine_detail'),
+    path('resources/machines/<pk>/', views.machine_edit_view, name='machine_detail'),
     path('resources/machines/<pk>/delete', views.MachineDelete.as_view(), name='machine_delete'),
+    path('resources/machines/sample/<int:pk>/', views.sample_machine_data, name='machine_sample'),
 
     path('sessions/', views.SessionListView.as_view(), name="session_manager"),
     path('sessions/<int:pk>/', views.generate_or_validate, name='session_detail'),
@@ -39,5 +38,7 @@ urlpatterns = [
     path('help/support/', views.support, name="support"),
     path('help/terms_of_use/', views.terms_of_use, name="terms_of_use"),
 
-    path('testing_session', views.testing_session, name="testing_session")
+    path('testing_session', views.testing_session, name="testing_session"),
+    path('health_check', views.session_health_check, name='health_check'),
+    path('privacy', views.privacy_statement, name='privacy_statement')
 ]

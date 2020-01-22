@@ -1,0 +1,6 @@
+{% block content %}{% endblock %}
+
+------
+Automated email from
+{{ application_url }}{% url 'index' %}
+

@@ -1,16 +1,62 @@
+import ast
+import logging
+import simplejson as json
 from django.db import models
 from django.utils import timezone
-from .choices import TEST_NUMBER_CHOICES, TARGET_CHOICES, SLICER_CHOICES, TOOL_CHOICES, FORM_CHOICES, UNITS
-import ast
-import simplejson as json
-from optimizer_api import api_client
-from authentication.models import User
 from django.http import Http404
+from authentication.models import User
+from optimizer_api import api_client
+from .choices import TEST_NUMBER_CHOICES, TARGET_CHOICES, SLICER_CHOICES, TOOL_CHOICES, FORM_CHOICES, UNITS
 
 # Create your models here.
 
+PREVENT_DELETION_MODELS = (User,)
 
-class Material(models.Model):
+def recursive_delete(instance, using=None, keep_parents=False):
+    foreign = (x for x in instance._meta.get_fields() if isinstance(x, models.ForeignKey))
+
+    for f in foreign:
+        v = getattr(instance, f.name)
+        if v is not None:
+            if any(isinstance(v, x) for x in PREVENT_DELETION_MODELS):
+                continue
+            recursive_delete(v, using, keep_parents)
+    models.Model.delete(instance, using, keep_parents)
+
+
+class DependanciesCopyMixin():
+    # Shoould not leak database space, because:
+    # 1. copied instances have owner set to None
+    # 2. instances with owner == None are skipped
+    def copy_dependancies(self, save=True):
+        # create copy of all ForeignKey instances
+        foreign = (x for x in self._meta.get_fields() if isinstance(x, models.ForeignKey))
+
+        for f in foreign:
+            v = getattr(self, f.name)
+            if v is not None:
+                if hasattr(v, 'owner'):
+                    if v.owner == None:
+                        continue
+                if isinstance(v, CopyableModelMixin):
+                    setattr(self, f.name, v.save_as_copy())
+
+        if save:
+            self.save()
+
+class CopyableModelMixin(DependanciesCopyMixin):
+    def save_as_copy(self):
+        # this method "hides" new copy of model instance from user
+        self.pk = None
+        if hasattr(self, 'owner'):
+            self.owner = None
+        self.copy_dependancies()
+        return self
+
+
+
+
+class Material(models.Model, CopyableModelMixin):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     size_od = models.DecimalField(default=1.75, max_digits=3, decimal_places=2)
     name = models.CharField(max_length=60)
@@ -39,7 +85,7 @@ class Material(models.Model):
         return output
 
 
-class Nozzle(models.Model):
+class Nozzle(models.Model, CopyableModelMixin):
     size_id = models.DecimalField(default=0.4, decimal_places=1, max_digits=2)
 
     @property
@@ -50,7 +96,7 @@ class Nozzle(models.Model):
         return output
 
 
-class Extruder(models.Model):
+class Extruder(models.Model, CopyableModelMixin):
     pub_date = models.DateTimeField(default=timezone.now, blank=True)
 
     tool = models.CharField(choices=TOOL_CHOICES, max_length=3, blank=True, default="T0")
@@ -69,7 +115,7 @@ class Extruder(models.Model):
         return output
 
 
-class Chamber(models.Model):
+class Chamber(models.Model, CopyableModelMixin):
     chamber_heatable = models.BooleanField(default=False)
     tool = models.CharField(max_length=3, choices=TOOL_CHOICES, blank=True)
     gcode_command = models.CharField(max_length=40, default="M141 S$temp")
@@ -86,19 +132,20 @@ class Chamber(models.Model):
         return output
 
 
-class Printbed(models.Model):
+class Printbed(models.Model, CopyableModelMixin):
     printbed_heatable = models.BooleanField(default=True)
     temperature_max = models.IntegerField(default=120)
 
     @property
     def __json__(self):
         output = {
-            "printbed_heatable": self.printbed_heatable
+            "printbed_heatable": self.printbed_heatable,
+            "temperature_max": self.temperature_max
         }
         return output
 
 
-class Machine(models.Model):
+class Machine(models.Model, CopyableModelMixin):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     pub_date = models.DateTimeField(default=timezone.now, blank=True)
     model = models.CharField(max_length=30, default="Unknown")
@@ -108,6 +155,10 @@ class Machine(models.Model):
     extruder = models.ForeignKey(Extruder, on_delete=models.CASCADE)
     chamber = models.ForeignKey(Chamber, on_delete=models.CASCADE, blank=True)
     printbed = models.ForeignKey(Printbed, on_delete=models.CASCADE, blank=True)
+    extruder_type = models.CharField(max_length=20, choices=(('bowden', 'Bowden'), ('directdrive', 'Direct drive')), default='bowden')
+
+    def delete(self, using=None, keep_parents=False):
+        return recursive_delete(self, using, keep_parents)
 
     def __str__(self):
         return "{} ({} mm)".format(self.model, str(self.extruder.nozzle.size_id))
@@ -131,6 +182,7 @@ class Machine(models.Model):
             "buildarea_maxdim1": self.buildarea_maxdim1,
             "buildarea_maxdim2": self.buildarea_maxdim2,
             "form": self.form,
+            "extruder_type": self.extruder_type,
             "temperature_controllers": {
                 "extruder": self.extruder.__json__,
                 "chamber": self.chamber.__json__,
@@ -151,10 +203,10 @@ class Settings(models.Model):
     track_width = models.DecimalField(max_digits=3, decimal_places=2, default=0)
     track_width_raft = models.DecimalField(max_digits=3, decimal_places=2, default=0)
     extrusion_multiplier = models.DecimalField(max_digits=3, decimal_places=2, default=1.0)
-    temperature_extruder = models.IntegerField(default=0)
+    _temperature_extruder = models.IntegerField(default=0)
     temperature_extruder_raft = models.IntegerField(default=0)
     retraction_restart_distance = models.DecimalField(max_digits=4, decimal_places=2, default=0)
-    retraction_speed = models.IntegerField(default=100)
+    retraction_speed = models.IntegerField(default=0)
     retraction_distance = models.DecimalField(max_digits=4, decimal_places=2, default=0)
     bridging_extrusion_multiplier = models.DecimalField(max_digits=3, decimal_places=1, default=1)
     bridging_part_cooling = models.IntegerField(default=0)
@@ -168,6 +220,26 @@ class Settings(models.Model):
 
     def __str__(self):
         return self.name
+
+    @property
+    def temperature_extruder(self):
+        """
+        If temperature_extruder is 0, default to temperature_extruder_raft
+        :return:
+        """
+        if self._temperature_extruder == 0:
+            self._temperature_extruder = self.temperature_extruder_raft
+            self.save()
+        return self._temperature_extruder
+
+    @temperature_extruder.setter
+    def temperature_extruder(self, value):
+        """
+        Stores actual value to the DB via a hidden variable
+        :param value:
+        :return:
+        """
+        self._temperature_extruder = value
 
     @property
     def __json__(self):
@@ -198,7 +270,10 @@ class Settings(models.Model):
         return output
 
 
-class Session(models.Model):
+class Session(models.Model, DependanciesCopyMixin):
+    """
+    Used to store testing session progress, relevant assets (machine, material) and test data.
+    """
     number = models.IntegerField(default=0)
     name = models.CharField(default="Untitled", max_length=20)
     pub_date = models.DateTimeField(default=timezone.now, blank=True)
@@ -246,18 +321,21 @@ class Session(models.Model):
         else:
             return True
 
-    def delete(self, using=None, keep_parents=False):
-        if self.settings:
-            self.settings.delete()
-        super(Session, self).delete(using, keep_parents)
-
     def init_settings(self):
+        """
+        Initializes settings and sets some initial values for certain fields with machine-specific values.
+        :return:
+        """
         for name, value in self.persistence["settings"].items():
             self.settings.__setattr__(name, value)
         self.settings.track_width_raft = self.machine.extruder.nozzle.size_id
         self.settings.track_width = self.machine.extruder.nozzle.size_id
         self.settings.track_height_raft = float(self.machine.extruder.nozzle.size_id) * 0.6
         self.settings.speed_printing_raft = 15
+        if self.machine.extruder_type.strip().lower() == 'bowden':
+            self.settings.retraction_speed = 100
+        else:
+            self.settings.retraction_speed = 30
 
     def clean_min_max(self, to_zero: bool = False):
         """
@@ -282,19 +360,42 @@ class Session(models.Model):
             elif parameter["parameter"].endswith("three"):
                 self.min_max_parameter_three = output
 
+    def delete(self, using=None, keep_parents=False):
+        return recursive_delete(self, using, keep_parents)
+
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
+        """
+        Saves self, as well as self.settings upon saving.
+        :param force_insert:
+        :param force_update:
+        :param using:
+        :param update_fields:
+        :return:
+        """
+        self.copy_dependancies(save=False)
         self.update_persistence()
         self.settings.save()
         super(Session, self).save(force_insert, force_update, using, update_fields)
 
     @property
     def persistence(self):
+        """
+        Updates and then returns a Session persistent data dictionary.
+        :return:
+        """
         return self.update_persistence()
 
     @persistence.setter
-    def persistence(self, value):
+    def persistence(self, value: dict or str):
+        """
+        Sets persistent data dictionary and self.settings fields to input value.
+        :param value:
+        :return:
+        """
         if type(value) == dict:
+            self.settings.critical_overhang_angle = value["settings"]["critical_overhang_angle"]
+            self.settings.save()
             self._persistence = json.dumps(value)
         else:
             self._persistence = value
@@ -302,6 +403,10 @@ class Session(models.Model):
 
     @property
     def min_max_parameter_one(self):
+        """
+        Deserializes self._min_max_parameter_one to a list of two values.
+        :return:
+        """
         if type(self._min_max_parameter_one) == list:
             return self._min_max_parameter_one
         else:
@@ -309,25 +414,54 @@ class Session(models.Model):
 
     @min_max_parameter_one.setter
     def min_max_parameter_one(self, value):
+        """
+        Serializes input value to self._min_max_parameter_one as a string.
+        :return:
+        """
+        if type(value) != list:
+            raise TypeError("Given input value {} is not a list.".format(str(value)))
         self._min_max_parameter_one = str(value)
 
     @property
     def min_max_parameter_two(self):
+        """
+        Deserializes self._min_max_parameter_two to a list of two values.
+        :return:
+        """
         return ast.literal_eval(self._min_max_parameter_two)
 
     @min_max_parameter_two.setter
     def min_max_parameter_two(self, value):
+        """
+        Serializes input value to self._min_max_parameter_two as a string.
+        :return:
+        """
         self._min_max_parameter_two = str(value)
 
     @property
     def min_max_parameter_three(self):
+        """
+        Deserializes self._min_max_parameter_three to a list of two values.
+        :return:
+        """
         return ast.literal_eval(self._min_max_parameter_three)
 
     @min_max_parameter_three.setter
     def min_max_parameter_three(self, value):
+        """
+        Serializes input value to self._min_max_parameter_three as a string.
+        :return:
+        """
         self._min_max_parameter_three = str(value)
 
     def selected_parameter_value(self, value_key, new_value):
+        """
+        Assigns newly selected settings to self.settings object.
+        For example, user selects track_height of 0.15, and this will set self.settings.track_height to 0.15
+        :param value_key:
+        :param new_value:
+        :return:
+        """
         if new_value is not None:
             parameter_numbers = ["parameter_one", "parameter_two", "parameter_three"]
             for number in parameter_numbers:
@@ -340,6 +474,11 @@ class Session(models.Model):
 
     @property
     def test_info(self):
+        """
+        Checks if test_info is cached and if it is still valid for the current test.
+        If it isn't, test_info is updated.
+        :return:
+        """
         temp_info = None
         if self._test_info != "":
             temp_info = json.loads(self._test_info)
@@ -352,26 +491,61 @@ class Session(models.Model):
         return temp_info
 
     def update_test_info(self):
+        """
+        Contacts Optimizer API to retrieve test_info for the current persistence data.
+        :return:
+        """
         temp_info = api_client.get_test_info(self.persistence)
         self._test_info = json.dumps(temp_info)
         return temp_info
 
     @property
     def get_gcode(self):
+        """
+        Retrieves GCODE for the current persistence data.
+        :return:
+        """
         gcode = api_client.return_data(self.persistence, output="gcode")
         self.persistence = api_client.persistence
         return gcode
 
     @property
     def previous_tests(self):
+        """
+        A shortcut method for retrieving a list of dicts of previous test data.
+        :return:
+        """
         return self.persistence["session"]["previous_tests"]
 
+    def previous_tests_as_dict(self):
+        """
+        A shortcut method for retrieving a dict of dicts of previous test data.
+        Follows the convention of test_number: {test data}
+        :return:
+        """
+        output = {}
+        for test in self.previous_tests:
+            output[test["test_number"]] = test
+        return output
+
     def alter_previous_tests(self, index, key, value):
+        """
+        A method which takes a test index, field key and value, to manually alter fields in formerly tested tests.
+        :param index:
+        :param key:
+        :param value:
+        :return:
+        """
         temp_persistence = self.persistence
         temp_persistence["session"]["previous_tests"][index][key] = value
         self.persistence = temp_persistence
 
     def delete_previous_test(self, number):
+        """
+        Deletes test (or tests) from self.previous_tests, if their test_number == number
+        :param number:
+        :return:
+        """
         persistence = self.persistence
         temp_tests = self.previous_tests
         for test in temp_tests:
@@ -381,21 +555,33 @@ class Session(models.Model):
         self.persistence = persistence
 
     def get_test_with_current_number(self):
+        """
+        Looks through previous tests and returns data of the first test whose number matches the current self.test_number.
+        :return:
+        """
         for test in self.previous_tests:
             if test["test_number"] == self.test_number:
                 return test
 
     @property
     def min_max_parameters(self):
+        """
+        Returns a list of dicts (or dict) of min_max parameters (one, two or three)
+        :return:
+        """
         parameters = []
         for item, content in self.test_info.items():
             if item.startswith("parameter_"):
                 if type(content) == dict:
                     if content["name"] is None:
                         continue
-                    parameters.append({"name": content["name"], "units": content["units"], "iterable_values": list(enumerate(content["values"])),
+                    parameters.append({"name": content["name"], "units": content["units"],
+                                       "iterable_values": list(enumerate(content["values"])),
                                        "values": content["values"], "parameter": item,
-                                       "programmatic_name": content["programmatic_name"], "min_max": content["min_max"]})
+                                       "programmatic_name": content["programmatic_name"],
+                                       "min_max": content["min_max"],
+                                       "hint_active": content["hint_active"],
+                                       "active": content["active"]})
         if len(parameters) == 3:
             parameters = [parameters[i] for i in [0, 2, 1]]
         return parameters
@@ -407,17 +593,26 @@ class Session(models.Model):
         """
         for test in self.previous_tests[::-1]:
             for parameter in test["tested_parameters"]:
-                if "speed_printing" in parameter["programmatic_name"]:
-                    values = parameter["values"]
-                    return [values[0], values[-1]]
+                if parameter["programmatic_name"] is not None:
+                    if "speed_printing" in parameter["programmatic_name"]:
+                        values = parameter["values"]
+                        return [values[0], values[-1]]
         return [0, 0]
 
     @property
     def completed_tests(self):
+        """
+        Returns the amount of previously conducted tests.
+        :return:
+        """
         return len(self.previous_tests)
 
     @property
     def executed(self):
+        """
+        Checks whether or not the current test is executed. Used to trigger validation view.
+        :return:
+        """
         try:
             for test in self.previous_tests:
                 if self.test_number == test["test_number"] and test["executed"]:
@@ -427,6 +622,10 @@ class Session(models.Model):
             return False
 
     def get_validated_tests(self):
+        """
+        Returns a list of test data for tests that have been validated.
+        :return:
+        """
         validated_tests = []
         for test in self.previous_tests:
             if test["validated"]:
@@ -435,25 +634,91 @@ class Session(models.Model):
 
     @property
     def test_number(self):
+        """
+        Returns the current/active test number
+        :return:
+        """
         return self._test_number
 
     @test_number.setter
     def test_number(self, value):
-        self._test_info = ""
-        self._test_number = value
-        self.update_test_info()
-        self.clean_min_max()
+        """
+        Sets the active test number to the new one, checks whether or not the test is available for the user,
+        advances to the next primary test if it isn't.
+        Flushes test_info and min_max parameters.
+        :param value:
+        :return:
+        """
+        allowed_numbers = []
+        if self.owner.plan == 'basic':
+            allowed_numbers = [number for number in api_client.get_routine(mode='primary')]
+        elif self.owner.plan == 'premium':
+            allowed_numbers = [number for number in api_client.get_routine(mode='full')]
+        if value in allowed_numbers:
+            self._test_info = ""
+            self._test_number = value
+            self.update_test_info()
+            self.clean_min_max()
+        else:
+            self.test_number = self.test_number_next()
+            self.save()
+            logging.getLogger("views").info("{} tried to set a disallowed test_number".format(self.owner))
+
+    def test_number_next(self, primary: bool = True):
+        """
+        Method for advancing test_number according to testing session routine retrieved from backend
+        :return:
+        """
+        routine = api_client.get_routine()
+        test_names = [name for name, _ in routine.items()]
+
+        next_test = None
+        next_primary_test = None
+
+        current_found = False
+        for i, test_info in enumerate(routine.items()):
+            if current_found:
+                if test_info[1]["priority"] == "primary":
+                    next_primary_test = test_names[i]
+                    break
+            if test_info[0] == self.test_number:
+                try:
+                    next_test = test_names[i + 1]
+                except IndexError:
+                    next_primary_test = next_test = self.test_number
+                current_found = True
+        if primary:
+            return next_primary_test
+        else:
+            return next_test
 
     @property
     def tested_values(self):
-        return [self.previous_tests[-1]["tested_parameter_one_values"][::-1], self.previous_tests[-1]["tested_parameter_two_values"]]
+        """
+        Returns a list of tested_parameters (one and two). One is inverted.
+        Used in validation table.
+        :return:
+        """
+        return [self.previous_tests[-1]["tested_parameter_one_values"][::-1],
+                self.previous_tests[-1]["tested_parameter_two_values"]]
 
     @property
     def previously_tested_parameters(self):
+        """
+        Returns a dict of lists of previously tested and set parameters.
+        Follows the following convention ["test_number"][parameter1, parameter2, ...]
+        :return:
+        """
         return json.loads(self._previously_tested_parameters)
 
     @previously_tested_parameters.setter
     def previously_tested_parameters(self, value):
+        """
+        Takes a list of parameters and assigns it to current test number key in self._previously_test_values
+        Used to block previously tested and assigned values in test generation view.
+        :param value:
+        :return:
+        """
         parameters = self.previously_tested_parameters
         if value is not None:
             parameters[self.test_number] = value
@@ -462,15 +727,27 @@ class Session(models.Model):
         self._previously_tested_parameters = json.dumps(parameters)
 
     def get_previously_tested_parameters(self):
+        """
+        Returns a flat list of previously tested and/or assigned parameters.
+        Follows the convention of [parameter1, parameter2, parameter3, ...]
+        :return:
+        """
         parameters = self.previously_tested_parameters
+        previous_tests = self.previous_tests_as_dict()
         output = []
         for test, param_list in parameters.items():
-            for param in param_list:
-                if param not in output:
-                    output.append(param)
+            if test in previous_tests:
+                if previous_tests[test]['validated']:
+                    for param in param_list:
+                        if param not in output:
+                            output.append(param)
         return output
 
     def remove_last_test(self):
+        """
+        Delete the last test in previous_tests. Used to undo a test_generation from test validation_view.
+        :return:
+        """
         temp_persistence = self.persistence
         del temp_persistence["session"]["previous_tests"][-1]
         self.persistence = temp_persistence
@@ -480,7 +757,11 @@ class Session(models.Model):
         return "{} (target: {})".format(self.name, self.target)
 
     @property
-    def __json__(self):
+    def __json__(self) -> dict:
+        """
+        Returns ["session"] persistent data block representation of the current session state.
+        :return: type dict
+        """
         output = {
             "uid": self.pk,
             "target": self.target,

@@ -1,9 +1,11 @@
-from django import forms
-from .choices import TEST_NUMBER_CHOICES
-from .models import *
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit, Layout, Row, Column, Field
 import logging
+from django import forms
+from django.urls import reverse_lazy
+from django.utils.safestring import mark_safe
+from crispy_forms.layout import Submit, Layout, Row, Column, Field
+from crispy_forms.helper import FormHelper
+from .models import *
+from .choices import TEST_NUMBER_CHOICES
 
 
 class MinMaxWidget(forms.widgets.MultiWidget):
@@ -135,6 +137,16 @@ class SessionForm(forms.ModelForm):
         self.fields["material"] = forms.ModelChoiceField(queryset=Material.objects.filter(owner=self.user))
         self.fields["machine"] = forms.ModelChoiceField(queryset=Machine.objects.filter(owner=self.user))
 
+        self.fields["name"].label = "Session name"
+        self.fields["material"].label = 'Material'
+        self.fields["material"].help_text = mark_safe('<a href="{}?next={}">+ New Material</a>'.format(reverse_lazy('material_form'), reverse_lazy('new_session')))
+        self.fields["machine"].label = "Machine"
+        self.fields["machine"].help_text = mark_safe('<a href="{}?next={}">+ New Machine</a>'.format(reverse_lazy('machine_form'), reverse_lazy('new_session')))
+        self.fields["target"].label = "Optimization Strategy"
+
+        self.helper = FormHelper()
+        self.helper.form_tag = False
+
 
 class SettingForm(forms.ModelForm):
 
@@ -144,9 +156,9 @@ class SettingForm(forms.ModelForm):
         self.fields['track_height_raft'].label = "First layer track height (mm)"
         self.fields['track_height_raft'].field_class = "field-horizontal"
 
-        self.fields['speed_printing_raft'].label = 'First layer printing spped (mm/s)'
+        self.fields['speed_printing_raft'].label = 'First layer printing speed (mm/s)'
         self.fields['temperature_extruder_raft'].label = 'First layer extrusion temperature (°C)'
-        self.fields['temperature_printbed_setpoint'].label = 'Pritbed temperature (°C)'
+        self.fields['temperature_printbed_setpoint'].label = 'Print bed temperature (°C)'
         self.fields['track_width_raft'].label = 'First layer track width (mm)'
 
         self.helper = FormHelper()
@@ -168,7 +180,7 @@ class TestValidateForm(forms.ModelForm):
         session = self.instance
 
         self.fields["validation"] = TestValidationField(tested_values=session.tested_values, required=True)
-        self.fields["validation"].label = "Select the best sub-structure:"
+        self.fields["validation"].label = ""
 
         if len(session.min_max_parameters) == 3:
             parameter = session.min_max_parameters[-1]
@@ -177,8 +189,12 @@ class TestValidateForm(forms.ModelForm):
                 param = forms.IntegerField(min_value=parameter["values"][0], max_value=parameter["values"][1], widget=RangeSliderWidget([parameter["values"][0], parameter["values"][1]], parameter["units"]))
             elif parameter["programmatic_name"] == "extrusion_multiplier":
                 param = forms.DecimalField(min_value=parameter["values"][0], max_value=parameter["values"][1], widget=RangeSliderWidget([parameter["values"][0], parameter["values"][1]], parameter["units"]))
-            param.label = "Please select the best {} along the width of the selected substructure ({} {} - {} {}):".format(parameter["name"], str(parameter["values"][0]), parameter["units"], str(parameter["values"][-1]), parameter["units"])
+            param.label = "{}".format(parameter["name"].capitalize())
+            param.help_text = "Please select the best {} along the width of the selected substructure ({} {} - {} {}):".format(parameter["name"], str(parameter["values"][0]), parameter["units"], str(parameter["values"][-1]), parameter["units"])
             self.fields["min_max_parameter_three"] = param
+
+        self.fields["comments"] = forms.CharField(max_length=74,
+                                                  required=False, label='Comment')
 
         self.helper = FormHelper()
         self.helper.form_tag = False
@@ -188,6 +204,8 @@ class TestValidateForm(forms.ModelForm):
         self.instance.selected_parameter_value("selected_parameter_two_value", self.cleaned_data["validation"][1])
         if "min_max_parameter_three" in self.cleaned_data:
             self.instance.selected_parameter_value("selected_parameter_three_value", self.cleaned_data["min_max_parameter_three"])
+        if "comments" in self.cleaned_data:
+            self.instance.alter_previous_tests(-1, 'comments', self.cleaned_data["comments"] or 0)
         return super(TestValidateForm, self).save(commit=commit)
 
     class Meta:
@@ -211,44 +229,48 @@ class TestGenerateForm(forms.ModelForm):
                     if item[1]["name"] is not None:
                         self.parameters.append(('min_max_{}'.format(item[0]), item[1]))
 
-        # Creating custom form fields for min_max
-        for parameter in session.min_max_parameters:
-            if parameter["name"] is not None:
-                field_id = "min_max_{}".format(parameter["parameter"])
-                widgets = []
-                highest_iterable = parameter["iterable_values"][-1][0]
-                for iterable, value in parameter["iterable_values"]:
-                    subwidget = forms.NumberInput(attrs={
-                            "class": "form-control",
-                            "type": ("text" if iterable not in [0, highest_iterable] else "number"),
-                            "id": "linspace-field-{}".format(str(iterable)),
-                            "value": round(value, (2 if parameter["units"] in ["mm", "-"] else 0)),
-                            "step": ("0.01" if parameter["units"] in ["mm", "-"] else "1"),
-                            "onchange": "change_fields(this)",
-                            "min": round(parameter["min_max"][0], 3),
-                            "max": round(parameter["min_max"][1], 3)
-                        })
-                    if iterable not in [0, highest_iterable]:
-                        subwidget.attrs["type"] = "text"
-                        subwidget.attrs["readonly"] = "readonly"
-                    else:
-                        subwidget.attrs["type"] = "number"
-                    widgets.append(subwidget)
-
-                self.fields[field_id] = MinMaxField(
-                    fields=([forms.DecimalField(initial=x) for x in parameter["values"]]),
-                    widget=MinMaxWidget(
-                        widgets=widgets))
-
-                self.fields[field_id].label = "{} ({})".format(parameter["name"].capitalize(), (
-                    "°C" if parameter["units"] == "degC" else parameter["units"]))
-
-        for secondary_parameter in test_info["other_parameters"]:
-            secondary_parameters.append(secondary_parameter)
-
         # Containers for active and inactive (readonly) fields
         actives = {}
         inactives = {}
+
+        # Creating custom form fields for min_max
+        for parameter in session.min_max_parameters:
+            if parameter["active"]:
+                if parameter["name"] is not None:
+                    field_id = "min_max_{}".format(parameter["parameter"])
+                    widgets = []
+                    highest_iterable = parameter["iterable_values"][-1][0]
+                    for iterable, value in parameter["iterable_values"]:
+                        subwidget = forms.NumberInput(attrs={
+                                "class": "form-control",
+                                "type": ("text" if iterable not in [0, highest_iterable] else "number"),
+                                "id": "linspace-field-{}".format(str(iterable)),
+                                "value": round(value, (2 if parameter["units"] in ["mm", "-"] else 0)),
+                                "step": ("0.01" if parameter["units"] in ["mm", "-"] else "1"),
+                                "onchange": "change_fields(this)",
+                                "min": round(parameter["min_max"][0], 3),
+                                "max": round(parameter["min_max"][1], 3)
+                            })
+                        if iterable not in [0, highest_iterable]:
+                            subwidget.attrs["type"] = "text"
+                            subwidget.attrs["readonly"] = "readonly"
+                        else:
+                            subwidget.attrs["type"] = "number"
+                        widgets.append(subwidget)
+
+                    self.fields[field_id] = MinMaxField(
+                        fields=([forms.DecimalField(initial=x) for x in parameter["values"]]),
+                        widget=MinMaxWidget(
+                            widgets=widgets))
+
+                    self.fields[field_id].label = "{} ({})".format(parameter["name"].capitalize(), (
+                        "°C" if parameter["units"] == "degC" else parameter["units"]))
+
+                    if parameter['hint_active']:
+                        self.fields[field_id].help_text = "{}".format(parameter['hint_active'])
+
+        for secondary_parameter in test_info["other_parameters"]:
+            secondary_parameters.append(secondary_parameter)
 
         # Create fields for secondary_parameters
         for parameter in secondary_parameters:
@@ -270,6 +292,8 @@ class TestGenerateForm(forms.ModelForm):
                 inactives[parameter["programmatic_name"]] = param
             else:
                 actives[parameter["programmatic_name"]] = param
+                if parameter["hint_active"]:
+                    param.help_text = "{}".format(parameter["hint_active"])
             self.secondary_parameters_programmatic_names.append(parameter["programmatic_name"])
 
         #  Instantiate active fields first, so that they would appear on top
@@ -281,7 +305,8 @@ class TestGenerateForm(forms.ModelForm):
 
         previously_tested = self.secondary_parameters_programmatic_names + [parameter["programmatic_name"] for parameter in session.min_max_parameters]
         if session.test_number == "01" or session.test_number == "02":
-            previously_tested.remove("part_cooling_setpoint")
+            if "part_cooling_setpoint" in previously_tested:
+                previously_tested.remove("part_cooling_setpoint")
 
         if self.is_valid():
             session.previously_tested_parameters = previously_tested
@@ -293,8 +318,11 @@ class TestGenerateForm(forms.ModelForm):
     def save(self, commit: bool = True):
         settings = self.instance.__getattribute__("settings")
         for parameter, info in self.parameters:
-            logging.getLogger("views").info("Currently saving {}: {}".format(parameter, self.cleaned_data[parameter]))
-            self.instance.__setattr__(parameter, self.cleaned_data[parameter])
+            if info["active"]:
+                logging.getLogger("views").info("Currently saving {}: {}".format(parameter, self.cleaned_data[parameter]))
+                self.instance.__setattr__(parameter, self.cleaned_data[parameter])
+            else:
+                self.instance.__setattr__(parameter, [self.cleaned_data[info["programmatic_name"]]])
         for setting in self.secondary_parameters_programmatic_names:
             logging.getLogger("views").info("Currently saving {}: {}".format(setting, self.cleaned_data[setting]))
             settings.__setattr__(setting, self.cleaned_data[setting])
@@ -314,8 +342,8 @@ class NewMachineForm(forms.ModelForm):
         self.helper.form_tag = False
 
         self.fields["model"].label = "Printer model"
-        self.fields["buildarea_maxdim1"].label = "Build area maximum dimension on X axis (mm)"
-        self.fields["buildarea_maxdim2"].label = "Build area maximum dimension on Y axis (mm)"
+        self.fields["buildarea_maxdim1"].label = "Maximum dimension on X axis (mm)"
+        self.fields["buildarea_maxdim2"].label = "Maximum dimension on Y axis (mm)"
         self.fields["form"].label = "Build area form factor"
 
         self.helper.layout = Layout(
@@ -329,12 +357,15 @@ class NewMachineForm(forms.ModelForm):
             ),
             Row(
                 Column("form", css_class='form-group col-md')
+            ),
+            Row(
+                Column("extruder_type", css_class='form-group col-md')
             )
         )
 
     class Meta:
         model = Machine
-        fields = ["model", "buildarea_maxdim1", "buildarea_maxdim2", "form"]
+        fields = ["model", "buildarea_maxdim1", "buildarea_maxdim2", "form", "extruder_type"]
 
 
 class NewExtruderForm(forms.ModelForm):
@@ -343,11 +374,8 @@ class NewExtruderForm(forms.ModelForm):
         self.helper = FormHelper()
         self.helper.form_tag = False
 
-        self.fields["temperature_max_extruder"] = self.fields["temperature_max"]
-        del self.fields["temperature_max"]
-
         self.fields["tool"].label = "Gcode tool index"
-        self.fields["temperature_max_extruder"].label = "Maximum temperature (°C)"
+        self.fields["temperature_max"].label = "Maximum temperature (°C)"
 
     class Meta:
         model = Extruder
@@ -377,14 +405,6 @@ class NewChamberForm(forms.ModelForm):
         self.fields["gcode_command"].label = "Gcode syntax"
         self.fields["temperature_max"].label = "Maximum temperature (°C)"
 
-        self.fields["chamber_tool"] = self.fields["tool"]
-        self.fields["chamber_gcode_command"] = self.fields["gcode_command"]
-        self.fields["temperature_max_chamber"] = self.fields["temperature_max"]
-
-        del self.fields["tool"]
-        del self.fields["gcode_command"]
-        del self.fields["temperature_max"]
-
     class Meta:
         model = Chamber
         fields = ["chamber_heatable", "tool", "gcode_command", "temperature_max"]
@@ -398,9 +418,6 @@ class NewPrintbedForm(forms.ModelForm):
 
         self.fields["temperature_max"].label = "Maximum temperature (°C)"
         self.fields["printbed_heatable"].label = "Print bed heatable"
-
-        self.fields["temperature_max_printbed"] = self.fields["temperature_max"]
-        del self.fields["temperature_max"]
 
     class Meta:
         model = Printbed

@@ -67,12 +67,34 @@ class ApiClient(object):
                 else:
                     raise KeyError("Specified output is invalid. Valid outputs are 'gcode'(default) and 'persistence'.")
 
-    def get_routine(self):
+    def get_routine(self, mode: str = "full"):
         """
         Returns information about 3DOptimizer testing routine
+        :param mode: By default 'full', can also be 'primary' and 'secondary'.
+        Will only return test numbers with such priority
         :return:
         """
-        return json.loads(requests.get(self.base_url + "/routine").text)
+        routine = json.loads(requests.get(self.base_url + "/routine").text)
+
+        if mode == 'full':
+            return routine
+
+        elif mode == 'primary':
+            primary_tests = {}
+            for number, test in routine.items():
+                if test['priority'] == 'primary':
+                    primary_tests[number] = test
+            return primary_tests
+
+        elif mode == 'secondary':
+            secondary_tests = {}
+            for number, test in routine.items():
+                if test['priority'] == 'secondary':
+                    secondary_tests[number] = test
+            return secondary_tests
+
+        else:
+            raise ValueError("Incorrect routine return mode selected. Valid modes are ['full', 'primary', 'secondary']")
 
     def get_config(self, slicer: str, persistence: dict):
         response = requests.post(self.base_url + "/config/" + slicer, json=persistence)

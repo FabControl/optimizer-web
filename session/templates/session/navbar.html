@@ -1,6 +1,7 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+{% load staticfiles %}
+<nav class="navbar navbar-expand-lg navbar-light shadow-sm bg-light">
   <div class="container">
-    <a class="navbar-brand" href="{% url 'dashboard' %}">3DOptimizer</a>
+    <a class="navbar-brand {% if "/dashboard/" not in request.path %}lead{% endif %}" href="{% url 'dashboard' %}"><img width="40px" class="d-inline-block" src="{% static 'session/img/logo.svg' %}" alt="Logo"> 3DOptimizer</a>
     {% if user.is_authenticated %}
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -8,9 +9,6 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
-        <li class="nav-item {% if "/dashboard/" in request.path %}active{% endif %}">
-          <a class="nav-link" href="{% url 'dashboard' %}">Dashboard <span class="sr-only">(current)</span></a>
-        </li>
         <li class="nav-item {% if "/resources/" in request.path %}active{% endif %} dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="resourcesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Resources
@@ -21,7 +19,7 @@
           </div>
         </li>
         <li class="nav-item {% if "/sessions/" in request.path %}active{% endif %}">
-          <a class="nav-link" href="{% url 'session_manager' %}">Testing Sessions</a>
+          <a id="testing_sessions" class="nav-link" href="{% url 'session_manager' %}">Testing Sessions</a>
         </li>
         <li class="nav-item {% if "/help/" in request.path %}active{% endif %} dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="helpDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -35,6 +33,9 @@
         </li>
       </ul>
       <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link text-success" href="{% url 'plans' %}">{{request.user.plan_navbar_text}}</a>
+        </li>
         {% if user.is_staff %}
         <li class="nav-item">
           <a class="nav-link" href="/admin">admin</a>
@@ -45,6 +46,7 @@
             {{user}}
           </a>
           <div class="dropdown-menu" aria-labelledby="helpDropdown">
+            <a class="dropdown-item" href="{% url 'password_change' %}">Change password</a>
             <a class="dropdown-item" href="{% url 'signout' %}">Sign out</a>
           </div>
         </li>

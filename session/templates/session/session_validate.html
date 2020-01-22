@@ -1,72 +1,31 @@
 {% load crispy_forms_tags %}
-<div class="row pt-3">
-  <div class="col-sm-4">
-    <button class="btn btn-outline-secondary" onclick="location.href='{% url 'gcode' object.pk %}'" type="button" name="button">Download G-Code</button>
+<div class="row pt-4 text-center">
+  <div class="col-sm-12">
+    <button class="btn btn-primary" onclick="location.href='{% url 'gcode' object.pk %}'" type="button" name="button">Download .GCODE file</button>
+  </div>
+</div>
+<div class="row pt-4">
+  <div class="col-sm">
+    {% if object.test_info.hint_valid %}
+    <div class="card p-3" style="background: #fff0c7">
+      {{ object.test_info.hint_valid|safe }}
+    </div>
+    {% endif %}
   </div>
 </div>
 <form class="" action="" method="POST">
   <div class="pt-3">
     {% crispy form %}
   </div>
-  <div class="row pt-3">
-    <div class="col text-right">
+  <div class="row pt-2">
+    <div class="col">
       <button class="btn btn-secondary" onclick="location.href='{% url 'session_validate_back' object.pk %}'" type="button" name="button">Back</button>
+    </div>
+    <div class="col text-right">
       <button type="submit" name="btnprimary" class="btn btn-primary">Submit</button>
     </div>
   </div>
 </form>
 {% if request.user.onboarding %}
-{% spaceless %}
-<script src="https://cdn.jsdelivr.net/npm/shepherd.js@5.0.1/dist/js/shepherd.js"></script>
-<script type="text/javascript">
-const tour = new Shepherd.Tour({
-  useModalOverlay: true,
-  defaultStepOptions: {
-    cancelIcon: {
-      enabled: true
-    },
-    classes: 'class-1 class-2',
-    scrollTo: { behavior: 'smooth', block: 'center' }
-  }
-});
-
-tour.addStep({
-  text: 'Now you can download, print and validate the paremeters you selected in the previous step',
-  classes: 'example-step-extra-class',
-  buttons: [
-    {
-      text: 'Next',
-      action: tour.next
-    }
-  ]
-});
-
-tour.addStep({
-  title: 'Validation table',
-  text: 'This table represents the array of different setting combinations used in the test.<br>\
-  Once you have printed the test G-Code, you may select the best test structure on this table.<br>',
-  canClickTarget: false,
-  attachTo: {
-    element: '.table',
-    on: 'left'
-  },
-  classes: 'example-step-extra-class',
-  buttons: [
-    {
-      action() {
-        return this.back();
-      },
-      classes: 'shepherd-button-secondary',
-      text: 'Back'
-    },
-    {
-      text: 'Next',
-      action: tour.next
-    }
-  ]
-});
-
-tour.start();
-</script>
-{% endspaceless %}
+{% include 'session/tour.html' %}
 {% endif %}

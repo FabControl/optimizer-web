@@ -1,7 +1,63 @@
 {% extends "session/base.html" %}
 
 {% block content %}
+{% load crispy_forms_tags %}
 <div class="container">
-  Machine Detail view
+  <div class="row">
+    <div class="col-md-6">
+      <form class="" action="" method="post" id="id_form">
+        {% csrf_token %}
+        <p>
+          {% crispy self_form %}
+        </p>
+        <p>
+          <h4> Extruder parameters </h4>
+          <div class="card p-3">
+            {% crispy extruder_form %}
+            {% crispy nozzle_form %}
+          </div>
+        </p>
+        <p>
+          <h4>Heating chamber parameters</h4>
+          <div class="card p-3">
+            {% crispy chamber_form %}
+          </div>
+        </p>
+        <p>
+          <h4>Print bed parameters</h4>
+          <div class="card p-3">
+            {% crispy printbed_form %}
+          </div>
+        </p>
+        {% if next %}
+        <input type="hidden" value="{{ next }}" name="next">
+        {% endif %}
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+  </div>
 </div>
+{% endblock %}
+
+{% block javascript%}
+<script>
+  $(function() {
+    $.fn.customSlideToggler = function(show) {
+      if (show) {
+        $(this).slideDown();
+      } else {
+        $(this).slideUp();
+      }
+    }
+    $('#id_chamber-chamber_heatable').change(function() {
+      $('#div_id_chamber-tool').customSlideToggler(this.checked);
+      $('#div_id_chamber-gcode_command').customSlideToggler(this.checked);
+      $('#div_id_chamber-temperature_max').customSlideToggler(this.checked);
+    }).change(); //ensure visible state matches initially
+
+    $('#id_printbed-printbed_heatable').change(function() {
+      $('#div_id_printbed-temperature_max').customSlideToggler(this.checked);
+    }).change(); //ensure visible state matches initially
+  });
+</script>
 {% endblock %}

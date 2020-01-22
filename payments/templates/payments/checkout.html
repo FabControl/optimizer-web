@@ -1,0 +1,22 @@
+{% extends "session/base.html" %}
+{% block extra_resources %}
+<script src="https://js.stripe.com/v3/"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row pt-5 text-center">
+    <h4>Redirecting to checkout page, please wait...</h4>
+  </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script type = "text/javascript">
+  <!--
+    Stripe('{{stripe_public_key}}').redirectToCheckout({
+        sessionId: '{{checkout_id}}'
+    }).then(function (result) { alert(result.error.message) });
+  //-->
+</script>
+{% endblock %}

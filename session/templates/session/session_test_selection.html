@@ -1,6 +1,10 @@
+{% with plan=request.user.plan %}
+{% with number=object.persistence.session.test_number %}
 <div id="test_selector" class="list-group">
   {% for test in routine.items %}
   <a href="{%url 'test_switch' object.pk test.0 %}"
-    class="list-group-item list-group-item-action list-group-item{% if test.0 in object.get_validated_tests %}-success{% endif %} {% if test.0 == object.persistence.session.test_number %}active{% endif %}">{% if test.1.priority == 'primary' %}<b>{{ test.1.name|capfirst }}</b>{% else %}{{ test.1.name|capfirst }}{% endif %}</a>
+    class="list-group-item list-group-item-action list-group-item{% if test.0 in object.get_validated_tests %}-success{% elif test.0 == number %}-secondary{% endif %} {% if plan == 'basic' and test.1.priority == 'secondary' %}disabled{% endif %}{% if test.0 == number %}{% endif %}">{% if test.1.priority == 'primary' %}<b>{{ test.1.name|capfirst }}</b>{% else %}{{ test.1.name|capfirst }}{% endif %}</a>
   {% endfor %}
 </div>
+{% endwith %}
+{% endwith %}

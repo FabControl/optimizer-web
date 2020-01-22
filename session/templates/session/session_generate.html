@@ -1,9 +1,12 @@
 {% load crispy_forms_tags %}
+<div class="pt-3">
+  <p class='font-weight-light'>{{ object.test_info.hint_init|safe }}</p>
+</div>
 <form class="" action="" method="post">
   {% crispy form %}
   <div class="row pt-3 justify-content-end">
     <div class="col text-right">
-      <button id="gcode_button" type="submit" class="btn btn-primary">Generate G-Code</button>
+      <button id="gcode_button" type="submit" class="btn btn-primary">Generate .GCODE file</button>
     </div>
   </div>
 </form>

@@ -9,10 +9,12 @@ class UserAdmin(DjangoUserAdmin):
     """Define admin model for custom User model with no email field."""
 
     fieldsets = (
-        (None, {'fields': ('email', 'password', 'plan')}),
+        (None, {'fields': ('email', 'password',)}),
+        ('Subscription', {'fields': ('plan', 'subscription_expiration')}),
         (_('Personal info'), {'fields': ('first_name', 'last_name')}),
-        (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser', 'onboarding',
+        (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser',
                                        'groups', 'user_permissions')}),
+        ('Onboarding', {'fields': ('onboarding', '_onboarding_sections',)}),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
     )
     add_fieldsets = (
@@ -21,6 +23,15 @@ class UserAdmin(DjangoUserAdmin):
             'fields': ('email', 'password1', 'password2'),
         }),
     )
-    list_display = ('email', 'first_name', 'last_name', 'plan', 'last_login', 'date_joined', 'is_staff')
+
+    actions = ['reset_onboarding']
+
+    def reset_onboarding(self, request, queryset):
+        for user in queryset:
+            user.onboarding_reset()
+
+    reset_onboarding.short_description = "Reenable onboarding tour"
+
+    list_display = ('email', 'first_name', 'last_name', 'plan', 'last_active', 'date_joined', 'is_staff')
     search_fields = ('email', 'first_name', 'last_name')
     ordering = ('email',)
