@@ -45,10 +45,10 @@ class User(AbstractUser):
 
     username = None
     email = models.EmailField('email address', unique=True,
-            error_messages={'unique':'Email must be unique'})
+                              error_messages={'unique': 'Email must be unique'})
     PLAN_CHOICES = [("basic", "Basic"), ("premium", "Premium")]
     plan = models.CharField(max_length=32, choices=PLAN_CHOICES, default="basic")
-    last_active = models.DateTimeField(null=True )
+    last_active = models.DateTimeField(null=True)
     onboarding = models.BooleanField(default=True)
     is_active = models.BooleanField(default=False)
     _onboarding_sections = models.CharField(max_length=256,

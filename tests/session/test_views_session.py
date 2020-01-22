@@ -11,22 +11,23 @@ from html.parser import HTMLParser
 
 REDIRECT_MATCHER = re.compile(r'((?:[/\w-])+)\??')
 
+
 class SessionSessionTest(TestCase):
     @classmethod
     def setUpClass(self):
         self.user = get_user_model().objects.create_user(email='known_user@somewhere.com',
-                                 is_active=True,
-                                 password='SomeSecretPassword')
+                                                         is_active=True,
+                                                         password='SomeSecretPassword')
 
         self.material = models.Material.objects.create(owner=self.user)
 
         self.machine = models.Machine.objects.create(owner=self.user,
-                model='SessionSessionTest Machine',
-                extruder=models.Extruder.objects.create(
-                    nozzle=models.Nozzle.objects.create(size_id=0.7)),
-                chamber=models.Chamber.objects.create(temperature_max=100),
-                printbed=models.Printbed.objects.create(temperature_max=90)
-                )
+                                                     model='SessionSessionTest Machine',
+                                                     extruder=models.Extruder.objects.create(
+                                                         nozzle=models.Nozzle.objects.create(size_id=0.7)),
+                                                     chamber=models.Chamber.objects.create(temperature_max=100),
+                                                     printbed=models.Printbed.objects.create(temperature_max=90)
+                                                     )
 
     @classmethod
     def tearDownClass(self):
@@ -69,7 +70,6 @@ class SessionSessionTest(TestCase):
         parser.feed(html_data)
         return result
 
-
     def test_sessions_list(self):
         tst_url = reverse('session_manager')
         # create some sessions without owner
@@ -77,9 +77,9 @@ class SessionSessionTest(TestCase):
         expected_links = []
         for s_name in 'some testing session instances'.split(' '):
             session = models.Session(name=s_name,
-                                    material=models.Material.objects.get(pk=self.material.pk),
-                                    settings=models.Settings.objects.create(),
-                                    machine=models.Machine.objects.get(pk=self.machine.pk))
+                                     material=models.Material.objects.get(pk=self.material.pk),
+                                     settings=models.Settings.objects.create(),
+                                     machine=models.Machine.objects.get(pk=self.machine.pk))
 
             session._persistence = json.dumps(json.loads(BLANK_PERSISTENCE)['persistence'])
             session.init_settings()

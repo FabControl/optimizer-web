@@ -20,7 +20,6 @@ class Plan(models.Model):
         return "{} ({})".format(self.name, '{} Eur'.format(self.price) if self.price != 0 else "Free")
 
 
-
 def get_sentinel_plan():
     return Plan.objects.filter(type='deleted')[0]
 

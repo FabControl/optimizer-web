@@ -2543,6 +2543,7 @@ MACHINE_SAMPLES = '''
     ]
 '''
 
+
 def populate_machine_samples(app, schema_editor):
     db_alias = schema_editor.connection.alias
 
