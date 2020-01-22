@@ -193,4 +193,3 @@ class SessionViewsTest(TestCase):
         resp = self.client.get(tst_url)
 
         self.assertEqual(resp.status_code, 200)
-        self.assertEqual(resp['Content-Type'], 'application/pdf')
