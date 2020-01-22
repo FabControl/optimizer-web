@@ -54,7 +54,7 @@ class SignUpForm(UserCreationForm):
     last_name = forms.CharField(max_length=30, required=True)
     company = forms.CharField(max_length=30, required=False)
     termsofuse = forms.BooleanField()
-    termsofuse.label = "I agree to terms of use"
+    termsofuse.label = safestring.mark_safe('<label class="small">I agree to <a href="/help/terms_of_use" target="blank">terms of use</a></label>')
 
     helper = FormHelper()
     helper.form_tag = False
