@@ -16,7 +16,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.datastructures import MultiValueDictKeyError
 from django.urls import reverse_lazy
 from django.shortcuts import render, redirect
-from .forms import ResetPasswordForm, SignUpForm, LoginForm, ChangePasswordForm, notify_support
+from .forms import ResetPasswordForm, SignUpForm, LoginForm, ChangePasswordForm
 from .tokens import account_activation_token
 from django.utils.encoding import force_text, force_bytes
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
@@ -189,7 +189,6 @@ def activate_account(request, uidb64, token):
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
-        notify_support(user)
         login(request, user)
         messages.success(request, 'Your email address was confirmed and account activated.')
         return redirect('dashboard')
