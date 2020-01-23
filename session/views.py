@@ -189,10 +189,8 @@ def machine_form(request):
                "chamber_form": chamber_form,
                "printbed_form": printbed_form}
 
-    sample_machines = Machine.objects.filter(owner=get_user_model().objects.get(email=settings.SAMPLE_SESSIONS_OWNER))
-    context = {'sample_machines':sample_machines,
-               **context,
-               **form_context}
+    sample_machines = Machine.objects.filter(owner=get_user_model().objects.get(email=settings.SAMPLE_SESSIONS_OWNER)).order_by('model')
+    context = {'sample_machines': sample_machines, **context, **form_context}
     return render(request, 'session/machine_form.html', context)
 
 @login_required
