@@ -10,7 +10,6 @@ _SUBJECTS = {
         'password_recovery_failure': 'Password recovery',
         'password_recovery': 'Password recovery',
         'register_complete': 'Account activation',
-        'account_activated': 'New account activated',
         'register_with_known_email': 'Account registration'
         }
 
