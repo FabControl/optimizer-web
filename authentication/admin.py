@@ -24,13 +24,20 @@ class UserAdmin(DjangoUserAdmin):
         }),
     )
 
-    actions = ['reset_onboarding']
+    actions = ['reset_onboarding', 'send_activation_email']
 
     def reset_onboarding(self, request, queryset):
         for user in queryset:
-            user.onboarding_reset()
+            user.onboarding_reset(request)
 
     reset_onboarding.short_description = "Reenable onboarding tour"
+
+    def send_activation_email(self, request, queryset):
+        for user in queryset:
+            if not user.is_active:
+                user.send_account_activation(request)
+
+    send_activation_email.short_description = 'Resend activation email'
 
     list_display = ('email', 'first_name', 'last_name', 'plan', 'last_active', 'date_joined', 'is_staff')
     search_fields = ('email', 'first_name', 'last_name')
