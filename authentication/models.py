@@ -4,6 +4,10 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.utils import timezone
 from datetime import timedelta
 import pytz
+from messaging import email
+from .tokens import account_activation_token
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
 
 
 class UserManager(BaseUserManager):
@@ -100,3 +104,12 @@ class User(AbstractUser):
         """
         self.plan = 'basic'
         self.save()
+
+    def send_account_activation(self, request):
+        email.send_to_single(self.email, 'register_complete',
+                             request,
+                             receiving_user=' '.join((self.first_name,
+                                                      self.last_name)),
+                             uid=urlsafe_base64_encode(force_bytes(self.pk)),
+                             token=account_activation_token.make_token(self)
+                             )
