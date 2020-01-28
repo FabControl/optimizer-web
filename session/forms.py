@@ -193,7 +193,7 @@ class TestValidateForm(forms.ModelForm):
             param.help_text = "Please select the best {} along the width of the selected substructure ({} {} - {} {}):".format(parameter["name"], str(parameter["values"][0]), parameter["units"], str(parameter["values"][-1]), parameter["units"])
             self.fields["min_max_parameter_three"] = param
 
-        self.fields["comments"] = forms.CharField(max_length=74,
+        self.fields["comments"] = forms.CharField(max_length=256,
                                                   required=False, label='Comment')
 
         self.helper = FormHelper()
