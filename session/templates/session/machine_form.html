@@ -91,7 +91,17 @@
 
         switch (type) {
           case 'checkbox':
-            $el.attr('checked', 'checked');
+            if (val) {
+              if (!$el.prop('checked')) {
+                $el.prop("checked", !$el.prop("checked"));
+                $el.trigger("change");
+              }
+            } else {
+              if ($el.prop('checked')) {
+                $el.prop("checked", !$el.prop("checked"));
+                $el.trigger("change");
+              }
+            }
             break;
           case 'radio':
             $el.filter('[value="' + val + '"]').attr('checked', 'checked');

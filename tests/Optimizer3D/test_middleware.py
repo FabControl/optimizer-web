@@ -1,10 +1,12 @@
 from django.contrib.auth import get_user_model
-from django.test import TestCase
+from django.test import TestCase, RequestFactory, override_settings
 from django.utils import timezone
 from django.urls import reverse
 from datetime import timedelta
 import pytz
-from unittest.mock import patch
+from unittest.mock import patch, Mock
+from Optimizer3D.middleware.GeoRestrictAccessMiddleware import GeoRestrictAccessMiddleware
+from django.core.exceptions import MiddlewareNotUsed, PermissionDenied
 
 
 class SubscriptionMiddlewareTest(TestCase):
@@ -103,4 +105,168 @@ class SubscriptionMiddlewareTest(TestCase):
 
         # premium should be assigned, since user has few extra seconds
         self.assertEqual(user.plan, 'basic')
+
+
+def add_location(request):
+    request.geolocation = {
+            "ip": "5.182.84.0",
+            "continent": "Europe",
+            "county": {
+                "code": "RU",
+                "name": "Russian Federation"
+                },
+            "geo": {
+                "latitude": 61.52401,
+                "latitude_dec": "63.125186920166016",
+                "longitude": 105.318756,
+                "longitude_dec": "103.75398254394531",
+                "max_latitude": 82.1673907,
+                "max_longitude": -168.9778799,
+                "min_latitude": 41.185353,
+                "min_longitude": 19.6160999,
+                "bounds": {
+                    "northeast": {
+                        "lat": 82.1673907,
+                        "lng": -168.9778799
+                        },
+                    "southwest": {
+                        "lat": 41.185353,
+                        "lng": 19.6160999
+                        }
+                    }
+                },
+            "raw_data": {
+                "continent": "Europe",
+                "address_format": "{{recipient}}\n{{postalcode}} {{city}}\n{{street}}\n{{country}}",
+                "alpha2": "RU",
+                "alpha3": "RUS",
+                "country_code": "7",
+                "international_prefix": "810",
+                "ioc": "RUS",
+                "gec": "RS",
+                "name": "Russian Federation",
+                "national_destination_code_lengths": [ 3 ],
+                "national_number_lengths": [ 10 ],
+                "national_prefix": "8",
+                "number": "643",
+                "region": "Europe",
+                "subregion": "Eastern Europe",
+                "world_region": "EMEA",
+                "un_locode": "RU",
+                "nationality": "Russian",
+                "postal_code": True,
+                "unofficial_names": [
+                    "Russia",
+                    "Russland",
+                    "Russie",
+                    "Rusia",
+                    "\u30ed\u30b7\u30a2\u9023\u90a6",
+                    "Rusland",
+                    "\u0420\u043e\u0441\u0441\u0438\u044f",
+                    "\u0420\u0430\u0441\u0456\u044f"
+                    ],
+                "languages_official": [ "ru" ],
+                "languages_spoken": [ "ru" ],
+                "geo": {
+                    "latitude": 61.52401,
+                    "latitude_dec": "63.125186920166016",
+                    "longitude": 105.318756,
+                    "longitude_dec": "103.75398254394531",
+                    "max_latitude": 82.1673907,
+                    "max_longitude": -168.9778799,
+                    "min_latitude": 41.185353,
+                    "min_longitude": 19.6160999,
+                    "bounds": {
+                        "northeast": {
+                            "lat": 82.1673907,
+                            "lng": -168.9778799
+                            },
+                        "southwest": {
+                            "lat": 41.185353,
+                            "lng": 19.6160999
+                            }
+                        }
+                    },
+                "currency_code": "RUB",
+                "start_of_week": "monday"
+            }
+        }
+
+
+class SubscriptionMiddlewareTest(TestCase):
+    def test_geo_restriction_disabled(self):
+        overrides = dict(GEO_RESTRICTION_BLACKLIST=None,
+                        GEO_RESTRICTION_WHITELIST=None)
+
+        with override_settings(**overrides):
+            with self.assertRaises(MiddlewareNotUsed):
+                mware = GeoRestrictAccessMiddleware()
+
+        overrides = dict(GEO_RESTRICTION_BLACKLIST=[],
+                        GEO_RESTRICTION_WHITELIST=[])
+
+        with override_settings(**overrides):
+            mware = GeoRestrictAccessMiddleware()
+
+
+    def test_geo_restriction(self):
+        factory = RequestFactory()
+        pathing_path = 'django_ip_geolocation.middleware.IpGeolocationMiddleware.process_request'
+
+        req = factory.get('/')
+        location_mock = Mock(side_effect=add_location)
+
+        # test passing blacklist
+        overrides = dict(GEO_RESTRICTION_BLACKLIST=['US', 'LV', 'GB'],
+                        GEO_RESTRICTION_WHITELIST=None)
+
+        with override_settings(**overrides):
+            mware = GeoRestrictAccessMiddleware()
+            with patch(pathing_path, location_mock):
+                mware.process_request(req)
+
+        location_mock.assert_called_once()
+
+        # test blacklisting
+        overrides['GEO_RESTRICTION_BLACKLIST'].append('RU')
+        location_mock.reset_mock()
+
+        with override_settings(**overrides):
+            with patch(pathing_path, location_mock):
+                with self.assertRaises(PermissionDenied):
+                    mware.process_request(req)
+
+        location_mock.assert_called_once()
+
+        # test restriction by whitelist
+        location_mock.reset_mock()
+        overrides = dict(GEO_RESTRICTION_WHITELIST=['US', 'LV', 'GB'],
+                        GEO_RESTRICTION_BLACKLIST=None)
+
+        with override_settings(**overrides):
+            mware = GeoRestrictAccessMiddleware()
+            with patch(pathing_path, location_mock):
+                with self.assertRaises(PermissionDenied):
+                    mware.process_request(req)
+
+        location_mock.assert_called_once()
+
+        # test whitelisting
+        overrides['GEO_RESTRICTION_WHITELIST'].append('RU')
+        location_mock.reset_mock()
+
+        with override_settings(**overrides):
+            with patch(pathing_path, location_mock):
+                mware.process_request(req)
+
+        location_mock.assert_called_once()
+
+        # Test prefer whitelist over blacklist
+        overrides = dict(GEO_RESTRICTION_BLACKLIST=['RU'],
+                        GEO_RESTRICTION_WHITELIST=['RU'])
+        location_mock.reset_mock()
+
+        with override_settings(**overrides):
+            with patch(pathing_path, location_mock):
+                mware.process_request(req)
 
