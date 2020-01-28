@@ -61,3 +61,8 @@ STRIPE_PUBLIC_KEY = config['STRIPE_API_PUBLIC_KEY']
 STRIPE_ENDPOINT_SECRET = config['STRIPE_ENDPOINT_SECRET']
 
 GA_TRACKING_ID = config['GA_TRACKING_ID']
+
+GEO_RESTRICTION_WHITELIST = ['LV']
+#GEO_RESTRICTION_BLACKLIST = ['LV']
+# If both exist, then ONLY whitelist is used
+# Country codes available https://en.wikipedia.org/wiki/ISO_3166-1
