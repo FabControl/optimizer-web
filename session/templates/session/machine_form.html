@@ -96,6 +96,11 @@
                 $el.prop("checked", !$el.prop("checked"));
                 $el.trigger("change");
               }
+            } else {
+              if ($el.prop('checked')) {
+                $el.prop("checked", !$el.prop("checked"));
+                $el.trigger("change");
+              }
             }
             break;
           case 'radio':
