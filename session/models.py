@@ -145,6 +145,20 @@ class Printbed(models.Model, CopyableModelMixin):
         return output
 
 
+DEFAULT_GCODE_HEADER = '''G28; move to the home position
+G21; unit in mm
+G92 E0; reset extruder
+M83; set extruder to relative mode
+M302 S1; allow cold extrusion'''
+
+
+DEFAULT_GCODE_FOOTER = '''M190 S20; set the print bed temperature
+M109 S0 T0; set the extruder temperature
+M106 S0; set the part cooling
+G28; move to the home position
+M84; disable motors'''
+
+
 class Machine(models.Model, CopyableModelMixin):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     pub_date = models.DateTimeField(default=timezone.now, blank=True)
@@ -156,6 +170,8 @@ class Machine(models.Model, CopyableModelMixin):
     chamber = models.ForeignKey(Chamber, on_delete=models.CASCADE, blank=True)
     printbed = models.ForeignKey(Printbed, on_delete=models.CASCADE, blank=True)
     extruder_type = models.CharField(max_length=20, choices=(('bowden', 'Bowden'), ('directdrive', 'Direct drive')), default='bowden')
+    gcode_header = models.TextField(default=DEFAULT_GCODE_HEADER)
+    gcode_footer = models.TextField(default=DEFAULT_GCODE_FOOTER)
 
     def delete(self, using=None, keep_parents=False):
         return recursive_delete(self, using, keep_parents)
@@ -183,6 +199,8 @@ class Machine(models.Model, CopyableModelMixin):
             "buildarea_maxdim2": self.buildarea_maxdim2,
             "form": self.form,
             "extruder_type": self.extruder_type,
+            "gcode_header": self.gcode_header,
+            "gcode_footer": self.gcode_footer,
             "temperature_controllers": {
                 "extruder": self.extruder.__json__,
                 "chamber": self.chamber.__json__,
