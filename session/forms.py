@@ -361,12 +361,6 @@ class NewMachineForm(forms.ModelForm):
             Row(
                 Column("extruder_type", css_class='form-group col-md')
             ),
-            Row(
-                Column("gcode_header", css_class='form-group col-md')
-            ),
-            Row(
-                Column("gcode_footer", css_class='form-group col-md')
-            )
         )
 
     class Meta:
