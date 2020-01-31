@@ -172,6 +172,8 @@ class Machine(models.Model, CopyableModelMixin):
     extruder_type = models.CharField(max_length=20, choices=(('bowden', 'Bowden'), ('directdrive', 'Direct drive')), default='bowden')
     gcode_header = models.TextField(default=DEFAULT_GCODE_HEADER)
     gcode_footer = models.TextField(default=DEFAULT_GCODE_FOOTER)
+    offset_1 = models.DecimalField(default=0, max_digits=5, decimal_places=2)
+    offset_2 = models.DecimalField(default=0, max_digits=5, decimal_places=2)
 
     def delete(self, using=None, keep_parents=False):
         return recursive_delete(self, using, keep_parents)
@@ -790,8 +792,8 @@ class Session(models.Model, DependanciesCopyMixin):
             "test_type": "A",
             "user_id": "user name",
             "offset": [
-                0,
-                0
+                self.machine.offset_1,
+                self.machine.offset_2
             ],
             "slicer": self.slicer,
             "previous_tests": json.loads(self._persistence)["session"]["previous_tests"]
