@@ -2,7 +2,7 @@ import logging
 from django import forms
 from django.urls import reverse_lazy
 from django.utils.safestring import mark_safe
-from crispy_forms.layout import Submit, Layout, Row, Column, Field
+from crispy_forms.layout import Submit, Layout, Row, Column, Field, HTML
 from crispy_forms.helper import FormHelper
 from .models import *
 from .choices import TEST_NUMBER_CHOICES
@@ -344,6 +344,8 @@ class NewMachineForm(forms.ModelForm):
         self.fields["model"].label = "Printer model"
         self.fields["buildarea_maxdim1"].label = "Maximum dimension on X axis (mm)"
         self.fields["buildarea_maxdim2"].label = "Maximum dimension on Y axis (mm)"
+        self.fields["offset_1"].label = "Offset on X axis (mm)"
+        self.fields["offset_2"].label = "Offset on Y axis (mm)"
         self.fields["form"].label = "Build area form factor"
         self.fields["gcode_header"].label = "GCODE Header"
         self.fields["gcode_footer"].label = "GCODE Footer"
@@ -368,12 +370,14 @@ class NewMachineForm(forms.ModelForm):
     class Meta:
         model = Machine
         fields = ["model",
-                  "buildarea_maxdim1", 
+                  "buildarea_maxdim1",
                   "buildarea_maxdim2",
-                  "form", 
+                  "form",
                   "extruder_type",
                   "gcode_header",
-                  "gcode_footer"]
+                  "gcode_footer",
+                  "offset_1",
+                  "offset_2"]
 
 
 class NewExtruderForm(forms.ModelForm):

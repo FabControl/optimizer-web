@@ -18,8 +18,12 @@ class SessionModelsTest(TestCase):
                 model='SessionModelTest Machine',
                 buildarea_maxdim1 = 200,
                 buildarea_maxdim2 = 220,
+                gcode_header = 'This is test machine specific header',
+                gcode_footer = 'This is test machine specific footer',
                 form='eliptic',
                 extruder_type='directdrive',
+                offset_1=20,
+                offset_2=-45,
                 extruder=models.Extruder.objects.create(
                     temperature_max=400,
                     tool='T1',
@@ -108,6 +112,18 @@ class SessionModelsTest(TestCase):
         # check if machine is copied
         self.machine.refresh_from_db()
         self.assertCopiedMachine(self.machine, session.machine)
+
+        # check if gcode header and footer fields are included
+        persistence = json.loads(session._persistence)
+        self.assertTrue('gcode_header' in persistence['machine'].keys())
+        self.assertEqual(self.machine.gcode_header, persistence['machine']['gcode_header'])
+        self.assertTrue('gcode_footer' in persistence['machine'].keys())
+        self.assertEqual(self.machine.gcode_footer, persistence['machine']['gcode_footer'])
+
+        # check if structure offsets are included
+        self.assertTrue('offset' in persistence['session'].keys())
+        self.assertEqual([self.machine.offset_1, self.machine.offset_2],
+                         persistence['session']['offset'])
 
         # delete session
         session1 = models.Session.objects.get(pk=session.pk)

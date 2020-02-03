@@ -38,6 +38,8 @@ class SessionMachineViewsTest(TestCase):
                 "form": "cartesian",
                 "gcode_header": ";this is header",
                 "gcode_footer": ";this is footer",
+                "offset_1": "0",
+                "offset_2": "0",
                 "extruder_type": "bowden",
                 "extruder-tool": "T0",
                 "extruder-temperature_max": "350",
@@ -153,7 +155,9 @@ class SessionMachineViewsTest(TestCase):
             "buildarea_maxdim2": "11",
             "form": "elliptic",
             "gcode_header": ";this is header",
-            "gcode_footer": ";this is footer"
+            "gcode_footer": ";this is footer",
+            "offset_1": "0",
+            "offset_2": "0"
             }
 
         subprops = {
