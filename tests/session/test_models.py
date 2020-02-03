@@ -22,6 +22,8 @@ class SessionModelsTest(TestCase):
                 gcode_footer = 'This is test machine specific footer',
                 form='eliptic',
                 extruder_type='directdrive',
+                offset_1=20,
+                offset_2=-45,
                 extruder=models.Extruder.objects.create(
                     temperature_max=400,
                     tool='T1',
@@ -117,6 +119,12 @@ class SessionModelsTest(TestCase):
         self.assertEqual(self.machine.gcode_header, persistence['machine']['gcode_header'])
         self.assertTrue('gcode_footer' in persistence['machine'].keys())
         self.assertEqual(self.machine.gcode_footer, persistence['machine']['gcode_footer'])
+
+        # check if structure offsets are included
+        self.assertTrue('offset' in persistence['session'].keys())
+        self.assertEqual([self.machine.offset_1, self.machine.offset_2],
+                         persistence['session']['offset'])
+
         # delete session
         session1 = models.Session.objects.get(pk=session.pk)
         session1.delete()
