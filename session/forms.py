@@ -344,11 +344,14 @@ class NewMachineForm(forms.ModelForm):
         self.fields["model"].label = "Printer model"
         self.fields["buildarea_maxdim1"].label = "Maximum dimension on X axis (mm)"
         self.fields["buildarea_maxdim2"].label = "Maximum dimension on Y axis (mm)"
+
         self.fields["offset_1"].label = "Offset on X axis (mm)"
         self.fields["offset_2"].label = "Offset on Y axis (mm)"
+
         self.fields["form"].label = "Build area form factor"
-        self.fields["gcode_header"].label = "GCODE Header"
-        self.fields["gcode_footer"].label = "GCODE Footer"
+
+        self.fields["gcode_header"].label = "Header"
+        self.fields["gcode_footer"].label = "Footer"
 
         self.helper.layout = Layout(
             Row(
