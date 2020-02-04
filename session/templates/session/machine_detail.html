@@ -9,6 +9,25 @@
         {% csrf_token %}
         <p>
           {% crispy self_form %}
+          <div class="text-center">
+            <a class='link' id='id_advanced_toggle' style='cursor: pointer'>Advanced <i class="fas fa-angle-down"></i></a>
+          </div>
+          <div id='id_advanced_toggle_content'>
+            <br>
+            <h4>GCODE Header and Footer</h4>
+            <div class="card p-3">
+              {{ self_form.gcode_header | as_crispy_field }}
+              {{ self_form.gcode_footer | as_crispy_field }}
+              <small class='text-muted'>Header/footer are prepended/appended to test routine GCODEs. These can be altered to better accomodate certain printer features, such as autocalibration.</small>
+            </div>
+            <br>
+            <h4>Offset from center of printbed</h4>
+            <div class="card p-3">
+              {{ self_form.offset_1 | as_crispy_field }}
+              {{ self_form.offset_2 | as_crispy_field }}
+              <small class='text-muted'>Test structure is centered on the printbed by default. Offset may be used to shift the test structure on build-plate.</small>
+            </div>
+          </div>
         </p>
         <p>
           <h4> Extruder parameters </h4>
@@ -27,6 +46,9 @@
           <h4>Print bed parameters</h4>
           <div class="card p-3">
             {% crispy printbed_form %}
+          </div>
+          <div class="" id='id_advanced_collapsible'>
+
           </div>
         </p>
         {% if next %}
@@ -58,6 +80,51 @@
     $('#id_printbed-printbed_heatable').change(function() {
       $('#div_id_printbed-temperature_max').customSlideToggler(this.checked);
     }).change(); //ensure visible state matches initially
+  });
+</script>
+<script type="text/javascript">
+  function getBaseUrl() {
+    var re = new RegExp(/^https?:\/\/[^\/]+/i);
+    return re.exec(window.location.href);
+  }
+
+  element = $('#id_preset_selector')
+  element.change(function() {
+    var selected_pk = element.children("option:selected").val();
+    var url = getBaseUrl() + "/resources/machines/sample/" + selected_pk
+    var api_response = $.getJSON(url, function(data) {
+      $.each(data, function(key, val) {
+        var $el = $('[name="' + key + '"]'),
+          type = $el.attr('type');
+
+        switch (type) {
+          case 'checkbox':
+            if (val) {
+              if (!$el.prop('checked')) {
+                $el.prop("checked", !$el.prop("checked"));
+                $el.trigger("change");
+              }
+            } else {
+              if ($el.prop('checked')) {
+                $el.prop("checked", !$el.prop("checked"));
+                $el.trigger("change");
+              }
+            }
+            break;
+          case 'radio':
+            $el.filter('[value="' + val + '"]').attr('checked', 'checked');
+            break;
+          default:
+            $el.val(val);
+        }
+      });
+    });
+  })
+</script>
+<script type="text/javascript">
+  $('#id_advanced_toggle_content').slideUp(0);
+  $('#id_advanced_toggle').click(function() {
+    $('#id_advanced_toggle_content').slideToggle();
   });
 </script>
 {% endblock %}

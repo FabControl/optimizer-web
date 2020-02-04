@@ -344,9 +344,14 @@ class NewMachineForm(forms.ModelForm):
         self.fields["model"].label = "Printer model"
         self.fields["buildarea_maxdim1"].label = "Maximum dimension on X axis (mm)"
         self.fields["buildarea_maxdim2"].label = "Maximum dimension on Y axis (mm)"
+
         self.fields["offset_1"].label = "Offset on X axis (mm)"
         self.fields["offset_2"].label = "Offset on Y axis (mm)"
+
         self.fields["form"].label = "Build area form factor"
+
+        self.fields["gcode_header"].label = "Header"
+        self.fields["gcode_footer"].label = "Footer"
 
         self.helper.layout = Layout(
             Row(
@@ -363,19 +368,6 @@ class NewMachineForm(forms.ModelForm):
             Row(
                 Column("extruder_type", css_class='form-group col-md')
             ),
-            Row(
-                Column("gcode_header", css_class='form-group col-md')
-            ),
-            Row(
-                Column("gcode_footer", css_class='form-group col-md')
-            ),
-            Row(
-                HTML('<h4 class="col-md">Test structure offset from printbed center</h4>'),
-            ),
-            Row(
-                Column("offset_1", css_class='form-group col-md'),
-                Column("offset_2", css_class='form-group col-md')
-            )
         )
 
     class Meta:
