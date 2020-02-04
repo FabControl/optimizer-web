@@ -684,6 +684,14 @@ class Session(models.Model, DependanciesCopyMixin):
             self.save()
             logging.getLogger("views").info("{} tried to set a disallowed test_number".format(self.owner))
 
+    @property
+    def completed(self):
+        tests = self.previous_tests
+        if len(tests) < 1 or not self.executed:
+            return False
+        result =  self.test_number == self.test_number_next() and tests[-1]['validated']
+        return result
+
     def test_number_next(self, primary: bool = True):
         """
         Method for advancing test_number according to testing session routine retrieved from backend

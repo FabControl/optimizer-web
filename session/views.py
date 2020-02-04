@@ -410,10 +410,13 @@ def test_switch(request, pk, number):
 def next_test_switch(request, pk, priority: str):
     session = get_object_or_404(Session, pk=pk)
     session.is_owner(request.user)
+    num = session.test_number
     if priority == "primary":
         session.test_number = session.test_number_next()
     elif priority == "any":
         session.test_number = session.test_number_next(primary=False)
+    if session.test_number == num:
+        return redirect('session_overview', pk=pk)
     session.clean_min_max()
     session.save()
     return redirect('session_detail', pk=pk)
