@@ -75,15 +75,20 @@ class SessionSessionTest(TestCase):
         # create some sessions without owner
         sessions = []
         expected_links = []
+        persistence = json.loads(BLANK_PERSISTENCE)['persistence']
+        persistence['session']['previous_tests'] = []
+        persistence = json.dumps(persistence)
         for s_name in 'some testing session instances'.split(' '):
             session = models.Session(name=s_name,
                                      material=models.Material.objects.get(pk=self.material.pk),
                                      settings=models.Settings.objects.create(),
                                      machine=models.Machine.objects.get(pk=self.machine.pk))
 
-            session._persistence = json.dumps(json.loads(BLANK_PERSISTENCE)['persistence'])
+            session._persistence = persistence
             session.init_settings()
             session.update_persistence()
+
+            session.persistence["session"]["previous_tests"] = []
 
             session.save()
             expected_links.append((len(sessions),
