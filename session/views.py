@@ -450,6 +450,7 @@ def serve_report(request, pk):
     report_file, report_file_format = api_client.get_report(session.persistence)
     f = BytesIO(report_file)
     response = FileResponse(f, content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename=report_{}.pdf'.format(session.name.replace(" ", "_"))
     return response
 
 
