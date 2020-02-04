@@ -2,7 +2,7 @@ import logging
 from django import forms
 from django.urls import reverse_lazy
 from django.utils.safestring import mark_safe
-from crispy_forms.layout import Submit, Layout, Row, Column, Field
+from crispy_forms.layout import Submit, Layout, Row, Column, Field, HTML
 from crispy_forms.helper import FormHelper
 from .models import *
 from .choices import TEST_NUMBER_CHOICES
@@ -193,7 +193,7 @@ class TestValidateForm(forms.ModelForm):
             param.help_text = "Please select the best {} along the width of the selected substructure ({} {} - {} {}):".format(parameter["name"], str(parameter["values"][0]), parameter["units"], str(parameter["values"][-1]), parameter["units"])
             self.fields["min_max_parameter_three"] = param
 
-        self.fields["comments"] = forms.CharField(max_length=74,
+        self.fields["comments"] = forms.CharField(max_length=256,
                                                   required=False, label='Comment')
 
         self.helper = FormHelper()
@@ -344,7 +344,14 @@ class NewMachineForm(forms.ModelForm):
         self.fields["model"].label = "Printer model"
         self.fields["buildarea_maxdim1"].label = "Maximum dimension on X axis (mm)"
         self.fields["buildarea_maxdim2"].label = "Maximum dimension on Y axis (mm)"
+
+        self.fields["offset_1"].label = "Offset on X axis (mm)"
+        self.fields["offset_2"].label = "Offset on Y axis (mm)"
+
         self.fields["form"].label = "Build area form factor"
+
+        self.fields["gcode_header"].label = "Header"
+        self.fields["gcode_footer"].label = "Footer"
 
         self.helper.layout = Layout(
             Row(
@@ -360,12 +367,20 @@ class NewMachineForm(forms.ModelForm):
             ),
             Row(
                 Column("extruder_type", css_class='form-group col-md')
-            )
+            ),
         )
 
     class Meta:
         model = Machine
-        fields = ["model", "buildarea_maxdim1", "buildarea_maxdim2", "form", "extruder_type"]
+        fields = ["model",
+                  "buildarea_maxdim1",
+                  "buildarea_maxdim2",
+                  "form",
+                  "extruder_type",
+                  "gcode_header",
+                  "gcode_footer",
+                  "offset_1",
+                  "offset_2"]
 
 
 class NewExtruderForm(forms.ModelForm):

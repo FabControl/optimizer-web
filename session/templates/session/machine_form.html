@@ -23,6 +23,25 @@
         {% csrf_token %}
         <p>
           {% crispy self_form %}
+          <div class="text-center">
+            <a class='link' id='id_advanced_toggle' style='cursor: pointer'>Advanced <i class="fas fa-angle-down"></i></a>
+          </div>
+          <div id='id_advanced_toggle_content'>
+            <br>
+            <h4>GCODE Header and Footer</h4>
+            <div class="card p-3">
+              {{ self_form.gcode_header | as_crispy_field }}
+              {{ self_form.gcode_footer | as_crispy_field }}
+              <small class='text-muted'>Header/footer are prepended/appended to test routine GCODEs. These can be altered to better accomodate certain printer features, such as autocalibration.</small>
+            </div>
+            <br>
+            <h4>Offset from center of printbed</h4>
+            <div class="card p-3">
+              {{ self_form.offset_1 | as_crispy_field }}
+              {{ self_form.offset_2 | as_crispy_field }}
+              <small class='text-muted'>Test structure is centered on the printbed by default. Offset may be used to shift the test structure on build-plate.</small>
+            </div>
+          </div>
         </p>
         <p>
           <h4> Extruder parameters </h4>
@@ -41,6 +60,9 @@
           <h4>Print bed parameters</h4>
           <div class="card p-3">
             {% crispy printbed_form %}
+          </div>
+          <div class="" id='id_advanced_collapsible'>
+
           </div>
         </p>
         {% if next %}
@@ -112,5 +134,11 @@
       });
     });
   })
+</script>
+<script type="text/javascript">
+  $('#id_advanced_toggle_content').slideUp(0);
+  $('#id_advanced_toggle').click(function() {
+    $('#id_advanced_toggle_content').slideToggle();
+  });
 </script>
 {% endblock %}
