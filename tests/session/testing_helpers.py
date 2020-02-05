@@ -1,3 +1,6 @@
+import json
+
+
 BLANK_PERSISTENCE = """
 {
     "persistence": {
@@ -407,6 +410,638 @@ BLANK_PERSISTENCE = """
     }
 }
 """
+
+EXECUTED_LAST_TEST = """[
+    {
+        "comments": 0,
+        "datetime_info": "2020-01-29 07:36:19",
+        "executed": true,
+        "extruded_filament_mm": 1026.139,
+        "parameter_one_name": "extrusion temperature",
+        "parameter_one_precision": "{:.0f}",
+        "parameter_one_units": "degC",
+        "parameter_three_name": null,
+        "parameter_two_name": "printing speed",
+        "parameter_two_precision": "{:.0f}",
+        "parameter_two_units": "mm/s",
+        "selected_parameter_one_value": 44.0,
+        "selected_parameter_two_value": 1.0,
+        "selected_volumetric_flow-rate_value": 0,
+        "test_name": "extrusion temperature vs printing speed",
+        "test_number": "03",
+        "tested_parameter_one_values": [
+            33.0,
+            36.0,
+            40.0,
+            44.0,
+            47.0,
+            50.0,
+            54.0
+        ],
+        "tested_parameter_two_values": [
+            1.0,
+            1.0,
+            2.0,
+            2.0
+        ],
+        "tested_parameters": [
+            {
+                "active": true,
+                "hint_active": "These seven values will be tested at four different <b>Printing speeds</b> (see below). You can change the limiting values",
+                "min_max": [
+                    30,
+                    350
+                ],
+                "name": "extrusion temperature",
+                "precision": "{:.0f}",
+                "programmatic_name": "temperature_extruder",
+                "units": "degC",
+                "values": [
+                    33.0,
+                    36.0,
+                    40.0,
+                    44.0,
+                    47.0,
+                    50.0,
+                    54.0
+                ]
+            },
+            {
+                "active": true,
+                "hint_active": "Set the range to 20-50 mm/s for printing flexible materials, or to 30-70 mm/s for printing harder materials",
+                "min_max": [
+                    1,
+                    140
+                ],
+                "name": "printing speed",
+                "precision": "{:.0f}",
+                "programmatic_name": "speed_printing",
+                "units": "mm/s",
+                "values": [
+                    1.0,
+                    1.3333333333333333,
+                    1.6666666666666665,
+                    2.0
+                ]
+            }
+        ],
+        "tested_volumetric_flow-rate_values": [
+            [
+                0.038,
+                0.038,
+                0.038,
+                0.038,
+                0.038,
+                0.038,
+                0.038
+            ],
+            [
+                0.05,
+                0.05,
+                0.05,
+                0.05,
+                0.05,
+                0.05,
+                0.05
+            ],
+            [
+                0.063,
+                0.063,
+                0.063,
+                0.063,
+                0.063,
+                0.063,
+                0.063
+            ],
+            [
+                0.076,
+                0.076,
+                0.076,
+                0.076,
+                0.076,
+                0.076,
+                0.076
+            ]
+        ],
+        "validated": true
+    },
+    {
+        "comments": "Another long testing commit. This text should be wrapped properly. And another line should be included.",
+        "datetime_info": "2020-01-29 07:50:07",
+        "executed": true,
+        "extruded_filament_mm": 859.107,
+        "parameter_one_name": "retraction distance",
+        "parameter_one_precision": "{:.3f}",
+        "parameter_one_units": "mm",
+        "parameter_three_name": null,
+        "parameter_two_name": null,
+        "parameter_two_precision": null,
+        "parameter_two_units": null,
+        "selected_parameter_one_value": 5.0,
+        "selected_parameter_two_value": null,
+        "selected_volumetric_flow-rate_value": 0.038,
+        "test_name": "retraction distance",
+        "test_number": "10",
+        "tested_parameter_one_values": [
+            0.0,
+            1.0,
+            2.0,
+            3.0,
+            4.0,
+            5.0,
+            6.0
+        ],
+        "tested_parameter_two_values": null,
+        "tested_parameters": [
+            {
+                "active": true,
+                "hint_active": "These seven values will be tested. You can change the limiting values",
+                "min_max": [
+                    0,
+                    20
+                ],
+                "name": "retraction distance",
+                "precision": "{:.3f}",
+                "programmatic_name": "retraction_distance",
+                "units": "mm",
+                "values": [
+                    0.0,
+                    1.0,
+                    2.0,
+                    3.0,
+                    4.0,
+                    5.0,
+                    6.0
+                ]
+            },
+            {
+                "active": true,
+                "hint_active": null,
+                "min_max": null,
+                "name": null,
+                "precision": null,
+                "programmatic_name": null,
+                "units": null,
+                "values": null
+            }
+        ],
+        "tested_volumetric_flow-rate_values": [
+            0.038
+        ],
+        "validated": true
+    },
+    {
+        "comments": 0,
+        "datetime_info": "2020-02-05 13:57:30",
+        "executed": true,
+        "extruded_filament_mm": 1183.053,
+        "parameter_one_name": "bridging extrusion multiplier",
+        "parameter_one_precision": "{:.3f}",
+        "parameter_one_units": "-",
+        "parameter_three_name": null,
+        "parameter_two_name": "bridging printing speed",
+        "parameter_two_precision": "{:.0f}",
+        "parameter_two_units": "mm/s",
+        "selected_parameter_one_value": 0,
+        "selected_parameter_two_value": 0,
+        "selected_volumetric_flow-rate_value": 0,
+        "test_name": "bridging extrusion multiplier vs bridging printing speed",
+        "test_number": "13",
+        "tested_parameter_one_values": [
+            1.0,
+            1.167,
+            1.333,
+            1.5,
+            1.667,
+            1.833,
+            2.0
+        ],
+        "tested_parameter_two_values": [
+            1.0,
+            1.0,
+            2.0,
+            2.0
+        ],
+        "tested_parameters": [
+            {
+                "active": true,
+                "hint_active": "These seven values will be tested at four different <b>Bridging printing speeds</b> (see below). You can change the limiting values",
+                "min_max": [
+                    0.01,
+                    2
+                ],
+                "name": "bridging extrusion multiplier",
+                "precision": "{:.3f}",
+                "programmatic_name": "bridging_extrusion_multiplier",
+                "units": "-",
+                "values": [
+                    1.0,
+                    1.1666666666666667,
+                    1.3333333333333333,
+                    1.5,
+                    1.6666666666666665,
+                    1.8333333333333333,
+                    2.0
+                ]
+            },
+            {
+                "active": true,
+                "hint_active": "Set the range to 10-25 mm/s for printing flexible materials, or 15-35 mm/s for harder materials",
+                "min_max": [
+                    1,
+                    280
+                ],
+                "name": "bridging printing speed",
+                "precision": "{:.0f}",
+                "programmatic_name": "bridging_speed_printing",
+                "units": "mm/s",
+                "values": [
+                    1.0,
+                    1.3333333333333333,
+                    1.6666666666666665,
+                    2.0
+                ]
+            }
+        ],
+        "tested_volumetric_flow-rate_values": [
+            [
+                0.038,
+                0.044,
+                0.05,
+                0.057,
+                0.063,
+                0.069,
+                0.076
+            ],
+            [
+                0.038,
+                0.044,
+                0.05,
+                0.057,
+                0.063,
+                0.069,
+                0.076
+            ],
+            [
+                0.038,
+                0.044,
+                0.05,
+                0.057,
+                0.063,
+                0.069,
+                0.076
+            ],
+            [
+                0.038,
+                0.044,
+                0.05,
+                0.057,
+                0.063,
+                0.069,
+                0.076
+            ],
+            [
+                0.038,
+                0.044,
+                0.05,
+                0.057,
+                0.063,
+                0.069,
+                0.076
+            ],
+            [
+                0.038,
+                0.044,
+                0.05,
+                0.057,
+                0.063,
+                0.069,
+                0.076
+            ],
+            [
+                0.038,
+                0.044,
+                0.05,
+                0.057,
+                0.063,
+                0.069,
+                0.076
+            ]
+        ],
+        "validated": false
+    }
+]
+"""
+
+
+def get_routine(mode='full'):
+    routine = json.loads("""
+        {
+         "01": {
+          "name": "first-layer track height vs first-layer printing speed",
+          "priority": "primary"
+         },
+         "02": {
+          "name": "first-layer track width",
+          "priority": "secondary"
+         },
+         "03": {
+          "name": "extrusion temperature vs printing speed",
+          "priority": "primary"
+         },
+         "04": {
+          "name": "track height vs printing speed",
+          "priority": "secondary"
+         },
+         "05": {
+          "name": "track width",
+          "priority": "secondary"
+         },
+         "06": {
+          "name": "extrusion multiplier vs printing speed",
+          "priority": "secondary"
+         },
+         "07": {
+          "name": "printing speed",
+          "priority": "secondary"
+         },
+         "08": {
+          "name": "extrusion temperature vs retraction distance",
+          "priority": "secondary"
+         },
+         "09": {
+          "name": "retraction distance vs printing speed",
+          "priority": "secondary"
+         },
+         "10": {
+          "name": "retraction distance",
+          "priority": "primary"
+         },
+         "11": {
+          "name": "retraction distance vs retraction speed",
+          "priority": "secondary"
+         },
+         "13": {
+          "name": "bridging extrusion multiplier vs bridging printing speed",
+          "priority": "primary"
+         }
+        }
+    """)
+
+    print('routine called')
+    if mode == 'full':
+        return routine
+
+    elif mode == 'primary':
+        primary_tests = {}
+        for number, test in routine.items():
+            if test['priority'] == 'primary':
+                primary_tests[number] = test
+        return primary_tests
+
+    elif mode == 'secondary':
+        secondary_tests = {}
+        for number, test in routine.items():
+            if test['priority'] == 'secondary':
+                secondary_tests[number] = test
+        return secondary_tests
+
+def get_test_info(num):
+    return json.loads("""{
+          "hint_init": "",
+          "hint_valid": "",
+          "name": "bridging extrusion multiplier vs bridging printing speed",
+          "number_of_layers": 8,
+          "number_of_substructures": 4,
+          "number_of_test_structures": 7,
+          "other_parameters": [
+            {
+              "active": true,
+              "hint_active": "Set this value to proceed",
+              "min_max": [
+                30,
+                120
+              ],
+              "name": "print bed temperature",
+              "precision": "{:.0f}",
+              "programmatic_name": "temperature_printbed_setpoint",
+              "units": "degC",
+              "values": 0
+            },
+            {
+              "active": true,
+              "hint_active": "Set part cooling. Active part cooling is required when printing using high deposition rates or when printing fine details",
+              "min_max": [
+                0,
+                100
+              ],
+              "name": "part cooling",
+              "precision": "{:.0f}",
+              "programmatic_name": "part_cooling_setpoint",
+              "units": "%",
+              "values": 0
+            },
+            {
+              "active": true,
+              "hint_active": "Set this value to proceed",
+              "min_max": [
+                30,
+                350
+              ],
+              "name": "first-layer extrusion temperature",
+              "precision": "{:.0f}",
+              "programmatic_name": "temperature_extruder_raft",
+              "units": "degC",
+              "values": 0
+            },
+            {
+              "active": true,
+              "hint_active": "Set this value to proceed. Perform the corresponding test to fine-tune this value",
+              "min_max": [
+                0.04000000000000001,
+                0.4
+              ],
+              "name": "first-layer track height",
+              "precision": "{:.2f}",
+              "programmatic_name": "track_height_raft",
+              "units": "mm",
+              "values": 0.24
+            },
+            {
+              "active": true,
+              "hint_active": "The default value is equal to the nozzle inner diameter, but you can perform the corresponding test to fine-tune this value",
+              "min_max": [
+                0.2,
+                0.8
+              ],
+              "name": "first-layer track width",
+              "precision": "{:.2f}",
+              "programmatic_name": "track_width_raft",
+              "units": "mm",
+              "values": 0.4
+            },
+            {
+              "active": true,
+              "hint_active": "Set this value to proceed. Perform the corresponding test to fine-tune this value",
+              "min_max": [
+                1,
+                140
+              ],
+              "name": "first-layer printing speed",
+              "precision": "{:.0f}",
+              "programmatic_name": "speed_printing_raft",
+              "units": "mm/s",
+              "values": 15
+            },
+            {
+              "active": true,
+              "hint_active": "Set this value to proceed. This value will determine the resolution and surface quality of your print",
+              "min_max": [
+                0.04000000000000001,
+                0.4
+              ],
+              "name": "track height",
+              "precision": "{:.2f}",
+              "programmatic_name": "track_height",
+              "units": "mm",
+              "values": 0.0
+            },
+            {
+              "active": true,
+              "hint_active": "The default value is equal to the nozzle inner diameter, but you can perform the corresponding test to fine-tune this value",
+              "min_max": [
+                0.2,
+                0.8
+              ],
+              "name": "track width",
+              "precision": "{:.2f}",
+              "programmatic_name": "track_width",
+              "units": "mm",
+              "values": 0.4
+            },
+            {
+              "active": true,
+              "hint_active": "Set this value to proceed. Perform the corresponding test to fine-tune this value",
+              "min_max": [
+                1,
+                140
+              ],
+              "name": "printing speed",
+              "precision": "{:.0f}",
+              "programmatic_name": "speed_printing",
+              "units": "mm/s",
+              "values": 0
+            },
+            {
+              "active": true,
+              "hint_active": "Set this value to proceed. Perform the corresponding test to fine-tune this value",
+              "min_max": [
+                30,
+                350
+              ],
+              "name": "extrusion temperature",
+              "precision": "{:.0f}",
+              "programmatic_name": "temperature_extruder",
+              "units": "degC",
+              "values": 0
+            },
+            {
+              "active": true,
+              "hint_active": "For this test this value is equal to unity, but, if needed, it can be tested in a separate test",
+              "min_max": [
+                0.01,
+                2
+              ],
+              "name": "extrusion multiplier",
+              "precision": "{:.3f}",
+              "programmatic_name": "extrusion_multiplier",
+              "units": "-",
+              "values": 1.0
+            },
+            {
+              "active": true,
+              "hint_active": "Set this value to proceed. Perform the corresponding test to fine-tune this value",
+              "min_max": [
+                0,
+                30
+              ],
+              "name": "retraction distance",
+              "precision": "{:.3f}",
+              "programmatic_name": "retraction_distance",
+              "units": "mm",
+              "values": 0.0
+            },
+            {
+              "active": true,
+              "hint_active": "Set this value to proceed. Perform the corresponding test to fine-tune this value",
+              "min_max": [
+                1,
+                200
+              ],
+              "name": "retraction speed",
+              "precision": "{:.0f}",
+              "programmatic_name": "retraction_speed",
+              "units": "mm/s",
+              "values": 100
+            },
+            {
+              "active": true,
+              "hint_active": "Set this value to proceed",
+              "min_max": [
+                0,
+                100
+              ],
+              "name": "bridging part cooling",
+              "precision": "{:.0f}",
+              "programmatic_name": "bridging_part_cooling",
+              "units": "%",
+              "values": 0
+            }
+          ],
+          "parameter_one": {
+            "active": true,
+            "hint_active": "These seven values will be tested at four different <b>Bridging printing speeds</b> (see below). You can change the limiting values",
+            "min_max": [
+              0.01,
+              2
+            ],
+            "name": "bridging extrusion multiplier",
+            "precision": "{:.3f}",
+            "programmatic_name": "bridging_extrusion_multiplier",
+            "units": "-",
+            "values": [
+              1.0,
+              1.1666666666666667,
+              1.3333333333333333,
+              1.5,
+              1.6666666666666665,
+              1.8333333333333333,
+              2.0
+            ]
+          },
+          "parameter_three": null,
+          "parameter_two": {
+            "active": true,
+            "hint_active": "Set the range to 10-25 mm/s for printing flexible materials, or 15-35 mm/s for harder materials",
+            "min_max": [
+              1,
+              280
+            ],
+            "name": "bridging printing speed",
+            "precision": "{:.0f}",
+            "programmatic_name": "bridging_speed_printing",
+            "units": "mm/s",
+            "values": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "raft": true,
+          "test_number": "13"
+        }""")
+
 
 def assertMachinesEqual(self, orig, copied):
     self.assertEqual(orig.model, copied.model)

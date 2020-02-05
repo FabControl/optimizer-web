@@ -688,6 +688,7 @@ class Session(models.Model, DependanciesCopyMixin):
     def completed(self):
         tests = self.previous_tests
         if len(tests) < 1 or not self.executed:
+            print(self, 'test not executed, so can not be completed')
             return False
         result =  self.test_number == self.test_number_next() and tests[-1]['validated']
         return result
