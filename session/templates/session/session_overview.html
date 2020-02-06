@@ -16,10 +16,12 @@
           <br><a>Tested <b>{{ test.parameter_one_name }}</b> values ({{test.parameter_one_units}}):</a>
           <br><a>{% for value in test.tested_parameter_one_values %}{% if value == test.selected_parameter_one_value %}<b>{{ value }}</b>{% else %}{{ value }}{% endif %}, {% endfor %}</a>
         </p>
+        {% if test.parameter_two_name %}
         <p>
           <a>Tested <b>{{ test.parameter_two_name }}</b> values ({{test.parameter_two_units}}):</a>
           <br><a>{% for value in test.tested_parameter_two_values %}{% if value == test.selected_parameter_two_value %}<b>{{ value }}</b>{% else %}{{ value }}{% endif %}, {% endfor %}</a>
         </p>
+        {% endif %}
 
       </div>
     </div>
