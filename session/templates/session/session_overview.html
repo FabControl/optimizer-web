@@ -22,6 +22,11 @@
           <br><a>{% for value in test.tested_parameter_two_values %}{% if value == test.selected_parameter_two_value %}<b>{{ value }}</b>{% else %}{{ value }}{% endif %}, {% endfor %}</a>
         </p>
         {% endif %}
+        {% if test.comments %}
+        <p>
+          <a>{{ test.comments }}</a>
+        </p>
+        {% endif %}
 
       </div>
     </div>
