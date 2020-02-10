@@ -811,7 +811,7 @@ class Session(models.Model, DependanciesCopyMixin):
             "min_max_parameter_two": self.min_max_parameter_two,
             "min_max_parameter_three": self.min_max_parameter_three,
             "test_type": "A",
-            "user_id": "user name",
+            "user_id": " ".join([self.owner.first_name, self.owner.last_name]),
             "offset": [
                 self.machine.offset_1,
                 self.machine.offset_2
