@@ -803,6 +803,7 @@ class Session(models.Model, DependanciesCopyMixin):
         Returns ["session"] persistent data block representation of the current session state.
         :return: type dict
         """
+        user = " ".join([self.owner.first_name, self.owner.last_name]) if self.owner is not None else 'user name'
         output = {
             "uid": self.pk,
             "target": self.target,
@@ -811,7 +812,7 @@ class Session(models.Model, DependanciesCopyMixin):
             "min_max_parameter_two": self.min_max_parameter_two,
             "min_max_parameter_three": self.min_max_parameter_three,
             "test_type": "A",
-            "user_id": " ".join([self.owner.first_name, self.owner.last_name]),
+            "user_id": user,
             "offset": [
                 self.machine.offset_1,
                 self.machine.offset_2
