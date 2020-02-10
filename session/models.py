@@ -732,6 +732,17 @@ class Session(models.Model, DependanciesCopyMixin):
                 self.previous_tests[-1]["tested_parameter_two_values"]]
 
     @property
+    def tested_value_units(self):
+        """
+        Returns a list of tested_parameter_units (one and two).
+        Used in validation table.
+        :return:
+        """
+        t = self.previous_tests[-1]
+        return [t["parameter_one_units"],
+                t["parameter_two_units"]]
+
+    @property
     def previously_tested_parameters(self):
         """
         Returns a dict of lists of previously tested and set parameters.
