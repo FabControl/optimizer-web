@@ -728,8 +728,9 @@ class Session(models.Model, DependanciesCopyMixin):
         Used in validation table.
         :return:
         """
-        return [self.previous_tests[-1]["tested_parameter_one_values"][::-1],
-                self.previous_tests[-1]["tested_parameter_two_values"]]
+        t = self.previous_tests[-1]
+        return [t["tested_parameter_one_values"][::-1],
+                t["tested_parameter_two_values"]]
 
     @property
     def tested_value_units(self):
