@@ -684,6 +684,15 @@ class Session(models.Model, DependanciesCopyMixin):
             self.save()
             logging.getLogger("views").info("{} tried to set a disallowed test_number".format(self.owner))
 
+    @property
+    def completed(self):
+        tests = self.previous_tests
+        if len(tests) < 1 or not self.executed:
+            print(self, 'test not executed, so can not be completed')
+            return False
+        result =  self.test_number == self.test_number_next() and tests[-1]['validated']
+        return result
+
     def test_number_next(self, primary: bool = True):
         """
         Method for advancing test_number according to testing session routine retrieved from backend
@@ -719,8 +728,20 @@ class Session(models.Model, DependanciesCopyMixin):
         Used in validation table.
         :return:
         """
-        return [self.previous_tests[-1]["tested_parameter_one_values"][::-1],
-                self.previous_tests[-1]["tested_parameter_two_values"]]
+        t = self.previous_tests[-1]
+        return [t["tested_parameter_one_values"][::-1],
+                t["tested_parameter_two_values"]]
+
+    @property
+    def tested_value_units(self):
+        """
+        Returns a list of tested_parameter_units (one and two).
+        Used in validation table.
+        :return:
+        """
+        t = self.previous_tests[-1]
+        return [t["parameter_one_units"],
+                t["parameter_two_units"]]
 
     @property
     def previously_tested_parameters(self):
@@ -782,6 +803,7 @@ class Session(models.Model, DependanciesCopyMixin):
         Returns ["session"] persistent data block representation of the current session state.
         :return: type dict
         """
+        user = " ".join([self.owner.first_name, self.owner.last_name]) if self.owner is not None else 'user name'
         output = {
             "uid": self.pk,
             "target": self.target,
@@ -790,7 +812,7 @@ class Session(models.Model, DependanciesCopyMixin):
             "min_max_parameter_two": self.min_max_parameter_two,
             "min_max_parameter_three": self.min_max_parameter_three,
             "test_type": "A",
-            "user_id": "user name",
+            "user_id": user,
             "offset": [
                 self.machine.offset_1,
                 self.machine.offset_2

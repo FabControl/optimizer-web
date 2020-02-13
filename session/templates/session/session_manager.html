@@ -27,7 +27,11 @@
             {# ROW CONTENTS #}
             {% for session in sessions %}
             <tr>
-              <td><a class="text-secondary" href="{% url 'session_detail' session.pk %}">{{ session.name }}</a></td>
+              {% if  session.completed %}
+                <td><a class="text-secondary" href="{% url 'session_overview' session.pk %}">{{ session.name }}</a></td>
+              {% else %}
+                <td><a class="text-secondary" href="{% url 'session_detail' session.pk %}">{{ session.name }}</a></td>
+              {% endif %}
               <td><a class="text-secondary" href="{% url 'material_detail' session.material.pk %}">{{ session.material.name }}</a></td>
               <td><a class="text-secondary" href="{% url 'machine_detail' session.machine.pk %}">{{ session.machine.model }}</a></td>
               <td>{{ session.get_target_display }}</td>
