@@ -519,6 +519,9 @@ def new_session(request):
             session.update_persistence()
 
             session.save()
+            for k in ('machine', 'material', 'optimizer_session_name'):
+                if k in request.session:
+                    del request.session[k]
             return redirect('session_detail', pk=session.pk)
 
     if request.method == 'PATCH':
