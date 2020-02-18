@@ -148,8 +148,7 @@ class Printbed(models.Model, CopyableModelMixin):
 DEFAULT_GCODE_HEADER = '''G28; move to the home position
 G21; unit in mm
 G92 E0; reset extruder
-M83; set extruder to relative mode
-M302 S1; allow cold extrusion'''
+M83; set extruder to relative mode'''
 
 
 DEFAULT_GCODE_FOOTER = '''M190 S20; set the print bed temperature
