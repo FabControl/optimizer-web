@@ -39,7 +39,7 @@ class MinMaxField(forms.MultiValueField):
 
 
 class TestValidationWidget(forms.widgets.Input):
-    def __init__(self, tested_values, attrs=None):
+    def __init__(self, tested_values, units, attrs=None):
         # tested_values[0] is column, tested_values[1] is row
 
         super(TestValidationWidget, self).__init__(attrs)
@@ -50,13 +50,20 @@ class TestValidationWidget(forms.widgets.Input):
         else:
             self.bundled_values = [[(x, _) for x, _ in enumerate(tested_values[0])], []]
 
+        self.units = tuple(map(self._to_printable_units, units))
+
         self.template_name = "session/widgets/test_validation_widget.html"
+
+    def _to_printable_units(self, unit):
+        if unit == '-': return ''
+        if unit == 'degC': return '°C'
+        return unit
 
     def get_context(self, name, value, attrs):
         context = super().get_context(name, value, attrs)
         context["tested_values"] = self.tested_values
         context["bundled_values"] = self.bundled_values
-        context["units"] = ["mm", "mm/s"]
+        context["units"] = self.units
         return context
 
     def decompress(self, value):
@@ -67,9 +74,9 @@ class TestValidationWidget(forms.widgets.Input):
 
 
 class TestValidationField(forms.Field):
-    def __init__(self, tested_values, *args, **kwargs):
+    def __init__(self, tested_values, units, *args, **kwargs):
         super(TestValidationField, self).__init__(*args, **kwargs)
-        self.widget = TestValidationWidget(tested_values=tested_values)
+        self.widget = TestValidationWidget(tested_values, units)
         self.tested_values = tested_values
 
     def to_python(self, value):
@@ -179,7 +186,7 @@ class TestValidateForm(forms.ModelForm):
 
         session = self.instance
 
-        self.fields["validation"] = TestValidationField(tested_values=session.tested_values, required=True)
+        self.fields["validation"] = TestValidationField(session.tested_values, session.tested_value_units, required=True)
         self.fields["validation"].label = ""
 
         if len(session.min_max_parameters) == 3:

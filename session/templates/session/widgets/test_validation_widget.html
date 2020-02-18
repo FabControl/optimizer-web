@@ -4,7 +4,7 @@
     <tr>
       <th scope="col"> </th>
       {% for column in tested_values.0 %}
-      <th scope="col">{{column}}</th>
+      <th scope="col">{{column}} {{units.0}}</th>
       {% endfor %}
     </tr>
   </thead>
@@ -12,7 +12,7 @@
     {% if bundled_values.1 %}
     {% for row in bundled_values.1 %}
     <tr>
-      <th scope="row">{{row.1}}</th>
+      <th scope="row">{{row.1}} {{units.1}}</th>
       {% for paramter1 in bundled_values.0 %}
       <td>
         <input type="radio" name="{{ widget.name }}" value="[{{paramter1.0}},{{row.0}}]" required>

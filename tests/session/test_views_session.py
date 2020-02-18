@@ -4,7 +4,7 @@ from django.urls import reverse
 from session import models
 from unittest.mock import Mock, patch
 import re
-from .testing_helpers import BLANK_PERSISTENCE
+from .testing_helpers import BLANK_PERSISTENCE, EXECUTED_LAST_TEST, get_routine, get_test_info
 import json
 from html.parser import HTMLParser
 
@@ -75,15 +75,20 @@ class SessionSessionTest(TestCase):
         # create some sessions without owner
         sessions = []
         expected_links = []
+        persistence = json.loads(BLANK_PERSISTENCE)['persistence']
+        persistence['session']['previous_tests'] = []
+        persistence = json.dumps(persistence)
         for s_name in 'some testing session instances'.split(' '):
             session = models.Session(name=s_name,
                                      material=models.Material.objects.get(pk=self.material.pk),
                                      settings=models.Settings.objects.create(),
                                      machine=models.Machine.objects.get(pk=self.machine.pk))
 
-            session._persistence = json.dumps(json.loads(BLANK_PERSISTENCE)['persistence'])
+            session._persistence = persistence
             session.init_settings()
             session.update_persistence()
+
+            session.persistence["session"]["previous_tests"] = []
 
             session.save()
             expected_links.append((len(sessions),
@@ -129,3 +134,73 @@ class SessionSessionTest(TestCase):
 
         self.assertEqual(len(found_links), 0,
                          msg='{} should not be in view'.format(list(sessions[x[0]] for x in found_links)))
+
+    def test_overview_redirection(self):
+        persistence = json.loads(BLANK_PERSISTENCE)['persistence']
+        persistence['session']['previous_tests'] = json.loads(EXECUTED_LAST_TEST)
+        persistence = json.dumps(persistence)
+        session = models.Session(name='redirection test',
+                                 owner=self.user,
+                                 material=models.Material.objects.get(pk=self.material.pk),
+                                 settings=models.Settings.objects.create(),
+                                 machine=models.Machine.objects.get(pk=self.machine.pk))
+
+        session._persistence = persistence
+        session.init_settings()
+        session.update_persistence()
+
+        session.save()
+
+        # log in as user
+        self.assertTrue(self.client.login(email='known_user@somewhere.com', password='SomeSecretPassword'))
+        with patch('optimizer_api.ApiClient.get_routine', side_effect=get_routine):
+            with patch('optimizer_api.ApiClient.get_test_info', side_effect=get_test_info):
+                session.test_number = '13'
+                session.save()
+
+            session_link = reverse('session_detail', kwargs=dict(pk=session.pk))
+            # test dashboard and sessions list contain session link
+            for dest in ('dashboard', 'session_manager'):
+                resp = self.client.get(reverse(dest))
+                self.assertEqual(resp.status_code, 200)
+                links = self.extract_links(resp.content)
+                self.assertTrue((session.name, session_link) in links,
+                                msg='Session detail link not found in ' + dest)
+
+            overview_link = reverse('session_overview', kwargs=dict(pk=session.pk))
+            # make session completed and test if user gets redirected to overview
+            with patch('optimizer_api.ApiClient.get_test_info', side_effect=get_test_info):
+                resp = self.client.post(session_link,
+                                        {"validation":"[2,1]",
+                                            "comments":"",
+                                            "btnprimary":""},
+                                        follow=True)
+
+            self.assertEqual(resp.status_code, 200)
+            self.assertTrue(len(resp.redirect_chain) > 0)
+            self.assertEqual(resp.redirect_chain[-1][0], overview_link)
+
+            # test dashboard and sessions list contain overview link
+            for dest in ('dashboard', 'session_manager'):
+                resp = self.client.get(reverse(dest))
+                self.assertEqual(resp.status_code, 200)
+                links = self.extract_links(resp.content)
+                self.assertTrue((session.name, overview_link) in links,
+                                msg='Session overview link not found in ' + dest)
+
+            # make sure session link still accessible
+            resp = self.client.get(session_link)
+            self.assertEqual(resp.status_code, 200)
+
+            # revert to last test
+            session.delete_previous_test('13')
+            session.save()
+
+            # dashboard and sessions list should again contain session link
+            for dest in ('dashboard', 'session_manager'):
+                resp = self.client.get(reverse(dest))
+                self.assertEqual(resp.status_code, 200)
+                links = self.extract_links(resp.content)
+                self.assertTrue((session.name, session_link) in links,
+                                msg='Session detail link not found in ' + dest)
+
