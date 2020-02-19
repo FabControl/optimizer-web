@@ -33,33 +33,44 @@ class SessionSessionTest(TestCase):
     def tearDownClass(self):
         self.user.delete()
 
-    def extract_links(self, html_bytes):
+    def extract_from_html(self, html_bytes, tag_match, attr_match):
         html_data = str(html_bytes, 'utf-8')
         result = []
         open_tags = []
+        class BoolClass(object):
+            capture = False
+
+        data_capture = BoolClass()
+
 
         def tag_open(tag, attrs):
             # skip img tags, since they can exist without closing tag
-            if tag in ('link', 'meta', 'img', 'input'):
-                return
             open_tags.append((tag, attrs))
+            if tag_match(tag) and attr_match(attrs):
+                data_capture.capture = True
+            if data_capture.capture:
+                result.append([tag, attrs, None])
 
         def tag_close(tag):
             if len(open_tags) < 1:
                 raise Exception('Closing tag after end of document "{}"'.format(tag))
-            self.assertEqual(open_tags[-1][0], tag)
-            open_tags.pop()
+            if open_tags[-1][0] == tag:
+                t, attrs = open_tags.pop()
+                if tag_match(tag) and attr_match(attrs):
+                    data_capture.capture = False
+            else:
+                data_capture.capture = False
+
 
         def handle_data(data):
             if len(open_tags) < 1:
                 return
-            if open_tags[-1][0] == 'a':
-                for (attr, val) in open_tags[-1][1]:
-                    if attr == 'href':
-                        result.append((data, val))
-                        break
+            if data_capture.capture:
+                result[-1][-1] = data
 
-        def start_end(tag, attrs): pass
+        def start_end(tag, attrs):
+            tag_open(tag, attrs)
+            tag_close(tag)
 
         parser = HTMLParser()
         parser.handle_starttag = tag_open
@@ -68,6 +79,19 @@ class SessionSessionTest(TestCase):
         parser.handle_startendtag = start_end
 
         parser.feed(html_data)
+        return result
+
+
+    def extract_links(self, html_bytes):
+        link_data = self.extract_from_html(html_bytes,
+                                          lambda x: x=='a',
+                                          lambda x: True)
+
+        result = []
+        for tag, attrs, data in link_data:
+            for attr, val in attrs:
+                if attr == 'href':
+                    result.append((data, val))
         return result
 
     def test_sessions_list(self):
