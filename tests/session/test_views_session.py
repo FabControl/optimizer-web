@@ -228,3 +228,108 @@ class SessionSessionTest(TestCase):
                 self.assertTrue((session.name, session_link) in links,
                                 msg='Session detail link not found in ' + dest)
 
+    def test_session_creation_cache(self):
+        def extract_data(b):
+            def attr_match(attrs):
+                for attr, val in attrs:
+                    if attr == 'selected':
+                        return True
+                    elif attr == 'name' and val == 'name':
+                        return True
+                return False
+
+            result = []
+            for _, attrs, data in self.extract_from_html(b, lambda x: x in ('input', 'option'), attr_match):
+                for a, v in attrs:
+                    if a == 'value':
+                        result.append((v, data))
+                        break
+
+            return result
+
+        tst_url = reverse('new_session')
+        patched_name = 'Some session'
+        self.assertTrue(self.client.login(email='known_user@somewhere.com', password='SomeSecretPassword'))
+
+        # load new session page
+        resp = self.client.get(tst_url)
+        self.assertEqual(resp.status_code, 200)
+        # make sure defaults are selected
+        name, material, machine, tst_type = extract_data(resp.content)
+
+        #Probably space from template
+        self.assertEqual(name, ('Untitled', ' '))
+        self.assertEqual(material, ('', '---------'))
+        self.assertEqual(machine, ('', '---------'))
+        # pach session name
+        resp = self.client.patch(tst_url, data=patched_name)
+        self.assertEqual(resp.status_code, 204)
+        # load new session page and check defaults
+        resp = self.client.get(tst_url)
+        self.assertEqual(resp.status_code, 200)
+        name, material, machine, tst_type = extract_data(resp.content)
+
+        #Probably space from template
+        self.assertEqual(name, (patched_name, ' '))
+        self.assertEqual(material, ('', '---------'))
+        self.assertEqual(machine, ('', '---------'))
+        # use create material link. Should redirect back
+        resp = self.client.post(reverse('material_form'),
+                                dict(name='Material name', size_od=1.25, next=tst_url),
+                                follow=True)
+        self.assertEqual(resp.status_code, 200)
+        name, material, machine, tst_type = extract_data(resp.content)
+
+        self.assertEqual(name, (patched_name, ' '))
+        self.assertFalse(material == ('', '---------'))
+        self.assertEqual(machine, ('', '---------'))
+
+        # use create machine link
+        machine_props = {
+            "model": "New machine test model",
+            "buildarea_maxdim1": "12",
+            "buildarea_maxdim2": "11",
+            "form": "elliptic",
+            "gcode_header": ";this is header",
+            "gcode_footer": ";this is footer",
+            "offset_1": "0",
+            "offset_2": "0",
+            "extruder_type": "bowden",
+            "extruder-tool": "T0",
+            "extruder-temperature_max": "350",
+            "extruder-part_cooling": "on",
+            "nozzle-size_id": "0.4",
+            "chamber-tool": "",
+            "chamber-gcode_command": "M141+S$temp",
+            "chamber-temperature_max": "80",
+            "printbed-printbed_heatable": "on",
+            "printbed-temperature_max": "124",
+            "next": tst_url
+            }
+        resp = self.client.post(reverse('machine_form'), machine_props, follow=True)
+        self.assertEqual(resp.status_code, 200)
+        name, material, machine, tst_type = extract_data(resp.content)
+
+        self.assertEqual(name, (patched_name, ' '))
+        self.assertFalse(material == ('', '---------'))
+        self.assertFalse(machine == ('', '---------'))
+
+        # create new session and check defaults
+        p = json.loads(BLANK_PERSISTENCE)['persistence']
+        with patch('optimizer_api.ApiClient.get_template', return_value=p):
+            resp = self.client.post(tst_url,
+                                    dict(name=name[0],
+                                            material=material[0],
+                                            machine=machine[0],
+                                            target=tst_type[0]))
+        self.assertEqual(resp.status_code, 302)
+
+        # load new session page
+        resp = self.client.get(tst_url)
+        self.assertEqual(resp.status_code, 200)
+        # cache should be cleared now
+        name, material, machine, tst_type = extract_data(resp.content)
+
+        self.assertEqual(name, ('Untitled', ' '))
+        self.assertEqual(material, ('', '---------'))
+        self.assertEqual(machine, ('', '---------'))
