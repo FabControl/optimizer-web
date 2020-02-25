@@ -519,7 +519,15 @@ def new_session(request):
             session.update_persistence()
 
             session.save()
+            for k in ('machine', 'material', 'optimizer_session_name'):
+                if k in request.session:
+                    del request.session[k]
             return redirect('session_detail', pk=session.pk)
+
+    if request.method == 'PATCH':
+        request.session['optimizer_session_name'] = request.body.decode('utf-8')
+        return HttpResponse(status=204)
+
     else:
         form = SessionForm(user=request.user)
         if "machine" in request.session:
@@ -527,6 +535,8 @@ def new_session(request):
 
         if "material" in request.session:
             form.fields["material"].initial = request.session["material"]
+        if "optimizer_session_name" in request.session:
+            form.fields["name"].initial = request.session["optimizer_session_name"]
 
     context = {"form": form, "target_descriptions": load_json('session/json/target_descriptions.json')}
     return render(request, 'session/new_session.html', context)
