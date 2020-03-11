@@ -24,3 +24,16 @@
 {% endif %}
 
 {% endblock %}
+{% block javascript %}
+  <script type = "text/javascript">
+    <!--
+    $("#id_name").focusout(function(){
+      $.ajax({
+        method: "PATCH",
+        headers: { 
+          "X-CSRFToken": $("input[name=csrfmiddlewaretoken]").val()},
+        data: $("#id_name").val()});
+    });
+    //-->
+  </script>
+  {% endblock %}
