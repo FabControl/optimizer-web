@@ -3,7 +3,7 @@
 {% load django_simple_cookie_consent_tags %}
 <!doctype html>
 <html lang="en" class="h-100">
-
+<meta http-equiv="refresh" content="600" >
 <head>
   <!-- Hide content for the duration of loading -->
   <style>
@@ -57,7 +57,7 @@
   <div class="container">
     <div class="row">
       {% for item in stats %}
-      <div class="col-sm-3 pt-3">
+      <div class="col-sm-4 pt-3">
         <div class="card p-2 text-center shadow-sm">
           <p class="lead">{{item.label}}</p>
           <p class="display-1">{{item.value}}</p>
