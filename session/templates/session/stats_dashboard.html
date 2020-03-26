@@ -55,37 +55,15 @@
   {% include "session/message.html" %}
   {% endif %}
   <div class="container">
-    <div class="row pt-3">
-      <div class="col-sm-3">
-        <div class="card text-center">
-          <small>Total accounts:</small>
-          <span class='h3'>{{total_accounts}}</span>
+    <div class="row">
+      {% for item in stats %}
+      <div class="col-sm-3 pt-3">
+        <div class="card p-2 text-center shadow-sm">
+          <p class="lead">{{item.label}}</p>
+          <p class="display-1">{{item.value}}</p>
         </div>
       </div>
-    </div>
-    <div class="row pt-3">
-      <div class="col-sm-3">
-        <div class="card text-center">
-          <small>Total active accounts:</small>
-          <span class='h3'>{{total_active_accounts}}</span>
-        </div>
-      </div>
-    </div>
-    <div class="row pt-3">
-      <div class="col-sm-3">
-        <div class="card text-center">
-          <small>New accounts this month:</small>
-          <span class='h3'>{{users_last_month}}</span>
-        </div>
-      </div>
-    </div>
-    <div class="row pt-3">
-      <div class="col-sm-3">
-        <div class="card text-center">
-          <small>New accounts this week:</small>
-          <span class='h3'>{{users_last_week}}</span>
-        </div>
-      </div>
+      {% endfor %}
     </div>
   </div>
 
