@@ -575,6 +575,29 @@ def privacy_statement(request):
     return render(request, 'session/TOP.html')
 
 
+@login_required
+def investor_dashboard(request):
+    """
+    Total accounts
+    New accounts this week
+    New accounts this month
+    Total active accounts
+    :param request:
+    :return:
+    """
+    if request.user.email == 'egils@fabcontrol.com':
+        total_accounts = len(User.objects.all())
+
+        users_last_month = len(User.objects.filter(date_joined__gt=timezone.datetime.today() - timezone.timedelta(days=30)))
+        users_last_week = len(User.objects.filter(date_joined__gt=timezone.datetime.today() - timezone.timedelta(days=7)))
+
+        total_active_accounts = len(User.objects.filter(is_active=True))
+        return render(request, 'session/investor_dashboard.html', context={'total_accounts': total_accounts,
+                                                                           'total_active_accounts': total_active_accounts,
+                                                                           'users_last_month': users_last_month,
+                                                                           'users_last_week': users_last_week})
+
+
 def terms_of_use(request):
     return render(request, 'session/TOS.html')
 

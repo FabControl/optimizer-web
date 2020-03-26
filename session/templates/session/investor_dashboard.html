@@ -1,0 +1,85 @@
+<!-- Loads static files -->
+{% load staticfiles %}
+{% load django_simple_cookie_consent_tags %}
+<!doctype html>
+<html lang="en" class="h-100">
+
+<head>
+  <!-- Hide content for the duration of loading -->
+  <style>
+    html {
+      display: none;
+    }
+  </style>
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+
+  <script src="{% static 'session/js/index.js' %}"></script>
+  {% block extra_resources %}{% endblock %}
+  <!-- Unhide content after it has been styled -->
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="{% static 'session/css/index.css' %}">
+  <link rel="shortcut icon" type="image/png" href="{% static 'session/img/favicon.ico' %}" />
+  {% if 'session_detail' not in request.resolver_match.url_name %}
+  {% if ga_tracking_id %}
+  {% block analytics %}
+  {% include "session/google_analytics.html" %}
+  {% endblock %}
+  {% endif %}
+  <title>3DOptimizer</title>
+  {% endif %}
+  <nav class="navbar navbar-expand-lg navbar-light shadow-sm bg-light">
+    <div class="container">
+      <a class="navbar-brand {% if "/dashboard/" not in request.path %}lead{% endif %}" href="{% url 'dashboard' %}"><img width="40px" class="d-inline-block" src="{% static 'session/img/logo.svg' %}" alt="Logo"> 3DOptimizer</a>
+      {% if user.is_authenticated %}
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      {% endif %}
+    </div>
+  </nav>
+  {% display_cookie_consent %}
+</head>
+
+<body class="d-flex flex-column h-100">
+
+  <!-- Message notification -->
+  {% if messages %}
+  {% include "session/message.html" %}
+  {% endif %}
+  <div class="container">
+    <div class="row pt-3">
+      <div class="col-sm">
+        <p>Total amount of accounts: {{total_accounts}}</p>
+        <p>Total active accounts: {{total_active_accounts}}</p>
+        <p>Users joined during the last 30 days: {{users_last_month}}</p>
+        <p>Users joined during the last 7 days: {{users_last_week}}</p>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    html {
+      display: block;
+    }
+  </style>
+  <footer class="footer mt-auto py-3">
+    <div class="container text-center">
+      <span class="text-muted"><small>©FabControl SIA - <a>support@fabcontrol.com</a></small></span>
+    </div>
+  </footer>
+  {% block javascript %}
+  {% endblock %}
+  {% block beacon %}
+  {% include "session/beacon.html" %}
+  {% endblock %}
+</body>
+
+</html>
