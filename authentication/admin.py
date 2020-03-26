@@ -12,7 +12,7 @@ class UserAdmin(DjangoUserAdmin):
         (None, {'fields': ('email', 'password',)}),
         ('Subscription', {'fields': ('plan', 'subscription_expiration')}),
         (_('Personal info'), {'fields': ('first_name', 'last_name')}),
-        (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser',
+        (_('Permissions'), {'fields': ('is_active', 'can_access_investor_dashboard', 'is_staff', 'is_superuser',
                                        'groups', 'user_permissions')}),
         ('Onboarding', {'fields': ('onboarding', '_onboarding_sections',)}),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
