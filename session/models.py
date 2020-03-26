@@ -145,19 +145,6 @@ class Printbed(models.Model, CopyableModelMixin):
         return output
 
 
-DEFAULT_GCODE_HEADER = '''G28; move to the home position
-G21; unit in mm
-G92 E0; reset extruder
-M83; set extruder to relative mode'''
-
-
-DEFAULT_GCODE_FOOTER = '''M190 S20; set the print bed temperature
-M109 S0 T0; set the extruder temperature
-M106 S0; set the part cooling
-G28; move to the home position
-M84; disable motors'''
-
-
 class Machine(models.Model, CopyableModelMixin):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     pub_date = models.DateTimeField(default=timezone.now, blank=True)
@@ -169,8 +156,8 @@ class Machine(models.Model, CopyableModelMixin):
     chamber = models.ForeignKey(Chamber, on_delete=models.CASCADE, blank=True)
     printbed = models.ForeignKey(Printbed, on_delete=models.CASCADE, blank=True)
     extruder_type = models.CharField(max_length=20, choices=(('bowden', 'Bowden'), ('directdrive', 'Direct drive')), default='bowden')
-    gcode_header = models.TextField(default=DEFAULT_GCODE_HEADER)
-    gcode_footer = models.TextField(default=DEFAULT_GCODE_FOOTER)
+    gcode_header = models.TextField(default='')
+    gcode_footer = models.TextField(default='')
     offset_1 = models.DecimalField(default=0, max_digits=5, decimal_places=2)
     offset_2 = models.DecimalField(default=0, max_digits=5, decimal_places=2)
 
