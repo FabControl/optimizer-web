@@ -56,11 +56,35 @@
   {% endif %}
   <div class="container">
     <div class="row pt-3">
-      <div class="col-sm">
-        <p>Total amount of accounts: {{total_accounts}}</p>
-        <p>Total active accounts: {{total_active_accounts}}</p>
-        <p>Users joined during the last 30 days: {{users_last_month}}</p>
-        <p>Users joined during the last 7 days: {{users_last_week}}</p>
+      <div class="col-sm-3">
+        <div class="card text-center">
+          <small>Total accounts:</small>
+          <span class='h3'>{{total_accounts}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="row pt-3">
+      <div class="col-sm-3">
+        <div class="card text-center">
+          <small>Total active accounts:</small>
+          <span class='h3'>{{total_active_accounts}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="row pt-3">
+      <div class="col-sm-3">
+        <div class="card text-center">
+          <small>New accounts this month:</small>
+          <span class='h3'>{{users_last_month}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="row pt-3">
+      <div class="col-sm-3">
+        <div class="card text-center">
+          <small>New accounts this week:</small>
+          <span class='h3'>{{users_last_week}}</span>
+        </div>
       </div>
     </div>
   </div>
