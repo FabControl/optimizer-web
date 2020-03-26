@@ -590,10 +590,10 @@ def stats_view(request):
         stats = []
         stats.append({'label': 'Total accounts', 'value': len(User.objects.all())})
         stats.append({'label': 'Total active accounts', 'value': len(User.objects.filter(is_active=True))})
+        stats.append({'label': 'Online today', 'value': len(User.objects.filter(last_active__gt=timezone.datetime.today() - timezone.timedelta(days=1)))-1})  # minus one to exclude self
         stats.append({'label': 'New accounts this month', 'value': len(User.objects.filter(date_joined__gt=timezone.datetime.today() - timezone.timedelta(days=30)))})
         stats.append({'label': 'New accounts this week', 'value': len(User.objects.filter(date_joined__gt=timezone.datetime.today() - timezone.timedelta(days=7)))})
         stats.append({'label': 'New accounts today', 'value': len(User.objects.filter(date_joined__gt=timezone.datetime.today() - timezone.timedelta(days=1)))})
-        stats.append({'label': 'Online today', 'value': len(User.objects.filter(last_active__gt=timezone.datetime.today() - timezone.timedelta(days=1)))-1})  # minus one to exclude self
 
         return render(request, 'session/stats_dashboard.html', context={'stats': stats})
     else:
