@@ -132,7 +132,7 @@ class SessionViewsTest(TestCase):
                 ("support", {}),
                 ('testing_session', {}),
                 ('privacy_statement', {}),
-                ('investor_dashboard', {})
+                ('stats_view', {})
                 ]
 
         no_login_urls = [

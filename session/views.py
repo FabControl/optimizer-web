@@ -576,7 +576,7 @@ def privacy_statement(request):
 
 
 @login_required
-def investor_dashboard(request):
+def stats_view(request):
     """
     Needs to display the following information:
     Total accounts
@@ -587,16 +587,15 @@ def investor_dashboard(request):
     :return:
     """
     if request.user.can_access_investor_dashboard:
-        total_accounts = len(User.objects.all())
+        stats = []
+        stats.append({'label': 'Total accounts', 'value': len(User.objects.all())})
+        stats.append({'label': 'Total active accounts', 'value': len(User.objects.filter(is_active=True))})
+        stats.append({'label': 'New accounts this month', 'value': len(User.objects.filter(date_joined__gt=timezone.datetime.today() - timezone.timedelta(days=30)))})
+        stats.append({'label': 'New accounts this week', 'value': len(User.objects.filter(date_joined__gt=timezone.datetime.today() - timezone.timedelta(days=7)))})
+        stats.append({'label': 'New accounts today', 'value': len(User.objects.filter(is_active=True))})
+        stats.append({'label': 'Online today', 'value': len(User.objects.filter(last_active__gt=timezone.datetime.today() - timezone.timedelta(days=1)))-1})  # minus one to exclude self
 
-        users_last_month = len(User.objects.filter(date_joined__gt=timezone.datetime.today() - timezone.timedelta(days=30)))
-        users_last_week = len(User.objects.filter(date_joined__gt=timezone.datetime.today() - timezone.timedelta(days=7)))
-
-        total_active_accounts = len(User.objects.filter(is_active=True))
-        return render(request, 'session/investor_dashboard.html', context={'total_accounts': total_accounts,
-                                                                           'total_active_accounts': total_active_accounts,
-                                                                           'users_last_month': users_last_month,
-                                                                           'users_last_week': users_last_week})
+        return render(request, 'session/stats_dashboard.html', context={'stats': stats})
     else:
         raise Http404()
 
