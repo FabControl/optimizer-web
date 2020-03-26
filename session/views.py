@@ -578,6 +578,7 @@ def privacy_statement(request):
 @login_required
 def investor_dashboard(request):
     """
+    Needs to display the following information:
     Total accounts
     New accounts this week
     New accounts this month
@@ -585,7 +586,7 @@ def investor_dashboard(request):
     :param request:
     :return:
     """
-    if request.user.email == 'egils@fabcontrol.com':
+    if request.user.can_access_investor_dashboard:
         total_accounts = len(User.objects.all())
 
         users_last_month = len(User.objects.filter(date_joined__gt=timezone.datetime.today() - timezone.timedelta(days=30)))
@@ -596,6 +597,8 @@ def investor_dashboard(request):
                                                                            'total_active_accounts': total_active_accounts,
                                                                            'users_last_month': users_last_month,
                                                                            'users_last_week': users_last_week})
+    else:
+        raise Http404()
 
 
 def terms_of_use(request):
