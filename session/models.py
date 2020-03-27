@@ -598,11 +598,14 @@ class Session(models.Model, DependanciesCopyMixin):
         :return:
         """
         for test in self.previous_tests[::-1]:
-            for parameter in test["tested_parameters"]:
-                if parameter["programmatic_name"] is not None:
-                    if "speed_printing" in parameter["programmatic_name"]:
-                        values = parameter["values"]
-                        return [values[0], values[-1]]
+            for i in range(len(test["tested_parameters"])):
+                parameter = test["tested_parameters"][i]
+                if parameter["programmatic_name"] is None: continue
+                if "speed_printing" in parameter["programmatic_name"]:
+                    selected = test['selected_parameter_{}_value'.format(
+                                                    ('one','two','three')[i])]
+                    return [selected, selected * 2]
+
         return [0, 0]
 
     @property
