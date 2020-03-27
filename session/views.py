@@ -575,6 +575,31 @@ def privacy_statement(request):
     return render(request, 'session/TOP.html')
 
 
+@login_required
+def stats_view(request):
+    """
+    Needs to display the following information:
+    Total accounts
+    New accounts this week
+    New accounts this month
+    Total active accounts
+    :param request:
+    :return:
+    """
+    if request.user.can_access_investor_dashboard:
+        stats = []
+        stats.append({'label': 'Total accounts', 'value': len(User.objects.all())})
+        stats.append({'label': 'Total active accounts', 'value': len(User.objects.filter(is_active=True))})
+        stats.append({'label': 'Online today', 'value': len(User.objects.filter(last_active__gt=timezone.datetime.today() - timezone.timedelta(days=1)))-1})  # minus one to exclude self
+        stats.append({'label': 'New accounts this month', 'value': len(User.objects.filter(date_joined__gt=timezone.datetime.today() - timezone.timedelta(days=30)))})
+        stats.append({'label': 'New accounts this week', 'value': len(User.objects.filter(date_joined__gt=timezone.datetime.today() - timezone.timedelta(days=7)))})
+        stats.append({'label': 'New accounts today', 'value': len(User.objects.filter(date_joined__gt=timezone.datetime.today() - timezone.timedelta(days=1)))})
+
+        return render(request, 'session/stats_dashboard.html', context={'stats': stats})
+    else:
+        raise Http404()
+
+
 def terms_of_use(request):
     return render(request, 'session/TOS.html')
 

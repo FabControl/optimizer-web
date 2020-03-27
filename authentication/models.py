@@ -55,6 +55,7 @@ class User(AbstractUser):
     last_active = models.DateTimeField(null=True)
     onboarding = models.BooleanField(default=True)
     is_active = models.BooleanField(default=False)
+    can_access_investor_dashboard = models.BooleanField(default=False)
     _onboarding_sections = models.CharField(max_length=256,
                                             default="['dashboard', 'new_session', 'session_generate_1', 'session_validate', 'session_generate_2']")
 
