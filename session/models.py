@@ -145,19 +145,6 @@ class Printbed(models.Model, CopyableModelMixin):
         return output
 
 
-DEFAULT_GCODE_HEADER = '''G28; move to the home position
-G21; unit in mm
-G92 E0; reset extruder
-M83; set extruder to relative mode'''
-
-
-DEFAULT_GCODE_FOOTER = '''M190 S20; set the print bed temperature
-M109 S0 T0; set the extruder temperature
-M106 S0; set the part cooling
-G28; move to the home position
-M84; disable motors'''
-
-
 class Machine(models.Model, CopyableModelMixin):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     pub_date = models.DateTimeField(default=timezone.now, blank=True)
@@ -169,8 +156,8 @@ class Machine(models.Model, CopyableModelMixin):
     chamber = models.ForeignKey(Chamber, on_delete=models.CASCADE, blank=True)
     printbed = models.ForeignKey(Printbed, on_delete=models.CASCADE, blank=True)
     extruder_type = models.CharField(max_length=20, choices=(('bowden', 'Bowden'), ('directdrive', 'Direct drive')), default='bowden')
-    gcode_header = models.TextField(default=DEFAULT_GCODE_HEADER)
-    gcode_footer = models.TextField(default=DEFAULT_GCODE_FOOTER)
+    gcode_header = models.TextField(default='')
+    gcode_footer = models.TextField(default='')
     offset_1 = models.DecimalField(default=0, max_digits=5, decimal_places=2)
     offset_2 = models.DecimalField(default=0, max_digits=5, decimal_places=2)
 
@@ -611,11 +598,14 @@ class Session(models.Model, DependanciesCopyMixin):
         :return:
         """
         for test in self.previous_tests[::-1]:
-            for parameter in test["tested_parameters"]:
-                if parameter["programmatic_name"] is not None:
-                    if "speed_printing" in parameter["programmatic_name"]:
-                        values = parameter["values"]
-                        return [values[0], values[-1]]
+            for i in range(len(test["tested_parameters"])):
+                parameter = test["tested_parameters"][i]
+                if parameter["programmatic_name"] is None: continue
+                if "speed_printing" in parameter["programmatic_name"]:
+                    selected = test['selected_parameter_{}_value'.format(
+                                                    ('one','two','three')[i])]
+                    return [selected, selected * 2]
+
         return [0, 0]
 
     @property

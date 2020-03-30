@@ -131,8 +131,7 @@ class SessionViewsTest(TestCase):
                 ("quickstart", {}),
                 ("support", {}),
                 ('testing_session', {}),
-                ('privacy_statement', {}),
-                ('stats_view', {})
+                ('privacy_statement', {})
                 ]
 
         no_login_urls = [
@@ -140,8 +139,11 @@ class SessionViewsTest(TestCase):
                 ("health_check", {})
                 ]
 
+        investor_only_urls = [
+                ('stats', {})
+                ]
         # we do not check index, since it redirects to dashboard
-        self.assertEqual(len(login_req_urls) + len(no_login_urls) + len(staff_only_urls),
+        self.assertEqual(len(login_req_urls) + len(no_login_urls) + len(staff_only_urls) + len(investor_only_urls),
                          len(urls.urlpatterns) - 1,
                          msg='Have You added/removed some views and forgot about tests?')
 
@@ -160,7 +162,7 @@ class SessionViewsTest(TestCase):
 
         login_url = reverse('login')
         # Login required for these views
-        for url_name, kwargs in (login_req_urls + staff_only_urls):
+        for url_name, kwargs in (login_req_urls + staff_only_urls + investor_only_urls):
             resp = self.client.get(reverse(url_name, kwargs=kwargs), follow=True)
             self.assertEqual(resp.status_code, 200, msg='Url name: {}'.format(url_name))
             self.assertTrue((len(resp.redirect_chain) > 0), msg='Url name: {}'.format(url_name))
@@ -186,6 +188,21 @@ class SessionViewsTest(TestCase):
                 self.assertEqual(resp.status_code, 200, msg='Url name: {}'.format(url_name))
 
         self.user.is_staff = False
+        self.user.save()
+
+        # These urls are inverstor only, otherwise 404
+        for url_name, kwargs in investor_only_urls:
+            resp = self.client.get(reverse(url_name, kwargs=kwargs), follow=True)
+            self.assertEqual(resp.status_code, 404, msg='Url name: {}'.format(url_name))
+
+        self.user.can_access_investor_dashboard = True
+        self.user.save()
+
+        for url_name, kwargs in investor_only_urls:
+            resp = self.client.get(reverse(url_name, kwargs=kwargs), follow=True)
+            self.assertEqual(resp.status_code, 200, msg='Url name: {}'.format(url_name))
+
+        self.user.can_access_investor_dashboard = False
         self.user.save()
 
     def test_terms_of_use(self):

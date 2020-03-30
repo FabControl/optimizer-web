@@ -358,7 +358,9 @@ class NewMachineForm(forms.ModelForm):
         self.fields["form"].label = "Build area form factor"
 
         self.fields["gcode_header"].label = "Header"
+        self.fields["gcode_header"].required = False
         self.fields["gcode_footer"].label = "Footer"
+        self.fields["gcode_footer"].required = False
 
         self.helper.layout = Layout(
             Row(
