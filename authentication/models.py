@@ -52,8 +52,6 @@ class User(AbstractUser):
                               error_messages={'unique': 'Email must be unique'})
     PLAN_CHOICES = [("basic", "Core"), ("premium", "Premium"), ("education", "Education"), ("permanent", "Permanent"), ("test", "Test")]
     plan = models.CharField(max_length=32, choices=PLAN_CHOICES, default="basic")
-    # Time limited subscription types:
-    time_limited_plans = ['premium', 'education', 'test']
     last_active = models.DateTimeField(null=True)
     onboarding = models.BooleanField(default=True)
     is_active = models.BooleanField(default=False)
