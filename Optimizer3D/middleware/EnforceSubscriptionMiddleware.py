@@ -1,5 +1,6 @@
 from django.utils import timezone
 from django.contrib import messages
+from django.conf import settings
 
 
 def enforce_subscription_middleware(get_response):
@@ -8,7 +9,7 @@ def enforce_subscription_middleware(get_response):
 
     def middleware(request):
         # Time limited subscription types:
-        tlp = request.user.time_limited_plans
+        tlp = settings.TIME_LIMITED_PLANS
         now = timezone.now()
         # Code to be executed for each request before
         # the view (and later middleware) are called.
