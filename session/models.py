@@ -661,7 +661,7 @@ class Session(models.Model, DependanciesCopyMixin):
         allowed_numbers = []
         if self.owner.plan == 'basic':
             allowed_numbers = [number for number in api_client.get_routine(mode='primary')]
-        elif self.owner.plan == 'premium':
+        elif self.owner.plan in User.time_limited_plans:
             allowed_numbers = [number for number in api_client.get_routine(mode='full')]
         if value in allowed_numbers:
             self._test_info = ""
@@ -679,7 +679,7 @@ class Session(models.Model, DependanciesCopyMixin):
         if len(tests) < 1 or not self.executed:
             print(self, 'test not executed, so can not be completed')
             return False
-        result =  self.test_number == self.test_number_next() and tests[-1]['validated']
+        result = self.test_number == self.test_number_next() and tests[-1]['validated']
         return result
 
     def test_number_next(self, primary: bool = True):
