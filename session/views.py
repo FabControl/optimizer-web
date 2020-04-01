@@ -13,6 +13,7 @@ from django.forms.models import model_to_dict
 from .models import *
 from django.views import generic
 from .forms import *
+from payments.models import Checkout
 
 from config import config
 from optimizer_api import api_client
@@ -588,12 +589,18 @@ def stats_view(request):
     """
     if request.user.can_access_investor_dashboard:
         stats = []
-        stats.append({'label': 'Total accounts', 'value': len(User.objects.all())})
-        stats.append({'label': 'Total active accounts', 'value': len(User.objects.filter(is_active=True))})
+        stats.append({'label': 'Accounts', 'value': len(User.objects.all())})
+        stats.append({'label': 'Active accounts', 'value': len(User.objects.filter(is_active=True))})
         stats.append({'label': 'Online today', 'value': len(User.objects.filter(last_active__gt=timezone.datetime.today() - timezone.timedelta(days=1)))-1})  # minus one to exclude self
-        stats.append({'label': 'New accounts this month', 'value': len(User.objects.filter(date_joined__gt=timezone.datetime.today() - timezone.timedelta(days=30)))})
-        stats.append({'label': 'New accounts this week', 'value': len(User.objects.filter(date_joined__gt=timezone.datetime.today() - timezone.timedelta(days=7)))})
-        stats.append({'label': 'New accounts today', 'value': len(User.objects.filter(date_joined__gt=timezone.datetime.today() - timezone.timedelta(days=1)))})
+        stats.append({'label': 'New accounts last 24 hours', 'value': len(User.objects.filter(date_joined__gt=timezone.datetime.today() - timezone.timedelta(days=1)))})
+        stats.append({'label': 'New accounts last 7 days', 'value': len(User.objects.filter(date_joined__gt=timezone.datetime.today() - timezone.timedelta(days=7)))})
+        stats.append({'label': 'New accounts last 30 days', 'value': len(User.objects.filter(date_joined__gt=timezone.datetime.today() - timezone.timedelta(days=30)))})
+        # TODO Replace with the actual amount of non-expired premium accounts. Not yet replaced, because accounts have not yet been migrated to their appropriate plans
+        stats.append({'label': 'Active paid subscriptions', 'value': len([checkout for checkout in Checkout.objects.filter(created__gt=timezone.datetime.today() - timezone.timedelta(days=30), is_paid=True)])})
+        income_7 = sum([checkout.payment_plan for checkout in Checkout.objects.filter(created__gt=timezone.datetime.today() - timezone.timedelta(days=7), is_paid=True)])
+        stats.append({'label': 'Income last 7 days', 'value': income_7})
+        income_30 = sum([checkout.payment_plan for checkout in Checkout.objects.filter(created__gt=timezone.datetime.today() - timezone.timedelta(days=30), is_paid=True)])
+        stats.append({'label': 'Income last 30 days', 'value': income_30})
 
         return render(request, 'session/stats_dashboard.html', context={'stats': stats})
     else:
