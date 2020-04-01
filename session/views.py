@@ -597,10 +597,10 @@ def stats_view(request):
         stats.append({'label': 'New accounts last 30 days', 'value': len(User.objects.filter(date_joined__gt=timezone.datetime.today() - timezone.timedelta(days=30)))})
         # TODO Replace with the actual amount of non-expired premium accounts. Not yet replaced, because accounts have not yet been migrated to their appropriate plans
         stats.append({'label': 'Active paid subscriptions', 'value': len([checkout for checkout in Checkout.objects.filter(created__gt=timezone.datetime.today() - timezone.timedelta(days=30), is_paid=True)])})
-        income_7 = sum([checkout.payment_plan for checkout in Checkout.objects.filter(created__gt=timezone.datetime.today() - timezone.timedelta(days=7), is_paid=True)])
-        stats.append({'label': 'Income last 7 days', 'value': income_7})
-        income_30 = sum([checkout.payment_plan for checkout in Checkout.objects.filter(created__gt=timezone.datetime.today() - timezone.timedelta(days=30), is_paid=True)])
-        stats.append({'label': 'Income last 30 days', 'value': income_30})
+        income_7 = sum([checkout.payment_plan.price for checkout in Checkout.objects.filter(created__gt=timezone.datetime.today() - timezone.timedelta(days=7), is_paid=True)])
+        stats.append({'label': 'Income last 7 days (EUR)', 'value': income_7})
+        income_30 = sum([checkout.payment_plan.price for checkout in Checkout.objects.filter(created__gt=timezone.datetime.today() - timezone.timedelta(days=30), is_paid=True)])
+        stats.append({'label': 'Income last 30 days (EUR)', 'value': income_30})
 
         return render(request, 'session/stats_dashboard.html', context={'stats': stats})
     else:
