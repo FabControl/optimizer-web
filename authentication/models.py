@@ -81,11 +81,17 @@ class User(AbstractUser):
 
     @property
     def plan_navbar_text(self):
+        expiration_delta = self.subscription_expiration - timezone.now()
         if self.plan == 'basic':
             return "Upgrade to Full Access"
-        else:
-            expiration_delta = self.subscription_expiration - timezone.now()
+        elif self.plan == 'permanent':
+            return "Permanent license"
+        elif self.plan == "education":
+            return "Student's license ({} days)".format(expiration_delta.days + 1)
+        elif self.plan == "premium":
             return "Full access ({} days)".format(expiration_delta.days + 1)
+        elif self.plan == "test":
+            return "Test access ({} days)".format(expiration_delta.days + 1)
 
     def extend_subscription(self, delta: timedelta):
         """
