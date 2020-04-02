@@ -50,7 +50,7 @@ class User(AbstractUser):
     username = None
     email = models.EmailField('email address', unique=True,
                               error_messages={'unique': 'Email must be unique'})
-    PLAN_CHOICES = [("basic", "Basic"), ("premium", "Premium")]
+    PLAN_CHOICES = [("basic", "Core"), ("premium", "Premium"), ("education", "Education"), ("permanent", "Permanent"), ("test", "Test")]
     plan = models.CharField(max_length=32, choices=PLAN_CHOICES, default="basic")
     last_active = models.DateTimeField(null=True)
     onboarding = models.BooleanField(default=True)
@@ -59,7 +59,7 @@ class User(AbstractUser):
     _onboarding_sections = models.CharField(max_length=256,
                                             default="['dashboard', 'new_session', 'session_generate_1', 'session_validate', 'session_generate_2']")
 
-    subscription_expiration = models.DateTimeField(null=False, default=timezone.datetime(year=2020, day=31, month=3, tzinfo=pytz.utc))
+    subscription_expiration = models.DateTimeField(null=False, default=timezone.datetime(year=2020, day=30, month=4, tzinfo=pytz.utc))
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
@@ -81,11 +81,17 @@ class User(AbstractUser):
 
     @property
     def plan_navbar_text(self):
+        expiration_delta = self.subscription_expiration - timezone.now()
         if self.plan == 'basic':
             return "Upgrade to Full Access"
-        else:
-            expiration_delta = self.subscription_expiration - timezone.now()
-            return "Open beta access ({} days)".format(expiration_delta.days + 1)
+        elif self.plan == 'permanent':
+            return "Permanent license"
+        elif self.plan == "education":
+            return "Student's license ({} days)".format(expiration_delta.days + 1)
+        elif self.plan == "premium":
+            return "Full access ({} days)".format(expiration_delta.days + 1)
+        elif self.plan == "test":
+            return "Test access ({} days)".format(expiration_delta.days + 1)
 
     def extend_subscription(self, delta: timedelta):
         """

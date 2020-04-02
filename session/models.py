@@ -4,6 +4,7 @@ import simplejson as json
 from django.db import models
 from django.utils import timezone
 from django.http import Http404
+from django.conf import settings
 from authentication.models import User
 from optimizer_api import api_client
 from .choices import TEST_NUMBER_CHOICES, TARGET_CHOICES, SLICER_CHOICES, TOOL_CHOICES, FORM_CHOICES, UNITS
@@ -658,10 +659,11 @@ class Session(models.Model, DependanciesCopyMixin):
         :param value:
         :return:
         """
+        time_limited_plans = settings.TIME_LIMITED_PLANS
         allowed_numbers = []
         if self.owner.plan == 'basic':
             allowed_numbers = [number for number in api_client.get_routine(mode='primary')]
-        elif self.owner.plan == 'premium':
+        elif self.owner.plan in time_limited_plans:
             allowed_numbers = [number for number in api_client.get_routine(mode='full')]
         if value in allowed_numbers:
             self._test_info = ""
@@ -679,7 +681,7 @@ class Session(models.Model, DependanciesCopyMixin):
         if len(tests) < 1 or not self.executed:
             print(self, 'test not executed, so can not be completed')
             return False
-        result =  self.test_number == self.test_number_next() and tests[-1]['validated']
+        result = self.test_number == self.test_number_next() and tests[-1]['validated']
         return result
 
     def test_number_next(self, primary: bool = True):
