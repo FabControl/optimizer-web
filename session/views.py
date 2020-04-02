@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.contrib.staticfiles import finders
-from .utilities import load_json, optimizer_info
+from .utilities import load_json, optimizer_info, common_cura_qulity_types
 from django.http import FileResponse, HttpResponseRedirect, Http404, HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -278,6 +278,8 @@ class SessionOverview(LoginRequiredMixin, generic.DetailView):
         session.is_owner(self.request.user)
         context = super().get_context_data(**kwargs)
         context['routine'] = api_client.get_routine()
+        context['default_quality_type'] = 'normal'
+        context['other_quality_types'] = common_cura_qulity_types
         return context
 
 
@@ -438,7 +440,11 @@ def serve_config(request, pk, slicer):
     assert slicer in supported_slicers
     session = get_object_or_404(Session, pk=pk)
     session.is_owner(request.user)
-    configuration_file, configuration_file_format = api_client.get_config(slicer, session.persistence)
+    quality_type = ''
+    if request.method == 'POST':
+        quality_type = request.POST.get('quality_type', '')
+
+    configuration_file, configuration_file_format = api_client.get_config(slicer, session.persistence, quality_type)
     response = HttpResponse(configuration_file, content_type='text/plain')
     response['Content-Type'] = 'application/octet-stream'
     response['Content-Disposition'] = 'attachment; ' + 'filename={}_{}'.format(str(session.material), str(session.machine)).replace(" ", "_").replace(".", "-") + '.{}'.format(configuration_file_format)
