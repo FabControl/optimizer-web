@@ -623,6 +623,7 @@ def session_health_check(request):
         return HttpResponse('')
     raise Http404()
 
+
 def error_404_view(request, exception):
     response = render_to_response('session/404.html', {"user": request.user})
     response.status_code = 404
