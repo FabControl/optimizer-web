@@ -44,12 +44,18 @@
     }
     // The last element is added here, because this way it is certain that the last value will match value2 in arguments.
     output.push(value2);
-    // Round all elements before returning
-    output_round = [];
-    output.forEach(function(item) {
-      output_round.push(item.toFixed(2));
-    });
-    return output_round;
+    return output;
+  }
+
+  function decimalPlaces(num) {
+    var match = (''+num).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
+    if (!match) { return 0; }
+    return Math.max(
+             0,
+             // Number of digits right of decimal point.
+             (match[1] ? match[1].length : 0)
+             // Adjust for scientific notation.
+             - (match[2] ? +match[2] : 0));
   }
 
   function change_fields(item) {
@@ -57,12 +63,13 @@
     var id = item.id
     var group_id = id.match(/^.*(?=_)/)[0];
     var fields = $(`*[id^="${group_id}"]`);
+    var decimals = decimalPlaces(item.step);
     // Create another array with the new set of values. They are stored as strings and need to be parsed.
     var lerp_values = lerp(parseFloat(fields[0].value), parseFloat(fields[fields.length - 1].value), fields.length - 1)
     var i;
     for (i = 0; i < fields.length; i++) {
       // Replace each of the values in "linspace-field" elements.
-      fields[i].value = lerp_values[i];
+      fields[i].value = lerp_values[i].toFixed(decimals);
     }
     // window.alert(fields.length)
   }
