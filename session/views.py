@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.contrib.staticfiles import finders
-from .utilities import load_json, optimizer_info
+from .utilities import load_json, optimizer_info, common_cura_qulity_types
 from django.http import FileResponse, HttpResponseRedirect, Http404, HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -279,6 +279,8 @@ class SessionOverview(LoginRequiredMixin, generic.DetailView):
         session.is_owner(self.request.user)
         context = super().get_context_data(**kwargs)
         context['routine'] = api_client.get_routine()
+        context['default_quality_type'] = 'normal'
+        context['other_quality_types'] = common_cura_qulity_types
         return context
 
 
@@ -439,7 +441,11 @@ def serve_config(request, pk, slicer):
     assert slicer in supported_slicers
     session = get_object_or_404(Session, pk=pk)
     session.is_owner(request.user)
-    configuration_file, configuration_file_format = api_client.get_config(slicer, session.persistence)
+    quality_type = ''
+    if request.method == 'POST':
+        quality_type = request.POST.get('quality_type', '')
+
+    configuration_file, configuration_file_format = api_client.get_config(slicer, session.persistence, quality_type)
     response = HttpResponse(configuration_file, content_type='text/plain')
     response['Content-Type'] = 'application/octet-stream'
     response['Content-Disposition'] = 'attachment; ' + 'filename={}_{}'.format(str(session.material), str(session.machine)).replace(" ", "_").replace(".", "-") + '.{}'.format(configuration_file_format)
@@ -596,11 +602,11 @@ def stats_view(request):
         stats.append({'label': 'New accounts last 7 days', 'value': len(User.objects.filter(date_joined__gt=timezone.datetime.today() - timezone.timedelta(days=7)))})
         stats.append({'label': 'New accounts last 30 days', 'value': len(User.objects.filter(date_joined__gt=timezone.datetime.today() - timezone.timedelta(days=30)))})
         # TODO Replace with the actual amount of non-expired premium accounts. Not yet replaced, because accounts have not yet been migrated to their appropriate plans
-        stats.append({'label': 'Active paid subscriptions', 'value': len([checkout for checkout in Checkout.objects.filter(created__gt=timezone.datetime.today() - timezone.timedelta(days=30), is_paid=True)])})
-        income_7 = sum([checkout.payment_plan.price for checkout in Checkout.objects.filter(created__gt=timezone.datetime.today() - timezone.timedelta(days=7), is_paid=True)])
-        stats.append({'label': 'Income last 7 days (EUR)', 'value': income_7})
-        income_30 = sum([checkout.payment_plan.price for checkout in Checkout.objects.filter(created__gt=timezone.datetime.today() - timezone.timedelta(days=30), is_paid=True)])
-        stats.append({'label': 'Income last 30 days (EUR)', 'value': income_30})
+        stats.append({'label': 'Paid subscriptions', 'value': len([checkout for checkout in Checkout.objects.filter(created__gt=timezone.datetime.today() - timezone.timedelta(days=30), is_paid=True)])})
+        income_30 = sum([checkout.payment_plan.pretty_price for checkout in Checkout.objects.filter(created__gt=timezone.datetime.today() - timezone.timedelta(days=30), is_paid=True)])
+        stats.append({'label': 'Revenue last 30 days (EUR)', 'value': income_30})
+        income_90 = sum([checkout.payment_plan.pretty_price for checkout in Checkout.objects.filter(created__gt=timezone.datetime.today() - timezone.timedelta(days=90), is_paid=True)])
+        stats.append({'label': 'Revenue last 90 days (EUR)', 'value': income_90})
 
         return render(request, 'session/stats_dashboard.html', context={'stats': stats})
     else:
@@ -616,6 +622,7 @@ def session_health_check(request):
     if resp is not None:
         return HttpResponse('')
     raise Http404()
+
 
 def error_404_view(request, exception):
     response = render_to_response('session/404.html', {"user": request.user})
