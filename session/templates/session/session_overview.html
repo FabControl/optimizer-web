@@ -47,7 +47,7 @@
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Profile quality type name:</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Select profile quality type</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -56,22 +56,17 @@
                 <form action="{% url 'config' pk=object.pk slicer='cura' %}" method="post">
                   {% csrf_token %}
                   <div>
-                    <input id="quality_type" list="suggestions" name="quality_type" value="{{ default_quality_type }}">
-                    <br>
-                    <small>Change this value to the Cura profile name you wish to override.</small>
-                    <br>
-                    <small>You can find profile available for your printer in Cura profile manager.</small>
+                    <label for="id_name" class="col-form-label  requiredField">Existing Cura profile to use as template:</label>
+                    <select class="select form-control" id="quality_type" name="quality_type" required>
+                      {% for suggestion in other_quality_types %}
+                      <option value="{{ suggestion }}" {% if suggestion == default_quality_type %}selected{% endif %}>{{ suggestion }}</option>
+                      {% endfor %}
+                    </select>
+                    <small>*You can find your printer profiles in Cura profile manager.</small>
                   </div>
                   <br>
                   <button type="submit" class="btn btn-primary">Download profile</button>
                 </form>
-              </div>
-              <div class="modal-footer">
-                <datalist id="suggestions">
-                  {% for suggestion in other_quality_types %}
-                    <option value="{{ suggestion }}">
-                  {% endfor %}
-                </datalist>
               </div>
             </div>
           </div>
