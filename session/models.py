@@ -158,7 +158,8 @@ class Machine(models.Model, CopyableModelMixin):
     printbed = models.ForeignKey(Printbed, on_delete=models.CASCADE, blank=True)
     extruder_type = models.CharField(max_length=20, choices=(('bowden', 'Bowden'), ('directdrive', 'Direct drive')), default='bowden')
     gcode_header = models.TextField(default='')
-    gcode_footer = models.TextField(default='')
+    gcode_footer = models.TextField(default='G28 ; Move to home position\nM84 ; Disable motors')
+    homing_sequence = models.TextField(default='G28 ; Move to home position')
     offset_1 = models.DecimalField(default=0, max_digits=5, decimal_places=2)
     offset_2 = models.DecimalField(default=0, max_digits=5, decimal_places=2)
 
@@ -190,6 +191,7 @@ class Machine(models.Model, CopyableModelMixin):
             "extruder_type": self.extruder_type,
             "gcode_header": self.gcode_header,
             "gcode_footer": self.gcode_footer,
+            "homing_sequence": self.homing_sequence,
             "temperature_controllers": {
                 "extruder": self.extruder.__json__,
                 "chamber": self.chamber.__json__,

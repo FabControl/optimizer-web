@@ -361,6 +361,8 @@ class NewMachineForm(forms.ModelForm):
         self.fields["gcode_header"].required = False
         self.fields["gcode_footer"].label = "Footer"
         self.fields["gcode_footer"].required = False
+        self.fields["homing_sequence"].required = True
+        self.fields["homing_sequence"].label = "Homing script"
 
         self.helper.layout = Layout(
             Row(
@@ -388,6 +390,7 @@ class NewMachineForm(forms.ModelForm):
                   "extruder_type",
                   "gcode_header",
                   "gcode_footer",
+                  "homing_sequence",
                   "offset_1",
                   "offset_2"]
 
