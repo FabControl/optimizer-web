@@ -31,7 +31,7 @@ def get_sentinel_user():
 class Checkout(models.Model):
     checkout_id = models.CharField(max_length=40, 
                                    primary_key=True,
-                                   unique=True, 
+                                   unique=True,
                                    default=uuid.uuid4,
                                    editable=False)
     stripe_id = models.CharField(max_length=100,

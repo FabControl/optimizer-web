@@ -43,6 +43,7 @@
             {{user}}
           </a>
           <div class="dropdown-menu" aria-labelledby="helpDropdown">
+            <a class="dropdown-item" href="{% url 'invoices' %}">Invoices</a>
             <a class="dropdown-item" href="{% url 'account_legal_info' %}">Account settings</a>
             <a class="dropdown-item" href="{% url 'password_change' %}">Change password</a>
             <a class="dropdown-item" href="{% url 'signout' %}">Sign out</a>
