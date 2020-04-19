@@ -252,8 +252,8 @@ class TestGenerateForm(forms.ModelForm):
                                 "class": "form-control",
                                 "type": ("text" if iterable not in [0, highest_iterable] else "number"),
                                 "id": "linspace-field-{}".format(str(iterable)),
-                                "value": round(value, (2 if parameter["units"] in ["mm", "-"] else 0)),
-                                "step": ("0.01" if parameter["units"] in ["mm", "-"] else "1"),
+                                "value": round(value, (3 if parameter["units"] in ["mm", "-"] else 0)),
+                                "step": ("0.001" if parameter["units"] in ["mm", "-"] else "1"),
                                 "onchange": "change_fields(this)",
                                 "min": round(parameter["min_max"][0], 3),
                                 "max": round(parameter["min_max"][1], 3)
@@ -361,6 +361,8 @@ class NewMachineForm(forms.ModelForm):
         self.fields["gcode_header"].required = False
         self.fields["gcode_footer"].label = "Footer"
         self.fields["gcode_footer"].required = False
+        self.fields["homing_sequence"].required = True
+        self.fields["homing_sequence"].label = "Homing script"
 
         self.helper.layout = Layout(
             Row(
@@ -388,6 +390,7 @@ class NewMachineForm(forms.ModelForm):
                   "extruder_type",
                   "gcode_header",
                   "gcode_footer",
+                  "homing_sequence",
                   "offset_1",
                   "offset_2"]
 

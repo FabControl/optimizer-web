@@ -28,11 +28,14 @@
           </div>
           <div id='id_advanced_toggle_content'>
             <br>
-            <h4>GCODE Header and Footer</h4>
+            <h4>Custom GCODE scripts</h4>
             <div class="card p-3">
               {{ self_form.gcode_header | as_crispy_field }}
+              <small class='text-muted'>Header is prepended to test routine GCODEs. This can be altered to better accomodate certain printer features, such as autocalibration.</small>
+              {{ self_form.homing_sequence | as_crispy_field }}
+              <small class='text-muted'>Homing script is executed after printer has heated up, but before actual printing starts.</small>
               {{ self_form.gcode_footer | as_crispy_field }}
-              <small class='text-muted'>Header/footer are prepended/appended to test routine GCODEs. These can be altered to better accomodate certain printer features, such as autocalibration.</small>
+              <small class='text-muted'>Footer is appended to test routine GCODEs. Homing command is recommended here, to move the nozzle away from the printed structure.</small>
             </div>
             <br>
             <h4>Offset from center of printbed</h4>

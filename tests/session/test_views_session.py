@@ -292,6 +292,7 @@ class SessionSessionTest(TestCase):
             "form": "elliptic",
             "gcode_header": ";this is header",
             "gcode_footer": ";this is footer",
+            "homing_sequence": ";should home at this point",
             "offset_1": "0",
             "offset_2": "0",
             "extruder_type": "bowden",

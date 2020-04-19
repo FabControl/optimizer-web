@@ -14,9 +14,9 @@ from django.contrib import messages
 
 from django.contrib.auth.decorators import login_required
 from django.utils.datastructures import MultiValueDictKeyError
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.shortcuts import render, redirect
-from .forms import ResetPasswordForm, SignUpForm, LoginForm, ChangePasswordForm
+from .forms import ResetPasswordForm, SignUpForm, LoginForm, ChangePasswordForm, LegalInformationForm
 from .tokens import account_activation_token
 from django.utils.encoding import force_text, force_bytes
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
@@ -194,3 +194,23 @@ def activate_account(request, uidb64, token):
         return redirect('dashboard')
 
     return render(request, 'authentication/invalid_activation_link.html')
+
+@login_required
+def legal_information_view(request):
+    if request.method == 'POST':
+        form = LegalInformationForm(request.POST)
+        if form.is_valid():
+            form.save(request.user)
+            return redirect(reverse('dashboard'))
+        else:
+            form_errors = (str(m.as_text()).lstrip('* ') for m in dict(form.errors).values())
+            message = "<br>".join(form_errors)
+            messages.error(request, mark_safe(message))
+
+    else:
+        user = request.user
+        form = LegalInformationForm(dict(first_name=user.first_name,
+                                        last_name=user.last_name))
+    return render(request,
+                  'authentication/legal_info.html',
+                  dict(legal_info=form))

@@ -10,6 +10,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth import get_user_model
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
+from .countries import codes_iso3166
 
 
 # class UserForm(forms.ModelForm):
@@ -118,3 +119,47 @@ class PasswordSetForm(SetPasswordForm):
         if commit:
             self.user.save()
         return self.user
+
+
+class LegalInformationForm(forms.Form):
+    first_name = forms.CharField(max_length=30)
+    last_name = forms.CharField(max_length=30)
+    company_account = forms.BooleanField(required=False)
+    company_name = forms.CharField(max_length=30, required=False,
+            label='Company name*')
+    company_country = forms.ChoiceField(choices=codes_iso3166,
+                                        required=False,
+                                        label='Company country*')
+    company_legal_address = forms.CharField(max_length=30,
+                                            required=False,
+                                            widget=forms.Textarea,
+                                            label='Company legal address*')
+    company_registration_number = forms.CharField(max_length=30, required=False,
+            label='Company registration number*')
+    company_vat_number = forms.CharField(max_length=30, required=False,
+                                        label='Company VAT number')
+
+    def clean(self):
+        cleaned_data = super().clean()
+        company_account = cleaned_data.get('company_account')
+
+        if company_account:
+            missing = []
+            for f in ['company_name', 'company_country', 'company_legal_address', 'company_registration_number']:
+                v = cleaned_data.get(f)
+                if v == '' or v is None:
+                    missing.append(self.fields[f].label)
+            if len(missing) > 0:
+                if len(missing) > 1:
+                    last = missing.pop()
+                    msg = ', '.join(missing) + ' and ' + last
+                else:
+                    msg = missing[0]
+
+                raise forms.ValidationError(
+                        'Company account requires: ' + msg + '.'
+                        )
+
+    def save(self, user):
+        pass
+

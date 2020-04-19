@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from django.contrib import messages
 from django.views.generic.edit import BaseFormView
+from django.views.generic import ListView
 from .models import Plan, Checkout
 from django.urls import reverse
 from .forms import PaymentPlanForm
@@ -12,6 +13,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import Http404, HttpResponse
 import stripe
 from django.utils.decorators import method_decorator
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
 
@@ -117,3 +119,9 @@ def confirm_payment(request):
     return HttpResponse(status=200)
 
 
+class InvoicesView(LoginRequiredMixin, ListView):
+    template_name = "payments/invoices.html"
+    context_object_name = 'invoices'
+
+    def get_queryset(self):
+        return Checkout.objects.filter(user=self.request.user, is_paid=True)
