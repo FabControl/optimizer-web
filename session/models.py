@@ -13,6 +13,7 @@ from .choices import TEST_NUMBER_CHOICES, TARGET_CHOICES, SLICER_CHOICES, TOOL_C
 
 PREVENT_DELETION_MODELS = (User,)
 
+
 def recursive_delete(instance, using=None, keep_parents=False):
     foreign = (x for x in instance._meta.get_fields() if isinstance(x, models.ForeignKey))
 
@@ -45,6 +46,7 @@ class DependanciesCopyMixin():
         if save:
             self.save()
 
+
 class CopyableModelMixin(DependanciesCopyMixin):
     def save_as_copy(self):
         # this method "hides" new copy of model instance from user
@@ -53,8 +55,6 @@ class CopyableModelMixin(DependanciesCopyMixin):
             self.owner = None
         self.copy_dependancies()
         return self
-
-
 
 
 class Material(models.Model, CopyableModelMixin):
