@@ -19,7 +19,6 @@ def assing_numbers(app, schema_editor):
             ('HU', 27),
             ('IE', 23),
             ('IT', 22),
-            ('LV', 21),
             ('LT', 21),
             ('LU', 17),
             ('MT', 18),
@@ -36,6 +35,9 @@ def assing_numbers(app, schema_editor):
     TaxationCountry = app.get_model('payments', 'TaxationCountry')
     for country, rate in countries:
         TaxationCountry.objects.using(db_alias).create(name=country, vat_charge=rate, exclude_vat=True)
+
+
+    TaxationCountry.objects.using(db_alias).create(name='LV', vat_charge=21, exclude_vat=False)
 
 
 class Migration(migrations.Migration):
