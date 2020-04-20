@@ -198,9 +198,10 @@ def activate_account(request, uidb64, token):
 @login_required
 def legal_information_view(request):
     if request.method == 'POST':
-        form = LegalInformationForm(request.POST)
+        form = LegalInformationForm(request.POST, instance=request.user)
         if form.is_valid():
-            form.save(request.user)
+            form.save(commit=True)
+            messages.success(request, 'Account changed successfully')
             return redirect(reverse('dashboard'))
         else:
             form_errors = (str(m.as_text()).lstrip('* ') for m in dict(form.errors).values())
@@ -208,9 +209,7 @@ def legal_information_view(request):
             messages.error(request, mark_safe(message))
 
     else:
-        user = request.user
-        form = LegalInformationForm(dict(first_name=user.first_name,
-                                        last_name=user.last_name))
+        form = LegalInformationForm(instance=request.user)
     return render(request,
                   'authentication/legal_info.html',
                   dict(legal_info=form))

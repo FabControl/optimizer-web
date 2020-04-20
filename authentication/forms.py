@@ -10,7 +10,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth import get_user_model
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
-from .countries import codes_iso3166
+from payments.countries import codes_iso3166
 
 
 # class UserForm(forms.ModelForm):
@@ -121,45 +121,50 @@ class PasswordSetForm(SetPasswordForm):
         return self.user
 
 
-class LegalInformationForm(forms.Form):
-    first_name = forms.CharField(max_length=30)
-    last_name = forms.CharField(max_length=30)
+class LegalInformationForm(forms.ModelForm):
     company_account = forms.BooleanField(required=False)
-    company_name = forms.CharField(max_length=30, required=False,
-            label='Company name*')
-    company_country = forms.ChoiceField(choices=codes_iso3166,
-                                        required=False,
-                                        label='Company country*')
-    company_legal_address = forms.CharField(max_length=30,
-                                            required=False,
-                                            widget=forms.Textarea,
-                                            label='Company legal address*')
-    company_registration_number = forms.CharField(max_length=30, required=False,
-            label='Company registration number*')
-    company_vat_number = forms.CharField(max_length=30, required=False,
-                                        label='Company VAT number')
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name',
+                  'company_name', 'company_country',
+                  'company_legal_address', 'company_registration_number',
+                  'company_vat_number')
+
+    def __init__(self, *a, **k):
+        super().__init__(*a, **k)
+        self.fields['company_name'].label = 'Company name*'
+        self.fields['company_country'].label = 'Company country*'
+        self.fields['company_legal_address'].label = 'Company legal address*'
+        self.fields['company_registration_number'].label = 'Company registration number*'
+        self.fields['company_vat_number'].label = 'Company VAT number'
+        self.fields['company_account'].initial = self.instance.is_company_account
 
     def clean(self):
         cleaned_data = super().clean()
         company_account = cleaned_data.get('company_account')
+        if not company_account:
+            cleaned_data['company_vat_number'] = ''
 
-        if company_account:
-            missing = []
-            for f in ['company_name', 'company_country', 'company_legal_address', 'company_registration_number']:
+        missing = []
+        for f in ['company_name', 'company_country', 'company_legal_address', 'company_registration_number']:
+            if company_account:
                 v = cleaned_data.get(f)
                 if v == '' or v is None:
                     missing.append(self.fields[f].label)
-            if len(missing) > 0:
-                if len(missing) > 1:
-                    last = missing.pop()
-                    msg = ', '.join(missing) + ' and ' + last
-                else:
-                    msg = missing[0]
 
-                raise forms.ValidationError(
-                        'Company account requires: ' + msg + '.'
-                        )
+            else:
+                cleaned_data[f] = ''
 
-    def save(self, user):
-        pass
+        if len(missing) > 0:
+            if len(missing) > 1:
+                last = missing.pop()
+                msg = ', '.join(missing) + ' and ' + last
+            else:
+                msg = missing[0]
+
+            raise forms.ValidationError(
+                    'Company account requires: ' + msg + '.'
+                    )
+
+        return cleaned_data
 
