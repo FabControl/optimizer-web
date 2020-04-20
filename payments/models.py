@@ -29,7 +29,7 @@ def get_sentinel_user():
 
 
 class Checkout(models.Model):
-    checkout_id = models.CharField(max_length=40, 
+    checkout_id = models.CharField(max_length=40,
                                    primary_key=True,
                                    unique=True,
                                    default=uuid.uuid4,
@@ -47,6 +47,7 @@ class Checkout(models.Model):
     payment_plan = models.ForeignKey('Plan',
                             on_delete=models.SET(get_sentinel_plan),
                             editable=False)
+    invoice = models.ForeignKey('Invoice', on_delete=models.SET_NULL, null=True)
 
     @property
     def is_expired(self):
@@ -57,9 +58,22 @@ class Checkout(models.Model):
     def confirm_payment(self):
         self.user.extend_subscription(self.payment_plan.subscription_period)
         self.is_paid = True
+        self.invoice = Invoice.objects.create()
         self.save()
 
     def cancel(self):
         if not (self.is_paid or self.is_expired):
             self.is_cancelled = True
             self.save()
+
+    @property
+    def invoice_number(self):
+        if self.invoice is None:
+            return ''
+        return 'INV_{0}_{1:03}'.format(self.created.strftime('%Y-%m'),
+                                       self.invoice.pk)
+
+
+class Invoice(models.Model):
+    pass
+
