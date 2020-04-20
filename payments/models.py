@@ -4,6 +4,7 @@ from datetime import timedelta
 from django.conf import settings
 import uuid
 from django.contrib.auth import get_user_model
+from .countries import codes_iso3166
 
 
 class Plan(models.Model):
@@ -77,3 +78,12 @@ class Checkout(models.Model):
 class Invoice(models.Model):
     pass
 
+class TaxationCountry(models.Model):
+    name = models.CharField(max_length=2, choices=codes_iso3166, primary_key=True)
+    vat_charge = models.DecimalField(decimal_places=0, max_digits=2, default=21,
+                                            help_text='In percents from full price')
+    exclude_vat = models.BooleanField(default=False,
+                                      help_text='Check this, if companies with VAT number should have 0% VAT charge (EU only)')
+    def __str__(self):
+        name = [x[1] for x in codes_iso3166 if x[0] == self.name][0]
+        return f'{name} (VAT={self.vat_charge}%)'
