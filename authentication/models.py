@@ -8,6 +8,7 @@ from messaging import email
 from .tokens import account_activation_token
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
+from payments.models import TaxationCountry
 from payments.countries import codes_iso3166
 
 
@@ -138,3 +139,10 @@ class User(AbstractUser):
             return False
         return True
 
+    @property
+    def can_collect_invoices(self):
+        if not self.is_company_account:
+            return False
+        if len(TaxationCountry.objects.filter(pk=self.company_country)) == 0:
+            return False
+        return True
