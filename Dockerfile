@@ -6,7 +6,7 @@ FROM python:3.6-slim-buster
 COPY requirements.txt ./
 RUN sed -i -e '/mysqlclient/d' requirements.txt
 RUN apt-get update
-RUN apt-get -y install libcairo2 libpango-1.0-0 libpangocairo-1.0-0 libgdk-pixbuf2.0-0
+RUN apt-get -y install libcairo2 libpango-1.0-0 libpangocairo-1.0-0 #libgdk-pixbuf2.0-0
 RUN pip install -r requirements.txt
 ENV OPTIMIZER_READ_CONFIG_FILE True
 ENV SECRET_KEY "some secret sring"
