@@ -13,6 +13,7 @@ from .choices import TEST_NUMBER_CHOICES, TARGET_CHOICES, SLICER_CHOICES, TOOL_C
 
 PREVENT_DELETION_MODELS = (User,)
 
+
 def recursive_delete(instance, using=None, keep_parents=False):
     foreign = (x for x in instance._meta.get_fields() if isinstance(x, models.ForeignKey))
 
@@ -25,11 +26,11 @@ def recursive_delete(instance, using=None, keep_parents=False):
     models.Model.delete(instance, using, keep_parents)
 
 
-class DependanciesCopyMixin():
-    # Shoould not leak database space, because:
+class DependenciesCopyMixin():
+    # Should not leak database space, because:
     # 1. copied instances have owner set to None
     # 2. instances with owner == None are skipped
-    def copy_dependancies(self, save=True):
+    def copy_dependencies(self, save=True):
         # create copy of all ForeignKey instances
         foreign = (x for x in self._meta.get_fields() if isinstance(x, models.ForeignKey))
 
@@ -45,22 +46,22 @@ class DependanciesCopyMixin():
         if save:
             self.save()
 
-class CopyableModelMixin(DependanciesCopyMixin):
+
+class CopyableModelMixin(DependenciesCopyMixin):
     def save_as_copy(self):
         # this method "hides" new copy of model instance from user
         self.pk = None
         if hasattr(self, 'owner'):
             self.owner = None
-        self.copy_dependancies()
+        self.copy_dependencies()
         return self
-
-
 
 
 class Material(models.Model, CopyableModelMixin):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     size_od = models.DecimalField(default=1.75, max_digits=3, decimal_places=2)
     name = models.CharField(max_length=60)
+    notes = models.CharField(max_length=240, null=True)
     pub_date = models.DateTimeField(default=timezone.now, blank=True)
 
     def is_owner(self, user: User):
@@ -279,7 +280,7 @@ class Settings(models.Model):
         return output
 
 
-class Session(models.Model, DependanciesCopyMixin):
+class Session(models.Model, DependenciesCopyMixin):
     """
     Used to store testing session progress, relevant assets (machine, material) and test data.
     """
@@ -382,7 +383,7 @@ class Session(models.Model, DependanciesCopyMixin):
         :param update_fields:
         :return:
         """
-        self.copy_dependancies(save=False)
+        self.copy_dependencies(save=False)
         self.update_persistence()
         self.settings.save()
         super(Session, self).save(force_insert, force_update, using, update_fields)
