@@ -84,6 +84,11 @@ class TaxationCountry(models.Model):
                                             help_text='In percents from full price')
     exclude_vat = models.BooleanField(default=False,
                                       help_text='Check this, if companies with VAT number should have 0% VAT charge (EU only)')
+    @property
+    def long_name(self):
+        for x in codes_iso3166: 
+            if x[0] == self.name:
+                return x[1]
+
     def __str__(self):
-        name = [x[1] for x in codes_iso3166 if x[0] == self.name][0]
-        return f'{name} (VAT={self.vat_charge}%)'
+        return f'{self.long_name} (VAT={self.vat_charge}%)'

@@ -4,6 +4,7 @@ Django==2.2.4
 django-crispy-forms==1.7.2
 django-simple-cookie-consent==0.1.1
 idna==2.8
+django-weasyprint==0.5.5
 pytz==2019.2
 requests==2.22.0
 simplejson==3.16.0
