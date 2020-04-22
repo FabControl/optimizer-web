@@ -5,7 +5,7 @@ definitions:
         image: 'python:3.6-slim-buster'
         script:
           # mysqlclient is not required for testing
-          - sed -i -e '/mysqlclient/d' requirements.txt
+          - sed -i -e '/mysqlclient/d' req.txt
           - apt-get update
           - apt-get -y install libcairo2 libpango-1.0-0 libpangocairo-1.0-0
           - pip install -r req.txt

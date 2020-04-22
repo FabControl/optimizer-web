@@ -3,11 +3,11 @@
 # Run with:
 # docker run --rm -p 8008:8000 -v $PWD:/opt/Optimizer -ti optimizer-test:latest
 FROM python:3.6-slim-buster
-COPY requirements.txt ./
-RUN sed -i -e '/mysqlclient/d' requirements.txt
+COPY req.txt ./
+RUN sed -i -e '/mysqlclient/d' req.txt
 RUN apt-get update
 RUN apt-get -y install libcairo2 libpango-1.0-0 libpangocairo-1.0-0 #libgdk-pixbuf2.0-0
-RUN pip install -r requirements.txt
+RUN pip install -r req.txt
 ENV OPTIMIZER_READ_CONFIG_FILE True
 ENV SECRET_KEY "some secret sring"
 ENV APP_HOST localhost
