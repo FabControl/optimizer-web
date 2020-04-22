@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 from datetime import timedelta
 from django.conf import settings
+import pytz
 import uuid
 from django.contrib.auth import get_user_model
 from .countries import codes_iso3166
@@ -71,7 +72,7 @@ class Checkout(models.Model):
     def invoice_number(self):
         if self.invoice is None:
             return ''
-        return 'INV_{0}_{1:03}'.format(self.created.strftime('%Y-%m'),
+        return 'INV_{0}_{1:03}'.format(self.created.astimezone(pytz.utc).strftime('%Y-%m'),
                                        self.invoice.pk)
 
 

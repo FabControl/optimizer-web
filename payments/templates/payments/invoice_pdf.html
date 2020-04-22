@@ -199,7 +199,8 @@
           <p>Invoice date:</p>
         </td>
         <td style="text-align:left;width:0.9992in; " class="ce8">
-          <p>{{ checkout.created}}</p>
+          {% load tz %}
+          <p>{{ checkout.created|utc|date:"Y-m-d" }}</p>
         </td>
         <td style="text-align:left;width:0.778in; " class="ce8"> </td>
         <td style="text-align:left;width:0.4764in; " class="ce2"> </td>
