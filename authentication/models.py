@@ -65,7 +65,7 @@ class User(AbstractUser):
 
     company_country = models.CharField(max_length=2, choices=codes_iso3166, blank=True)
     company_name = models.CharField(max_length=32, blank=True)
-    company_legal_address = models.TextField(max_length=100, blank=True)
+    company_legal_address = models.CharField(max_length=100, blank=True)
     company_registration_number = models.CharField(max_length=32, blank=True)
     company_vat_number = models.CharField(max_length=32, blank=True)
 
