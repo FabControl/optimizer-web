@@ -329,19 +329,15 @@
         <td style="text-align:left;width:0.889in; " class="ce2"> </td>
       </tr>
       {% for line in client_address %}
-        {% if loop.counter0 == 0 %}
+        {% if forloop.counter0 == 0 %}
           <tr class="ro6">
             <td style="text-align:left;width:0.2283in; " class="ce3"> </td>
             <td style="text-align:left;width:1.3953in; " class="ce10">
               <p>Legal address:</p>
             </td>
-            <td style="text-align:left;width:1.1957in; " class="ce8">
+            <td colspan="5" style="text-align:left;width:1.1957in; " class="ce8">
               <p>{{ line }}</p>
             </td>
-            <td style="text-align:left;width:0.4874in; " class="ce8"> </td>
-            <td style="text-align:left;width:1.1in; " class="ce8"> </td>
-            <td style="text-align:left;width:0.9992in; " class="ce8"> </td>
-            <td style="text-align:left;width:0.778in; " class="ce8"> </td>
             <td style="text-align:left;width:0.4764in; " class="ce2"> </td>
             <td style="text-align:left;width:0.889in; " class="ce2"> </td>
           </tr>
@@ -349,13 +345,9 @@
           <tr class="ro6">
             <td style="text-align:left;width:0.2283in; " class="ce3"> </td>
             <td style="text-align:left;width:1.3953in; " class="ce10"> </td>
-            <td style="text-align:left;width:1.1957in; " class="ce8">
+            <td colspan="5" style="text-align:left;width:1.1957in; " class="ce8">
               <p>{{ line }}</p>
             </td>
-            <td style="text-align:left;width:0.4874in; " class="ce8"> </td>
-            <td style="text-align:left;width:1.1in; " class="ce8"> </td>
-            <td style="text-align:left;width:0.9992in; " class="ce8"> </td>
-            <td style="text-align:left;width:0.778in; " class="ce8"> </td>
             <td style="text-align:left;width:0.4764in; " class="ce2"> </td>
             <td style="text-align:left;width:0.889in; " class="ce2"> </td>
           </tr>
