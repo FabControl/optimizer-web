@@ -88,7 +88,7 @@ class Material(models.Model, CopyableModelMixin):
 
 
 class Nozzle(models.Model, CopyableModelMixin):
-    size_id = models.DecimalField(default=0.4, decimal_places=2, max_digits=2)
+    size_id = models.DecimalField(default=0.4, decimal_places=2, max_digits=3)
 
     @property
     def __json__(self):
