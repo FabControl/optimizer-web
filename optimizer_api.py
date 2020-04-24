@@ -2,6 +2,8 @@ import requests
 from base64 import b64decode
 import simplejson as json
 from config import config
+from copy import deepcopy
+from datetime import datetime, timedelta
 
 
 class ApiClient(object):
@@ -12,6 +14,7 @@ class ApiClient(object):
         self.gcode = None
         self.response = None
         self.test_info = None
+        self._cached_routine = None
 
     def get_response(self, **kwargs):
         """
@@ -74,7 +77,11 @@ class ApiClient(object):
         Will only return test numbers with such priority
         :return:
         """
-        routine = json.loads(requests.get(self.base_url + "/routine").text)
+        if self._cached_routine is None or self._routine_cache_valid_till < datetime.utcnow():
+            self._cached_routine = json.loads(requests.get(self.base_url + "/routine").text)
+            self._routine_cache_valid_till = datetime.utcnow() + timedelta(seconds=5)
+
+        routine = deepcopy(self._cached_routine)
 
         if mode == 'full':
             return routine
