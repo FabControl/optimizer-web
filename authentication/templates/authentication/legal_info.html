@@ -1,0 +1,39 @@
+{% extends "session/base.html" %}
+
+{% block content %}
+{% load crispy_forms_tags %}
+<div class="container">
+  <div class="row">
+    <div class="col-md-6">
+        <form class="" action="" method="post" id="id_form">
+          {% csrf_token %}
+          {{ legal_info.first_name | as_crispy_field }}
+          {{ legal_info.last_name | as_crispy_field }}
+          {{ legal_info.company_account | as_crispy_field }}
+          <div id='company_form_content'>
+            {{ legal_info.company_name | as_crispy_field }}
+            {{ legal_info.company_registration_number | as_crispy_field }}
+            {{ legal_info.company_vat_number | as_crispy_field }}
+            {{ legal_info.company_country | as_crispy_field }}
+            {{ legal_info.company_legal_address | as_crispy_field }}
+          </div>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+    if ($('#id_company_account')[0].checked == false)
+      { $('#company_form_content').slideUp(0); }
+
+  $('#id_company_account').change(function(event) {
+    if (event.target.checked)
+      { $('#company_form_content').slideDown(); }
+    else
+      { $('#company_form_content').slideUp(); }
+  });
+</script>
+{% endblock %}

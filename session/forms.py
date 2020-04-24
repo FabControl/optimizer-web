@@ -125,12 +125,14 @@ class MachineForm(forms.ModelForm):
 class MaterialForm(forms.ModelForm):
     class Meta:
         model = Material
-        fields = ('name', 'size_od')
+        fields = ('name', 'size_od', 'notes')
 
     def __init__(self, *args, **kwargs):
         super(MaterialForm, self).__init__(*args, **kwargs)
         self.fields['name'].label = "Name"
         self.fields['size_od'].label = "Filament diameter (mm)"
+        self.fields['notes'].label = "Notes"
+        self.fields['notes'].required = False
 
 
 class SessionForm(forms.ModelForm):

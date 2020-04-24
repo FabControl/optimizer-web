@@ -8,6 +8,8 @@ from messaging import email
 from .tokens import account_activation_token
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
+from payments.models import TaxationCountry
+from payments.countries import codes_iso3166
 
 
 class UserManager(BaseUserManager):
@@ -60,6 +62,12 @@ class User(AbstractUser):
                                             default="['dashboard', 'new_session', 'session_generate_1', 'session_validate', 'session_generate_2']")
 
     subscription_expiration = models.DateTimeField(null=False, default=timezone.datetime(year=2020, day=10, month=4, tzinfo=pytz.utc))
+
+    company_country = models.CharField(max_length=2, choices=codes_iso3166, blank=True)
+    company_name = models.CharField(max_length=32, blank=True)
+    company_legal_address = models.CharField(max_length=100, blank=True)
+    company_registration_number = models.CharField(max_length=32, blank=True)
+    company_vat_number = models.CharField(max_length=32, blank=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
@@ -120,3 +128,21 @@ class User(AbstractUser):
                              uid=urlsafe_base64_encode(force_bytes(self.pk)),
                              token=account_activation_token.make_token(self)
                              )
+
+    @property
+    def is_company_account(self):
+        if len(self.company_country) == 0:
+            return False
+        if len(self.company_name) == 0:
+            return False
+        if len(self.company_registration_number) == 0:
+            return False
+        return True
+
+    @property
+    def can_collect_invoices(self):
+        if not self.is_company_account:
+            return False
+        if len(TaxationCountry.objects.filter(pk=self.company_country)) == 0:
+            return False
+        return True
