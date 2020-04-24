@@ -2,9 +2,12 @@ from django.db import models
 from django.utils import timezone
 from datetime import timedelta
 from django.conf import settings
+import pytz
 import uuid
 from django.contrib.auth import get_user_model
 from .countries import codes_iso3166
+import zlib
+from base64 import b64encode, b64decode
 
 
 class Plan(models.Model):
@@ -71,12 +74,29 @@ class Checkout(models.Model):
     def invoice_number(self):
         if self.invoice is None:
             return ''
-        return 'INV_{0}_{1:03}'.format(self.created.strftime('%Y-%m'),
+        return 'INV_{0}_{1:03}'.format(self.created.astimezone(pytz.utc).strftime('%Y-%m'),
                                        self.invoice.pk)
 
 
 class Invoice(models.Model):
-    pass
+    _backups = models.TextField(null=False, default='')
+
+    @property
+    def backup_count(self):
+        return self._backups.count('\n')
+
+    def get_backup(self, index):
+        data = zlib.decompress(b64decode(self._backups.split('\n')[index].encode()))
+        return data.decode()
+
+    def store_backup(self, html_invoice):
+        data = b64encode(zlib.compress(html_invoice.encode())).decode()
+        for l in self._backups.split('\n'):
+            if l == data:
+                return
+        self._backups += data + '\n'
+        self.save()
+
 
 class TaxationCountry(models.Model):
     name = models.CharField(max_length=2, choices=codes_iso3166, primary_key=True)

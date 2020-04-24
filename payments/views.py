@@ -16,6 +16,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django_weasyprint.views import WeasyTemplateResponseMixin
 from decimal import Decimal
+from django.template.loader import get_template
 
 # Create your views here.
 
@@ -168,6 +169,8 @@ class InvoiceHtmlView(LoginRequiredMixin, TemplateView):
         address = [x.strip() for x in user.company_legal_address.split('\n') if x.strip() != '']
         address.append(country.long_name)
         context['client_address'] = address
+
+        checkout.invoice.store_backup(get_template(self.template_name).render(context))
         return context
 
 

@@ -13,7 +13,7 @@
           <a id="testing_sessions" class="nav-link" href="{% url 'session_manager' %}">Tests</a>
         </li>
         <li class="nav-item {% if "/resources/machines" in request.path %}active{% endif %} dropdown">
-          <a class="nav-link" href="{% url 'machine_manager' %}">Machines</a>
+          <a class="nav-link" href="{% url 'machine_manager' %}">Printers</a>
         </li>
         <li class="nav-item {% if "/resources/materials" in request.path %}active{% endif %} dropdown">
           <a class="nav-link" href="{% url 'material_manager' %}">Materials</a>
