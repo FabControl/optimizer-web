@@ -149,8 +149,8 @@ class SessionForm(forms.ModelForm):
         self.fields["name"].label = "Session name"
         self.fields["material"].label = 'Material'
         self.fields["material"].help_text = mark_safe('<a href="{}?next={}">+ New Material</a>'.format(reverse_lazy('material_form'), reverse_lazy('new_session')))
-        self.fields["machine"].label = "Machine"
-        self.fields["machine"].help_text = mark_safe('<a href="{}?next={}">+ New Machine</a>'.format(reverse_lazy('machine_form'), reverse_lazy('new_session')))
+        self.fields["machine"].label = "Printer"
+        self.fields["machine"].help_text = mark_safe('<a href="{}?next={}">+ New Printer</a>'.format(reverse_lazy('machine_form'), reverse_lazy('new_session')))
         self.fields["target"].label = "Optimization Strategy"
 
         self.helper = FormHelper()
