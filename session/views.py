@@ -28,9 +28,20 @@ def index(request):
 
 @login_required
 def dashboard(request):
-    latest_sessions = Session.objects.filter(owner=request.user).order_by('pk')[:5]
-    context = {'latest_sessions': latest_sessions}
+    latest_sessions = Session.objects.filter(owner=request.user).order_by('-pub_date')[:5]
+
+    len_printers = len(Machine.objects.filter(owner=request.user))
+    len_materials = len(Machine.objects.filter(owner=request.user))
+    len_sessions = len(Machine.objects.filter(owner=request.user))
+
+    cards = {'printers': {'len': len_printers},
+             'materials': {'len': len_materials},
+             'sessions': {'len': len_sessions}}
+
+    context = {'latest_sessions': latest_sessions,
+               'cards': cards}
     return render(request, 'session/dashboard.html', context)
+
 
 class MaterialsView(LoginRequiredMixin, generic.ListView):
     template_name = "session/material_manager.html"
