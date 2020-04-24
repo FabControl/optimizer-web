@@ -138,7 +138,7 @@ class MaterialForm(forms.ModelForm):
 class SessionForm(forms.ModelForm):
     class Meta:
         model = Session
-        fields = ('name', 'material', 'machine', 'target')
+        fields = ('name', 'machine', 'material', 'target')
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop("user", None)
