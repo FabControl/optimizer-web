@@ -278,6 +278,8 @@ class TestGenerateForm(forms.ModelForm):
                     if parameter['hint_active']:
                         self.fields[field_id].help_text = "{}".format(parameter['hint_active'])
 
+        list(self.fields.values())[-1].use_hr = True
+
         for secondary_parameter in test_info["other_parameters"]:
             secondary_parameters.append(secondary_parameter)
 
@@ -321,8 +323,9 @@ class TestGenerateForm(forms.ModelForm):
             session.previously_tested_parameters = previously_tested
 
         # Disable form tags
-        self.helper = FormHelper()
+        self.helper = FormHelper(self)
         self.helper.form_tag = False
+        self.helper.field_template = 'session/field.html'
 
     def save(self, commit: bool = True):
         settings = self.instance.__getattribute__("settings")
