@@ -1,27 +1,73 @@
 
 {% extends "session/base.html" %}
 {% block content %}
+{% load static %}
+<script src="{% static 'session/js/sortable.min.js' %}"></script>
+<link rel="stylesheet" href="{% static 'session/css/sortable-theme-bootstrap.css' %}" />
 <div class="container pt-3">
-  <div class="card p-5">
-    <div class="col">
-      <p class="lead">
-        This is Optimizer's Dashboard.
-      </p>
-      <p>
-        Here you can manage your active sessions, materials and machines.
-      </p>
-      {% if latest_sessions %}
-      <p>Your most recent sessions:</p>
-      <ul>
-        {% for session in latest_sessions %}
-        {# <li><a href="{% url 'session_manager/session_number' session.session_number %}">{{ session.session_number }}</a></li> #}
-        <li><a href="{% if  session.completed %}{% url 'session_overview' session.pk %}{% else %}{% url 'session_detail' session.pk %}{% endif %}">{{ session.name }}</a></li>
-        {% endfor %}
-      </ul>
-      {% else %}
-      <p><span class="text-muted">You currently have no active testing sessions.</span></p>
-      {% endif %}
-      <button id="newSessionButton" type="button" onclick="location.href='{% url 'new_session' %}'" class="btn btn-primary btn-sm">New Testing Session</button>
+  <div class="row pt-2">
+    <div class="col-sm">
+      <p class='lead'><font size='6'>Welcome to 3DOptimizer!</font></p>
+    </div>
+  </div>
+  <div class="row pt-2">
+    <div class="col-sm">
+      <div class="card p-2 text-center shadow-sm" style='background: #f8f9fa'>
+        <p class='lead'>Testing sessions</p>
+        <p class='display-2'>{{cards.sessions.len}}</p>
+        <a href="{% url 'session_manager' %}">View all sessions</a>
+      </div>
+    </div>
+    <div class="col-sm">
+      <div class="card p-2 text-center shadow-sm" style='background: #f8f9fa'>
+        <p class='lead'>Printers</p>
+        <p class='display-2'>{{cards.printers.len}}</p>
+        <a href="{% url 'machine_manager' %}">View all printers</a>
+      </div>
+    </div>
+    <div class="col-sm">
+      <div class="card p-2 text-center shadow-sm" style='background: #f8f9fa'>
+        <p class='lead'>Materials</p>
+        <p class='display-2'>{{cards.materials.len}}</p>
+        <a href="{% url 'material_manager' %}">View all materials</a>
+      </div>
+    </div>
+  </div>
+  <div class="row pt-3">
+    <div class="col-sm">
+      <div class="pt-3 pb-2">
+        <h3>Recent testing sessions</h3>
+      </div>
+      <table class="sortable-theme-bootstrap table" data-sortable>
+        <thead>
+          <tr>
+            <th data-sortable="true">Session name</th>
+            <th data-sortable="true">Printer</th>
+            <th data-sortable="true">Material</th>
+            <th data-sortable="true" data-sortable="true">Target</th>
+            <th data-sortable="true">Completed tests</th>
+            <th data-sorted="true">Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {# ROW CONTENTS #}
+          {% for session in latest_sessions %}
+          <tr>
+            {% if  session.completed %}
+              <td><a class="text-secondary" href="{% url 'session_overview' session.pk %}">{{ session.name }}</a></td>
+            {% else %}
+              <td><a class="text-secondary" href="{% url 'session_detail' session.pk %}">{{ session.name }}</a></td>
+            {% endif %}
+            <td><a class="text-secondary" href="{% url 'machine_detail' session.machine.pk %}">{{ session.machine.model }}</a></td>
+            <td><a class="text-secondary" href="{% url 'material_detail' session.material.pk %}">{{ session.material.name }}</a></td>
+            <td>{{session.get_target_display}}</td>
+            <td>{{session.completed_tests}}</td>
+            <td>{{session.pub_date}}</td>
+          </tr>
+          {% endfor %}
+
+        </tbody>
+      </table>
     </div>
   </div>
 </div>

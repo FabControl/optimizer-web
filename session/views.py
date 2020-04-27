@@ -28,9 +28,20 @@ def index(request):
 
 @login_required
 def dashboard(request):
-    latest_sessions = Session.objects.filter(owner=request.user).order_by('pk')[:5]
-    context = {'latest_sessions': latest_sessions}
+    latest_sessions = Session.objects.filter(owner=request.user).order_by('-pub_date')[:5]
+
+    len_printers = len(Machine.objects.filter(owner=request.user))
+    len_materials = len(Machine.objects.filter(owner=request.user))
+    len_sessions = len(Machine.objects.filter(owner=request.user))
+
+    cards = {'printers': {'len': len_printers},
+             'materials': {'len': len_materials},
+             'sessions': {'len': len_sessions}}
+
+    context = {'latest_sessions': latest_sessions,
+               'cards': cards}
     return render(request, 'session/dashboard.html', context)
+
 
 class MaterialsView(LoginRequiredMixin, generic.ListView):
     template_name = "session/material_manager.html"
@@ -233,15 +244,20 @@ class SessionListView(LoginRequiredMixin, generic.ListView):
         return queryset
 
 
-class SessionView(LoginRequiredMixin, generic.UpdateView):
+class SessionTestsSelectionMixin:
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        routine = api_client.get_routine()
+        for (k, v) in routine.items():
+            v['name'] = v['name'].replace (' vs ', ' vs<br>')
+        context['routine'] = routine
+        return context
+
+
+class SessionView(SessionTestsSelectionMixin, LoginRequiredMixin, generic.UpdateView):
     model = Session
     form_class = TestGenerateForm
     template_name = 'session/session.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['routine'] = api_client.get_routine()
-        return context
 
     def form_valid(self, form):
         session = form.save(commit=False)
@@ -270,7 +286,7 @@ class SessionValidateView(SessionView):
         return redirect('session_validate_back', pk=session.pk)
 
 
-class SessionOverview(LoginRequiredMixin, generic.DetailView):
+class SessionOverview(SessionTestsSelectionMixin, LoginRequiredMixin, generic.DetailView):
     model = Session
     template_name = "session/session.html"
 
@@ -278,7 +294,6 @@ class SessionOverview(LoginRequiredMixin, generic.DetailView):
         session = self.object
         session.is_owner(self.request.user)
         context = super().get_context_data(**kwargs)
-        context['routine'] = api_client.get_routine()
         context['default_quality_type'] = 'normal'
         context['other_quality_types'] = common_cura_qulity_types
         return context

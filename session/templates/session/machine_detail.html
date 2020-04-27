@@ -6,7 +6,7 @@
   <div class="row pt-2">
     <div class="col-md-6">
       <div class="alert alert-warning p-2">
-        <span>The changes will not be reflected in sessions already using this machine.</span>
+        <span>The changes will not be reflected in sessions already using this printer.</span>
       </div>
       <form class="" action="" method="post" id="id_form">
         {% csrf_token %}
@@ -61,7 +61,7 @@
         <input type="hidden" value="{{ next }}" name="next">
         {% endif %}
         <div class="alert alert-warning p-2">
-          <span>The changes will not be reflected in sessions already using this machine.</span>
+          <span>The changes will not be reflected in sessions already using this printer.</span>
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
       </form>
