@@ -83,6 +83,12 @@
       </table>
     </div>
   </div>
+  <div class="row">
+    <div class="col-sm">
+      <button type="button" onclick="location.href='{% url 'new_session' %}'" class="btn btn-primary">Start a new testing session</button>
+    </div>
+  </div>
+  {%  endif %}
 </div>
 {% if request.user.onboarding and 'dashboard' in request.user.onboarding_sections %}
 {% include 'session/tour.html' %}
