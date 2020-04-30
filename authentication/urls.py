@@ -8,6 +8,7 @@ urlpatterns = [
     path('login/', views.user_login, name='login'),
     path('logout/', views.user_logout, name='signout'),
     path('signup/', views.user_signup, name='signup'),
+    path('signup/<uidb64>/<token>/', views.use_affiliate, name='use_affiliate'),
     path('onboarding_toggler/', views.onboarding_toggler, name='onboarding_toggler'),
     path('onboarding/', views.onboarding_disable, name='disable_onboarding'),
     path('password_reset/', views.password_reset, name='password_reset'),
@@ -27,4 +28,5 @@ urlpatterns = [
             name='password_change'),
     path('activate_account/<uidb64>/<token>/', views.activate_account, name='activate_account'),
     path('account_legal_info/', views.legal_information_view, name='account_legal_info'),
+    path('my_affiliates', views.MyAffiliatesView.as_view(), name='my_affiliates'),
     ]
