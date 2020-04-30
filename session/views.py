@@ -31,8 +31,8 @@ def dashboard(request):
     latest_sessions = Session.objects.filter(owner=request.user).order_by('-pub_date')[:5]
 
     len_printers = len(Machine.objects.filter(owner=request.user))
-    len_materials = len(Machine.objects.filter(owner=request.user))
-    len_sessions = len(Machine.objects.filter(owner=request.user))
+    len_materials = len(Material.objects.filter(owner=request.user))
+    len_sessions = len(Session.objects.filter(owner=request.user))
 
     cards = {'printers': {'len': len_printers},
              'materials': {'len': len_materials},
