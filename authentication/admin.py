@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 from django.utils.translation import ugettext_lazy as _
-from .models import User
+from .models import User, Affiliate
 
 # Register your models here.
 @admin.register(User)
@@ -12,7 +12,7 @@ class UserAdmin(DjangoUserAdmin):
         (None, {'fields': ('email', 'password',)}),
         ('Subscription', {'fields': ('plan', 'subscription_expiration')}),
         (_('Personal info'), {'fields': ('first_name', 'last_name')}),
-        (_('Company info'), {'fields': ('company_name', 
+        (_('Company info'), {'fields': ('company_name',
                                         'company_registration_number',
                                         'company_vat_number',
                                         'company_country',
@@ -47,3 +47,10 @@ class UserAdmin(DjangoUserAdmin):
     list_display = ('email', 'first_name', 'last_name', 'plan', 'last_active', 'date_joined', 'is_staff')
     search_fields = ('email', 'first_name', 'last_name')
     ordering = ('email',)
+
+@admin.register(Affiliate)
+class AffiliatesAdmin(admin.ModelAdmin):
+    list_display = ('email', 'sender', 'date_created', 'date_registered', 'receiver')
+
+    def has_add_permission(self, request):
+        return False

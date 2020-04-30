@@ -1,0 +1,11 @@
+
+{% extends "email/base.txt" %}
+
+{% block content %}
+Hi, {{ affiliate.sender.first_name }} {{ affiliate.sender.last_name }}!
+
+{{ affiliate.name }} ({{ affiliate.email }}) has registered and started to use his 3DOptimizer account.
+To thank you, we've awarded you a free {{ affiliate.days_assigned }} days of full usage.
+Your full usage now expires {{ affiliate.sender.subscription_expiration }}.
+{% endblock content %}
+

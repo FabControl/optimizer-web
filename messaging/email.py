@@ -9,6 +9,8 @@ _PLAIN_TEMPLATE = 'email/{0}.txt'
 _SUBJECTS = {
         'password_recovery_failure': 'Password recovery',
         'password_recovery': 'Password recovery',
+        'affiliate_invitation': 'Invitation to 3DOptimizer',
+        'affiliate_confirmed': 'Thanks for your 3DOptimizer referral',
         'register_complete': 'Account activation',
         'register_with_known_email': 'Account registration'
         }

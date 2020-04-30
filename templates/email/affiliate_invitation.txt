@@ -1,0 +1,16 @@
+{% extends "email/base.txt" %}
+
+{% block content %}
+{{ affiliate.name }}, you have been invited by {{ affiliate.sender.first_name }} {{ affiliate.sender.last_name }} to 3D Optimizer!
+
+{{ affiliate.message }}
+
+With 3DOptimizer, you can develop your own printing settings — tailored for your exact 3D printer and material combination, and three targets: mechanical strength, best visual quality or shortest printing time.
+
+3DOptimizer offers a free account with core tests, that give a useful head start with optimized process parameters. Create your account and enjoy your improved printing!
+
+Follow the link below, to create 3DOptimizer account.
+{{ application_url }}{% url 'use_affiliate' uidb64=uid token=token %}
+
+{% endblock content %}
+

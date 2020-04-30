@@ -10,6 +10,7 @@ from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from payments.models import TaxationCountry
 from payments.countries import codes_iso3166
+from django.conf import settings
 
 
 class UserManager(BaseUserManager):
@@ -146,3 +147,39 @@ class User(AbstractUser):
         if len(TaxationCountry.objects.filter(pk=self.company_country)) == 0:
             return False
         return True
+
+
+class Affiliate(models.Model):
+    date_created = models.DateTimeField(auto_now_add=True, editable=False)
+    date_registered = models.DateTimeField(editable=False, null=True)
+    sender = models.ForeignKey('User', null=True, editable=False,
+                                    on_delete=models.SET_NULL)
+    email = models.EmailField(null=False)
+    name = models.CharField(max_length=30)
+    message = models.TextField(default='', blank=True)
+    receiver = models.ForeignKey('User', null=True, editable=False,
+                                    on_delete=models.SET_NULL, default=None,
+                                    related_name='invited_by')
+    days_assigned = models.IntegerField(default=0)
+
+
+    @property
+    def is_confirmed(self):
+        return self.days_assigned > 0
+
+    def confirm(self, request):
+        self.days_assigned = settings.AFFILIATE_BONUS_DAYS
+        self.date_registered = timezone.now()
+        self.save()
+
+        if self.sender is None:
+            return
+        self.sender.extend_subscription(timedelta(days=settings.AFFILIATE_BONUS_DAYS))
+
+        email.send_to_single(self.sender.email, 'affiliate_confirmed', request,
+                            affiliate=self)
+
+
+        # notify requester about subscription extension
+
+
