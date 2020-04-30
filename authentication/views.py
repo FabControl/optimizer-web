@@ -12,7 +12,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.utils.safestring import mark_safe
 from django.contrib import messages
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit
+from crispy_forms.layout import Submit, Layout, Div
 from django.contrib.auth.decorators import login_required
 from django.utils.datastructures import MultiValueDictKeyError
 from django.urls import reverse_lazy, reverse
@@ -224,9 +224,15 @@ class MyAffiliatesView(LoginRequiredMixin, ModelFormMixin, generic.ListView, Pro
 
         form.clean = clean
 
+        form.fields['message'].widget.attrs['rows'] = 5
+
         form.helper = FormHelper()
         form.helper.add_input(Submit('submit', 'Send', css_class='btn btn-primary'))
         form.helper.method = 'POST'
+        form.helper.layout = Layout(Div(Div(Div('email', 'name', css_class='col'),
+                                            Div('message', css_class='col'), 
+                                            css_class='row'),
+                                        css_class='container'))
         return form
 
     def form_valid(self, form):
