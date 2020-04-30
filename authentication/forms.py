@@ -61,6 +61,7 @@ class SignUpForm(UserCreationForm):
     def save_and_notify(self, request):
         user = self.save()
         user.send_account_activation(request)
+        return user
 
 
 class ResetPasswordForm(PasswordResetForm):

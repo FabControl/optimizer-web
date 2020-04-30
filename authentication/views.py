@@ -5,23 +5,26 @@ from django.contrib.auth import authenticate, login, logout, update_session_auth
 from django.utils.datastructures import MultiValueDictKeyError
 from .forms import SignUpForm, ResetPasswordForm
 from django.views import generic
-from django.views.generic.edit import FormView
+from django.views.generic.edit import FormView, ModelFormMixin, ProcessFormView
 from django.utils.decorators import method_decorator
 from django.views.decorators.debug import sensitive_post_parameters
 from django.views.decorators.csrf import csrf_protect
 from django.utils.safestring import mark_safe
 from django.contrib import messages
-
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Submit
 from django.contrib.auth.decorators import login_required
 from django.utils.datastructures import MultiValueDictKeyError
 from django.urls import reverse_lazy, reverse
 from django.shortcuts import render, redirect
 from .forms import ResetPasswordForm, SignUpForm, LoginForm, ChangePasswordForm, LegalInformationForm
-from .tokens import account_activation_token
+from .tokens import account_activation_token, affiliate_token_generator
 from django.utils.encoding import force_text, force_bytes
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from messaging import email
 from django.contrib.auth.tokens import default_token_generator
+from .models import Affiliate
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 # Create your views here.
@@ -189,11 +192,103 @@ def activate_account(request, uidb64, token):
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
+        affiliates = Affiliate.objects.filter(receiver=user)
+        if len(affiliates) > 0:
+            affiliates[0].confirm(request)
+
         login(request, user)
         messages.success(request, 'Your email address was confirmed and account activated.')
         return redirect('dashboard')
 
     return render(request, 'authentication/invalid_activation_link.html')
+
+class MyAffiliatesView(LoginRequiredMixin, ModelFormMixin, generic.ListView, ProcessFormView):
+    object = None
+    model = Affiliate
+    fields = ('email', 'name', 'message')
+    template_name = 'authentication/my_affiliates.html'
+    success_url = reverse_lazy('my_affiliates')
+
+    def get_queryset(self):
+        return Affiliate.objects.filter(sender=self.request.user).order_by('date_created').reverse()[:100]
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form_clean = form.clean
+
+        def clean():
+            form_clean()
+            mail = form.cleaned_data['email']
+            if len(get_user_model().objects.filter(email=mail)) > 0 or len(Affiliate.objects.filter(email=mail)) > 0:
+                form.add_error('email', 'User already invited or registered')
+
+        form.clean = clean
+
+        form.helper = FormHelper()
+        form.helper.add_input(Submit('submit', 'Send', css_class='btn btn-primary'))
+        form.helper.method = 'POST'
+        return form
+
+    def form_valid(self, form):
+        affiliate = form.save(commit=False)
+        affiliate.sender = self.request.user
+
+        affiliate.save()
+        email.send_to_single(affiliate.email, 'affiliate_invitation', self.request,
+                            affiliate=affiliate,
+                            uid=urlsafe_base64_encode(force_bytes(affiliate.pk)),
+                            token=affiliate_token_generator.make_token(affiliate))
+
+        messages.success(self.request, 'Invitation sent to {0.name} ({0.email})'.format(affiliate))
+        # send invitation message
+        return redirect('my_affiliates')
+
+    def form_invalid(self, form):
+        self.object_list = self.get_queryset()
+        return super().form_invalid(form)
+
+
+def use_affiliate(request, uidb64, token):
+    if request.user.is_authenticated:
+        return redirect('dashboard')
+    try:
+        affiliate = Affiliate.objects.get(pk=force_text(urlsafe_base64_decode(uidb64)))
+    except(TypeError, ValueError, OverflowError, Affiliate.DoesNotExist):
+        affiliate = None
+
+    if (affiliate is not None and
+        affiliate_token_generator.check_token(affiliate, token) and
+        len(get_user_model().objects.filter(email=affiliate.email)) == 0):
+
+        if request.method == 'POST':
+            form = SignUpForm(request.POST)
+            if form.is_valid():
+                if form.cleaned_data['email'] == affiliate.email:
+                    new_user = form.save(commit=False)
+                    new_user.is_active = True
+                    new_user.save()
+                    affiliate.receiver = new_user
+                    affiliate.confirm(request)
+                    login(request, new_user)
+                    return redirect('dashboard')
+
+                else:
+                    new_user = form.save_and_notify(request)
+                    affiliate.receiver = new_user
+                    affiliate.save()
+                    return render(request, 'authentication/check_email.html', {})
+
+            else:
+                form_errors = [str(m.as_text()).lstrip('* ') for m in dict(form.errors).values()]
+                messages.error(request, '<br>'.join(form_errors))
+
+        else:
+            form = SignUpForm(initial=dict(email=affiliate.email, first_name=affiliate.name))
+
+        return render(request, 'authentication/signup.html', dict(form=form))
+
+    return render(request, 'authentication/invalid_affiliate_url.html')
+
 
 @login_required
 def legal_information_view(request):

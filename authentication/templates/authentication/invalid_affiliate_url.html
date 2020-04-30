@@ -1,0 +1,9 @@
+{% extends "session/base.html" %}
+{% block content %}
+<div class="container">
+  <div class="row">
+    <p>Affiliate link is not valid.<br>
+    You can use default <a href="{% url 'signup' %}">sign up</a> form or <a href="{% url 'login' %}">log in </a> to your account.</p>
+  </div>
+</div>
+{% endblock %}
