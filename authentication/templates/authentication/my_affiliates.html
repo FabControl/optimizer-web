@@ -23,6 +23,7 @@
         </form>
       </div>
   </div>
+  {% if object_list|length > 0 %}
   <hr>
   <div class="row pt-3">
     <div class="col-sm-12">
@@ -56,11 +57,11 @@
               <td>-</td>
             </tr>
             {% endfor %}
-
           </tbody>
         </table>
       </div>
     </div>
   </div>
+  {% endif %}
 </div>
 {% endblock %}
