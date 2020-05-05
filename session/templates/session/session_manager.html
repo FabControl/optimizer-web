@@ -32,8 +32,8 @@
               {% else %}
                 <td><a class="text-secondary" href="{% url 'session_detail' session.pk %}">{{ session.name }}</a></td>
               {% endif %}
-              <td><a class="text-secondary" href="{% url 'material_detail' session.material.pk %}">{{ session.material.name }}</a></td>
-              <td><a class="text-secondary" href="{% url 'machine_detail' session.machine.pk %}">{{ session.machine.model }}</a></td>
+              <td><a class="text-secondary" href="#">{{ session.material.name }}</a></td>
+              <td><a class="text-secondary" href="#">{{ session.machine.model }}</a></td>
               <td>{{ session.get_target_display }}</td>
               <td>{{ session.completed_tests }}</td>
               <td>{{ session.pub_date }}</td>
