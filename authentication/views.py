@@ -225,6 +225,8 @@ class MyAffiliatesView(LoginRequiredMixin, ModelFormMixin, generic.ListView, Pro
         form.clean = clean
 
         form.fields['message'].widget.attrs['rows'] = 5
+        form.fields['email'].label = "Friend's email"
+        form.fields['name'].label = "Friend's name"
 
         form.helper = FormHelper()
         form.helper.add_input(Submit('submit', 'Send', css_class='btn btn-primary'))
