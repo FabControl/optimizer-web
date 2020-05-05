@@ -19,8 +19,8 @@ class PaymentPlanForm(forms.Form):
         bill = stripe.checkout.Session.create(
                 payment_method_types=['card'],
                 line_items=[{
-                    'name': '3DOptimizer premium {0.name}'.format(plan),
-                    'description': 'Complete access to all 3DOptimizer features',
+                    'name': '3DOptimizer full access {0.name}'.format(plan),
+                    'description': 'Full access to all 3DOptimizer features',
                     'amount': int(plan.price * 100), # price in cents
                     'currency': 'eur',
                     'quantity': 1,

@@ -46,7 +46,7 @@
               <td>{{ affiliate.name }}</td>
               <td>{{ affiliate.email }}</td>
               <td>{% if affiliate.is_confirmed %}Registered on {{ affiliate.date_registered|date:"Y-m-d" }}{% else %}Invitation sent{% endif %}</td>
-              <td>{% if affiliate.is_confirmed %}Received {{ affiliate.days_assigned }} days premium access{% else %} - {% endif %}</td>
+              <td>{% if affiliate.is_confirmed %}Received {{ affiliate.days_assigned }} days full access{% else %} - {% endif %}</td>
             </tr>
             {% empty %}
             <tr>
