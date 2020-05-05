@@ -2,5 +2,7 @@
 
 {% block content %}
 <p>Hi, {{ affiliate.sender.first_name }} {{ affiliate.sender.last_name }}!</p>
-<p>{{ affiliate.name }} ({{ affiliate.email }}) has registered and started to use his 3DOptimizer account. To thank you, we've awarded you a free {{ affiliate.days_assigned }} days of full usage. Your full usage now expires {{ affiliate.sender.subscription_expiration }}.</p>
+<p>{{ affiliate.name }} ({{ affiliate.email }}) has registered and started to use his 3DOptimizer account.<br>
+To thank you, we've awarded you a free {{ affiliate.days_assigned }} days of full access.<br>
+Your full access now expires on {{ affiliate.sender.subscription_expiration|date:"Y-m-d" }}.</p>
 {% endblock content %}
