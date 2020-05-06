@@ -90,30 +90,39 @@ def checkout_cancelled(request, checkout):
         checkout.cancel()
 
 
-@csrf_exempt
-def confirm_payment(request):
-    payload = request.body
-    try:
-        sig_header = request.META['HTTP_STRIPE_SIGNATURE']
-    except KeyError:
-        return HttpResponse(status=400)
+def stripe_webhook_wrap(event_types:str):
+    def decorator(handler):
+        @csrf_exempt
+        def wrapper(request, *a, **k):
+            payload = request.body
+            try:
+                sig_header = request.META['HTTP_STRIPE_SIGNATURE']
+            except KeyError:
+                return HttpResponse(status=400)
 
-    try:
-        event = stripe.Webhook.construct_event(payload,
-                                               sig_header,
-                                               settings.STRIPE_ENDPOINT_SECRET)
-    except ValueError as e:
-        # Invalid payload
-        return HttpResponse(status=400)
-    except stripe.error.SignatureVerificationError as e:
-        # Invalid signature
-        return HttpResponse(status=400)
+            try:
+                event = stripe.Webhook.construct_event(payload,
+                                                       sig_header,
+                                                       settings.STRIPE_ENDPOINT_SECRET)
+            except ValueError as e:
+                # Invalid payload
+                return HttpResponse(status=400)
+            except stripe.error.SignatureVerificationError as e:
+                # Invalid signature
+                return HttpResponse(status=400)
 
-    # Handle the checkout.session.completed event
-    if event['type'] != 'checkout.session.completed':
-        # wrong event
-        return HttpResponse(status=400)
+            # Handle the checkout.session.completed event
+            if event['type'] not in event_types:
+                # wrong event
+                return HttpResponse(status=400)
+            return handler(request, event, *a, **k)
 
+        return wrapper
+    return decorator
+
+
+@stripe_webhook_wrap('checkout.session.completed')
+def confirm_payment(request, event):
     session = event['data']['object']
 
     checkout = Checkout.objects.get(pk=session['client_reference_id'])
