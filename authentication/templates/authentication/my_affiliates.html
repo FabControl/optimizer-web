@@ -16,13 +16,14 @@
     </div>
   </div>
   <div class="row">
-      <div class="col-sm-4">
+      <div class="col-sm-12">
         <form action="" method="post">
           {% load crispy_forms_tags %}
           {% crispy form%}
         </form>
       </div>
   </div>
+  {% if object_list|length > 0 %}
   <hr>
   <div class="row pt-3">
     <div class="col-sm-12">
@@ -44,8 +45,8 @@
               <td>{{ affiliate.date_created }}</td>
               <td>{{ affiliate.name }}</td>
               <td>{{ affiliate.email }}</td>
-              <td>{% if affiliate.is_confirmed %}Registered{% else %}Invitation sent{% endif %}</td>
-              <td>{% if affiliate.is_confirmed %}Received {{ affiliate.days_assigned }} days premium access{% else %} - {% endif %}</td>
+              <td>{% if affiliate.is_confirmed %}Registered on {{ affiliate.date_registered|date:"Y-m-d" }}{% else %}Invitation sent{% endif %}</td>
+              <td>{% if affiliate.is_confirmed %}Received {{ affiliate.days_assigned }} days full access{% else %} - {% endif %}</td>
             </tr>
             {% empty %}
             <tr>
@@ -56,11 +57,11 @@
               <td>-</td>
             </tr>
             {% endfor %}
-
           </tbody>
         </table>
       </div>
     </div>
   </div>
+  {% endif %}
 </div>
 {% endblock %}
