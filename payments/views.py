@@ -157,14 +157,14 @@ class InvoicesView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         if not self.request.user.can_collect_invoices:
             raise Http404()
-        return Checkout.objects.filter(user=self.request.user, is_paid=True)
+        return Invoice.objects.filter(user=self.request.user)
 
 
 class InvoiceHtmlView(LoginRequiredMixin, TemplateView):
     template_name = 'payments/invoice_pdf.html'
 
     def get_context_data(self, **kwargs):
-        query = dict(pk=self.kwargs['checkout_id'])
+        query = dict(pk=self.kwargs['invoice_id'])
         if not self.request.user.is_staff:
             if not self.request.user.can_collect_invoices:
                 raise Http404()
@@ -172,19 +172,19 @@ class InvoiceHtmlView(LoginRequiredMixin, TemplateView):
 
         context = super().get_context_data(**kwargs)
 
-        checkout = get_object_or_404(Checkout, **query)
-        context['checkout'] = checkout
+        invoice = get_object_or_404(Invoice, **query)
+        context['invoice'] = invoice
 
-        user = checkout.user
+        user = invoice.user
         country = TaxationCountry.objects.filter(name=user.company_country)[0]
         if country.exclude_vat and user.company_vat_number != '':
             tax = Decimal('0.00')
             context['tax_name'] = 'VAT tax for invoices between companies in European Union (reverse charge)'
         else:
-            tax = checkout.payment_plan.price * country.vat_charge / 100
+            tax = invoice.payment_plan.price * country.vat_charge / 100
             context['tax_name'] = 'VAT {}%'.format(country.vat_charge)
         context['tax_amount'] = tax
-        context['calculated_price'] = checkout.payment_plan.price - tax
+        context['calculated_price'] = invoice.payment_plan.price - tax
         # service provider
         context['provider_name'] = settings.PAYMENTS_COMPANY_NAME
         context['provider_reg_number'] = settings.PAYMENTS_COMPANY_REG_NUMBER
@@ -198,12 +198,12 @@ class InvoiceHtmlView(LoginRequiredMixin, TemplateView):
         address.append(country.long_name)
         context['client_address'] = address
 
-        checkout.invoice.store_backup(get_template(self.template_name).render(context))
+        invoice.store_backup(get_template(self.template_name).render(context))
         return context
 
 
 class InvoicePdfDownload(WeasyTemplateResponseMixin, InvoiceHtmlView):
     def get_pdf_filename(self):
-        return Checkout.objects.get(pk=self.kwargs['checkout_id']).invoice_number + '.pdf'
+        return Invoice.objects.get(pk=self.kwargs['invoice_id']).invoice_number + '.pdf'
 
 

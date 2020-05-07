@@ -113,7 +113,6 @@ class Checkout(models.Model):
     payment_plan = models.ForeignKey('Plan',
                             on_delete=models.SET(get_sentinel_plan),
                             editable=False)
-    invoice = models.ForeignKey('Invoice', on_delete=models.SET_NULL, null=True)
 
     @property
     def is_expired(self):
@@ -132,16 +131,30 @@ class Checkout(models.Model):
             self.is_cancelled = True
             self.save()
 
-    @property
-    def invoice_number(self):
-        if self.invoice is None:
-            return ''
-        return 'INV_{0}_{1:03}'.format(self.created.astimezone(pytz.utc).strftime('%Y-%m'),
-                                       self.invoice.pk)
-
 
 class Invoice(models.Model):
     _backups = models.TextField(null=False, default='')
+    _one_time_payment = models.ForeignKey('Checkout',
+                                            on_delete=models.SET_NULL,
+                                            null=True,
+                                            related_name='paid_invoice',
+                                            editable=False)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                            on_delete=models.SET(get_sentinel_user),
+                            editable=False,
+                            null=True)
+    date_paid = models.DateTimeField(auto_now_add=True, editable=False)
+
+    @property
+    def invoice_number(self):
+        return 'INV_{0}_{1:03}'.format(self.date_paid.astimezone(pytz.utc).strftime('%Y-%m'),
+                                       self.pk)
+
+    @property
+    def payment_plan(self):
+        if self._one_time_payment is not None:
+            return self._one_time_payment.payment_plan
+        return None
 
     @property
     def backup_count(self):
@@ -168,7 +181,7 @@ class TaxationCountry(models.Model):
                                       help_text='Check this, if companies with VAT number should have 0% VAT charge (EU only)')
     @property
     def long_name(self):
-        for x in codes_iso3166: 
+        for x in codes_iso3166:
             if x[0] == self.name:
                 return x[1]
 

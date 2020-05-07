@@ -22,7 +22,7 @@
             {% for invoice in invoices %}
             <tr>
               <td><a href="{% url 'view_invoice' invoice.pk %}" target="_blank">{{ invoice.invoice_number }}</a></td>
-              <td>{{ invoice.created }}</td>
+              <td>{{ invoice.date_paid }}</td>
               <td>{{ invoice.payment_plan.price }}</td>
               <td>
                 <button class="btn-sm btn-primary" type="button" onclick="location.href='{% url 'download_invoice' invoice.pk %}'">Download</button>
