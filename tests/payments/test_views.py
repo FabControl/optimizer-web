@@ -133,7 +133,7 @@ class PaymentPlansViewTest(TestCase):
                                           'type' : 'checkout.session.completed'})
         with patch('stripe.Webhook.construct_event', webhook_mock):
             c = Client(HTTP_STRIPE_SIGNATURE='checkout complete')
-            resp = c.post(reverse('confirm_payment'), {'data': ''})
+            resp = c.post(reverse('handle_stripe_event'), {'data': ''})
         self.assertEqual(resp.status_code, 200)
 
         # check subscription expiration time
@@ -144,7 +144,7 @@ class PaymentPlansViewTest(TestCase):
         self.assertTrue(self.user.subscription_expiration <= result_timestamp_max)
 
     def test_webhook_validation(self):
-        test_url = reverse('confirm_payment')
+        test_url = reverse('handle_stripe_event')
         self.user.refresh_from_db()
         expiration_base = self.user.subscription_expiration
         # create checkout object
@@ -344,7 +344,7 @@ class PaymentPlansViewTest(TestCase):
                     'data': {'object': {'client_reference_id': checkout.pk}}}
 
         with patch('stripe.Webhook.construct_event', side_effect=correct_event):
-            resp = self.client.post(reverse('confirm_payment'), {'data':''},
+            resp = self.client.post(reverse('handle_stripe_event'), {'data':''},
                                     content_type='application/json',
                                     HTTP_STRIPE_SIGNATURE='SecretSignatureFromStripe')
 

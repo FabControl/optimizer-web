@@ -90,62 +90,49 @@ def checkout_cancelled(request, checkout):
         checkout.cancel()
 
 
-def stripe_webhook_wrap(event_types:str):
-    def decorator(handler):
-        @csrf_exempt
-        def wrapper(request, *a, **k):
-            payload = request.body
-            try:
-                sig_header = request.META['HTTP_STRIPE_SIGNATURE']
-            except KeyError:
-                return HttpResponse(status=400)
+@csrf_exempt
+def handle_stripe_event(request):
+    payload = request.body
+    try:
+        sig_header = request.META['HTTP_STRIPE_SIGNATURE']
+    except KeyError:
+        return HttpResponse(status=400)
 
-            try:
-                event = stripe.Webhook.construct_event(payload,
-                                                       sig_header,
-                                                       settings.STRIPE_ENDPOINT_SECRET)
-            except ValueError as e:
-                # Invalid payload
-                return HttpResponse(status=400)
-            except stripe.error.SignatureVerificationError as e:
-                # Invalid signature
-                return HttpResponse(status=400)
+    try:
+        event = stripe.Webhook.construct_event(payload,
+                                               sig_header,
+                                               settings.STRIPE_ENDPOINT_SECRET)
+    except ValueError as e:
+        # Invalid payload
+        return HttpResponse(status=400)
+    except stripe.error.SignatureVerificationError as e:
+        # Invalid signature
+        return HttpResponse(status=400)
 
-            # Handle the checkout.session.completed event
-            if event['type'] not in event_types:
-                # wrong event
-                return HttpResponse(status=400)
-            return handler(request, event, *a, **k)
+    event_type = event['type']
+    event_object = event['data']['object']
 
-        return wrapper
-    return decorator
+    # handlers start here
+    if event_type == 'checkout.session.completed':
+        checkout = Checkout.objects.get(pk=event_object['client_reference_id'])
+        checkout.confirm_payment()
 
+    elif event_type in ('plan.created','plan.updated','plan.deleted'):
+        if event_object['product'] == settings.STRIPE_SUBSCRIPTION_PRODUCT_ID:
+            if event_type == 'plan.deleted':
+                try:
+                    Plan.objects.get(stripe_plan_id=event_object['id']).delete()
+                except Plan.DoesNotExist:
+                    pass
 
-@stripe_webhook_wrap('checkout.session.completed')
-def confirm_payment(request, event):
-    session = event['data']['object']
+            else:
+                plan = Plan.from_stripe(event_object)
+                if plan.has_changed:
+                    plan.save()
 
-    checkout = Checkout.objects.get(pk=session['client_reference_id'])
-    checkout.confirm_payment()
-
-    return HttpResponse(status=200)
-
-
-@stripe_webhook_wrap(['plan.created','plan.updated','plan.deleted'])
-def store_plan_changes(request, event):
-    stripe_plan = event['data']['object']
-
-    if stripe_plan['product'] == settings.STRIPE_SUBSCRIPTION_PRODUCT_ID:
-        if event['type'] == 'plan.deleted':
-            try:
-                Plan.objects.get(stripe_plan_id=stripe_plan['id']).delete()
-            except Plan.DoesNotExist:
-                pass
-
-        else:
-            plan = Plan.from_stripe(stripe_plan)
-            if plan.has_changed:
-                plan.save()
+    else:
+        # if event not handled by server
+        return HttpResponse(status=400)
 
     return HttpResponse(status=200)
 
