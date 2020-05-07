@@ -121,9 +121,12 @@ class Checkout(models.Model):
         return timezone.now() > self.created + timedelta(days=1)
 
     def confirm_payment(self):
+        if self.is_paid: 
+            return
+
         self.user.extend_subscription(self.payment_plan.subscription_period)
         self.is_paid = True
-        self.invoice = Invoice.objects.create()
+        Invoice.objects.create(_one_time_payment=self, user=self.user)
         self.save()
 
     def cancel(self):
