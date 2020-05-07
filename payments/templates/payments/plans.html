@@ -41,9 +41,15 @@
               <h1 class="display-4">{{plan.name}}</h1>
               <p class="text-primary"><span class='lead'>{{plan.pretty_price}} EUR</span>
                 <br>
-                <small>One-time payment</small>
-                <br>
-                <small>No subscription</small>
+                {% if plan.is_one_time %}
+                  <small>One-time payment</small>
+                  <br>
+                  <small>No subscription</small>
+                {% else %}
+                  <small>Recurring payment</small>
+                  <br>
+                  <small>Subscription-based</small>
+                {% endif %}
               </p>
               <hr>
               <p>Full access to all features</p>

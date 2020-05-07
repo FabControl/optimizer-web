@@ -131,6 +131,25 @@ def confirm_payment(request, event):
     return HttpResponse(status=200)
 
 
+@stripe_webhook_wrap(['plan.created','plan.updated','plan.deleted'])
+def store_plan_changes(request, event):
+    stripe_plan = event['data']['object']
+
+    if stripe_plan['product'] == settings.STRIPE_SUBSCRIPTION_PRODUCT_ID:
+        if event['type'] == 'plan.deleted':
+            try:
+                Plan.objects.get(stripe_plan_id=stripe_plan['id']).delete()
+            except Plan.DoesNotExist:
+                pass
+
+        else:
+            plan = Plan.from_stripe(stripe_plan)
+            if plan.has_changed:
+                plan.save()
+
+    return HttpResponse(status=200)
+
+
 class InvoicesView(LoginRequiredMixin, ListView):
     template_name = "payments/invoices.html"
     context_object_name = 'invoices'

@@ -59,13 +59,31 @@ class Plan(ModelDiffMixin, models.Model):
     price = models.DecimalField(default=None, null=True, decimal_places=2, max_digits=6)
     subscription_period = models.DurationField(default=timedelta(days=31))
     type = models.CharField(max_length=32, choices=(('corporate', 'Corporate'), ('premium', 'Premium'), ('basic', 'Basic'), ('deleted', 'Deleted')), default='basic')
+    stripe_plan_id = models.CharField(max_length=32, default="", editable=False)
+
+    @property
+    def is_one_time(self):
+        return self.stripe_plan_id == ''
 
     @property
     def pretty_price(self):
         return str(self.price).replace('.00', ',-')
 
     def __str__(self):
-        return "{} ({})".format(self.name, '{} Eur'.format(self.price) if self.price != 0 else "Free")
+        return "{} ({})".format(self.name, ('{} Eur '.format(self.price) + ("One-Time" if self.is_one_time else "Subscription")) if self.price != 0 else "Free")
+
+    @classmethod
+    def from_stripe(cls, stripe_plan:dict):
+        try:
+            plan = cls.objects.get(stripe_plan_id=stripe_plan['id'])
+        except cls.DoesNotExist:
+            plan = cls(type='premium', stripe_plan_id=stripe_plan['id'])
+
+        plan.name = stripe_plan['nickname']
+        plan.price = stripe_plan['amount'] / 100.0
+        # subscriptin_period does not matter, since stripe is handling subscription extension
+        return plan
+
 
 
 def get_sentinel_plan():
