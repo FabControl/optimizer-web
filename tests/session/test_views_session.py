@@ -179,7 +179,7 @@ class SessionSessionTest(TestCase):
         self.assertTrue(self.client.login(email='known_user@somewhere.com', password='SomeSecretPassword'))
         with patch('optimizer_api.ApiClient.get_routine', side_effect=get_routine):
             with patch('optimizer_api.ApiClient.get_test_info', side_effect=get_test_info):
-                session.test_number = '13'
+                session.test_number = '10'
                 session.save()
 
             session_link = reverse('session_detail', kwargs=dict(pk=session.pk))
@@ -194,8 +194,6 @@ class SessionSessionTest(TestCase):
             overview_link = reverse('session_overview', kwargs=dict(pk=session.pk))
             # make session completed and test if user gets redirected to overview
             with patch('optimizer_api.ApiClient.get_test_info', side_effect=get_test_info):
-                session.test_number = '10'
-                session.save()
                 resp = self.client.post(session_link,
                                         {"validation":"[2,1]",
                                             "comments":"",
