@@ -194,6 +194,8 @@ class SessionSessionTest(TestCase):
             overview_link = reverse('session_overview', kwargs=dict(pk=session.pk))
             # make session completed and test if user gets redirected to overview
             with patch('optimizer_api.ApiClient.get_test_info', side_effect=get_test_info):
+                session.test_number = '10'
+                session.save()
                 resp = self.client.post(session_link,
                                         {"validation":"[2,1]",
                                             "comments":"",
@@ -217,7 +219,7 @@ class SessionSessionTest(TestCase):
             self.assertEqual(resp.status_code, 200)
 
             # revert to last test
-            session.delete_previous_test('13')
+            session.delete_previous_test('10')
             session.save()
 
             # dashboard and sessions list should again contain session link
