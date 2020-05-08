@@ -119,16 +119,11 @@ def handle_stripe_event(request):
 
     elif event_type in ('plan.created','plan.updated','plan.deleted'):
         if event_object['product'] == settings.STRIPE_SUBSCRIPTION_PRODUCT_ID:
+            plan = Plan.from_stripe(event_object)
             if event_type == 'plan.deleted':
-                try:
-                    Plan.objects.get(stripe_plan_id=event_object['id']).delete()
-                except Plan.DoesNotExist:
-                    pass
-
-            else:
-                plan = Plan.from_stripe(event_object)
-                if plan.has_changed:
-                    plan.save()
+                plan.type = 'deleted'
+            if plan.has_changed:
+                plan.save()
 
     else:
         # if event not handled by server

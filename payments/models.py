@@ -77,10 +77,11 @@ class Plan(ModelDiffMixin, models.Model):
         try:
             plan = cls.objects.get(stripe_plan_id=stripe_plan['id'])
         except cls.DoesNotExist:
-            plan = cls(type='premium', stripe_plan_id=stripe_plan['id'])
+            plan = cls(stripe_plan_id=stripe_plan['id'])
 
         plan.name = stripe_plan['nickname']
         plan.price = stripe_plan['amount'] / 100.0
+        plan.type = 'premium' if stripe_plan['active'] else 'deleted'
         # subscriptin_period does not matter, since stripe is handling subscription extension
         return plan
 
