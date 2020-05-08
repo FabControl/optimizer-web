@@ -249,7 +249,8 @@ class SessionTestsSelectionMixin:
         context = super().get_context_data(**kwargs)
         routine = api_client.get_routine()
         for (k, v) in routine.items():
-            v['name'] = v['name'].replace (' vs ', ' vs<br>')
+            v['free'] = True if k in settings.FREE_TESTS else False
+            v['name'] = v['name'].replace(' vs ', ' vs<br>')
         context['routine'] = routine
         return context
 

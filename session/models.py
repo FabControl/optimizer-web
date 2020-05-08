@@ -665,7 +665,7 @@ class Session(models.Model, DependenciesCopyMixin):
         time_limited_plans = settings.TIME_LIMITED_PLANS
         allowed_numbers = []
         if self.owner.plan == 'basic':
-            allowed_numbers = [number for number in api_client.get_routine(mode='primary')]
+            allowed_numbers = settings.FREE_TESTS
         elif self.owner.plan in time_limited_plans:
             allowed_numbers = [number for number in api_client.get_routine(mode='full')]
         if value in allowed_numbers:
