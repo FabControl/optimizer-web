@@ -711,7 +711,10 @@ class Session(models.Model, DependenciesCopyMixin):
                     next_primary_test = next_test = self.test_number
                 current_found = True
         if primary:
-            return next_primary_test
+            if next_primary_test in settings.FREE_TESTS:
+                return next_primary_test
+            else:
+                return self.test_number
         else:
             return next_test
 
