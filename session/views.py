@@ -54,7 +54,7 @@ class MaterialsView(LoginRequiredMixin, generic.ListView):
 
 class MaterialView(LoginRequiredMixin, generic.UpdateView):
     model = Material
-    template_name = 'session/material_form.html'
+    template_name = 'session/material_detail.html'
     form_class = MaterialForm
     success_url = reverse_lazy("material_manager")
 
