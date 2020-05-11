@@ -2,7 +2,6 @@ from django.contrib import admin
 from .models import Plan, Checkout, TaxationCountry
 
 # Register your models here.
-admin.site.register(Plan)
 admin.site.register(TaxationCountry)
 
 def mark_checkout_paid(modeladmin, request, queryset):
@@ -31,4 +30,10 @@ class CheckoutModelAdmin(admin.ModelAdmin):
         elif c.is_expired:
             return 'expired'
         return 'in progress'
+
+@admin.register(Plan)
+class PlanModelAdmin(admin.ModelAdmin):
+    def has_delete_permission(self, request):
+        return False
+
 
