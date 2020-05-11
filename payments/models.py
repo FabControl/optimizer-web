@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils import timezone
-from datetime import timedelta
+from datetime import timedelta, datetime
 from django.conf import settings
 import pytz
 import uuid
@@ -135,9 +135,55 @@ class Checkout(models.Model):
             self.is_cancelled = True
             self.save()
 
+class Subscription(models.Model):
+    PENDING = 'incomplete'
+    ACTIVE = 'active'
+    CHARGE_FAILED = 'past_due'
+    FAILURE_NOTIFIED = 'failure_notified'
+    CANCELLED = 'canceled'
+    EXPIRED = 'incomplete_expired'
+
+    created = models.DateTimeField(auto_now_add=True, editable=False)
+    paid_till = models.DateTimeField(auto_now_add=True, editable=False)
+    stripe_id = models.CharField(max_length=32, editable=False)
+    state = models.CharField(max_length=32, default=PENDING, editable=False,
+                            choices=[(ACTIVE, 'Active'),
+                                     (PENDING, 'First payment pending'),
+                                     (EXPIRED, 'First payment expired'),
+                                     (CHARGE_FAILED, 'Charge failed'),
+                                     (FAILURE_NOTIFIED, 'Failure notified'),
+                                     (CANCELLED, 'Cancelled')])
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                            on_delete=models.SET(get_sentinel_user),
+                            editable=False)
+    payment_plan = models.ForeignKey('Plan',
+                            on_delete=models.SET(get_sentinel_plan),
+                            editable=False)
+
+    @classmethod
+    def update_from_stripe(cls, stripe_data:dict):
+        subscription = cls.objects.get(stripe_id=stripe_data['id'])
+        subscription.state = stripe_data['status']
+        if subscription.state == cls.ACTIVE:
+            paid = datetime.fromtimestamp(stripe_data['current_period_end'], timezone.utc)
+            if subscription.paid_till < paid:
+                subscription.user.subscribe_till(paid + timedelta(days=settings.SUBSCRIPTION_EXTRA_DAYS))
+                subscription.paid_till = paid
+                Invoice.objects.create(_subscription=subscription, user=subscription.user)
+
+        subscription.save()
+
+
 
 class Invoice(models.Model):
     _backups = models.TextField(null=False, default='')
+    _subscription = models.ForeignKey('Subscription',
+                                            on_delete=models.SET_NULL,
+                                            null=True,
+                                            related_name='paid_invoice',
+                                            editable=False)
+
     _one_time_payment = models.ForeignKey('Checkout',
                                             on_delete=models.SET_NULL,
                                             null=True,
@@ -158,6 +204,8 @@ class Invoice(models.Model):
     def payment_plan(self):
         if self._one_time_payment is not None:
             return self._one_time_payment.payment_plan
+        if self._subscription is not None:
+            return self._subscription.payment_plan
         return None
 
     @property

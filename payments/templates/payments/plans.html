@@ -32,7 +32,7 @@
   <div class="row pt-5 text-center">
     {% for plan in plans %}
     <div class="col">
-      <div class="card p-4">
+      <div class="card p-4 {% if request.user.is_authenticated %} {% if active_subscriptions %} {% if active_subscriptions.0.payment_plan == plan %}alert-success{% endif %}{% endif %}{% endif %}">
         <form class="" action="" method="post">
           {% csrf_token %}
           <input type="hidden" name="plan_id" value="{{ plan.pk }}">
@@ -54,7 +54,13 @@
               <hr>
               <p>Full access to all features</p>
               {% if request.user.is_authenticated %}
-              <button type="submit" class="btn btn-primary" name="{{plan.name}}button">Purchase</button>
+                {% if active_subscriptions %}
+                  {% if active_subscriptions.0.payment_plan == plan %}
+                    Curently active
+                    {% else %}<br>
+                  {% endif %}
+                {% else %}<button type="submit" class="btn btn-primary" name="{{plan.name}}button">Purchase</button>
+                {% endif %}
               {% endif %}
             </div>
           </div>

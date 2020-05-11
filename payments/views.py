@@ -5,7 +5,7 @@ from django.utils import timezone
 from django.contrib import messages
 from django.views.generic.edit import BaseFormView
 from django.views.generic import ListView, TemplateView
-from .models import Plan, Checkout, Invoice, TaxationCountry
+from .models import Plan, Checkout, Invoice, TaxationCountry, Subscription
 from django.urls import reverse
 from .forms import PaymentPlanForm
 from django.contrib.auth.decorators import login_required
@@ -35,6 +35,8 @@ class PaymentPlansView(BaseFormView):
         if request.user.is_authenticated:
             days_remaining = request.user.subscription_expiration - timezone.now()
             context['expiration'] = days_remaining.days + 1
+            context['active_subscriptions'] = Subscription.objects.filter(user=request.user,
+                                                                       state=Subscription.ACTIVE)
 
         return render(request, 'payments/plans.html', context)
 
@@ -115,7 +117,33 @@ def handle_stripe_event(request):
     # handlers start here
     if event_type == 'checkout.session.completed':
         checkout = Checkout.objects.get(pk=event_object['client_reference_id'])
-        checkout.confirm_payment()
+        if checkout.payment_plan.is_one_time:
+            checkout.confirm_payment()
+        else:
+            subscription_args = dict(stripe_id=event_object['subscription'],
+                                        payment_plan=checkout.payment_plan,
+                                        user=checkout.user)
+            try:
+                Subscription.objects.get(**subscription_args)
+            except Subscription.DoesNotExist:
+                Subscription.objects.create(**subscription_args)
+
+            checkout.stripe_id = event_object['subscription']
+            checkout.is_paid = True
+            checkout.save()
+
+    elif event_type in ('customer.subscription.created', 'customer.subscription.updated'):
+        if event_type == 'customer.subscription.created':
+            # if user tried initial payment with insufficient funds this event will happen before checkout.completed
+            try:
+                Subscription.objects.get(stripe_id=event_object['id'])
+            except Subscription.DoesNotExist:
+                checkout = Checkout.objects.get(pk=event_object['metadata']['internal_reference'])
+                Subscription.objects.create(stripe_id=event_object['id'],
+                                            payment_plan=checkout.payment_plan,
+                                            user=checkout.user)
+
+        Subscription.update_from_stripe(event_object)
 
     elif event_type in ('plan.created','plan.updated','plan.deleted'):
         if event_object['product'] == settings.STRIPE_SUBSCRIPTION_PRODUCT_ID:

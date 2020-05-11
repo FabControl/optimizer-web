@@ -2,7 +2,7 @@ import ast
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.utils import timezone
-from datetime import timedelta
+from datetime import timedelta, datetime
 import pytz
 from messaging import email
 from .tokens import account_activation_token
@@ -111,6 +111,10 @@ class User(AbstractUser):
         base = max(self.subscription_expiration, timezone.now())
         new_date = base + delta
         self.subscription_expiration = new_date.replace(hour=23, minute=59, second=59)
+        self.save()
+
+    def subscribe_till(self, target_date:datetime):
+        self.subscription_expiration = target_date.replace(hour=23, minute=59, second=59)
         self.save()
 
     def expire(self):
