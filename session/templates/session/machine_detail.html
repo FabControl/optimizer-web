@@ -2,12 +2,23 @@
 
 {% block content %}
 {% load crispy_forms_tags %}
-<div class="container">
-  <div class="row pt-2">
-    <div class="col-md-6">
+<div class="container pt-3">
+  <div class="row">
+    <div class="col-sm-6">
       <div class="alert alert-warning p-2">
         <span>The changes will not be reflected in sessions already using this printer.</span>
       </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm">
+      <p class="lead">
+        <font size="6">3D Printer editor</font>
+      </p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
       <form class="" action="" method="post" id="id_form">
         {% csrf_token %}
         <p>

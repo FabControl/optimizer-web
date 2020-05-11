@@ -54,7 +54,7 @@ class MaterialsView(LoginRequiredMixin, generic.ListView):
 
 class MaterialView(LoginRequiredMixin, generic.UpdateView):
     model = Material
-    template_name = 'session/material_form.html'
+    template_name = 'session/material_detail.html'
     form_class = MaterialForm
     success_url = reverse_lazy("material_manager")
 
@@ -249,7 +249,8 @@ class SessionTestsSelectionMixin:
         context = super().get_context_data(**kwargs)
         routine = api_client.get_routine()
         for (k, v) in routine.items():
-            v['name'] = v['name'].replace (' vs ', ' vs<br>')
+            v['free'] = True if k in settings.FREE_TESTS else False
+            v['name'] = v['name'].replace(' vs ', ' vs<br>')
         context['routine'] = routine
         return context
 
