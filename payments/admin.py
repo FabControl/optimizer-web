@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Plan, Checkout, TaxationCountry
+from .models import Plan, Checkout, TaxationCountry, Subscription
 
 # Register your models here.
 admin.site.register(TaxationCountry)
@@ -37,3 +37,16 @@ class PlanModelAdmin(admin.ModelAdmin):
         return False
 
 
+@admin.register(Subscription)
+class SubscriptionModelAdmin(admin.ModelAdmin):
+    list_display = ('created', 'user', 'payment_plan', 'state', 'stripe_id')
+    sortable_by = ('created', 'user', 'payment_plan', 'state', 'stripe_id')
+    date_hierarchy = 'created'
+
+    list_display_links = None
+
+    def has_delete_permission(self, request):
+        return False
+
+    def has_add_permission(self, request):
+        return False
