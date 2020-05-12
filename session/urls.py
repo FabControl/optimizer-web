@@ -19,7 +19,7 @@ urlpatterns = [
     path('resources/machines/sample/<int:pk>/', views.sample_machine_data, name='machine_sample'),
 
     path('sessions/', views.SessionListView.as_view(), name="session_manager"),
-    path('sessions/<int:pk>/', views.generate_or_validate, name='session_detail'),
+    path('sessions/<int:pk>/', views.session_state_manager, name='session_detail'),
     path('sessions/<int:pk>/json', views.session_json, name='session_json'),
     path('sessions/<int:pk>/test_info', views.session_test_info, name='session__test_info'),
     path('sessions/<int:pk>/back/', views.session_validate_undo, name='session_validate_back'),
