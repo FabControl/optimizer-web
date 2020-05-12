@@ -833,30 +833,3 @@ class Session(models.Model, DependenciesCopyMixin):
             "previous_tests": json.loads(self._persistence)["session"]["previous_tests"]
         }
         return output
-
-
-class TestInfo(models.Model):
-    test_name = models.CharField(max_length=64, choices=[(x, x) for y, x in TEST_NUMBER_CHOICES])
-    test_number = models.CharField(max_length=64, choices=[(y, y) for y, x in TEST_NUMBER_CHOICES])
-    executed = models.BooleanField(default=True)
-
-    # Save raw json strings to be serialized/unserialized
-    tested_parameter_one_values = models.TextField(max_length=10000, blank=True)
-    tested_parameter_two_values = models.TextField(max_length=10000, blank=True)
-    tested_parameter_three_values = models.TextField(max_length=10000, blank=True)
-    tested_volumetric_flow_rate_values = models.TextField(max_length=10000, blank=True)
-
-    selected_parameter_one_value = models.DecimalField(max_digits=4, decimal_places=3, default=0, blank=True)
-    selected_parameter_two_value = models.DecimalField(max_digits=4, decimal_places=3, default=0, blank=True)
-    selected_parameter_three_value = models.DecimalField(max_digits=4, decimal_places=3, default=0, blank=True)
-    selected_volumetric_flow_rate_value = models.DecimalField(max_digits=4, decimal_places=3, default=0, blank=True)
-    parameter_one_name = models.CharField(max_length=64, default="first-layer track height")
-    parameter_two_name = models.CharField(max_length=64, default="first-layer printing speed")
-    parameter_one_units = models.CharField(max_length=12, choices=UNITS, default="mm")
-    parameter_two_units = models.CharField(max_length=12, choices=UNITS, default="mm/s")
-    parameter_one_precision = "{:.3f}"
-    parameter_two_precision = "{:.1f}"
-    comments = 0
-    datetime_info = models.DateTimeField(default=timezone.now, blank=True)
-    extruded_filament_mm = 841.53
-    estimated_printing_time = "0:09:28"
