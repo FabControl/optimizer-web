@@ -9,6 +9,7 @@ from .countries import codes_iso3166
 import zlib
 from base64 import b64encode, b64decode
 from django.forms.models import model_to_dict
+import stripe
 
 
 class ModelDiffMixin(object):
@@ -173,6 +174,16 @@ class Subscription(models.Model):
                 Invoice.objects.create(_subscription=subscription, user=subscription.user)
 
         subscription.save()
+
+    @property
+    def card_info(self):
+        subscription = stripe.Subscription.retrieve(self.stripe_id)
+        payment_method_id = subscription['default_payment_method']
+        if payment_method_id is None:
+            payment_method_id = stripe.Customer.retrieve(subscription['customer'])['invoice_settings']['default_payment_method']
+
+        card = stripe.PaymentMethod.retrieve(payment_method_id)['card']
+        return card['brand'] + ' ****' + card['last4']
 
 
 

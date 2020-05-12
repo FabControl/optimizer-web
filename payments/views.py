@@ -61,22 +61,21 @@ def _decorate_checkout(method):
         if checkout.user != request.user:
             raise Http404()
 
-        if checkout.is_expired:
-            messages.error(request, 'Your checkout session has expired')
-        else:
-            method(request, checkout)
+        landing_url = method(request, checkout)
 
         if checkout.is_cancelled:
             messages.error(request, 'Your checkout was cancelled')
 
-        return redirect(reverse('plans'))
+        return redirect(reverse(landing_url))
 
     return _method
 
 
 @_decorate_checkout
 def checkout_completed(request, checkout):
-    if checkout.is_paid:
+    if checkout.is_expired:
+        messages.error(request, 'Your session has expired')
+    elif checkout.is_paid:
         messages.success(request,
                         'Your full access was extended for {0.days} days'.format(checkout.payment_plan.subscription_period))
 
@@ -85,11 +84,74 @@ def checkout_completed(request, checkout):
         messages.warning(request,
                         'We haven\'t received your payment yet. Please check after few minutes')
 
+    return 'plans'
+
 
 @_decorate_checkout
 def checkout_cancelled(request, checkout):
     if not checkout.is_paid and not checkout.is_expired:
         checkout.cancel()
+    return 'plans'
+
+@login_required
+def update_payment_method(request, subscription_id):
+    subscription = get_object_or_404(Subscription, pk=subscription_id, user=request.user)
+    checkout = Checkout(user=subscription.user,
+                        payment_plan=subscription.payment_plan)
+
+    base_url = 'https://' + request.META['HTTP_HOST']
+    stripe_subscription = stripe.Subscription.retrieve(subscription.stripe_id)
+    stripe_checkout = stripe.checkout.Session.create(
+                        customer=stripe_subscription['customer'],
+                        payment_method_types=['card'],
+                        client_reference_id=checkout.checkout_id,
+                        mode='setup',
+                        setup_intent_data={
+                            'metadata': {
+                                'subscription_id': subscription.stripe_id}},
+                            success_url=base_url + reverse('card_details_updated', args=[checkout.checkout_id]),
+                            cancel_url=base_url + reverse('card_details_unchanged', args=[checkout.checkout_id]),
+                            )
+
+    checkout.stripe_id = stripe_checkout['id']
+    checkout.save()
+
+    return render(request,
+                  'payments/checkout.html',
+                  {'checkout_id': stripe_checkout['id'],
+                      'stripe_public_key': settings.STRIPE_PUBLIC_KEY })
+
+
+@_decorate_checkout
+def card_details_updated(request, checkout):
+    if checkout.is_paid:
+        messages.success(request, 'Subscription payment method changed!')
+        # checkout is no longer required
+        checkout.delete()
+
+    # this should never happen in real life with webhooks, but better safe than sorry
+    else:
+        messages.error(request, 'Something went wrong. Please try again later.')
+
+    return 'account_legal_info'
+
+
+@_decorate_checkout
+def card_details_unchanged(request, checkout):
+    # checkout is no longer required
+    checkout.delete()
+    return 'account_legal_info'
+
+
+@login_required
+def cancel_subscription(request, subscription_id):
+    subscription = get_object_or_404(Subscription, pk=subscription_id, user=request.user)
+    # will not actually delete subscription, but mark it as cancelled
+    data = stripe.Subscription.delete(subscription.stripe_id)
+    Subscription.update_from_stripe(data)
+
+    messages.success(request, 'Subscription cancelled')
+    return redirect(reverse('account_legal_info'))
 
 
 @csrf_exempt
@@ -117,9 +179,12 @@ def handle_stripe_event(request):
     # handlers start here
     if event_type == 'checkout.session.completed':
         checkout = Checkout.objects.get(pk=event_object['client_reference_id'])
-        if checkout.payment_plan.is_one_time:
+        if event_object['mode'] == 'payment':
+            # one-time payment
             checkout.confirm_payment()
-        else:
+
+        elif event_object['mode'] == 'subscription':
+            # created new subscription
             subscription_args = dict(stripe_id=event_object['subscription'],
                                         payment_plan=checkout.payment_plan,
                                         user=checkout.user)
@@ -132,7 +197,18 @@ def handle_stripe_event(request):
             checkout.is_paid = True
             checkout.save()
 
-    elif event_type in ('customer.subscription.created', 'customer.subscription.updated'):
+        elif event_object['mode'] == 'setup':
+            # updated subscription payment method e.g. card
+            intent = stripe.SetupIntent.retrieve(event_object['setup_intent'])
+            stripe.Subscription.modify(
+                        intent['metadata']['subscription_id'],
+                        default_payment_method=intent['payment_method'])
+
+            checkout.is_paid = True
+            checkout.save()
+
+
+    elif event_type in ('customer.subscription.created', 'customer.subscription.updated', 'customer.subscription.deleted'):
         if event_type == 'customer.subscription.created':
             # if user tried initial payment with insufficient funds this event will happen before checkout.completed
             try:
