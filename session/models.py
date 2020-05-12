@@ -6,8 +6,9 @@ from django.utils import timezone
 from django.http import Http404
 from django.conf import settings
 from authentication.models import User
+from payments.models import Plan
 from optimizer_api import api_client
-from .choices import TEST_NUMBER_CHOICES, TARGET_CHOICES, SLICER_CHOICES, TOOL_CHOICES, FORM_CHOICES, UNITS
+from .choices import TEST_NUMBER_CHOICES, TARGET_CHOICES, SLICER_CHOICES, TOOL_CHOICES, FORM_CHOICES, UNITS, MODE_CHOICES, WIZARD_MODES
 
 # Create your models here.
 
@@ -280,10 +281,24 @@ class Settings(models.Model):
         return output
 
 
+class SessionMode(models.Model):
+    """
+    Used to store information regarding different testing modes - the types of tests that are included, who these modes
+    are available to.
+    """
+    core = Plan.objects.filter(name="core")
+    wizard_mode = models.CharField(max_length=64, choices=WIZARD_MODES, default='flat')
+    plan_availability = models.ForeignKey(Plan, default=core, on_delete=models.CASCADE)
+
+    # Private variables, for getters, setters
+    _included_tests = models.CharField(max_length=200)
+
+
 class Session(models.Model, DependenciesCopyMixin):
     """
     Used to store testing session progress, relevant assets (machine, material) and test data.
     """
+    mode = models.ForeignKey(SessionMode, null=True, on_delete=models.CASCADE)
     number = models.IntegerField(default=0)
     name = models.CharField(default="Untitled", max_length=20)
     pub_date = models.DateTimeField(default=timezone.now, blank=True)
