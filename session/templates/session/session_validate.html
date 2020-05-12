@@ -9,6 +9,7 @@
     {% if object.test_info.hint_valid %}
     <div class="card p-3" style="background: #fff0c7">
       {{ object.test_info.hint_valid|safe }}
+      <a href="https://3doptimizer.helpscoutdocs.com/test/{{object.test_number}}" class='font-weight-light' target="_blank">Read more in Help Center</a>
     </div>
     {% endif %}
   </div>
