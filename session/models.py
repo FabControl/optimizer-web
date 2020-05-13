@@ -286,6 +286,7 @@ class SessionMode(models.Model):
     Used to store information regarding different testing modes - the types of tests that are included, who these modes
     are available to.
     """
+    name = models.CharField(max_length=64, default='Untitled')
     core = Plan.objects.filter(name="core")
     wizard_mode = models.CharField(max_length=64, choices=WIZARD_MODES, default='flat')
     plan_availability = models.ForeignKey(Plan, default=core, on_delete=models.CASCADE)
