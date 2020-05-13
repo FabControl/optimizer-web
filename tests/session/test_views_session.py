@@ -179,7 +179,7 @@ class SessionSessionTest(TestCase):
         self.assertTrue(self.client.login(email='known_user@somewhere.com', password='SomeSecretPassword'))
         with patch('optimizer_api.ApiClient.get_routine', side_effect=get_routine):
             with patch('optimizer_api.ApiClient.get_test_info', side_effect=get_test_info):
-                session.test_number = '13'
+                session.test_number = '10'
                 session.save()
 
             session_link = reverse('session_detail', kwargs=dict(pk=session.pk))
@@ -217,7 +217,7 @@ class SessionSessionTest(TestCase):
             self.assertEqual(resp.status_code, 200)
 
             # revert to last test
-            session.delete_previous_test('13')
+            session.delete_previous_test('10')
             session.save()
 
             # dashboard and sessions list should again contain session link

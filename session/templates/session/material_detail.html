@@ -2,10 +2,34 @@
 
 {% block content %}
 {% load crispy_forms_tags %}
-<div class="container">
-  <form class="" action="" method="post">
-    {{ form|crispy }}
-    <button type="submit" class="btn btn-primary">Submit</button>
+
+<div class="container pt-3">
+  <div class="row">
+    <div class="col-sm">
+      <p class="lead">
+        <font size="6">Material editor</font>
+      </p>
+    </div>
+  </div>
+  <form action="" method="post" novalidate>
+    {% csrf_token %}
+    <div class="row">
+      <div class="col-sm-3">
+        {{ form|crispy }}
+      </div>
+    </div>
+    <div class="row pt-3">
+      <div class="col-sm-4"></div>
+      <div class="col-sm-4 text-center">
+        {% if next %}
+        <input type="hidden" value="{{ next }}" name="next">
+        {% endif %}
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+    </div>
   </form>
+
 </div>
+
+
 {% endblock %}
