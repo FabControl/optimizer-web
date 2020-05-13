@@ -113,7 +113,8 @@ class PaymentPlansViewTest(TestCase):
         self.user.refresh_from_db()
         current_expiration = self.user.subscription_expiration
         plan = self.plans[2]
-        result_timestamp_min = (max(current_expiration, timezone.now()) + plan.subscription_period).replace(hour=23, minute=59, second=59)
+        result_timestamp_min = (max(current_expiration, timezone.now()) + plan.subscription_period).replace(hour=23, minute=59, second=59, microsecond=0)
+        result_timestamp_max = result_timestamp_min + timedelta(seconds=1)
 
         # ask for premium plan extension
         checkout_mock = Mock(side_effect=self.checkout_dummy)
@@ -139,7 +140,6 @@ class PaymentPlansViewTest(TestCase):
 
         # check subscription expiration time
         self.user.refresh_from_db()
-        result_timestamp_max = (max(current_expiration, timezone.now()) + plan.subscription_period).replace(hour=23, minute=59, second=59)
 
         self.assertTrue(self.user.subscription_expiration >= result_timestamp_min)
         self.assertTrue(self.user.subscription_expiration <= result_timestamp_max)
