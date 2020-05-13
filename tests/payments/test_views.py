@@ -79,6 +79,13 @@ class PaymentPlansViewTest(TestCase):
             for k in ['amount', 'currency', 'name', 'quantity']:
                 self.assertTrue(k in keys, msg='"{0}" not in {1}'.format(k, i))
 
+        if mode is None:
+            if line_items is not None:
+                mode = 'payment'
+            elif subscription_data is not None:
+                mode = 'subscription'
+
+
         test_item = CheckoutTestItem(cancel_url, success_url,
                                      line_items, client_reference_id)
         test_item.session_value = {
@@ -204,7 +211,8 @@ class PaymentPlansViewTest(TestCase):
         # make sure correct event works
         def correct_event(p, s, k):
             return {'type' : 'checkout.session.completed',
-                    'data': {'object': {'client_reference_id': checkout.pk}}}
+                    'data': {'object': {'client_reference_id': checkout.pk,
+                                        'mode': 'payment'}}}
 
         with patch('stripe.Webhook.construct_event', side_effect=correct_event):
             resp = self.client.post(test_url, {'data':''},
@@ -263,7 +271,7 @@ class PaymentPlansViewTest(TestCase):
         self.user.refresh_from_db()
         self.assertFalse(checkout.is_cancelled)
         self.assertEqual(self.user.subscription_expiration, expiration_base)
-        self.assertTrue(b'Your checkout session has expired' in resp.content)
+        self.assertTrue(b'Your session has expired' in resp.content)
 
         # check if checkout can be cancelled
         resp = self.client.get(test_url, follow=True)
@@ -326,7 +334,7 @@ class PaymentPlansViewTest(TestCase):
         self.user.refresh_from_db()
         self.assertFalse(checkout.is_paid)
         self.assertEqual(self.user.subscription_expiration, expiration_base)
-        self.assertTrue(b'Your checkout session has expired' in resp.content)
+        self.assertTrue(b'Your session has expired' in resp.content)
 
         # check warning message, if not confirmed
         resp = self.client.get(test_url, follow=True)
@@ -342,7 +350,8 @@ class PaymentPlansViewTest(TestCase):
         # notify about checkout completion
         def correct_event(p, s, k):
             return {'type' : 'checkout.session.completed',
-                    'data': {'object': {'client_reference_id': checkout.pk}}}
+                    'data': {'object': {'client_reference_id': checkout.pk,
+                                        'mode': 'payment'}}}
 
         with patch('stripe.Webhook.construct_event', side_effect=correct_event):
             resp = self.client.post(reverse('handle_stripe_event'), {'data':''},

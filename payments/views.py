@@ -92,7 +92,9 @@ def checkout_completed(request, checkout):
 
 @_decorate_checkout
 def checkout_cancelled(request, checkout):
-    if not checkout.is_paid and not checkout.is_expired:
+    if checkout.is_expired:
+        messages.error(request, 'Your session has expired')
+    elif not checkout.is_paid:
         checkout.cancel()
     return 'plans'
 
