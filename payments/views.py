@@ -17,6 +17,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django_weasyprint.views import WeasyTemplateResponseMixin
 from decimal import Decimal
 from django.template.loader import get_template
+from Optimizer3D.middleware.GeoRestrictAccessMiddleware import geoRestrictExempt
 
 # Create your views here.
 
@@ -159,6 +160,7 @@ def cancel_subscription(request, subscription_id):
     return redirect(reverse('account_legal_info'))
 
 
+@geoRestrictExempt
 @csrf_exempt
 def handle_stripe_event(request):
     payload = request.body

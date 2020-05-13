@@ -9,6 +9,11 @@ from django.core.exceptions import PermissionDenied
 # If both exist, then ONLY whitelist is used
 # Country codes available https://en.wikipedia.org/wiki/ISO_3166-1
 
+def geoRestrictExempt(viewFunc):
+    viewFunc.geo_restrict_exempt = True
+    return viewFunc
+
+
 class GeoRestrictAccessMiddleware(IpGeolocationMiddleware):
     def __init__(self, get_response=None):
         self.has_whitelist = False
@@ -25,26 +30,24 @@ class GeoRestrictAccessMiddleware(IpGeolocationMiddleware):
         super(GeoRestrictAccessMiddleware, self).__init__(get_response)
 
 
-    def process_request(self, request):
-        # Uncomment for testing purpose on localhost
-        # get addresses here https://lite.ip2location.com/ip-address-ranges-by-country
-        #request.META['HTTP_X_FORWARDED_FOR'] = '5.182.84.0,'
-        super(GeoRestrictAccessMiddleware, self).process_request(request)
+    def process_view(self, request, view_func, view_args, view_kwargs):
+        if getattr(view_func, 'geo_restrict_exempt', False) == True:
+            return None
+
         if not hasattr(request, 'geolocation'):
-            return
+            return None
 
         country = request.geolocation['county']['code']
 
         if self.has_whitelist:
             if country in settings.GEO_RESTRICTION_WHITELIST:
-                return
+                return None
             else:
                 raise PermissionDenied()
 
         if self.has_blacklist:
             if country in settings.GEO_RESTRICTION_BLACKLIST:
                 raise PermissionDenied()
-
 
 
     def process_response(self, request, response):

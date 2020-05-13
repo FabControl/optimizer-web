@@ -235,6 +235,7 @@ class SubscriptionMiddlewareTest(TestCase):
             with patch(pathing_path, location_mock):
                 with self.assertRaises(PermissionDenied):
                     mware.process_request(req)
+                    mware.process_view(req, None, None, None)
 
         location_mock.assert_called_once()
 
@@ -248,6 +249,7 @@ class SubscriptionMiddlewareTest(TestCase):
             with patch(pathing_path, location_mock):
                 with self.assertRaises(PermissionDenied):
                     mware.process_request(req)
+                    mware.process_view(req, None, None, None)
 
         location_mock.assert_called_once()
 
