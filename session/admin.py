@@ -11,6 +11,7 @@ admin.site.register(Extruder)
 admin.site.register(Chamber)
 admin.site.register(Printbed)
 admin.site.register(Settings)
+admin.site.register(SessionMode)
 
 
 @admin.register(Session)
