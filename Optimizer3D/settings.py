@@ -52,7 +52,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'Optimizer3D.middleware.EnforceSubscriptionMiddleware.enforce_subscription_middleware'
+    'Optimizer3D.middleware.EnforceSubscriptionMiddleware.enforce_subscription_middleware',
+    'payments.middleware.NotifySubscriptionChargeFailuresMiddleware.notify_failures_middleware'
 ]
 
 ROOT_URLCONF = 'Optimizer3D.urls'
