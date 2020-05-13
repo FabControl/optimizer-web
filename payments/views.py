@@ -76,8 +76,11 @@ def checkout_completed(request, checkout):
     if checkout.is_expired:
         messages.error(request, 'Your session has expired')
     elif checkout.is_paid:
-        messages.success(request,
+        if checkout.payment_plan.is_one_time:
+            messages.success(request,
                         'Your full access was extended for {0.days} days'.format(checkout.payment_plan.subscription_period))
+        else:
+            messages.success(request, 'Successfuly initialized subscription')
 
     # this should never happen in real life with webhooks, but better safe than sorry
     else:

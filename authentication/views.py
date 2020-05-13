@@ -25,6 +25,7 @@ from messaging import email
 from django.contrib.auth.tokens import default_token_generator
 from .models import Affiliate
 from django.contrib.auth.mixins import LoginRequiredMixin
+from payments.models import Subscription
 
 
 # Create your views here.
@@ -305,7 +306,7 @@ def legal_information_view(request):
         if form.is_valid():
             form.save(commit=True)
             messages.success(request, 'Account changed successfully')
-            return redirect(reverse('dashboard'))
+            return redirect(reverse('account_legal_info'))
         else:
             form_errors = (str(m.as_text()).lstrip('* ') for m in dict(form.errors).values())
             message = "<br>".join(form_errors)
@@ -313,6 +314,14 @@ def legal_information_view(request):
 
     else:
         form = LegalInformationForm(instance=request.user)
+        subscription = None
+        try:
+            subscription = Subscription.objects.get(user=request.user,
+                                                    state__in=(Subscription.ACTIVE, Subscription.FAILURE_NOTIFIED))
+        except Subscription.DoesNotExist:
+            pass
+
     return render(request,
                   'authentication/legal_info.html',
-                  dict(legal_info=form))
+                  dict(legal_info=form,
+                      subscription=subscription))
