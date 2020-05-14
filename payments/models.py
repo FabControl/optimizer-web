@@ -165,7 +165,9 @@ class Subscription(models.Model):
     @classmethod
     def update_from_stripe(cls, stripe_data:dict):
         subscription = cls.objects.get(stripe_id=stripe_data['id'])
-        subscription.state = stripe_data['status']
+        if stripe_data['status'] != cls.PENDING:
+            subscription.state = stripe_data['status']
+
         if subscription.state == cls.ACTIVE:
             paid = datetime.fromtimestamp(stripe_data['current_period_end'], timezone.utc)
             if subscription.paid_till < paid:
