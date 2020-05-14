@@ -55,11 +55,10 @@
                     </div>
                     <div class="modal-body">
                       <p>By pressing "Cancel subscription", you confirm cancellation of full access subscription.</p>
-                      <small>You will have full access till {{ request.user.subscription_expiration }}.</small>
+                      <small>You will have full access till {{ request.user.subscription_expiration|date:"Y-m-d" }}.</small>
                     </div>
                     <div class="modal-footer">
-                      <button type="button" class="btn btn-warning" onclick="location.href='{% url 'cancel_subscription' subscription.pk %}'">Cancel subscription</button>
-                      <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                      <button type="button" class="btn btn-danger" onclick="location.href='{% url 'cancel_subscription' subscription.pk %}'">Cancel subscription</button>
                     </div>
                   </div>
                 </div>

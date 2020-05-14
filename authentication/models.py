@@ -8,7 +8,7 @@ from messaging import email
 from .tokens import account_activation_token
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
-from payments.models import TaxationCountry
+from payments.models import TaxationCountry, Subscription
 from payments.countries import codes_iso3166
 from django.conf import settings
 
@@ -98,7 +98,10 @@ class User(AbstractUser):
         elif self.plan == "education":
             return "Student's license ({} days)".format(expiration_delta.days + 1)
         elif self.plan == "premium":
-            return "Full access ({} days)".format(expiration_delta.days + 1)
+            if len(Subscription.objects.filter(user=self, state__in=(Subscription.ACTIVE, Subscription.FAILURE_NOTIFIED))) == 0:
+                return "Full access ({} days)".format(expiration_delta.days + 1)
+            else:
+                return "Full access"
         elif self.plan == "test":
             return "Test access ({} days)".format(expiration_delta.days + 1)
 
