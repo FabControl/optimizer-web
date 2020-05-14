@@ -109,13 +109,6 @@ class RangeSliderWidget(forms.widgets.Input):
             return None
 
 
-class NewTestForm(forms.Form):
-    session_name = forms.CharField(label='Session name', max_length=20,
-                                   error_messages={'required': 'Please enter session name'})
-    comments = forms.CharField(label='Comments', max_length=20, required=False, help_text='100 characters max.')
-    test_number = forms.ChoiceField(choices=TEST_NUMBER_CHOICES)
-
-
 class MachineForm(forms.ModelForm):
     class Meta:
         model = Machine
