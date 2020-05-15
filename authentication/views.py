@@ -60,7 +60,8 @@ def user_login(request):
 
 
 def user_signup(request):
-    context = {"form": SignUpForm}
+    country = request.geolocation['county']['code'] if hasattr(request, 'geolocation') else ''
+    context = {"form": SignUpForm(initial={'company_country':country})}
     if request.user.is_authenticated:
         return redirect('dashboard')
     if request.method == 'POST':
