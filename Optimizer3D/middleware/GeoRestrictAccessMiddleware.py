@@ -16,6 +16,9 @@ def geoRestrictExempt(viewFunc):
 
 class GeoRestrictAccessMiddleware(IpGeolocationMiddleware):
     def __init__(self, get_response=None):
+        if getattr(settings, 'GEO_RESTRICTION_DISABLED', None) is not None:
+            raise MiddlewareNotUsed()
+
         self.has_whitelist = False
         self.has_blacklist = False
         if hasattr(settings, 'GEO_RESTRICTION_WHITELIST'):
@@ -23,9 +26,6 @@ class GeoRestrictAccessMiddleware(IpGeolocationMiddleware):
 
         if hasattr(settings, 'GEO_RESTRICTION_BLACKLIST'):
             self.has_blacklist = settings.GEO_RESTRICTION_BLACKLIST is not None
-
-        if not (self.has_blacklist or self.has_whitelist):
-            raise MiddlewareNotUsed()
 
         super(GeoRestrictAccessMiddleware, self).__init__(get_response)
 
