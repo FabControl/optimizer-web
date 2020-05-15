@@ -21,7 +21,7 @@ class PaymentPlanForm(forms.Form):
             items={'line_items': [{ 'name': '3DOptimizer full access {0.name}'.format(plan),
                                     'description': 'Full access to all 3DOptimizer features',
                                     'amount': int(plan.price * 100), # price in cents
-                                    'currency': 'eur',
+                                    'currency': plan.currency.name.lower(),
                                     'quantity': 1}]}
         else:
             items={'subscription_data':{ 'items': [{'plan': plan.stripe_plan_id}],

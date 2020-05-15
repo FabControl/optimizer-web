@@ -39,7 +39,7 @@
           <div class="row justify-content-center">
             <div class="col-sm-12 text-left">
               <h1 class="display-4">{{plan.name}}</h1>
-              <p class="text-primary"><span class='lead'>{{plan.pretty_price}} EUR</span>
+              <p class="text-primary"><span class='lead'>{{plan.pretty_price}} {{ plan.currency.name }}</span>
                 <br>
                 {% if plan.is_one_time %}
                   <small>One-time payment</small>

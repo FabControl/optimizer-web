@@ -411,7 +411,7 @@
           <p>Service description</p>
         </td>
         <td style="text-align:left;width:0.778in; " class="ce28">
-          <p>Amount, EUR</p>
+          <p>Amount, {{ invoice.payment_plan.currency.name }}</p>
         </td>
         <td style="text-align:left;width:0.4764in; " class="ce2"> </td>
         <td style="text-align:left;width:0.889in; " class="ce2"> </td>
@@ -444,7 +444,7 @@
         <td style="text-align:left;width:1.1957in; " class="ce17"> </td>
         <td style="text-align:left;width:0.4874in; " class="ce17"> </td>
         <td colspan="2" style="text-align:left;width:1.1in; " class="ce24">
-          <p>Total amount to pay €</p>
+          <p>Total amount to pay {{ invoice.payment_plan.currency.name }}</p>
         </td>
         <td style="text-align:right; width:0.778in; " class="ce31">
           <p>{{ invoice.payment_plan.price }}</p>
