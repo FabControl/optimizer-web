@@ -5,7 +5,7 @@ from django.conf import settings
 import pytz
 import uuid
 from django.contrib.auth import get_user_model
-from .countries import codes_iso3166
+from .countries import codes_iso3166, codes_iso4217
 import zlib
 from base64 import b64encode, b64decode
 from django.forms.models import model_to_dict
@@ -61,6 +61,7 @@ class Plan(ModelDiffMixin, models.Model):
     subscription_period = models.DurationField(default=timedelta(days=31))
     type = models.CharField(max_length=32, choices=(('corporate', 'Corporate'), ('premium', 'Premium'), ('basic', 'Basic'), ('deleted', 'Deleted')), default='basic')
     stripe_plan_id = models.CharField(max_length=32, default="", editable=False)
+    currency = models.ForeignKey('Currency', on_delete=models.CASCADE, default='EUR')
 
     @property
     def is_one_time(self):
@@ -71,7 +72,13 @@ class Plan(ModelDiffMixin, models.Model):
         return str(self.price).replace('.00', ',-')
 
     def __str__(self):
-        return "{} ({})".format(self.name, ('{} Eur '.format(self.price) + ("One-Time" if self.is_one_time else "Subscription")) if self.price != 0 else "Free")
+        if self.price == 0:
+            return "{} (Free)".format(self.name)
+
+        info = 'One-Time' if self.is_one_time else 'Subscription'
+        info += f' {self.price} {self.currency.name}'
+        return "{} ({})".format(self.name, info)
+
 
     @classmethod
     def from_stripe(cls, stripe_plan:dict):
@@ -80,9 +87,15 @@ class Plan(ModelDiffMixin, models.Model):
         except cls.DoesNotExist:
             plan = cls(stripe_plan_id=stripe_plan['id'])
 
+        try:
+            currency = Currency.objects.get(name=stripe_plan['currency'].upper())
+        except Currency.DoesNotExist:
+            currency = Currency.objects.create(name=stripe_plan['currency'].upper())
+
         plan.name = stripe_plan['nickname']
         plan.price = stripe_plan['amount'] / 100.0
         plan.type = 'premium' if stripe_plan['active'] else 'deleted'
+        plan.currency = currency
         # subscriptin_period does not matter, since stripe is handling subscription extension
         return plan
 
@@ -187,6 +200,23 @@ class Subscription(models.Model):
         card = stripe.PaymentMethod.retrieve(payment_method_id)['card']
         return card['brand'] + ' ****' + card['last4']
 
+class Currency(models.Model):
+    name = models.CharField(max_length=3, 
+                            editable=True,
+                            choices=codes_iso4217, 
+                            primary_key=True)
+    _countries = models.CharField(max_length=600, editable=False, default='')
+
+    @property
+    def countries(self):
+        return self._countries.split(' ')
+
+    @countries.setter
+    def countries(self, country_list:list):
+        self._countries = ' '.join(country_list)
+
+    def __str__(self):
+        return f'{self.name} in {len(self.countries)} countries'
 
 
 class Invoice(models.Model):

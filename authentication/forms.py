@@ -40,7 +40,6 @@ class SignUpForm(UserCreationForm):
     email = forms.EmailField(max_length=254, help_text='We will not share your email address with 3rd parties.')
     first_name = forms.CharField(max_length=30, required=True)
     last_name = forms.CharField(max_length=30, required=True)
-    company = forms.CharField(max_length=30, required=False)
     termsofuse = forms.BooleanField()
     termsofuse.label = safestring.mark_safe('<label class="small">I agree to <a href="/help/terms_of_use" target="blank">terms of use</a></label>')
 
@@ -53,10 +52,11 @@ class SignUpForm(UserCreationForm):
         self.fields['password2'].widget.attrs["maxlength"] = 32
         self.fields['password1'].widget.attrs["minlength"] = 8
         self.fields['password2'].widget.attrs["minlength"] = 8
+        self.fields['company_country'].label = 'Country'
 
     class Meta:
         model = User
-        fields = ('email', 'first_name', 'last_name', 'password1', 'password2',)
+        fields = ('email', 'first_name', 'last_name', 'password1', 'password2', 'company_country')
 
     def save_and_notify(self, request):
         user = self.save()
@@ -134,7 +134,9 @@ class LegalInformationForm(forms.ModelForm):
     def __init__(self, *a, **k):
         super().__init__(*a, **k)
         self.fields['company_name'].label = 'Company name*'
-        self.fields['company_country'].label = 'Company country*'
+        self.fields['first_name'].required = True
+        self.fields['last_name'].required = True
+        self.fields['company_country'].label = 'Country'
         self.fields['company_legal_address'].label = 'Company legal address*'
         self.fields['company_registration_number'].label = 'Company registration number*'
         self.fields['company_vat_number'].label = 'Company VAT number'
@@ -153,7 +155,7 @@ class LegalInformationForm(forms.ModelForm):
                 if v == '' or v is None:
                     missing.append(self.fields[f].label)
 
-            else:
+            elif f != 'company_country':
                 cleaned_data[f] = ''
 
         if len(missing) > 0:

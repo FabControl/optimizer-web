@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Plan, Checkout, TaxationCountry, Subscription
+from .models import Plan, Checkout, TaxationCountry, Subscription, Currency
+from .forms import CurrencyAdminForm
 
 # Register your models here.
 admin.site.register(TaxationCountry)
@@ -49,4 +50,12 @@ class SubscriptionModelAdmin(admin.ModelAdmin):
         return False
 
     def has_add_permission(self, request):
+        return False
+
+
+@admin.register(Currency)
+class CurrencyModelAdmin(admin.ModelAdmin):
+    form = CurrencyAdminForm
+
+    def has_delete_permission(self, request, obj=None):
         return False

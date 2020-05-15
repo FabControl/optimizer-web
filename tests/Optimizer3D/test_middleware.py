@@ -196,6 +196,7 @@ def add_location(request):
 class SubscriptionMiddlewareTest(TestCase):
     def test_geo_restriction_disabled(self):
         overrides = dict(GEO_RESTRICTION_BLACKLIST=None,
+                        GEO_RESTRICTION_DISABLED=True,
                         GEO_RESTRICTION_WHITELIST=None)
 
         with override_settings(**overrides):
@@ -203,6 +204,7 @@ class SubscriptionMiddlewareTest(TestCase):
                 mware = GeoRestrictAccessMiddleware()
 
         overrides = dict(GEO_RESTRICTION_BLACKLIST=[],
+                        GEO_RESTRICTION_DISABLED=None,
                         GEO_RESTRICTION_WHITELIST=[])
 
         with override_settings(**overrides):
@@ -218,6 +220,7 @@ class SubscriptionMiddlewareTest(TestCase):
 
         # test passing blacklist
         overrides = dict(GEO_RESTRICTION_BLACKLIST=['US', 'LV', 'GB'],
+                        GEO_RESTRICTION_DISABLED=None,
                         GEO_RESTRICTION_WHITELIST=None)
 
         with override_settings(**overrides):
@@ -242,6 +245,7 @@ class SubscriptionMiddlewareTest(TestCase):
         # test restriction by whitelist
         location_mock.reset_mock()
         overrides = dict(GEO_RESTRICTION_WHITELIST=['US', 'LV', 'GB'],
+                        GEO_RESTRICTION_DISABLED=None,
                         GEO_RESTRICTION_BLACKLIST=None)
 
         with override_settings(**overrides):

@@ -5,7 +5,7 @@ from django.utils import timezone
 from django.contrib import messages
 from django.views.generic.edit import BaseFormView
 from django.views.generic import ListView, TemplateView
-from .models import Plan, Checkout, Invoice, TaxationCountry, Subscription
+from .models import Plan, Checkout, Invoice, TaxationCountry, Subscription, Currency
 from django.urls import reverse
 from .forms import PaymentPlanForm
 from django.contrib.auth.decorators import login_required
@@ -27,7 +27,22 @@ class PaymentPlansView(BaseFormView):
     form_class = PaymentPlanForm
 
     def get(self, request, *a, **k):
-        plans = Plan.objects.filter(type='premium').order_by('price')
+        if request.user.is_authenticated:
+            country = request.user.company_country
+        else:
+            country = ''
+
+        if country == '' and hasattr(request, 'geolocation'):
+            country = request.geolocation['county']['code']
+
+        currencies = []
+        if country != '':
+            currencies = Currency.objects.filter(_countries__contains=country)
+
+        if len(currencies) < 1:
+            currencies = Currency.objects.filter(name='USD')
+
+        plans = Plan.objects.filter(type='premium', currency__in=currencies).order_by('price')
 
         context = {'plans': plans,
                 # Should work correctly if database contains
