@@ -56,3 +56,6 @@ class SubscriptionModelAdmin(admin.ModelAdmin):
 @admin.register(Currency)
 class CurrencyModelAdmin(admin.ModelAdmin):
     form = CurrencyAdminForm
+
+    def has_delete_permission(self, request, obj=None):
+        return False

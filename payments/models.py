@@ -72,7 +72,13 @@ class Plan(ModelDiffMixin, models.Model):
         return str(self.price).replace('.00', ',-')
 
     def __str__(self):
-        return "{} ({})".format(self.name, ('{} Eur '.format(self.price) + ("One-Time" if self.is_one_time else "Subscription")) if self.price != 0 else "Free")
+        if self.price == 0:
+            return "{} (Free)".format(self.name)
+
+        info = 'One-Time' if self.is_one_time else 'Subscription'
+        info += f' {self.price} {self.currency.name}'
+        return "{} ({})".format(self.name, info)
+
 
     @classmethod
     def from_stripe(cls, stripe_plan:dict):
@@ -206,6 +212,9 @@ class Currency(models.Model):
     @countries.setter
     def countries(self, country_list:list):
         self._countries = ' '.join(country_list)
+
+    def __str__(self):
+        return f'{self.name} in {len(self.countries)} countries'
 
 
 class Invoice(models.Model):
