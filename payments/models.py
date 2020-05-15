@@ -61,6 +61,7 @@ class Plan(ModelDiffMixin, models.Model):
     subscription_period = models.DurationField(default=timedelta(days=31))
     type = models.CharField(max_length=32, choices=(('corporate', 'Corporate'), ('premium', 'Premium'), ('basic', 'Basic'), ('deleted', 'Deleted')), default='basic')
     stripe_plan_id = models.CharField(max_length=32, default="", editable=False)
+    currency = models.ForeignKey('Currency', on_delete=models.CASCADE, default='EUR')
 
     @property
     def is_one_time(self):
@@ -80,9 +81,15 @@ class Plan(ModelDiffMixin, models.Model):
         except cls.DoesNotExist:
             plan = cls(stripe_plan_id=stripe_plan['id'])
 
+        try:
+            currency = Currency.objects.get(name=stripe_plan['currency'].upper())
+        except Currency.DoesNotExist:
+            currency = Currency.objects.create(name=stripe_plan['currency'].upper())
+
         plan.name = stripe_plan['nickname']
         plan.price = stripe_plan['amount'] / 100.0
         plan.type = 'premium' if stripe_plan['active'] else 'deleted'
+        plan.currency = currency
         # subscriptin_period does not matter, since stripe is handling subscription extension
         return plan
 
