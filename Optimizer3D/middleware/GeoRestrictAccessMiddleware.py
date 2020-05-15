@@ -2,6 +2,7 @@ from django.core.exceptions import MiddlewareNotUsed
 from django_ip_geolocation.middleware import IpGeolocationMiddleware
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
+import logging
 
 # In settings.py
 #GEO_RESTRICTION_WHITELIST = ['RU']
@@ -13,6 +14,20 @@ def geoRestrictExempt(viewFunc):
     viewFunc.geo_restrict_exempt = True
     return viewFunc
 
+
+# disable error messages from django_ip_geolocation module
+class _Geoip_spam_filter(logging.Filter):
+    def filter(self, record):
+        if not record.pathname:
+            return 1
+        if not record.pathname.endswith('/django_ip_geolocation/middleware.py'):
+            return 1
+        if record.msg != "Couldn't geolocate ip":
+            return 1
+        record.exc_info = None
+        return 1
+
+logging.getLogger().addFilter(_Geoip_spam_filter())
 
 class GeoRestrictAccessMiddleware(IpGeolocationMiddleware):
     def __init__(self, get_response=None):
