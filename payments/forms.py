@@ -1,8 +1,9 @@
 from django import forms
-from .models import Checkout, Plan
+from .models import Checkout, Plan, Currency
 import stripe
 from django.http.request import HttpRequest
 from django.urls import reverse
+from .countries import codes_iso3166
 
 
 class PaymentPlanForm(forms.Form):
@@ -41,3 +42,25 @@ class PaymentPlanForm(forms.Form):
         checkout.save()
 
         return bill['id']
+
+class CurrencyAdminForm(forms.ModelForm):
+    countries = forms.MultipleChoiceField(choices=codes_iso3166, widget=forms.widgets.CheckboxSelectMultiple)
+    class Meta:
+        model = Currency
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        if 'instance' in kwargs:
+            if 'initial' not in kwargs or kwargs['initial'] is None:
+                kwargs['initial'] = {}
+
+            kwargs['initial']['countries'] = kwargs['instance'].countries
+
+        return super().__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        result = super().save(commit=False)
+        result.countries = self.cleaned_data['countries']
+        if commit:
+            result.save()
+        return result

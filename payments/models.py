@@ -5,7 +5,7 @@ from django.conf import settings
 import pytz
 import uuid
 from django.contrib.auth import get_user_model
-from .countries import codes_iso3166
+from .countries import codes_iso3166, codes_iso4217
 import zlib
 from base64 import b64encode, b64decode
 from django.forms.models import model_to_dict
@@ -185,6 +185,20 @@ class Subscription(models.Model):
         card = stripe.PaymentMethod.retrieve(payment_method_id)['card']
         return card['brand'] + ' ****' + card['last4']
 
+class Currency(models.Model):
+    name = models.CharField(max_length=3, 
+                            editable=True,
+                            choices=codes_iso4217, 
+                            primary_key=True)
+    _countries = models.CharField(max_length=600, editable=False, default='')
+
+    @property
+    def countries(self):
+        return self._countries.split(' ')
+
+    @countries.setter
+    def countries(self, country_list:list):
+        self._countries = ' '.join(country_list)
 
 
 class Invoice(models.Model):
