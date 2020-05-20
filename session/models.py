@@ -321,6 +321,7 @@ class Session(models.Model, DependenciesCopyMixin):
     settings = models.ForeignKey(Settings, on_delete=models.CASCADE, null=False)
 
     # Fields that cannot be stored in a DB in any other format
+    _queue = models.CharField(max_length=512, default='["01", "03", "10", "13"]')  # Contains primary tests by default
     _min_max_parameter_one = models.CharField(max_length=20, default="[]")
     _min_max_parameter_two = models.CharField(max_length=20, default="[0,0]")
     _min_max_parameter_three = models.CharField(max_length=20, default="[0,0]")
@@ -816,8 +817,16 @@ class Session(models.Model, DependenciesCopyMixin):
         self.persistence = temp_persistence
         self.update_persistence()
 
-    def __str__(self):
-        return "{} (target: {})".format(self.name, self.target)
+    @property
+    def queue(self):
+        return ast.literal_eval(self._queue)
+
+    @queue.setter
+    def queue(self, new_value: list or str):
+        if type(new_value) == list:
+            self._queue = str(new_value)
+        elif type(ast.literal_eval(new_value)) == dict:  # Check if the string can be parsed as a dict
+            self._queue = new_value
 
     @property
     def __json__(self) -> dict:
