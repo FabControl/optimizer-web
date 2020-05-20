@@ -301,7 +301,7 @@ class SessionOverview(SessionTestsSelectionMixin, LoginRequiredMixin, generic.De
 
 
 @login_required
-def session_state_manager(request, pk):
+def session_dispatcher(request, pk):
     session = get_object_or_404(Session, pk=pk)
     session.is_owner(request.user)
 
