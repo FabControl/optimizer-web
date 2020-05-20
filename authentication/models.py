@@ -12,6 +12,8 @@ from payments.models import TaxationCountry
 from payments.countries import codes_iso3166
 from django.conf import settings
 
+from .choices import PLAN_CHOICES
+
 
 class UserManager(BaseUserManager):
     """Define a model manager for User model with no username field."""
@@ -53,7 +55,6 @@ class User(AbstractUser):
     username = None
     email = models.EmailField('email address', unique=True,
                               error_messages={'unique': 'Email must be unique'})
-    PLAN_CHOICES = [("basic", "Core"), ("premium", "Premium"), ("education", "Education"), ("permanent", "Permanent"), ("test", "Test")]
     plan = models.CharField(max_length=32, choices=PLAN_CHOICES, default="basic")
     last_active = models.DateTimeField(null=True)
     onboarding = models.BooleanField(default=True)
