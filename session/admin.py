@@ -6,12 +6,9 @@ from .models import *
 
 admin.site.register(Material)
 admin.site.register(Machine)
-admin.site.register(Nozzle)
-admin.site.register(Extruder)
-admin.site.register(Chamber)
-admin.site.register(Printbed)
-admin.site.register(Settings)
 admin.site.register(SessionMode)
+admin.site.register(PrintDescriptor)
+admin.site.register(Junction)
 
 
 @admin.register(Session)
