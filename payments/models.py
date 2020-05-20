@@ -201,7 +201,7 @@ class Subscription(models.Model):
         return card['brand'] + ' ****' + card['last4']
 
 class Currency(models.Model):
-    name = models.CharField(max_length=3, 
+    name = models.CharField(max_length=3,
                             editable=True,
                             choices=codes_iso4217, 
                             primary_key=True)
@@ -282,3 +282,17 @@ class TaxationCountry(models.Model):
 
     def __str__(self):
         return f'{self.long_name} (VAT={self.vat_charge}%)'
+
+class Corporation(models.Model):
+    name = models.CharField(max_length=32)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    _invited_users = models.CharField(max_length=500, default='', blank=True)
+
+    @property
+    def invited_users(self):
+        return get_user_model().objects.filter(email__in=self._invited_users.split(' '))
+
+    @invited_users.setter
+    def invited_users(self, users:models.QuerySet):
+        self._invited_users = ' '.join(users.values_list('email', flat=True))
+

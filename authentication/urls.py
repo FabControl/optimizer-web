@@ -29,4 +29,8 @@ urlpatterns = [
     path('activate_account/<uidb64>/<token>/', views.activate_account, name='activate_account'),
     path('account_legal_info/', views.legal_information_view, name='account_legal_info'),
     path('my_affiliates', views.MyAffiliatesView.as_view(), name='my_affiliates'),
+    path('corporation/assign_manager/', views.assign_manager_role, name='assign_manager_role'),
+    path('corporation/resign_manager/', views.resign_manager_role, name='resign_manager_role'),
+    path('corporation/remove_member/', views.remove_from_corporation, name='remove_from_corporation'),
+    path('corporation/leave/', views.delete_or_leave_corporation, name='delete_or_leave_corporation'),
     ]

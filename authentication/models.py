@@ -54,7 +54,7 @@ class User(AbstractUser):
     email = models.EmailField('email address', unique=True,
                               error_messages={'unique': 'Email must be unique'})
     PLAN_CHOICES = [("basic", "Core"), ("premium", "Premium"), ("education", "Education"), ("permanent", "Permanent"), ("test", "Test")]
-    plan = models.CharField(max_length=32, choices=PLAN_CHOICES, default="basic")
+    _plan = models.CharField(max_length=32, choices=PLAN_CHOICES, default="basic", db_column='plan')
     last_active = models.DateTimeField(null=True)
     onboarding = models.BooleanField(default=True)
     is_active = models.BooleanField(default=False)
@@ -70,10 +70,34 @@ class User(AbstractUser):
     company_registration_number = models.CharField(max_length=32, blank=True)
     company_vat_number = models.CharField(max_length=32, blank=True)
 
+    manager_of_corporation = models.ForeignKey('payments.Corporation',
+                                               null=True,
+                                               blank=True,
+                                               on_delete=models.SET_NULL,
+                                               related_name='managers')
+    member_of_corporation = models.ForeignKey('payments.Corporation',
+                                               null=True,
+                                               blank=True,
+                                               on_delete=models.SET_NULL,
+                                               related_name='team')
+
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
     objects = UserManager()
+
+    @property
+    def plan(self):
+        if self.member_of_corporation is None:
+            return self._plan
+
+        return self.member_of_corporation.owner._plan
+
+    @plan.setter
+    def plan(self, val:str):
+        if self.member_of_corporation is None:
+            self._plan = val
+
 
     @property
     def onboarding_sections(self):
@@ -160,6 +184,8 @@ class Affiliate(models.Model):
     date_created = models.DateTimeField(auto_now_add=True, editable=False)
     date_registered = models.DateTimeField(editable=False, null=True)
     sender = models.ForeignKey('User', null=True, editable=False,
+                                    on_delete=models.SET_NULL)
+    corporation = models.ForeignKey('payments.Corporation', null=True,
                                     on_delete=models.SET_NULL)
     email = models.EmailField(null=False)
     name = models.CharField(max_length=30)

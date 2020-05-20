@@ -1,6 +1,6 @@
 from django.contrib.auth import views as auth_views
 import simplejson as json
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash, get_user_model
 from django.utils.datastructures import MultiValueDictKeyError
 from .forms import SignUpForm, ResetPasswordForm
@@ -16,7 +16,7 @@ from crispy_forms.layout import Submit, Layout, Div
 from django.contrib.auth.decorators import login_required
 from django.utils.datastructures import MultiValueDictKeyError
 from django.urls import reverse_lazy, reverse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import ResetPasswordForm, SignUpForm, LoginForm, ChangePasswordForm, LegalInformationForm
 from .tokens import account_activation_token, affiliate_token_generator
 from django.utils.encoding import force_text, force_bytes
@@ -234,7 +234,7 @@ class MyAffiliatesView(LoginRequiredMixin, ModelFormMixin, generic.ListView, Pro
         form.helper.add_input(Submit('submit', 'Send', css_class='btn btn-primary'))
         form.helper.method = 'POST'
         form.helper.layout = Layout(Div(Div(Div('email', 'name', css_class='col'),
-                                            Div('message', css_class='col'), 
+                                            Div('message', css_class='col'),
                                             css_class='row'),
                                         css_class='container'))
         return form
@@ -326,3 +326,52 @@ def legal_information_view(request):
                   'authentication/legal_info.html',
                   dict(legal_info=form,
                       subscription=subscription))
+
+def _change_corporation_user(make_changes):
+    @login_required
+    def wrapped(request):
+        if request.method == 'POST' and request.user.manager_of_corporation is not None:
+            corporation = request.user.manager_of_corporation
+            target_user = get_object_or_404(get_user_model(),
+                                        member_of_corporation=corporation,
+                                        pk=request.POST.get('uid', ''))
+
+            if target_user != corporation.owner:
+                make_changes(target_user, corporation)
+                target_user.save()
+                return redirect(reverse(request.POST.get('next', 'account_legal_info')))
+
+        raise Http404()
+
+    return wrapped
+
+@_change_corporation_user
+def assign_manager_role(user, corporation):
+    user.manager_of_corporation = corporation
+
+
+@_change_corporation_user
+def resign_manager_role(user, corporation):
+    user.manager_of_corporation = None
+
+
+@_change_corporation_user
+def remove_from_corporation(user, corporation):
+    user.member_of_corporation = None
+    user.manager_of_corporation = None
+
+
+@login_required
+def delete_or_leave_corporation(request):
+    corp = request.user.member_of_corporation
+    if corp is not None:
+        user = request.user
+        if user == corp.owner:
+            corp.delete()
+        else:
+            user.member_of_corporation = None
+            user.manager_of_corporation = None
+            user.save()
+    return redirect(reverse('account_legal_info'))
+
+

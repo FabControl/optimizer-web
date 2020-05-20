@@ -1,9 +1,10 @@
 from django.contrib import admin
-from .models import Plan, Checkout, TaxationCountry, Subscription, Currency
+from .models import Plan, Checkout, TaxationCountry, Subscription, Currency, Corporation
 from .forms import CurrencyAdminForm
 
 # Register your models here.
 admin.site.register(TaxationCountry)
+admin.site.register(Corporation)
 
 def mark_checkout_paid(modeladmin, request, queryset):
     for c in queryset:
