@@ -852,3 +852,27 @@ class Session(models.Model, DependenciesCopyMixin):
             "previous_tests": json.loads(self._persistence)["session"]["previous_tests"]
         }
         return output
+
+
+class PrintDescriptor(models.Model):
+    """
+    Contains a statement about print quality and a pointer to a respective test, should the statement be selected as true
+    """
+    statement = models.CharField(max_length=512, default="There's a problem with the print")
+    target_test = models.CharField(max_length=4, choices=TEST_NUMBER_CHOICES, default="")
+    hint = models.CharField(max_length=512, null=True, blank=True)
+    image = models.ImageField(upload_to='descriptors', null=True, blank=True)
+
+    def __str__(self):
+        return f'"{self.statement}" > {self.target_test}'
+
+
+class Junction(models.Model):
+    """
+    Contains descriptor objects relevant for each test
+    """
+    base_test = models.CharField(max_length=4, default="", choices=TEST_NUMBER_CHOICES)
+    descriptors = models.ManyToManyField(PrintDescriptor, blank=True)
+
+    def __str__(self):
+        return f"Junction for {self.base_test}"
