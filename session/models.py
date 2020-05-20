@@ -9,6 +9,7 @@ from authentication.models import User
 from payments.models import Plan
 from optimizer_api import api_client
 from .choices import TEST_NUMBER_CHOICES, TARGET_CHOICES, SLICER_CHOICES, TOOL_CHOICES, FORM_CHOICES, UNITS, MODE_CHOICES, WIZARD_MODES
+from authentication.choices import PLAN_CHOICES
 
 # Create your models here.
 
@@ -287,12 +288,20 @@ class SessionMode(models.Model):
     are available to.
     """
     name = models.CharField(max_length=64, default='Untitled')
-    core = Plan.objects.filter(name="core")
-    wizard_mode = models.CharField(max_length=64, choices=WIZARD_MODES, default='flat')
-    plan_availability = models.ForeignKey(Plan, default=core, on_delete=models.CASCADE)
+    type = models.CharField(max_length=64, choices=WIZARD_MODES, default='normal')
+    plan_availability = models.CharField(default='basic', choices=PLAN_CHOICES, max_length=64)
+    public = models.BooleanField(default=True)
 
     # Private variables, for getters, setters
-    _included_tests = models.CharField(max_length=200)
+    _included_tests = models.CharField(max_length=200,
+                                       default="['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13']")
+
+    @property
+    def included_tests(self):
+        return ast.literal_eval(str(self._included_tests))
+
+    def __str__(self):
+        return f'{self.name}'
 
 
 class Session(models.Model, DependenciesCopyMixin):
