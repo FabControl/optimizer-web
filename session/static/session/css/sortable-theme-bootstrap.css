@@ -1,90 +1,110 @@
-/* line 2, ../sass/_sortable.sass */
-table[data-sortable] {
-  border-collapse: collapse;
-  border-spacing: 0;
-}
-/* line 6, ../sass/_sortable.sass */
-table[data-sortable] th {
-  vertical-align: bottom;
-  font-weight: bold;
-}
-/* line 10, ../sass/_sortable.sass */
-table[data-sortable] th, table[data-sortable] td {
-  text-align: left;
-  padding: 10px;
-}
-/* line 14, ../sass/_sortable.sass */
-table[data-sortable] th:not([data-sortable="false"]) {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  -o-user-select: none;
-  user-select: none;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-  -webkit-touch-callout: none;
-  cursor: pointer;
-}
-/* line 26, ../sass/_sortable.sass */
-table[data-sortable] th:after {
-  content: "";
-  visibility: hidden;
-  display: inline-block;
-  vertical-align: inherit;
-  height: 0;
-  width: 0;
-  border-width: 5px;
-  border-style: solid;
-  border-color: transparent;
-  margin-right: 1px;
-  margin-left: 10px;
-  float: right;
-}
-/* line 40, ../sass/_sortable.sass */
-table[data-sortable] th[data-sorted="true"]:after {
-  visibility: visible;
-}
-/* line 43, ../sass/_sortable.sass */
-table[data-sortable] th[data-sorted-direction="descending"]:after {
-  border-top-color: inherit;
-  margin-top: 8px;
-}
-/* line 47, ../sass/_sortable.sass */
-table[data-sortable] th[data-sorted-direction="ascending"]:after {
-  border-bottom-color: inherit;
-  margin-top: 3px;
+/**
+ * adding sorting ability to HTML tables with Bootstrap styling
+ * @summary HTML tables sorting ability
+ * @version 2.0.0
+ * @requires tinysort, moment.js, jQuery
+ * @license MIT
+ * @author Matus Brlit (drvic10k)
+ * @copyright Matus Brlit (drvic10k), bootstrap-sortable contributors
+ */
+
+table.sortable span.sign {
+    display: block;
+    position: absolute;
+    top: 50%;
+    right: 5px;
+    font-size: 12px;
+    margin-top: -10px;
+    color: #bfbfc1;
 }
 
-/* line 5, ../sass/sortable-theme-bootstrap.sass */
-table[data-sortable].sortable-theme-bootstrap {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 14px;
-  line-height: 20px;
-  color: #333333;
-  background: white;
+table.sortable th:after {
+    display: block;
+    position: absolute;
+    top: 50%;
+    right: 5px;
+    font-size: 12px;
+    margin-top: -10px;
+    color: #bfbfc1;
 }
-/* line 12, ../sass/sortable-theme-bootstrap.sass */
-table[data-sortable].sortable-theme-bootstrap thead th {
-  border-bottom: 2px solid #e0e0e0;
+
+table.sortable th.arrow:after {
+    content: '';
 }
-/* line 15, ../sass/sortable-theme-bootstrap.sass */
-table[data-sortable].sortable-theme-bootstrap tbody td {
-  border-top: 1px solid #e0e0e0;
+
+table.sortable span.arrow, span.reversed, th.arrow.down:after, th.reversedarrow.down:after, th.arrow.up:after, th.reversedarrow.up:after {
+    border-style: solid;
+    border-width: 5px;
+    font-size: 0;
+    border-color: #ccc transparent transparent transparent;
+    line-height: 0;
+    height: 0;
+    width: 0;
+    margin-top: -2px;
 }
-/* line 18, ../sass/sortable-theme-bootstrap.sass */
-table[data-sortable].sortable-theme-bootstrap th[data-sorted="true"] {
-  color: #3a87ad;
-  background: #d9edf7;
-  border-bottom-color: #bce8f1;
+
+    table.sortable span.arrow.up, th.arrow.up:after {
+        border-color: transparent transparent #ccc transparent;
+        margin-top: -7px;
+    }
+
+table.sortable span.reversed, th.reversedarrow.down:after {
+    border-color: transparent transparent #ccc transparent;
+    margin-top: -7px;
 }
-/* line 23, ../sass/sortable-theme-bootstrap.sass */
-table[data-sortable].sortable-theme-bootstrap th[data-sorted="true"][data-sorted-direction="descending"]:after {
-  border-top-color: #3a87ad;
+
+    table.sortable span.reversed.up, th.reversedarrow.up:after {
+        border-color: #ccc transparent transparent transparent;
+        margin-top: -2px;
+    }
+
+table.sortable span.az:before, th.az.down:after {
+    content: "a .. z";
 }
-/* line 26, ../sass/sortable-theme-bootstrap.sass */
-table[data-sortable].sortable-theme-bootstrap th[data-sorted="true"][data-sorted-direction="ascending"]:after {
-  border-bottom-color: #3a87ad;
+
+table.sortable span.az.up:before, th.az.up:after {
+    content: "z .. a";
 }
-/* line 31, ../sass/sortable-theme-bootstrap.sass */
-table[data-sortable].sortable-theme-bootstrap.sortable-theme-bootstrap-striped tbody > tr:nth-child(odd) > td {
-  background-color: #f9f9f9;
+
+table.sortable th.az.nosort:after, th.AZ.nosort:after, th._19.nosort:after, th.month.nosort:after {
+    content: "..";
+}
+
+table.sortable span.AZ:before, th.AZ.down:after {
+    content: "A .. Z";
+}
+
+table.sortable span.AZ.up:before, th.AZ.up:after {
+    content: "Z .. A";
+}
+
+table.sortable span._19:before, th._19.down:after {
+    content: "1 .. 9";
+}
+
+table.sortable span._19.up:before, th._19.up:after {
+    content: "9 .. 1";
+}
+
+table.sortable span.month:before, th.month.down:after {
+    content: "jan .. dec";
+}
+
+table.sortable span.month.up:before, th.month.up:after {
+    content: "dec .. jan";
+}
+
+table.sortable>thead th:not([data-defaultsort=disabled]) {
+    cursor: pointer;
+    position: relative;
+    top: 0;
+    left: 0;
+}
+
+table.sortable>thead th:hover:not([data-defaultsort=disabled]) {
+    background: #efefef;
+}
+
+table.sortable>thead th div.mozilla {
+    position: relative;
 }

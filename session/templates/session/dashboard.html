@@ -10,6 +10,16 @@
       <p class='lead'><font size='6'>Welcome to 3DOptimizer!</font></p>
     </div>
   </div>
+<div class="container pt-3">
+  <div class="row pt-2">
+    <div class="col-sm">
+      {% if invitations %}
+        {% for corporation in invitations %}
+        <p>{{ corporation.owner.first_name }} {{ corporation.owner.last_name }} invited you to collaborate in {{ corporation.name }}. <a href="{% url 'accept_corporation_invitation' corporation.pk %}">Join</a> | <a href="{% url 'decline_corporation_invitation' corporation.pk %}">Decline</a></p>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
   {% if cards.sessions.len < 1 %}
   <div class="row pt-5 pb-5">
     <div class="col-sm text-center">
@@ -51,15 +61,15 @@
       <div class="pt-3 pb-2">
         <h3>Recent testing sessions</h3>
       </div>
-      <table class="sortable-theme-bootstrap table" data-sortable>
+      <table class="sortable sortable-theme-bootstrap table" data-sortable>
         <thead>
           <tr>
-            <th data-sortable="true">Session name</th>
-            <th data-sortable="true">Printer</th>
-            <th data-sortable="true">Material</th>
-            <th data-sortable="true" data-sortable="true">Target</th>
-            <th data-sortable="true">Completed tests</th>
-            <th data-sorted="true">Date</th>
+            <th>Session name</th>
+            <th>Printer</th>
+            <th>Material</th>
+            <th>Target</th>
+            <th>Completed tests</th>
+            <th data-defaultsort="asc">Date</th>
           </tr>
         </thead>
         <tbody>

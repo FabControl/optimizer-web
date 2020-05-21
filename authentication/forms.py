@@ -171,3 +171,10 @@ class LegalInformationForm(forms.ModelForm):
 
         return cleaned_data
 
+
+class CorporationInviteForm(forms.Form):
+    email = forms.EmailField()
+    name = forms.CharField(max_length=20)
+
+    class Meta:
+        fields = ['email', 'name']
