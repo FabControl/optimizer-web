@@ -364,12 +364,22 @@ def session_dispatcher(request, pk):
             request.user.onboarding = False
             request.user.save()
 
-    if session.executed:
-        logging.getLogger("views").info("{} is initializing Session validation view!".format(request.user))
-        return SessionValidateView.as_view()(request, pk=pk)
-    else:
-        logging.getLogger("views").info("{} is initializing Session generation view!".format(request.user))
-        return SessionView.as_view()(request, pk=pk)
+    if session.mode.type == 'normal':
+        # Check if session should be in Generate or Validate state
+        if session.executed:
+            logging.getLogger("views").info("{} is initializing Session validation view!".format(request.user))
+            return SessionValidateView.as_view()(request, pk=pk)
+        else:
+            logging.getLogger("views").info("{} is initializing Session generation view!".format(request.user))
+            return SessionView.as_view()(request, pk=pk)
+
+    elif session.mode.type == 'guided':
+        if session.executed:
+            logging.getLogger("views").info("{} is initializing Session validation view!".format(request.user))
+            return GuidedValidateView.as_view()(request, pk=pk)
+        else:
+            logging.getLogger("views").info("{} is initializing Session generation view!".format(request.user))
+            return GuidedSessionView.as_view()(request, pk=pk)
 
 
 class SessionDelete(LoginRequiredMixin, generic.DeleteView):
