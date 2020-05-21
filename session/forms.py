@@ -131,15 +131,17 @@ class MaterialForm(forms.ModelForm):
 class SessionForm(forms.ModelForm):
     class Meta:
         model = Session
-        fields = ('name', 'machine', 'material', 'target')
+        fields = ('mode', 'name', 'machine', 'material', 'target', )
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop("user", None)
         super(SessionForm, self).__init__(*args, **kwargs)
+        self.fields["mode"] = forms.ModelChoiceField(queryset=SessionMode.objects.filter(public=True, plan_availability = self.user.plan), widget=forms.RadioSelect, empty_label=None)
         self.fields["material"] = forms.ModelChoiceField(queryset=Material.objects.filter(owner=self.user))
         self.fields["machine"] = forms.ModelChoiceField(queryset=Machine.objects.filter(owner=self.user))
 
         self.fields["name"].label = "Session name"
+        self.fields["mode"].label = "Session mode"
         self.fields["material"].label = 'Material'
         self.fields["material"].help_text = mark_safe('<a href="{}?next={}">+ New Material</a>'.format(reverse_lazy('material_form'), reverse_lazy('new_session')))
         self.fields["machine"].label = "Printer"
