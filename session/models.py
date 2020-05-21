@@ -321,7 +321,6 @@ class Session(models.Model, DependenciesCopyMixin):
     settings = models.ForeignKey(Settings, on_delete=models.CASCADE, null=False)
 
     # Fields that cannot be stored in a DB in any other format
-    _queue = models.CharField(max_length=512, default='["01", "03", "10", "13"]')  # Contains primary tests by default
     _min_max_parameter_one = models.CharField(max_length=20, default="[]")
     _min_max_parameter_two = models.CharField(max_length=20, default="[0,0]")
     _min_max_parameter_three = models.CharField(max_length=20, default="[0,0]")
