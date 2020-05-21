@@ -353,6 +353,9 @@ class Session(models.Model, DependenciesCopyMixin):
             """
         if self.owner != user:
             raise Http404
+        elif self.mode.plan_availability != self.owner.plan:
+            print("plan is not available for the user")
+            raise Http404
         else:
             return True
 
