@@ -13,7 +13,7 @@ from django.forms.models import model_to_dict
 from .models import *
 from django.views import generic
 from .forms import *
-from payments.models import Checkout
+from payments.models import Checkout, Corporation
 
 from config import config
 from optimizer_api import api_client
@@ -39,6 +39,7 @@ def dashboard(request):
              'sessions': {'len': len_sessions}}
 
     context = {'latest_sessions': latest_sessions,
+               'invitations': Corporation.objects.filter(_invited_users__contains=' '+ request.user.email + ' '),
                'cards': cards}
     return render(request, 'session/dashboard.html', context)
 

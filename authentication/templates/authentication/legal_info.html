@@ -103,6 +103,7 @@
                         </div>
                       </div>
                     </p>
+                    <br>
                   {% else %}
                     <p>Owner of <b>{{ corporation.name }}</b>
                       <a data-toggle="modal" data-target="#leaveCorporationPrompt" href="">Delete</a>
@@ -125,23 +126,24 @@
                     </p>
                   {% endif %}
                   {% if request.user == corporation.owner or request.user.manager_of_corporation == corporation %}
-                    <table class="sortable-theme-bootstrap table" data-sortable>
+                  <div>
+                    <table class="sortable sortable-theme-bootstrap table" data-sortable>
                       <thead>
                         <tr>
-                          <th data-sortable="true">User</th>
-                          <th data-sortable="true">Email</th>
-                          <th data-sortable="true" data-sorted="true">Role</th>
-                          <th data-sortable="true">Last active</th>
-                          <th data-sortable="false"></th>
+                          <th>User</th>
+                          <th>Email</th>
+                          <th data-defaultsort="asc">Role</th>
+                          <th>Last active</th>
+                          <th data-defaultsort='disabled'></th>
                         </tr>
                       </thead>
                       <tbody>
                         {# ROW CONTENTS #}
                         {% for user in corporation.team.all %}
-                        <tr>
+                        <tr{% if user == corporation.owner %} data-disablesort="true"{% endif %}>
                           <td>{{ user.first_name }} {{ user.last_name }}</td>
                           <td>{{ user.email }}</td>
-                          <td>{% if user == corporation.owner %}Owner{% elif user.manager_of_corporation == corporation %}Manager{% else %}Member{% endif %}</td>
+                          <td>{% if user == corporation.owner %}Owner{% elif user.manager_of_corporation == corporation %}Manager{% else %}User{% endif %}</td>
                           <td>{{ user.last_active }}</td>
                           <td>
                             {% if user != corporation.owner %}
@@ -158,33 +160,123 @@
                                 <button class="dropdown-item" data-toggle="modal" data-target="#removeFromCorporationPrompt{{ user.pk }}">Remove</button>
                               </div>
                               <div class="modal fade" id="removeFromCorporationPrompt{{ user.pk }}" role="dialog">
-                                    <div class="modal-dialog">
-                                      <div class="modal-content">
-                                        <div class="modal-header">
-                                          <h4 class="modal-title">Remove from corporation</h4>
-                                          <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                        </div>
-                                        <div class="modal-body">
-                                          <p>By pressing "Remove", you confirm removal of <b>{{ user.first_name }} {{ user.last_name }}</b> from your corporation.</p>
-                                        </div>
-                                        <div class="modal-footer">
-                                          <form class="" action="{% url 'remove_from_corporation' %}" method="post">
-                                            {% csrf_token %}
-                                            <input type="hidden" name="uid" value="{{ user.pk }}">
-                                            <button class="btn btn-danger" type="submit">Remove</button>
-                                          </form>
-                                        </div>
-                                      </div>
+                                <div class="modal-dialog">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h4 class="modal-title">Remove from corporation</h4>
+                                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    </div>
+                                    <div class="modal-body">
+                                      <p>By pressing "Remove", you confirm removal of <b>{{ user.first_name }} {{ user.last_name }}</b> from your corporation.</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                      <form class="" action="{% url 'remove_from_corporation' %}" method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="uid" value="{{ user.pk }}">
+                                        <button class="btn btn-danger" type="submit">Remove</button>
+                                      </form>
                                     </div>
                                   </div>
+                                </div>
+                              </div>
                             </div>
                             {% endif %}
                           </td>
                         </tr>
                         {% endfor %}
-
+                        {% for user in corporation.invited_users %}
+                        <tr>
+                          <td>{{ user.first_name }} {{ user.last_name }}</td>
+                          <td>{{ user.email }}</td>
+                          <td>Invitation sent</td>
+                          <td></td>
+                          <td>
+                          <div class="dropdown">
+                            <button class="btn-sm btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              Action
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                              <button class="dropdown-item" data-toggle="modal" data-target="#removeFromCorporationPrompt{{ user.pk }}">Remove</button>
+                            </div>
+                              <div class="modal fade" id="removeFromCorporationPrompt{{ user.pk }}" role="dialog">
+                                <div class="modal-dialog">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h4 class="modal-title">Remove from corporation</h4>
+                                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    </div>
+                                    <div class="modal-body">
+                                      <p>By pressing "Remove", you confirm removal of <b>{{ user.first_name }} {{ user.last_name }}</b> from your corporation.</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                      <form class="" action="{% url 'cancel_corporation_invitation' %}" method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="email" value="{{ user.email }}">
+                                        <button class="btn btn-danger" type="submit">Remove</button>
+                                      </form>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                        {% endfor %}
+                        {% for affiliate in corporation.affiliate_set.all %}
+                        <tr>
+                          <td>{{ affiliate.name }}</td>
+                          <td>{{ affiliate.email }}</td>
+                          <td>Invitation sent</td>
+                          <td></td>
+                          <td>
+                          <div class="dropdown">
+                            <button class="btn-sm btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              Action
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                              <button class="dropdown-item" data-toggle="modal" data-target="#removeCorporationInvitationPrompt{{ affiliate.pk }}">Remove</button>
+                            </div>
+                              <div class="modal fade" id="removeCorporationInvitationPrompt{{ affiliate.pk }}" role="dialog">
+                                <div class="modal-dialog">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h4 class="modal-title">Remove from corporation</h4>
+                                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    </div>
+                                    <div class="modal-body">
+                                      <p>By pressing "Remove", you confirm removal of <b>{{ affiliate.name }}</b> from your corporation.</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                      <form class="" action="{% url 'cancel_corporation_invitation' %}" method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="email" value="{{ affiliate.email }}">
+                                        <button class="btn btn-danger" type="submit">Remove</button>
+                                      </form>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                        {% endfor %}
+                        <tr  data-disablesort='true'>
+                          <form class="form-inline" action="{% url 'invite_into_corporation' %}" method="post">
+                            <td>{{ corporate_invitation.name }}</td>
+                            <td>{{ corporate_invitation.email }}</td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                              {% csrf_token %}
+                              <button class="btn btn-primary" type="submit">Add</button>
+                            </td>
+                          </form>
+                        </tr>
                       </tbody>
                     </table>
+                  </div>
+                    <div>
+                    </div>
                   {% endif %}
 
                 {% endwith %}

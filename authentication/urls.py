@@ -33,4 +33,8 @@ urlpatterns = [
     path('corporation/resign_manager/', views.resign_manager_role, name='resign_manager_role'),
     path('corporation/remove_member/', views.remove_from_corporation, name='remove_from_corporation'),
     path('corporation/leave/', views.delete_or_leave_corporation, name='delete_or_leave_corporation'),
+    path('corporation/invite/', views.invite_into_corporation, name='invite_into_corporation'),
+    path('corporation/cancel_invitation/', views.cancel_corporation_invitation, name='cancel_corporation_invitation'),
+    path('corporation/accept/<corp_id>', views.accept_corporation_invitation, name='accept_corporation_invitation'),
+    path('corporation/decline/<corp_id>', views.decline_corporation_invitation, name='decline_corporation_invitation'),
     ]

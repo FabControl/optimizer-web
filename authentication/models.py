@@ -207,6 +207,13 @@ class Affiliate(models.Model):
 
         if self.sender is None:
             return
+        if self.corporation is not None:
+            self.receiver.member_of_corporation = self.corporation
+            self.receiver.save()
+            self.corporation = None
+            self.save()
+            return
+
         self.sender.extend_subscription(timedelta(days=settings.AFFILIATE_BONUS_DAYS))
 
         email.send_to_single(self.sender.email, 'affiliate_confirmed', request,

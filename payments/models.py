@@ -292,7 +292,15 @@ class Corporation(models.Model):
     def invited_users(self):
         return get_user_model().objects.filter(email__in=self._invited_users.split(' '))
 
-    @invited_users.setter
-    def invited_users(self, users:models.QuerySet):
-        self._invited_users = ' '.join(users.values_list('email', flat=True))
+    def invite_user(self, user):
+        if ' ' + user.email + ' ' not in self._invited_users:
+            if len(self._invited_users) < 1:
+                self._invited_users = ' '
+            self._invited_users += user.email + ' '
+            self.save()
+
+
+    def remove_invitation(self, user):
+        self._invited_users = self._invited_users.replace(user.email + ' ', '')
+        self.save()
 
