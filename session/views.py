@@ -338,6 +338,21 @@ class SessionOverview(SessionTestsSelectionMixin, LoginRequiredMixin, generic.De
         return context
 
 
+class GuidedSessionOverview(SessionOverview):
+    template_name = 'session/guided_mode/guided_session.html'
+
+
+@login_required
+def overview_dispatcher(request, pk):
+    session = get_object_or_404(Session, pk=pk)
+    session.is_owner(request.user)
+
+    if session.mode.type == 'guided':
+        return GuidedSessionOverview.as_view()(request, pk=pk)
+    elif session.mode.type == 'normal':
+        return SessionOverview.as_view()(request, pk=pk)
+
+
 @login_required
 def session_dispatcher(request, pk):
     session = get_object_or_404(Session, pk=pk)
