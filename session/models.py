@@ -712,30 +712,41 @@ class Session(models.Model, DependenciesCopyMixin):
         :return:
         """
         routine = api_client.get_routine()
-        test_names = [name for name, _ in routine.items()]
+        if self.mode.type == 'normal':
+            test_names = [name for name, _ in routine.items()]
 
-        next_test = None
-        next_primary_test = None
+            next_test = None
+            next_primary_test = None
 
-        current_found = False
-        for i, test_info in enumerate(routine.items()):
-            if current_found:
-                if test_info[1]["priority"] == "primary":
-                    next_primary_test = test_names[i]
-                    break
-            if test_info[0] == self.test_number:
-                try:
-                    next_test = test_names[i + 1]
-                except IndexError:
-                    next_primary_test = next_test = self.test_number
-                current_found = True
-        if primary:
-            if next_primary_test in settings.FREE_TESTS:
-                return next_primary_test
+            current_found = False
+            for i, test_info in enumerate(routine.items()):
+                if current_found:
+                    if test_info[1]["priority"] == "primary":
+                        next_primary_test = test_names[i]
+                        break
+                if test_info[0] == self.test_number:
+                    try:
+                        next_test = test_names[i + 1]
+                    except IndexError:
+                        next_primary_test = next_test = self.test_number
+                    current_found = True
+            if primary:
+                if next_primary_test in settings.FREE_TESTS:
+                    return next_primary_test
+                else:
+                    return self.test_number
             else:
-                return self.test_number
-        else:
-            return next_test
+                return next_test
+        elif self.mode.type == 'guided':
+            current_test = self.test_number
+            next_tests = list(filter(lambda x: int(x.lstrip('0')) > int(current_test.lstrip('0')), self.mode.included_tests))
+            for test in next_tests:
+                if test in routine:
+                    if routine[test]['priority'] == 'primary':
+                        return test
+            return current_test
+            # Atgriezt nākošo primary, ja tas ir pieejams, ja nav - atgriezt tagadējo
+
 
     @property
     def tested_values(self):
