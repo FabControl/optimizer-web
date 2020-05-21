@@ -287,6 +287,40 @@ class SessionValidateView(SessionView):
         return redirect('session_validate_back', pk=session.pk)
 
 
+class GuidedValidateView(GuidedSessionView):
+    form_class = TestValidateForm
+
+    def get_context_data(self, **kwargs):
+        session = self.object
+        session.is_owner(self.request.user)
+        context = super().get_context_data(**kwargs)
+        context['question_form'] = ValidateFormTestDescriptionForm(instance=self.object)
+        context['questions'] = Junction.objects.get(base_test=session.test_number).descriptors.all()
+        return context
+
+    def form_valid(self, form):
+        session = form.save(commit=False)
+        session.alter_previous_tests(-1, "validated", True)
+        session = form.save(commit=True)
+        questions = [PrintDescriptor.objects.get(pk=int(y)) for y in [self.request.POST[x] for x in self.request.POST if x.startswith('question')]]
+        questions.sort(key=lambda x: int(x.target_test.lstrip('0')))  # sort the selected questions by target tests.
+        if len(questions) > 0:
+            # Select the highest priority test. Lower test number = higher priority
+            # first element will have the lowest test number
+            q1 = questions[0]
+            if q1.hint is not None:
+                messages.info(self.request, q1.hint)
+            if q1.target_test == session.test_number:
+                session.delete_previous_test(q1.target_test)
+                session.save()
+            return redirect('test_switch', number=q1.target_test, pk=session.pk)
+        return redirect('session_next_test', pk=session.pk, priority='primary')
+
+    def form_invalid(self, form):
+        session = form.save(commit=False)
+        return redirect('session_validate_back', pk=session.pk)
+
+
 class SessionOverview(SessionTestsSelectionMixin, LoginRequiredMixin, generic.DetailView):
     model = Session
     template_name = "session/session.html"
