@@ -825,17 +825,6 @@ class Session(models.Model, DependenciesCopyMixin):
         self.update_persistence()
 
     @property
-    def queue(self):
-        return ast.literal_eval(self._queue)
-
-    @queue.setter
-    def queue(self, new_value: list or str):
-        if type(new_value) == list:
-            self._queue = str(new_value)
-        elif type(ast.literal_eval(new_value)) == dict:  # Check if the string can be parsed as a dict
-            self._queue = new_value
-
-    @property
     def __json__(self) -> dict:
         """
         Returns ["session"] persistent data block representation of the current session state.
