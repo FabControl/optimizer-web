@@ -50,6 +50,7 @@ class SessionViewsTest(TestCase):
         extruder = models.Extruder.objects.create(nozzle=nozzle)
         chamber = models.Chamber.objects.create()
         printbed = models.Printbed.objects.create()
+        mode = models.SessionMode.objects.create()
         machine = models.Machine.objects.create(owner=self.user, extruder=extruder,
                                                 chamber=chamber, printbed=printbed)
 
@@ -62,6 +63,7 @@ class SessionViewsTest(TestCase):
         for s in test_sessions:
             models.Session.objects.create(owner=self.user,
                                           name=s,
+                                          mode=mode,
                                           machine=machine,
                                           material=material,
                                           _persistence='{"session":{"previous_tests":[]}}',
@@ -79,6 +81,7 @@ class SessionViewsTest(TestCase):
         extruder = models.Extruder.objects.create(nozzle=nozzle)
         chamber = models.Chamber.objects.create()
         printbed = models.Printbed.objects.create()
+        mode = models.SessionMode.objects.create()
         machine = models.Machine.objects.create(owner=self.user, extruder=extruder,
                                                 chamber=chamber, printbed=printbed)
 
@@ -88,11 +91,12 @@ class SessionViewsTest(TestCase):
         sett = models.Settings()
         sett.save()
         test_session = models.Session.objects.create(owner=self.user,
-                                          name='some',
-                                          machine=machine,
-                                          material=material,
-                                          _persistence='{"session":{"previous_tests":[]}}',
-                                          settings=sett)
+                                                     name='some',
+                                                     mode=mode,
+                                                     machine=machine,
+                                                     material=material,
+                                                     _persistence='{"session":{"previous_tests":[]}}',
+                                                     settings=sett)
 
         sample_owner = get_user_model().objects.get(email=settings.SAMPLE_SESSIONS_OWNER)
         sample_machine = models.Machine.objects.filter(owner=sample_owner)[0]

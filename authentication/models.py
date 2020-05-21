@@ -12,6 +12,8 @@ from payments.models import TaxationCountry, Subscription
 from payments.countries import codes_iso3166
 from django.conf import settings
 
+from .choices import PLAN_CHOICES
+
 
 class UserManager(BaseUserManager):
     """Define a model manager for User model with no username field."""

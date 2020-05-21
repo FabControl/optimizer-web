@@ -163,3 +163,6 @@ SUBSCRIPTION_EXTRA_DAYS = 5
 
 FREE_TESTS = ['01', '03', '10']
 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+

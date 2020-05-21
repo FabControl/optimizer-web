@@ -88,9 +88,10 @@ class SessionModelsTest(TestCase):
         material = models.Material.objects.create(owner=self.user)
         # create session
         session = models.Session(owner=self.user,
-                                material=models.Material.objects.get(pk=material.pk),
-                                settings=models.Settings.objects.create(),
-                                machine=models.Machine.objects.get(pk=self.machine.pk))
+                                 mode=models.SessionMode.objects.create(),
+                                 material=models.Material.objects.get(pk=material.pk),
+                                 settings=models.Settings.objects.create(),
+                                 machine=models.Machine.objects.get(pk=self.machine.pk))
 
         session._persistence = json.dumps(json.loads(BLANK_PERSISTENCE)['persistence'])
         session.init_settings()
