@@ -390,7 +390,6 @@ class Session(models.Model, DependenciesCopyMixin):
                     output = []
             else:
                 output = self.get_last_min_max_speed()
-            names = [param["programmatic_name"] for param in self.min_max_parameters]
             if parameter["parameter"].endswith("one"):
                 self.min_max_parameter_one = output
             elif parameter["parameter"].endswith("two"):
