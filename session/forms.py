@@ -339,10 +339,12 @@ class TestGenerateForm(forms.ModelForm):
                 logging.getLogger("views").info("Currently saving {}: {}".format(parameter, self.cleaned_data[parameter]))
                 self.instance.__setattr__(parameter, self.cleaned_data[parameter])
             else:
-                self.instance.__setattr__(parameter, [self.cleaned_data[info["programmatic_name"]]])
+                if info["programmatic_name"] in self.cleaned_data:
+                    self.instance.__setattr__(parameter, [self.cleaned_data[info["programmatic_name"]]])
         for setting in self.secondary_parameters_programmatic_names:
-            logging.getLogger("views").info("Currently saving {}: {}".format(setting, self.cleaned_data[setting]))
-            settings.__setattr__(setting, self.cleaned_data[setting])
+            if setting in self.cleaned_data:
+                logging.getLogger("views").info("Currently saving {}: {}".format(setting, self.cleaned_data[setting]))
+                settings.__setattr__(setting, self.cleaned_data[setting])
         settings.save()
 
         return super(TestGenerateForm, self).save(commit=commit)
