@@ -270,6 +270,10 @@ class SessionView(SessionTestsSelectionMixin, LoginRequiredMixin, generic.Update
         return redirect('session_detail', pk=session.pk)
 
 
+class GuidedSessionView(SessionView):
+    template_name = 'session/guided_mode/guided_session.html'
+
+
 class SessionValidateView(SessionView):
     form_class = TestValidateForm
 
