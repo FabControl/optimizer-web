@@ -15,7 +15,7 @@ def populate_junctions(app, schema_editor):
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('session', '0047_manual_add_session_modes'),
+        ('session', '0048_manual_add_session_modes'),
     ]
 
     operations = [

@@ -23,7 +23,7 @@ def populate_testing_modes(app, schema_editor):
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('session', '0046_auto_20200521_1510'),
+        ('session', '0047_auto_20200521_1510'),
     ]
 
     operations = [
