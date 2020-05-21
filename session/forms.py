@@ -217,6 +217,34 @@ class TestValidateForm(forms.ModelForm):
         fields = []
 
 
+class ValidateFormTestDescriptionForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(ValidateFormTestDescriptionForm, self).__init__(*args, **kwargs)
+
+        self.helper = FormHelper()
+        self.helper.form_tag = False
+
+        session = self.instance
+        questions = Junction.objects.get(base_test=session.test_number).descriptors.all()
+        for i, question in enumerate(questions):
+            question_name = f'question_{str(i)}'
+            q = forms.BooleanField()
+            if question.image:
+                q.label = mark_safe(f"""<a type="button" href="#" class="" data-toggle="popover" data-trigger="focus" title=" " data-img='{question.image.url}'>{question.statement}</a>""")
+            else:
+                q.label = question.statement
+            q.required = False
+            q.widget.attrs.update({'value': question.pk})
+            """
+            <input type="checkbox" checked data-toggle="toggle" data-on="There are no gaps between tracks" data-off="There are gaps between tracks" data-onstyle="outline-primary" data-offstyle="danger" data-width="300" data-height="40">
+            """
+            self.fields[question_name] = q
+
+    class Meta:
+        model = Session
+        fields = []
+
+
 class TestGenerateForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(TestGenerateForm, self).__init__(*args, **kwargs)
