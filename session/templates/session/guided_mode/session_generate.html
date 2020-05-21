@@ -1,0 +1,13 @@
+{% load crispy_forms_tags %}
+<form class="" action="" method="post">
+  {% crispy form %}
+  <div class="row pt-3 justify-content-end">
+    <div class="col text-right">
+      <button id="gcode_button" type="submit" class="btn btn-primary">Download .GCODE file</button>
+    </div>
+  </div>
+</form>
+
+{% if request.user.onboarding %}
+{% include "session/tour.html" %}
+{% endif %}

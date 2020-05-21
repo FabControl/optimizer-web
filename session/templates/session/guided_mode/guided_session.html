@@ -1,0 +1,92 @@
+{% extends "session/base.html" %}
+
+{% block content %}
+<title>{{ object.material.name }} - 3DOptimizer</title>
+
+<div class="container">
+  <div class="row pt-4">
+    <div class="col-sm">
+      <div class="pb-3">
+        <h3>{{object.test_info.name|capfirst}}</h3>
+      </div>
+      {% include "session/session_nav.html" %}
+      {% csrf_token %}
+      {% if "/overview" in request.path %}
+      {% include "session/guided_mode/guided_session_overview.html" %}
+      {% elif not object.executed %}
+      {% include "session/guided_mode/session_generate.html" %}
+      {% elif object.test_number in object.get_validated_tests %}
+      {% include "session/session_validated.html" %}
+      {% else %}
+      {% include "session/guided_mode/session_validate.html" %}
+      {% endif %}
+    </div>
+    <div class="col-sm-5">
+      <div class="card p-3">
+        {% include "session/session_info.html" %}
+      </div>
+      <div class="pt-3">
+        <div class="card p-3" style="background: #fff0c7">
+          {% if object.executed %}
+          <span class='font-weight-light'>{{ object.test_info.hint_valid|safe }}</span>
+          {% else %}
+          <span class='font-weight-light'>{{ object.test_info.hint_init|safe }}</span>
+          {% endif %}
+          <a href="https://3doptimizer.helpscoutdocs.com/test/{{object.test_number}}" class='font-weight-light' target="_blank">Learn more</a>
+        </div>
+      </div>
+      <div class="pt-3">
+        <iframe class='embed-responsive' width="560" height="315" src="https://www.youtube.com/embed/bQrWrnlgQ24" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      <div class="pt-3">
+        {% if object.mode.type == 'normal' %}
+        {% include "session/session_test_selection.html" %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  function lerp(value1, value2, amount) {
+    // Calculate what the interpolation step will be.
+    step = (value2 - value1) / amount;
+    // Create an array where all the interpolated values will be added. Add the first value.
+    output = [value1];
+    var i;
+    // Start with 1 = 1 so that the last element would not be added.
+    for (i = 1; i < amount; i++) {
+      output.push(output[output.length - 1] + step);
+    }
+    // The last element is added here, because this way it is certain that the last value will match value2 in arguments.
+    output.push(value2);
+    return output;
+  }
+
+  function decimalPlaces(num) {
+    var match = (''+num).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
+    if (!match) { return 0; }
+    return Math.max(
+             0,
+             // Number of digits right of decimal point.
+             (match[1] ? match[1].length : 0)
+             // Adjust for scientific notation.
+             - (match[2] ? +match[2] : 0));
+  }
+
+  function change_fields(item) {
+    // Create an array with all the "linspace-field" elements.
+    var id = item.id
+    var group_id = id.match(/^.*(?=_)/)[0];
+    var fields = $(`*[id^="${group_id}"]`);
+    var decimals = decimalPlaces(item.step);
+    // Create another array with the new set of values. They are stored as strings and need to be parsed.
+    var lerp_values = lerp(parseFloat(fields[0].value), parseFloat(fields[fields.length - 1].value), fields.length - 1)
+    var i;
+    for (i = 0; i < fields.length; i++) {
+      // Replace each of the values in "linspace-field" elements.
+      fields[i].value = lerp_values[i].toFixed(decimals);
+    }
+    // window.alert(fields.length)
+  }
+</script>
+{% endblock %}

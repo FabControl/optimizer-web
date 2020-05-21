@@ -1,0 +1,51 @@
+{% load crispy_forms_tags %}
+{% load static %}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<form class="" action="" method="POST">
+  <div class="row">
+    <div class="col-sm">
+      {% if questions %}
+      <div class="pt-4 pb-2">
+        <h4>Describe the printed results!</h4>
+      </div>
+      {% endif %}
+      {% crispy question_form %}
+      <div class="pt-4 pb-2">
+        <h4>Select the best test structure!</h4>
+      </div>
+      {% crispy form %}
+    </div>
+  </div>
+  <div class="row pt-2">
+    <div class="col">
+      <button class="btn btn-secondary" onclick="location.href='{% url 'session_validate_back' object.pk %}'" type="button" name="button">Back</button>
+    </div>
+    <div class="col text-right">
+      <button type="submit" name="btnprimary" class="btn btn-primary">Next test</button>
+    </div>
+  </div>
+</form>
+<div class="row pt-3">
+  <div class="col-sm-12">
+    <p class='small'><a href="{% url 'gcode' object.pk %}">Redownload gcode</a> if it didn't download automatically.</p>
+  </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+	 $('[data-toggle="popover"]').popover({
+          trigger: 'focus',
+		  trigger: 'hover',
+          html: true,
+          content: function () {
+				return '<img class="img-fluid" src="'+$(this).data('img') + '" />';
+          },
+          title: 'Toolbox'
+    })
+});
+</script>
+{% if request.user.onboarding %}
+{% include 'session/tour.html' %}
+{% endif %}
