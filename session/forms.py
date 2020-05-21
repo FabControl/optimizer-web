@@ -220,7 +220,12 @@ class TestValidateForm(forms.ModelForm):
 class TestGenerateForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(TestGenerateForm, self).__init__(*args, **kwargs)
+        show_inactives = True
         session = self.instance
+
+        if session.mode.type == 'guided':
+            show_inactives = False
+
         test_info = session.update_test_info()
         self.parameters = []
         secondary_parameters = []
@@ -291,11 +296,16 @@ class TestGenerateForm(forms.ModelForm):
             param.widget.attrs["class"] = "col-sm-2"
             param.initial = parameter["values"]
             if not parameter["active"]:
-                param.widget.attrs['readonly'] = True
-                inactives[parameter["programmatic_name"]] = param
+                # TODO reintroduce functionality to show previously tested params
+                if not show_inactives:
+                    continue
+                # param.widget.attrs['readonly'] = True
+                # inactives[parameter["programmatic_name"]] = param
             elif parameter["programmatic_name"] in session.get_previously_tested_parameters():
-                param.widget.attrs['readonly'] = True
-                inactives[parameter["programmatic_name"]] = param
+                if not show_inactives:
+                    continue
+                # param.widget.attrs['readonly'] = True
+                # inactives[parameter["programmatic_name"]] = param
             else:
                 actives[parameter["programmatic_name"]] = param
                 if parameter["hint_active"]:
