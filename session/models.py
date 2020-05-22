@@ -291,12 +291,19 @@ class SessionMode(models.Model):
     """
     name = models.CharField(max_length=64, default='Untitled')
     type = models.CharField(max_length=64, choices=WIZARD_MODES, default='normal')
-    plan_availability = models.CharField(default='basic', choices=PLAN_CHOICES, max_length=64)
     public = models.BooleanField(default=True)
 
     # Private variables, for getters, setters
+    _plan_availability = models.CharField(default='basic', choices=PLAN_CHOICES, max_length=64)
     _included_tests = models.CharField(max_length=200,
                                        default="['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13']")
+
+    @property
+    def plan_availability(self):
+        if self._plan_availability == 'premium':
+            return ['basic', self._plan_availability]
+        else:
+            return [self._plan_availability]
 
     @property
     def included_tests(self):
