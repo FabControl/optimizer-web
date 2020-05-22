@@ -136,10 +136,18 @@ class SessionForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop("user", None)
         super(SessionForm, self).__init__(*args, **kwargs)
-        self.fields["mode"] = forms.ModelChoiceField(queryset=SessionMode.objects.filter(public=True, plan_availability = self.user.plan), widget=forms.RadioSelect, empty_label=None)
+
+        # Make sure that premium users can also access free plans
+        if self.user.plan == 'premium':
+            queryset = SessionMode.objects.filter(public=True)
+            initial = SessionMode.objects.get(name='Guided').pk
+        else:
+            queryset = SessionMode.objects.filter(public=True, _plan_availability=self.user.plan)
+            initial = SessionMode.objects.get(name='Core').pk
+
+        self.fields["mode"] = forms.ModelChoiceField(initial=initial, queryset=queryset, widget=forms.RadioSelect, empty_label=None)
         self.fields["material"] = forms.ModelChoiceField(queryset=Material.objects.filter(owner=self.user))
         self.fields["machine"] = forms.ModelChoiceField(queryset=Machine.objects.filter(owner=self.user))
-
         self.fields["name"].label = "Session name"
         self.fields["mode"].label = "Session mode"
         self.fields["material"].label = 'Material'
