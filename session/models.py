@@ -13,8 +13,6 @@ from authentication.choices import PLAN_CHOICES
 
 # Create your models here.
 
-PREVENT_DELETION_MODELS = (User,)
-
 
 def recursive_delete(instance, using=None, keep_parents=False):
     foreign = (x for x in instance._meta.get_fields() if isinstance(x, models.ForeignKey))
@@ -880,3 +878,6 @@ class Junction(models.Model):
 
     def __str__(self):
         return f"Junction for {self.base_test}"
+
+
+PREVENT_DELETION_MODELS = (User, SessionMode)
