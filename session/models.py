@@ -315,7 +315,7 @@ class Session(models.Model, DependenciesCopyMixin):
     """
     Used to store testing session progress, relevant assets (machine, material) and test data.
     """
-    mode = models.ForeignKey(SessionMode, default=SessionMode.objects.get(name='Core').pk, on_delete=models.CASCADE)
+    mode = models.ForeignKey(SessionMode, null=True, on_delete=models.CASCADE)
     number = models.IntegerField(default=0)
     name = models.CharField(default="Untitled", max_length=20)
     corporation = models.ForeignKey('payments.Corporation', on_delete=models.CASCADE, null=True)
