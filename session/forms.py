@@ -287,7 +287,6 @@ class TestGenerateForm(forms.ModelForm):
                     highest_iterable = parameter["iterable_values"][-1][0]
                     for iterable, value in parameter["iterable_values"]:
                         subwidget = forms.NumberInput(attrs={
-                                "class": "form-control",
                                 "type": ("text" if iterable not in [0, highest_iterable] else "number"),
                                 "id": "linspace-field-{}".format(str(iterable)),
                                 "value": round(value, (3 if parameter["units"] in ["mm", "-"] else 0)),
@@ -299,8 +298,10 @@ class TestGenerateForm(forms.ModelForm):
                         if iterable not in [0, highest_iterable]:
                             subwidget.attrs["type"] = "text"
                             subwidget.attrs["readonly"] = "readonly"
+                            subwidget.attrs["class"] = "form-control"
                         else:
                             subwidget.attrs["type"] = "number"
+                            subwidget.attrs["class"] = "form-control optimizer-input"
                         widgets.append(subwidget)
 
                     self.fields[field_id] = MinMaxField(
@@ -329,7 +330,7 @@ class TestGenerateForm(forms.ModelForm):
                 param = forms.DecimalField(min_value=parameter["min_max"][0], max_value=parameter["min_max"][1])
             param.label = "{} ({})".format(parameter["name"].capitalize(), (
                     "°C" if parameter["units"] == "degC" else parameter["units"]))
-            param.widget.attrs["class"] = "col-sm-2"
+            param.widget.attrs["class"] = "col-sm-2 optimizer-input"
             param.initial = parameter["values"]
             if not parameter["active"]:
                 # TODO reintroduce functionality to show previously tested params
