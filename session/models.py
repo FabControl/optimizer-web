@@ -13,8 +13,6 @@ from authentication.choices import PLAN_CHOICES
 
 # Create your models here.
 
-PREVENT_DELETION_MODELS = (User,)
-
 
 def recursive_delete(instance, using=None, keep_parents=False):
     foreign = (x for x in instance._meta.get_fields() if isinstance(x, models.ForeignKey))
@@ -291,12 +289,19 @@ class SessionMode(models.Model):
     """
     name = models.CharField(max_length=64, default='Untitled')
     type = models.CharField(max_length=64, choices=WIZARD_MODES, default='normal')
-    plan_availability = models.CharField(default='basic', choices=PLAN_CHOICES, max_length=64)
     public = models.BooleanField(default=True)
 
     # Private variables, for getters, setters
+    _plan_availability = models.CharField(default='basic', choices=PLAN_CHOICES, max_length=64)
     _included_tests = models.CharField(max_length=200,
                                        default="['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13']")
+
+    @property
+    def plan_availability(self):
+        if self._plan_availability == 'premium':
+            return ['basic', self._plan_availability]
+        else:
+            return [self._plan_availability]
 
     @property
     def included_tests(self):
@@ -310,7 +315,7 @@ class Session(models.Model, DependenciesCopyMixin):
     """
     Used to store testing session progress, relevant assets (machine, material) and test data.
     """
-    mode = models.ForeignKey(SessionMode, blank=True, null=True, on_delete=models.CASCADE)
+    mode = models.ForeignKey(SessionMode, null=True, on_delete=models.CASCADE)
     number = models.IntegerField(default=0)
     name = models.CharField(default="Untitled", max_length=20)
     corporation = models.ForeignKey('payments.Corporation', on_delete=models.CASCADE, null=True)
@@ -356,8 +361,7 @@ class Session(models.Model, DependenciesCopyMixin):
             """
         if self.owner != user:
             raise Http404
-        elif self.mode.plan_availability != self.owner.plan:
-            print("plan is not available for the user")
+        elif self.owner.plan not in self.mode.plan_availability:
             raise Http404
         else:
             return True
@@ -874,3 +878,6 @@ class Junction(models.Model):
 
     def __str__(self):
         return f"Junction for {self.base_test}"
+
+
+PREVENT_DELETION_MODELS = (User, SessionMode)

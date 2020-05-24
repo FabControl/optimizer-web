@@ -1,5 +1,24 @@
-<a>Session: <b>{{ object.name }}</b></a>
-<a>Printer: <b>{{ object.machine }}</b></a>
-<a>Material: <b>{{ object.material }}</b></a>
-<a>Strategy: <b>{{ object.get_target_display }}</b></a>
-<a>Session mode: <b>{{ object.mode.name }}</b></a>
+<table style="width:100%" class="">
+  <tbody>
+    <tr>
+      <th scope="row">Session</th>
+      <td>{{ object.name }}</td>
+    </tr>
+    <tr>
+      <th scope="row">Strategy</th>
+      <td>{{ object.get_target_display }}</td>
+    </tr>
+    <tr>
+      <th scope="row">Mode</th>
+      <td>{{ object.mode.name }}</td>
+    </tr>
+    <tr>
+      <th scope="row">Printer</th>
+      <td>{{ object.machine }}</td>
+    </tr>
+    <tr>
+      <th scope="row">Material</th>
+      <td>{{ object.material }}</td>
+    </tr>
+  </tbody>
+</table>

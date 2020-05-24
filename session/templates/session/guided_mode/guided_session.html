@@ -5,9 +5,35 @@
 
 <div class="container">
   <div class="row pt-4">
+    <div class="col-sm-5">
+      <div class="card p-3">
+        {% include "session/session_info.html" %}
+      </div>
+      <div class="pt-3">
+        <div class="help-box">
+          {% if object.executed %}
+          <span class='font-weight-light'>{{ object.test_info.hint_valid|safe }}</span>
+          {% else %}
+          <span class='font-weight-light'>{{ object.test_info.hint_init|safe }}</span>
+          {% endif %}
+          <a href="https://3doptimizer.helpscoutdocs.com/test/{{object.test_number}}" class='font-weight-light' target="_blank"><small>Read more in Help Center</small></a>
+        </div>
+      </div>
+      <div class="pt-3">
+        <iframe class='embed-responsive' width="560" height="315" src="https://www.youtube.com/embed/bQrWrnlgQ24" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      <div class="pt-3">
+        {% if object.mode.type == 'normal' %}
+        {% include "session/session_test_selection.html" %}
+        {% endif %}
+      </div>
+    </div>
     <div class="col-sm">
-      <div class="pb-3">
-        <h3>{{object.test_info.name|capfirst}}</h3>
+      <div class="test-title-container">
+        <span class="test-title">{{object.test_info.name}}</span>
+        <br>
+        <span class="test-number">{{object.test_number}}</span>
+        <span class="test-class">Core</span>
       </div>
       {% include "session/session_nav.html" %}
       {% csrf_token %}
@@ -20,29 +46,6 @@
       {% else %}
       {% include "session/guided_mode/session_validate.html" %}
       {% endif %}
-    </div>
-    <div class="col-sm-5">
-      <div class="card p-3">
-        {% include "session/session_info.html" %}
-      </div>
-      <div class="pt-3">
-        <div class="card p-3" style="background: #fff0c7">
-          {% if object.executed %}
-          <span class='font-weight-light'>{{ object.test_info.hint_valid|safe }}</span>
-          {% else %}
-          <span class='font-weight-light'>{{ object.test_info.hint_init|safe }}</span>
-          {% endif %}
-          <a href="https://3doptimizer.helpscoutdocs.com/test/{{object.test_number}}" class='font-weight-light' target="_blank">Learn more</a>
-        </div>
-      </div>
-      <div class="pt-3">
-        <iframe class='embed-responsive' width="560" height="315" src="https://www.youtube.com/embed/bQrWrnlgQ24" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-      </div>
-      <div class="pt-3">
-        {% if object.mode.type == 'normal' %}
-        {% include "session/session_test_selection.html" %}
-        {% endif %}
-      </div>
     </div>
   </div>
 </div>

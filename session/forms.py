@@ -131,15 +131,23 @@ class MaterialForm(forms.ModelForm):
 class SessionForm(forms.ModelForm):
     class Meta:
         model = Session
-        fields = ('mode', 'name', 'machine', 'material', 'target', )
+        fields = ('name', 'target', 'mode', 'machine', 'material')
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop("user", None)
         super(SessionForm, self).__init__(*args, **kwargs)
-        self.fields["mode"] = forms.ModelChoiceField(queryset=SessionMode.objects.filter(public=True, plan_availability = self.user.plan), widget=forms.RadioSelect, empty_label=None)
+
+        # Make sure that premium users can also access free plans
+        if self.user.plan == 'premium':
+            queryset = SessionMode.objects.filter(public=True)
+            initial = SessionMode.objects.get(name='Guided').pk
+        else:
+            queryset = SessionMode.objects.filter(public=True, _plan_availability=self.user.plan)
+            initial = SessionMode.objects.get(name='Core').pk
+
+        self.fields["mode"] = forms.ModelChoiceField(initial=initial, queryset=queryset, widget=forms.RadioSelect, empty_label=None)
         self.fields["material"] = forms.ModelChoiceField(queryset=Material.objects.filter(owner=self.user))
         self.fields["machine"] = forms.ModelChoiceField(queryset=Machine.objects.filter(owner=self.user))
-
         self.fields["name"].label = "Session name"
         self.fields["mode"].label = "Session mode"
         self.fields["material"].label = 'Material'
@@ -198,7 +206,7 @@ class TestValidateForm(forms.ModelForm):
             self.fields["min_max_parameter_three"] = param
 
         self.fields["comments"] = forms.CharField(max_length=256,
-                                                  required=False, label='Comment')
+                                                  required=False, label='My Comment (optional)')
 
         self.helper = FormHelper()
         self.helper.form_tag = False
@@ -279,7 +287,6 @@ class TestGenerateForm(forms.ModelForm):
                     highest_iterable = parameter["iterable_values"][-1][0]
                     for iterable, value in parameter["iterable_values"]:
                         subwidget = forms.NumberInput(attrs={
-                                "class": "form-control",
                                 "type": ("text" if iterable not in [0, highest_iterable] else "number"),
                                 "id": "linspace-field-{}".format(str(iterable)),
                                 "value": round(value, (3 if parameter["units"] in ["mm", "-"] else 0)),
@@ -291,8 +298,10 @@ class TestGenerateForm(forms.ModelForm):
                         if iterable not in [0, highest_iterable]:
                             subwidget.attrs["type"] = "text"
                             subwidget.attrs["readonly"] = "readonly"
+                            subwidget.attrs["class"] = "form-control"
                         else:
                             subwidget.attrs["type"] = "number"
+                            subwidget.attrs["class"] = "form-control optimizer-input"
                         widgets.append(subwidget)
 
                     self.fields[field_id] = MinMaxField(
@@ -321,7 +330,7 @@ class TestGenerateForm(forms.ModelForm):
                 param = forms.DecimalField(min_value=parameter["min_max"][0], max_value=parameter["min_max"][1])
             param.label = "{} ({})".format(parameter["name"].capitalize(), (
                     "°C" if parameter["units"] == "degC" else parameter["units"]))
-            param.widget.attrs["class"] = "col-sm-2"
+            param.widget.attrs["class"] = "col-sm-2 optimizer-input"
             param.initial = parameter["values"]
             if not parameter["active"]:
                 # TODO reintroduce functionality to show previously tested params
