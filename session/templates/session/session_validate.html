@@ -7,7 +7,7 @@
 <div class="row pt-4">
   <div class="col-sm">
     {% if object.test_info.hint_valid %}
-    <div class="card p-3" style="background: #fff0c7">
+    <div class="help-box">
       {{ object.test_info.hint_valid|safe }}
       <a href="https://3doptimizer.helpscoutdocs.com/test/{{object.test_number}}" class='font-weight-light' target="_blank"><small>Read more in Help Center</small></a>
     </div>
