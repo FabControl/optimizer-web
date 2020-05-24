@@ -263,7 +263,7 @@ class SessionSessionTest(TestCase):
         resp = self.client.get(tst_url)
         self.assertEqual(resp.status_code, 200)
         # make sure defaults are selected
-        mode, mode2, name, material, machine, tst_type = extract_data(resp.content)
+        name, tst_type, mode, mode2, machine, material = extract_data(resp.content)
 
         #Probably space from template
         self.assertEqual(mode, ('3', '\n            Core\n        '))
@@ -277,8 +277,7 @@ class SessionSessionTest(TestCase):
         # load new session page and check defaults
         resp = self.client.get(tst_url)
         self.assertEqual(resp.status_code, 200)
-        mode, mode2, name, machine, material, tst_type = extract_data(resp.content)
-
+        name, tst_type, mode, mode2, machine, material = extract_data(resp.content)
         #Probably space from template
         self.assertEqual(mode, ('3', '\n            Core\n        '))
         self.assertEqual(mode2, ('4', '\n            Untitled\n        '))
@@ -290,8 +289,7 @@ class SessionSessionTest(TestCase):
                                 dict(name='Material name', size_od=1.25, next=tst_url),
                                 follow=True)
         self.assertEqual(resp.status_code, 200)
-        mode, mode2, name, machine, material, tst_type = extract_data(resp.content)
-
+        name, tst_type, mode, mode2, machine, material = extract_data(resp.content)
         self.assertEqual(name, (patched_name, ' '))
         self.assertFalse(material == ('', '---------'))
         self.assertEqual(machine, ('', '---------'))
@@ -321,7 +319,7 @@ class SessionSessionTest(TestCase):
             }
         resp = self.client.post(reverse('machine_form'), machine_props, follow=True)
         self.assertEqual(resp.status_code, 200)
-        mode, mode2, name, machine, material, tst_type = extract_data(resp.content)
+        name, tst_type, mode, mode2, machine, material = extract_data(resp.content)
 
         self.assertEqual(name, (patched_name, ' '))
         self.assertFalse(material == ('', '---------'))
@@ -342,7 +340,7 @@ class SessionSessionTest(TestCase):
         resp = self.client.get(tst_url)
         self.assertEqual(resp.status_code, 200)
         # cache should be cleared now
-        mode, mode2, name, material, machine, tst_type = extract_data(resp.content)
+        name, tst_type, mode, mode2, machine, material = extract_data(resp.content)
 
         self.assertEqual(mode, ('3', '\n            Core\n        '))
         self.assertEqual(mode2, ('4', '\n            Untitled\n        '))
