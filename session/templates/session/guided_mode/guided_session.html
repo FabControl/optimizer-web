@@ -5,28 +5,12 @@
 
 <div class="container">
   <div class="row pt-4">
-    <div class="col-sm">
-      <div class="pb-3">
-        <h3>{{object.test_info.name|capfirst}}</h3>
-      </div>
-      {% include "session/session_nav.html" %}
-      {% csrf_token %}
-      {% if "/overview" in request.path %}
-      {% include "session/guided_mode/guided_session_overview.html" %}
-      {% elif not object.executed %}
-      {% include "session/guided_mode/session_generate.html" %}
-      {% elif object.test_number in object.get_validated_tests %}
-      {% include "session/session_validated.html" %}
-      {% else %}
-      {% include "session/guided_mode/session_validate.html" %}
-      {% endif %}
-    </div>
     <div class="col-sm-5">
       <div class="card p-3">
         {% include "session/session_info.html" %}
       </div>
       <div class="pt-3">
-        <div class="card p-3" style="background: #fff0c7">
+        <div class="help-box">
           {% if object.executed %}
           <span class='font-weight-light'>{{ object.test_info.hint_valid|safe }}</span>
           {% else %}
@@ -43,6 +27,25 @@
         {% include "session/session_test_selection.html" %}
         {% endif %}
       </div>
+    </div>
+    <div class="col-sm">
+      <div class="test-title-container">
+        <span class="test-title">{{object.test_info.name}}</span>
+        <br>
+        <span class="test-number">{{object.test_number}}</span>
+        <span class="test-class">Core</span>
+      </div>
+      {% include "session/session_nav.html" %}
+      {% csrf_token %}
+      {% if "/overview" in request.path %}
+      {% include "session/guided_mode/guided_session_overview.html" %}
+      {% elif not object.executed %}
+      {% include "session/guided_mode/session_generate.html" %}
+      {% elif object.test_number in object.get_validated_tests %}
+      {% include "session/session_validated.html" %}
+      {% else %}
+      {% include "session/guided_mode/session_validate.html" %}
+      {% endif %}
     </div>
   </div>
 </div>
