@@ -131,7 +131,7 @@ class MaterialForm(forms.ModelForm):
 class SessionForm(forms.ModelForm):
     class Meta:
         model = Session
-        fields = ('mode', 'name', 'machine', 'material', 'target', )
+        fields = ('name', 'target', 'mode', 'machine', 'material')
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop("user", None)
@@ -206,7 +206,7 @@ class TestValidateForm(forms.ModelForm):
             self.fields["min_max_parameter_three"] = param
 
         self.fields["comments"] = forms.CharField(max_length=256,
-                                                  required=False, label='Comment')
+                                                  required=False, label='My Comment (optional)')
 
         self.helper = FormHelper()
         self.helper.form_tag = False
