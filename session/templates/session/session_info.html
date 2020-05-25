@@ -5,7 +5,7 @@
       <td>{{ object.name }}</td>
     </tr>
     <tr>
-      <th scope="row">Strategy</th>
+      <th scope="row"><span class="test-muted">Target</span></th>
       <td>{{ object.get_target_display }}</td>
     </tr>
     <tr>
@@ -22,3 +22,6 @@
     </tr>
   </tbody>
 </table>
+<div class="pt-3">
+  <button type="button" onclick="location.href='{% url 'session_overview' object.pk %}'" class="btn btn-outline-primary" href="{% url 'session_overview' object.pk %}">Results</button>
+</div>
