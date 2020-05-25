@@ -22,7 +22,8 @@ class Command(BaseCommand):
 
         for plan in Plan.objects.exclude(stripe_plan_id='').exclude(stripe_plan_id__in=stripe_plans.keys()):
             # remove no longer existing plans
-            plan.delete()
+            plan.type = 'deleted'
+            plan.save()
             self.stdout.write(self.style.WARNING('Removed payment plan: ' + str(plan)))
 
         # update existing or create new
