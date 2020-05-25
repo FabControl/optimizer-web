@@ -6,21 +6,19 @@
 <div class="container">
   <div class="row pt-4">
     <div class="col-sm-5">
-      <div class="card p-3">
-        {% include "session/session_info.html" %}
-      </div>
-      <div class="pt-3">
-        <div class="help-box">
-          {% if object.executed %}
-          <span class='font-weight-light'>{{ object.test_info.hint_valid|safe }}</span>
-          {% else %}
-          <span class='font-weight-light'>{{ object.test_info.hint_init|safe }}</span>
-          {% endif %}
-          <a href="https://3doptimizer.helpscoutdocs.com/test/{{object.test_number}}" class='font-weight-light' target="_blank"><small>Read more in Help Center</small></a>
-        </div>
-      </div>
+      {% include "session/session_info.html" %}
+      <hr>
+      <p class='lead'>Test description</p>
+      {% if object.executed %}
+      <span class='font-weight-light'>{{ object.test_info.hint_valid|safe }}</span>
+      {% else %}
+      <span class='font-weight-light'>{{ object.test_info.hint_init|safe }}</span>
+      {% endif %}
       <div class="pt-3">
         <iframe class='embed-responsive' width="560" height="315" src="https://www.youtube.com/embed/bQrWrnlgQ24" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      <div class="pt-1">
+        <a href="https://3doptimizer.helpscoutdocs.com/test/{{object.test_number}}" class='font-weight-light' target="_blank"><small>Read more in Help Center</small></a>
       </div>
       <div class="pt-3">
         {% if object.mode.type == 'normal' %}
@@ -29,23 +27,25 @@
       </div>
     </div>
     <div class="col-sm">
-      <div class="test-title-container">
-        <span class="test-title">{{object.test_info.name}}</span>
-        <br>
-        <span class="test-number">{{object.test_number}}</span>
-        <span class="test-class">Core</span>
+      <div class="help-box">
+        <div class="pt-1">
+          <div class="pb-2">
+            <span class="tag-secondary">Test {{object.test_number}}</span>
+            <span class="tag-secondary">Core Test</span>
+          </div>
+          <h3>{{object.test_info.name | capfirst}}</h3>
+        </div>
+
+        {% include "session/session_nav.html" %}
+        {% csrf_token %}
+        {% if not object.executed %}
+        {% include "session/guided_mode/session_generate.html" %}
+        {% elif object.test_number in object.get_validated_tests %}
+        {% include "session/session_validated.html" %}
+        {% else %}
+        {% include "session/guided_mode/session_validate.html" %}
+        {% endif %}
       </div>
-      {% include "session/session_nav.html" %}
-      {% csrf_token %}
-      {% if "/overview" in request.path %}
-      {% include "session/guided_mode/guided_session_overview.html" %}
-      {% elif not object.executed %}
-      {% include "session/guided_mode/session_generate.html" %}
-      {% elif object.test_number in object.get_validated_tests %}
-      {% include "session/session_validated.html" %}
-      {% else %}
-      {% include "session/guided_mode/session_validate.html" %}
-      {% endif %}
     </div>
   </div>
 </div>
@@ -66,14 +66,17 @@
   }
 
   function decimalPlaces(num) {
-    var match = (''+num).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
-    if (!match) { return 0; }
+    var match = ('' + num).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
+    if (!match) {
+      return 0;
+    }
     return Math.max(
-             0,
-             // Number of digits right of decimal point.
-             (match[1] ? match[1].length : 0)
-             // Adjust for scientific notation.
-             - (match[2] ? +match[2] : 0));
+      0,
+      // Number of digits right of decimal point.
+      (match[1] ? match[1].length : 0)
+      // Adjust for scientific notation.
+      -
+      (match[2] ? +match[2] : 0));
   }
 
   function change_fields(item) {
