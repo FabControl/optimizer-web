@@ -27,6 +27,7 @@
               <th>Target</th>
               <th>Tests</th>
               <th data-defaultsort="asc">Created</th>
+              {% if request.user.member_of_corporation %}<th>Performer</th>{% endif %}
               <th data-defaultsort='disabled'></th>
             </tr>
           </thead>
@@ -44,6 +45,7 @@
               <td>{{ session.get_target_display }}</td>
               <td>{{ session.completed_tests }}</td>
               <td>{{ session.pub_date }}</td>
+              {% if request.user.member_of_corporation %}<td>{{ session.owner.first_name }} {{ session.owner.last_name }}</td>{% endif %}
               <td>
                 <div class="dropdown">
                   <button class="btn-sm btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

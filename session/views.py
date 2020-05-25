@@ -9,6 +9,7 @@ from django.shortcuts import render_to_response
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.forms.models import model_to_dict
+from django.db.models import Q
 
 from .models import *
 from django.views import generic
@@ -17,6 +18,17 @@ from payments.models import Checkout, Corporation
 
 from config import config
 from optimizer_api import api_client
+
+def model_ownership_query(user):
+    if user.member_of_corporation is None:
+        return Q(owner=user)
+    return (Q(owner=user) |
+            (Q(corporation=user.member_of_corporation) & Q(owner__in=user.member_of_corporation.team.all())))
+
+class ModelOwnershipCheckMixin:
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.filter(model_ownership_query(self.request.user))
 
 # Create your views here.
 
@@ -44,16 +56,16 @@ def dashboard(request):
     return render(request, 'session/dashboard.html', context)
 
 
-class MaterialsView(LoginRequiredMixin, generic.ListView):
+class MaterialsView(LoginRequiredMixin, ModelOwnershipCheckMixin, generic.ListView):
     template_name = "session/material_manager.html"
     context_object_name = 'materials'
+    model = Material
 
     def get_queryset(self):
-        queryset = Material.objects.filter(owner=self.request.user).order_by('pub_date')
-        return queryset
+        return super().get_queryset().order_by('pub_date')
 
 
-class MaterialView(LoginRequiredMixin, generic.UpdateView):
+class MaterialView(LoginRequiredMixin, ModelOwnershipCheckMixin, generic.UpdateView):
     model = Material
     template_name = 'session/material_detail.html'
     form_class = MaterialForm
@@ -61,11 +73,6 @@ class MaterialView(LoginRequiredMixin, generic.UpdateView):
 
     def __init__(self):
         super(MaterialView, self).__init__()
-
-    def get_object(self, queryset=None):
-        material = super(MaterialView, self).get_object(queryset)
-        material.is_owner(self.request.user)
-        return material
 
 
 @login_required
@@ -76,6 +83,7 @@ def material_form(request):
         if form.is_valid():
             material = form.save(commit=False)
             material.owner = request.user
+            material.corporation = request.user.member_of_corporation
             messages.success(request, 'Material "{}" has been created!'.format(material.name))
             material.save()
             if "next" in request.POST:
@@ -94,7 +102,8 @@ def material_form(request):
 @login_required
 def machine_edit_view(request, pk):
     context = {}
-    machine = get_object_or_404(Machine, pk=pk, owner=request.user)
+    machine = get_object_or_404(Machine, model_ownership_query(request.user), pk=pk)
+
     if request.method == 'POST':
         self_form = NewMachineForm(request.POST, instance=machine)
         extruder_form = NewExtruderForm(request.POST, instance=machine.extruder, prefix="extruder")
@@ -137,25 +146,19 @@ def machine_edit_view(request, pk):
     return render(request, 'session/machine_detail.html', context)
 
 
-class MachineView(LoginRequiredMixin, generic.UpdateView):
+class MachineView(LoginRequiredMixin, ModelOwnershipCheckMixin, generic.UpdateView):
     form_class = NewMachineForm
     model = Machine
     template_name = 'session/machine_detail.html'
 
-    def get_context_data(self, **kwargs):
-        machine = self.object
-        machine.is_owner(self.request.user)
-        context = super(MachineView, self).get_context_data(**kwargs)
-        return context
 
-
-class MachinesView(LoginRequiredMixin, generic.ListView):
+class MachinesView(LoginRequiredMixin, ModelOwnershipCheckMixin, generic.ListView):
     template_name = "session/machine_manager.html"
     context_object_name = 'machines'
+    model = Machine
 
     def get_queryset(self):
-        queryset = Machine.objects.filter(owner=self.request.user).order_by('pub_date')
-        return queryset
+        return super().get_queryset().order_by('pub_date')
 
 
 @login_required
@@ -181,6 +184,7 @@ def machine_form(request):
                 machine.printbed = printbed_form.save()
             messages.success(request, 'Machine "{}" has been created!'.format(machine.model))
             machine.extruder = extruder
+            machine.corporation = request.user.member_of_corporation
             machine.save()
             if "next" in request.POST:
                 request.session["machine"] = machine.pk
@@ -236,13 +240,13 @@ class SettingsView(LoginRequiredMixin, generic.ListView):
         return Settings.objects.order_by('pub_date')
 
 
-class SessionListView(LoginRequiredMixin, generic.ListView):
+class SessionListView(LoginRequiredMixin, ModelOwnershipCheckMixin, generic.ListView):
     template_name = "session/session_manager.html"
     context_object_name = 'sessions'
+    model = Session
 
     def get_queryset(self):
-        queryset = Session.objects.filter(owner=self.request.user).order_by('pub_date')
-        return queryset
+        return super().get_queryset().order_by('pub_date')
 
 
 class SessionTestsSelectionMixin:
@@ -288,13 +292,11 @@ class SessionValidateView(SessionView):
         return redirect('session_validate_back', pk=session.pk)
 
 
-class SessionOverview(SessionTestsSelectionMixin, LoginRequiredMixin, generic.DetailView):
+class SessionOverview(SessionTestsSelectionMixin, LoginRequiredMixin, ModelOwnershipCheckMixin, generic.DetailView):
     model = Session
     template_name = "session/session.html"
 
     def get_context_data(self, **kwargs):
-        session = self.object
-        session.is_owner(self.request.user)
         context = super().get_context_data(**kwargs)
         context['default_quality_type'] = 'normal'
         context['other_quality_types'] = common_cura_qulity_types
@@ -303,8 +305,7 @@ class SessionOverview(SessionTestsSelectionMixin, LoginRequiredMixin, generic.De
 
 @login_required
 def generate_or_validate(request, pk):
-    session = get_object_or_404(Session, pk=pk)
-    session.is_owner(request.user)
+    session = get_object_or_404(Session, model_ownership_query(request.user), pk=pk)
 
     # Check if user still is onboarding
     if request.user.onboarding:
@@ -320,44 +321,25 @@ def generate_or_validate(request, pk):
         return SessionView.as_view()(request, pk=pk)
 
 
-class SessionDelete(LoginRequiredMixin, generic.DeleteView):
+class SessionDelete(LoginRequiredMixin, ModelOwnershipCheckMixin, generic.DeleteView):
     model = Session
     success_url = reverse_lazy('session_manager')
 
-    def delete(self, request, *args, **kwargs):
-        """
-        Call the delete() method on the fetched object and then redirect to the
-        success URL.
-        """
-        if Session.objects.get(pk=self.kwargs["pk"]).owner != self.request.user:
-            raise Exception('Session not owned by user.')
-        self.object = self.get_object()
-        success_url = self.get_success_url()
-        self.object.delete()
-        return HttpResponseRedirect(success_url)
+    def get(self, request, *args, **kwargs):
+        raise Http404("Page not found")
 
 
-class MachineDelete(LoginRequiredMixin, generic.DeleteView):
+
+class MachineDelete(LoginRequiredMixin, ModelOwnershipCheckMixin, generic.DeleteView):
     model = Machine
     success_url = reverse_lazy('machine_manager')
 
     def get(self, request, *args, **kwargs):
         raise Http404("Page not found")
 
-    def delete(self, request, *args, **kwargs):
-        """
-        Call the delete() method on the fetched object and then redirect to the
-        success URL.
-        """
-        self.object = self.get_object()
-        if not self.object.is_owner(self.request.user):
-            raise Http404("Page not found")
-        success_url = self.get_success_url()
-        self.object.delete()
-        return HttpResponseRedirect(success_url)
 
 
-class MaterialDelete(LoginRequiredMixin, generic.DeleteView):
+class MaterialDelete(LoginRequiredMixin, ModelOwnershipCheckMixin, generic.DeleteView):
     model = Material
     success_url = reverse_lazy('material_manager')
 
@@ -365,23 +347,10 @@ class MaterialDelete(LoginRequiredMixin, generic.DeleteView):
         raise Http404("Page not found")
 
 
-    def delete(self, request, *args, **kwargs):
-        """
-        Call the delete() method on the fetched object and then redirect to the
-        success URL.
-        """
-        self.object = self.get_object()
-        if not self.object.is_owner(self.request.user):
-            raise Http404("Page not found")
-        success_url = self.get_success_url()
-        self.object.delete()
-        return HttpResponseRedirect(success_url)
-
 
 @login_required
 def session_validate_undo(request, pk):
-    session = Session.objects.get(pk=pk)
-    session.is_owner(request.user)
+    session = get_object_or_404(Session, model_ownership_query(request.user), pk=pk)
     session.remove_last_test()
 
     previously_tested_parameters = session.previously_tested_parameters
@@ -394,8 +363,7 @@ def session_validate_undo(request, pk):
 
 @login_required
 def session_validate_revert(request, pk):
-    session = Session.objects.get(pk=pk)
-    session.is_owner(request.user)
+    session = get_object_or_404(Session, model_ownership_query(request.user), pk=pk)
 
     routine = api_client.get_routine()
     test_names = [name for name, _ in routine.items()]
@@ -419,8 +387,7 @@ def session_validate_revert(request, pk):
 
 @login_required
 def test_switch(request, pk, number):
-    session = Session.objects.get(pk=pk)
-    session.is_owner(request.user)
+    session = get_object_or_404(Session, model_ownership_query(request.user), pk=pk)
     session.test_number = number
     session.save()
     return redirect('session_detail', pk=pk)
@@ -428,8 +395,7 @@ def test_switch(request, pk, number):
 
 @login_required
 def next_test_switch(request, pk, priority: str):
-    session = get_object_or_404(Session, pk=pk)
-    session.is_owner(request.user)
+    session = get_object_or_404(Session, model_ownership_query(request.user), pk=pk)
     num = session.test_number
     if priority == "primary":
         session.test_number = session.test_number_next()
@@ -444,8 +410,7 @@ def next_test_switch(request, pk, priority: str):
 
 @login_required
 def serve_gcode(request, pk):
-    session = Session.objects.get(pk=pk)
-    session.is_owner(request.user)
+    session = get_object_or_404(Session, model_ownership_query(request.user), pk=pk)
     response = FileResponse(session.get_gcode, content_type='text/plain')
     response['Content-Type'] = 'text/plain'
     response['Content-Disposition'] = 'attachment; filename={}.gcode'.format(session.name.replace(" ", "_") + "_" + session.test_number)
@@ -456,8 +421,8 @@ def serve_gcode(request, pk):
 def serve_config(request, pk, slicer):
     supported_slicers = ["simplify3d", "slic3r_pe", 'cura']
     assert slicer in supported_slicers
-    session = get_object_or_404(Session, pk=pk)
-    session.is_owner(request.user)
+    session = get_object_or_404(Session, model_ownership_query(request.user), pk=pk)
+
     quality_type = ''
     if request.method == 'POST':
         quality_type = request.POST.get('quality_type', '')
@@ -472,8 +437,7 @@ def serve_config(request, pk, slicer):
 @login_required
 def serve_report(request, pk):
     from io import BytesIO
-    session = get_object_or_404(Session, pk=pk)
-    session.is_owner(request.user)
+    session = get_object_or_404(Session, model_ownership_query(request.user), pk=pk)
     report_file, report_file_format = api_client.get_report(session.persistence)
     f = BytesIO(report_file)
     response = FileResponse(f, content_type='application/pdf')
@@ -530,11 +494,12 @@ def terms_of_use(request):
 @login_required
 def new_session(request):
     if request.method == 'POST':
-        form = SessionForm(request.POST, user=request.user)
+        form = SessionForm(request.POST, ownership=model_ownership_query(request.user))
 
         if form.is_valid():
             session = form.save(commit=False)
             session.owner = request.user
+            session.corporation = request.user.member_of_corporation
 
             session.settings = Settings.objects.create(name=session.name)
 
@@ -553,7 +518,7 @@ def new_session(request):
         return HttpResponse(status=204)
 
     else:
-        form = SessionForm(user=request.user)
+        form = SessionForm(ownership=model_ownership_query(request.user))
         if "machine" in request.session:
             form.fields["machine"].initial = request.session["machine"]
 
