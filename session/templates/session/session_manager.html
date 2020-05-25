@@ -22,6 +22,7 @@
           <thead>
             <tr>
               <th>Name</th>
+              <th>Mode</th>
               <th>Material</th>
               <th>Printer</th>
               <th>Target</th>
@@ -39,6 +40,7 @@
               {% else %}
               <td><a class="text-secondary" href="{% url 'session_detail' session.pk %}">{{ session.name }}</a></td>
               {% endif %}
+              <td>{{ session.mode.name }}</td>
               <td><a class="text-secondary" href="#">{{ session.material.name }}</a></td>
               <td><a class="text-secondary" href="#">{{ session.machine.model }}</a></td>
               <td>{{ session.get_target_display }}</td>
