@@ -1,4 +1,5 @@
 {% load crispy_forms_tags %}
+<iframe width="1" height="1" frameborder="0" src="{% url 'gcode' object.pk %}"></iframe>
 <div class="row pt-4 text-center">
   <div class="col-sm-12">
     <button class="btn btn-primary" onclick="location.href='{% url 'gcode' object.pk %}'" type="button" name="button">Download .GCODE file</button>
