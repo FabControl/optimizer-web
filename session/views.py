@@ -328,7 +328,7 @@ class GuidedValidateView(GuidedSessionView):
 
 class SessionOverview(SessionTestsSelectionMixin, LoginRequiredMixin, generic.DetailView):
     model = Session
-    template_name = "session/session.html"
+    template_name = "session/session_overview.html"
 
     def get_context_data(self, **kwargs):
         session = self.object
@@ -340,7 +340,7 @@ class SessionOverview(SessionTestsSelectionMixin, LoginRequiredMixin, generic.De
 
 
 class GuidedSessionOverview(SessionOverview):
-    template_name = 'session/guided_mode/guided_session.html'
+    template_name = 'session/session_overview.html'
 
 
 @login_required
