@@ -6,29 +6,33 @@
 <div class="container">
   <div class="row pt-4">
     <div class="col-sm-4">
-      <div class="card p-3">
-        {% include "session/session_info.html" %}
-      </div>
+      {% include "session/session_info.html" %}
+      <hr>
+      <span class='font-weight-light'>{{ object.test_info.hint_init|safe }}</span>
+      <br>
+      <a href="https://3doptimizer.helpscoutdocs.com/test/{{object.test_number}}" class='font-weight-light' target="_blank"><small>Read more in Help Center</small></a>
       <div class="pt-3">
         {% include "session/session_test_selection.html" %}
       </div>
     </div>
     <div class="col-sm">
-      <div class="test-title-container">
-        <span class="test-title">{{object.test_info.name}}</span>
-        <br>
-        <span class="test-number">{{object.test_number}}</span>
-        <span class="test-class">Core</span>
+      <div class="test-box">
+        <div class="test-title-container">
+          <span class="test-number">{{object.test_number}}</span>
+          <span class="test-class">Core</span>
+          <br>
+          <span class="test-title">{{object.test_info.name}}</span>
+        </div>
+        {% include "session/session_nav.html" %}
+        {% csrf_token %}
+        {% if not object.executed %}
+        {% include "session/session_generate.html" %}
+        {% elif object.test_number in object.get_validated_tests %}
+        {% include "session/session_validated.html" %}
+        {% else %}
+        {% include "session/session_validate.html" %}
+        {% endif %}
       </div>
-      {% include "session/session_nav.html" %}
-      {% csrf_token %}
-      {% if not object.executed %}
-      {% include "session/session_generate.html" %}
-      {% elif object.test_number in object.get_validated_tests %}
-      {% include "session/session_validated.html" %}
-      {% else %}
-      {% include "session/session_validate.html" %}
-      {% endif %}
     </div>
   </div>
 </div>
@@ -49,14 +53,17 @@
   }
 
   function decimalPlaces(num) {
-    var match = (''+num).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
-    if (!match) { return 0; }
+    var match = ('' + num).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
+    if (!match) {
+      return 0;
+    }
     return Math.max(
-             0,
-             // Number of digits right of decimal point.
-             (match[1] ? match[1].length : 0)
-             // Adjust for scientific notation.
-             - (match[2] ? +match[2] : 0));
+      0,
+      // Number of digits right of decimal point.
+      (match[1] ? match[1].length : 0)
+      // Adjust for scientific notation.
+      -
+      (match[2] ? +match[2] : 0));
   }
 
   function change_fields(item) {
