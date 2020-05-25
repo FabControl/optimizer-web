@@ -41,32 +41,30 @@
     </div>
   </div>
 </nav>
-<nav class="navbar navbar-expand-lg navbar-light shadow-sm bg-light">
-  <div class="container">
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item px-3 {% if "/dashboard/" in request.path %}active{% endif %}">
-          <a id="dash" class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
-        </li>
-        <li class="nav-item px-3 {% if "/sessions/" in request.path %}active{% endif %}">
-          <a id="testing_sessions" class="nav-link" href="{% url 'session_manager' %}">Tests</a>
-        </li>
-        <li class="nav-item px-3 {% if "/resources/machines" in request.path %}active{% endif %} dropdown">
-          <a class="nav-link" href="{% url 'machine_manager' %}">Printers</a>
-        </li>
-        <li class="nav-item px-3 {% if "/resources/materials" in request.path %}active{% endif %} dropdown">
-          <a class="nav-link" href="{% url 'material_manager' %}">Materials</a>
-        </li>
-        <li class="nav-item px-3 {% if "/help/" in request.path %}active{% endif %} dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="helpDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Help
-          </a>
-          <div class="dropdown-menu" aria-labelledby="helpDropdown">
-            <a class="dropdown-item" href="https://3doptimizer.helpscoutdocs.com/">Help center</a>
-          </div>
-        </li>
-      </ul>
-    </div>
-    {% endif %}
+<div class="container">
+  <div class="card">
+    <ul class="nav mr-auto">
+      <li class="nav-item px-3 {% if "/dashboard/" in request.path %}active{% endif %}">
+        <a id="dash" class="nav-link {% if "/dashboard/" in request.path %}active{% endif %}" href="{% url 'dashboard' %}">Dashboard</a>
+      </li>
+      <li class="nav-item px-3 {% if "/sessions/" in request.path %}active{% endif %}">
+        <a id="testing_sessions" class="nav-link {% if "/sessions/" in request.path %}active{% endif %}" href="{% url 'session_manager' %}">Tests</a>
+      </li>
+      <li class="nav-item px-3 {% if "/resources/machines" in request.path %}active{% endif %} dropdown">
+        <a class="nav-link {% if "/resources/machines" in request.path %}active{% endif %}" href="{% url 'machine_manager' %}">Printers</a>
+      </li>
+      <li class="nav-item px-3 {% if "/resources/materials" in request.path %}active{% endif %} dropdown">
+        <a class="nav-link {% if "/resources/materials" in request.path %}active{% endif %}" href="{% url 'material_manager' %}">Materials</a>
+      </li>
+      <li class="nav-item px-3 {% if "/help/" in request.path %}active{% endif %} dropdown">
+        <a class="nav-link dropdown-toggle {% if "/help/" in request.path %}active{% endif %}" href="#" id="helpDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Help
+        </a>
+        <div class="dropdown-menu" aria-labelledby="helpDropdown">
+          <a class="dropdown-item" href="https://3doptimizer.helpscoutdocs.com/">Help center</a>
+        </div>
+      </li>
+    </ul>
   </div>
-</nav>
+  {% endif %}
+</div>
