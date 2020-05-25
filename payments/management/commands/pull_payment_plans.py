@@ -12,7 +12,13 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         # pull list of payment plans
-        stripe_plans = {x['id']:x for x in stripe.Plan.list(active=True, product=settings.STRIPE_SUBSCRIPTION_PRODUCT_ID, limit=100)['data']}
+        unsorted_simple_plans = stripe.Plan.list(product=settings.STRIPE_SUBSCRIPTION_PRODUCT_ID,
+                                                limit=100)['data']
+
+        unsorted_business_plans = stripe.Plan.list(product=settings.STRIPE_BUSINESS_PRODUCT_ID,
+                                                limit=100)['data']
+
+        stripe_plans = {x['id']:x for x in unsorted_business_plans + unsorted_simple_plans}
 
         for plan in Plan.objects.exclude(stripe_plan_id='').exclude(stripe_plan_id__in=stripe_plans.keys()):
             # remove no longer existing plans

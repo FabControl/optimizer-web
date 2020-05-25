@@ -5,7 +5,7 @@ from django.utils import timezone
 from django.contrib import messages
 from django.views.generic.edit import BaseFormView
 from django.views.generic import ListView, TemplateView
-from .models import Plan, Checkout, Invoice, TaxationCountry, Subscription, Currency
+from .models import Plan, Checkout, Invoice, TaxationCountry, Subscription, Currency, Corporation
 from django.urls import reverse
 from .forms import PaymentPlanForm
 from django.contrib.auth.decorators import login_required
@@ -43,8 +43,10 @@ class PaymentPlansView(BaseFormView):
             currencies = Currency.objects.filter(name='USD')
 
         plans = Plan.objects.filter(type='premium', currency__in=currencies).order_by('price')
+        corporation_plans = Plan.objects.filter(type='corporate', currency__in=currencies).order_by('price')
 
         context = {'plans': plans,
+                   'corporation_plans': corporation_plans,
                 # Should work correctly if database contains
                 #   only one instance of Plan with type 'basic'
                 'core': Plan.objects.get(type='basic')}
@@ -211,9 +213,18 @@ def handle_stripe_event(request):
                                         payment_plan=checkout.payment_plan,
                                         user=checkout.user)
             try:
-                Subscription.objects.get(**subscription_args)
+                subscription = Subscription.objects.get(**subscription_args)
             except Subscription.DoesNotExist:
-                Subscription.objects.create(**subscription_args)
+                subscription = Subscription.objects.create(**subscription_args)
+
+            if subscription.payment_plan.type == 'corporate':
+                user = subscription.user
+                if len(user.corporation_set.all()) < 1:
+                    corp = Corporation.objects.create(owner=user,
+                                                name=f"{user.first_name}'s corporation")
+                    user.member_of_corporation = corp
+                    user.manager_of_corporation = corp
+                    user.save()
 
             checkout.stripe_id = event_object['subscription']
             checkout.is_paid = True
@@ -244,7 +255,7 @@ def handle_stripe_event(request):
         Subscription.update_from_stripe(event_object)
 
     elif event_type in ('plan.created','plan.updated','plan.deleted'):
-        if event_object['product'] == settings.STRIPE_SUBSCRIPTION_PRODUCT_ID:
+        if event_object['product'] in (settings.STRIPE_BUSINESS_PRODUCT_ID, settings.STRIPE_SUBSCRIPTION_PRODUCT_ID):
             plan = Plan.from_stripe(event_object)
             if event_type == 'plan.deleted':
                 plan.type = 'deleted'

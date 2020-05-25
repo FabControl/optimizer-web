@@ -260,23 +260,27 @@
                           </td>
                         </tr>
                         {% endfor %}
-                        <tr  data-disablesort='true'>
-                          <form class="form-inline" action="{% url 'invite_into_corporation' %}" method="post">
-                            <td>{{ corporate_invitation.name }}</td>
-                            <td>{{ corporate_invitation.email }}</td>
-                            <td></td>
-                            <td></td>
-                            <td>
-                              {% csrf_token %}
-                              <button class="btn btn-primary" type="submit">Add</button>
-                            </td>
-                          </form>
-                        </tr>
+                        {% if corporation.allow_invites %}
+                          <tr  data-disablesort='true'>
+                            <form class="form-inline" action="{% url 'invite_into_corporation' %}" method="post">
+                              <td>{{ corporate_invitation.name }}</td>
+                              <td>{{ corporate_invitation.email }}</td>
+                              <td></td>
+                              <td></td>
+                              <td>
+                                {% csrf_token %}
+                                <button class="btn btn-primary" type="submit">Add</button>
+                              </td>
+                            </form>
+                          </tr>
+                        {% endif %}
                       </tbody>
                     </table>
                   </div>
-                    <div>
-                    </div>
+                  {% if not corporation.allow_invites %}
+                  <div class='row'><p></p></div>
+                  <div class='row'><p></p></div>
+                  {% endif %}
                   {% endif %}
 
                 {% endwith %}

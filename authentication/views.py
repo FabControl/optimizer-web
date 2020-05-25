@@ -402,8 +402,11 @@ def delete_or_leave_corporation(request):
 @login_required
 def invite_into_corporation(request):
     if request.method == 'POST' and request.user.manager_of_corporation is not None:
-        form = CorporationInviteForm(request.POST)
         corporation = request.user.manager_of_corporation
+        if not corporation.allow_invites:
+            raise Http404()
+
+        form = CorporationInviteForm(request.POST)
         invitation_sent = False
         if form.is_valid():
             try:
