@@ -1,11 +1,8 @@
-<ul class="nav nav-tabs">
+<ul class="nav nav-optimizer">
   <li class="nav-item">
     <a class="nav-link {% if not object.executed and not '/overview' in request.path %}active{% endif %} disabled">Setup</a>
   </li>
   <li class="nav-item">
     <a class="nav-link {% if object.executed and not '/overview' in request.path %}active{% endif %} disabled" href="#">Print and validate</a>
-  </li>
-  <li class="nav-item ml-auto">
-    <a class="nav-link {% if '/overview' in request.path %}active disabled{% endif %}{% if not object.previous_tests %}disabled{% endif %}" id="overview" name="overview" href="{% url 'session_overview' object.pk %}">Results</a>
   </li>
 </ul>
