@@ -301,7 +301,6 @@ class GuidedValidateView(GuidedSessionView):
 
     def get_context_data(self, **kwargs):
         session = self.object
-        session.is_owner(self.request.user)
         context = super().get_context_data(**kwargs)
         context['question_form'] = ValidateFormTestDescriptionForm(instance=self.object)
         context['questions'] = Junction.objects.get(base_test=session.test_number).descriptors.all()
