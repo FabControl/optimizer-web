@@ -1,10 +1,4 @@
 {% load crispy_forms_tags %}
-<div class="pt-3">
-  <div class="help-box">
-    <span class='font-weight-light'>{{ object.test_info.hint_init|safe }}</span>
-    <a href="https://3doptimizer.helpscoutdocs.com/test/{{object.test_number}}" class='font-weight-light' target="_blank"><small>Read more in Help Center</small></a>
-  </div>
-</div>
 <form class="" action="" method="post">
   {% crispy form %}
   <div class="row pt-3 justify-content-end">
