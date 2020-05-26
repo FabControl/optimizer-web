@@ -286,8 +286,12 @@ def use_affiliate(request, uidb64, token):
         corporation_form = None
         form = None
 
+        corporate_affiliate = False
+        if affiliate.sender is not None:
+            corporate_affiliate = affiliate.sender.member_of_corporation is not None
+
         if request.method == 'POST':
-            if 'company_name' in request.POST:
+            if not corporate_affiliate and 'company_name' in request.POST:
                 form = CorporationSignUpForm(request.POST)
                 corporation_form = form
             else:
