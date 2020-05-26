@@ -17,7 +17,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.datastructures import MultiValueDictKeyError
 from django.urls import reverse_lazy, reverse
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import ResetPasswordForm, SignUpForm, LoginForm, ChangePasswordForm, LegalInformationForm, CorporationInviteForm
+from .forms import ResetPasswordForm, SignUpForm, LoginForm, ChangePasswordForm, LegalInformationForm, CorporationInviteForm, CorporationSignUpForm
 from .tokens import account_activation_token, affiliate_token_generator
 from django.utils.encoding import force_text, force_bytes
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
@@ -60,20 +60,28 @@ def user_login(request):
 
 
 def user_signup(request):
-    country = request.geolocation['county']['code'] if hasattr(request, 'geolocation') else ''
-    context = {"form": SignUpForm(initial={'company_country':country})}
     if request.user.is_authenticated:
         return redirect('dashboard')
+    default_form = None
+    corporation_form = None
+    form = None
+
     if request.method == 'POST':
-        form = SignUpForm(request.POST)
+        if 'company_name' in request.POST:
+            form = CorporationSignUpForm(request.POST)
+            corporation_form = form
+        else:
+            form = SignUpForm(request.POST)
+            default_form = form
+
         if form.is_valid():
             form.save_and_notify(request)
-            return render(request, 'authentication/check_email.html', context)
+            return render(request, 'authentication/check_email.html', {})
         else:
-            known_email = 'Email must be unique'
-            form_errors = list(filter(lambda x: x != known_email,
-                (str(m.as_text()).lstrip('* ') for m in dict(form.errors).values())))
-            if len(form_errors) < 1:
+            if form.has_error('email', 'unique'):
+                del form._errors['email']
+
+            if form.is_valid():
                 # someone is attempting to register twice with same email
                 # or checking if account with email exists
                 user_email = request.POST['email'].strip()
@@ -84,11 +92,13 @@ def user_signup(request):
                                      token=default_token_generator.make_token(user),
                                      uid=urlsafe_base64_encode(force_bytes(user.pk))
                                      )
-                return render(request, 'authentication/check_email.html', context)
+                return render(request, 'authentication/check_email.html', {})
 
 
-            message = "<br>".join(form_errors)
-            messages.error(request, mark_safe(message))
+    country = request.geolocation['county']['code'] if hasattr(request, 'geolocation') else ''
+    context = {"form": SignUpForm(initial={'company_country':country}) if default_form is None else default_form,
+                "open_form": form,
+                "corporation_form": CorporationSignUpForm(initial={'company_country':country}) if corporation_form is None else corporation_form}
     return render(request, 'authentication/signup.html', context)
 
 
@@ -200,6 +210,8 @@ def activate_account(request, uidb64, token):
 
         login(request, user)
         messages.success(request, 'Your email address was confirmed and account activated.')
+        if user.company_name != '':
+            return redirect(reverse('plans') + '#corporate')
         return redirect('dashboard')
 
     return render(request, 'authentication/invalid_activation_link.html')
@@ -270,8 +282,18 @@ def use_affiliate(request, uidb64, token):
         affiliate_token_generator.check_token(affiliate, token) and
         len(get_user_model().objects.filter(email=affiliate.email)) == 0):
 
+        default_form = None
+        corporation_form = None
+        form = None
+
         if request.method == 'POST':
-            form = SignUpForm(request.POST)
+            if 'company_name' in request.POST:
+                form = CorporationSignUpForm(request.POST)
+                corporation_form = form
+            else:
+                form = SignUpForm(request.POST)
+                default_form = form
+
             if form.is_valid():
                 if form.cleaned_data['email'] == affiliate.email:
                     new_user = form.save(commit=False)
@@ -280,6 +302,8 @@ def use_affiliate(request, uidb64, token):
                     affiliate.receiver = new_user
                     affiliate.confirm(request)
                     login(request, new_user)
+                    if new_user.member_of_corporation is None and new_user.company_name != '':
+                        return redirect(reverse('plans') + '#corporate')
                     return redirect('dashboard')
 
                 else:
@@ -288,14 +312,18 @@ def use_affiliate(request, uidb64, token):
                     affiliate.save()
                     return render(request, 'authentication/check_email.html', {})
 
-            else:
-                form_errors = [str(m.as_text()).lstrip('* ') for m in dict(form.errors).values()]
-                messages.error(request, '<br>'.join(form_errors))
 
-        else:
-            form = SignUpForm(initial=dict(email=affiliate.email, first_name=affiliate.name))
+        country = request.geolocation['county']['code'] if hasattr(request, 'geolocation') else ''
+        if default_form is None:
+            default_form = SignUpForm(initial=dict(email=affiliate.email, first_name=affiliate.name, company_country=county))
+        if corporation_form is None:
+            corporation_form = CorporationSignUpForm(initial=dict(email=affiliate.email, first_name=affiliate.name, company_country=county))
 
-        return render(request, 'authentication/signup.html', dict(form=form))
+
+        context = {"form": default_form,
+                    "open_form": form,
+                    "corporation_form": corporation_form}
+        return render(request, 'authentication/signup.html', context)
 
     return render(request, 'authentication/invalid_affiliate_url.html')
 

@@ -64,6 +64,13 @@ class SignUpForm(UserCreationForm):
         return user
 
 
+class CorporationSignUpForm(SignUpForm):
+    company_name = forms.CharField(max_length=30, required=True)
+    class Meta:
+        model = User
+        fields = ('email', 'first_name', 'last_name', 'password1', 'password2', 'company_country', 'company_name')
+
+
 class ResetPasswordForm(PasswordResetForm):
     def __init__(self, *a, **k):
         super(ResetPasswordForm, self).__init__(*a, **k)
