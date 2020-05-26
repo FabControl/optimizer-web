@@ -464,7 +464,7 @@ def invite_into_corporation(request):
             messages.error(request,
                             '{} already invited or joined another corporation'.format(form.cleaned_data['email']))
 
-        return redirect(reverse('account_legal_info'))
+        return redirect(reverse('account_legal_info', kwargs=dict(category='corporation')) + '#corporation')
 
 
     raise Http404()
