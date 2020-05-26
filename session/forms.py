@@ -142,11 +142,21 @@ class SessionForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         ownership = kwargs.pop("ownership", None)
+        self.user = kwargs.pop("user", None)
         super(SessionForm, self).__init__(*args, **kwargs)
         self.fields["material"] = forms.ModelChoiceField(queryset=Material.objects.filter(ownership))
         self.fields["machine"] = forms.ModelChoiceField(queryset=Machine.objects.filter(ownership))
 
+        if self.user.plan == 'premium':
+            queryset = SessionMode.objects.filter(public=True)
+            initial = SessionMode.objects.get(name='Guided').pk
+        else:
+            queryset = SessionMode.objects.filter(public=True, _plan_availability=self.user.plan)
+            initial = SessionMode.objects.get(name='Core').pk
+
+        self.fields["mode"] = forms.ModelChoiceField(initial=initial, queryset=queryset, widget=forms.RadioSelect, empty_label=None)
         self.fields["name"].label = "Session name"
+        self.fields["mode"].label = "Session mode"
         self.fields["material"].label = 'Material'
         self.fields["material"].help_text = mark_safe('<a href="{}?next={}">+ New Material</a>'.format(reverse_lazy('material_form'), reverse_lazy('new_session')))
         self.fields["machine"].label = "Printer"
@@ -203,7 +213,7 @@ class TestValidateForm(forms.ModelForm):
             self.fields["min_max_parameter_three"] = param
 
         self.fields["comments"] = forms.CharField(max_length=256,
-                                                  required=False, label='Comment')
+                                                  required=False, label='My Comment (optional)')
 
         self.helper = FormHelper()
         self.helper.form_tag = False
@@ -222,10 +232,43 @@ class TestValidateForm(forms.ModelForm):
         fields = []
 
 
+class ValidateFormTestDescriptionForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(ValidateFormTestDescriptionForm, self).__init__(*args, **kwargs)
+
+        self.helper = FormHelper()
+        self.helper.form_tag = False
+
+        session = self.instance
+        questions = Junction.objects.get(base_test=session.test_number).descriptors.all()
+        for i, question in enumerate(questions):
+            question_name = f'question_{str(i)}'
+            q = forms.BooleanField()
+            if question.image:
+                q.label = mark_safe(f"""<a type="button" href="#" class="" data-toggle="popover" data-trigger="focus" title=" " data-img='{question.image.url}'>{question.statement}</a>""")
+            else:
+                q.label = question.statement
+            q.required = False
+            q.widget.attrs.update({'value': question.pk})
+            """
+            <input type="checkbox" checked data-toggle="toggle" data-on="There are no gaps between tracks" data-off="There are gaps between tracks" data-onstyle="outline-primary" data-offstyle="danger" data-width="300" data-height="40">
+            """
+            self.fields[question_name] = q
+
+    class Meta:
+        model = Session
+        fields = []
+
+
 class TestGenerateForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(TestGenerateForm, self).__init__(*args, **kwargs)
+        show_inactives = True
         session = self.instance
+
+        if session.mode.type == 'guided':
+            show_inactives = False
+
         test_info = session.update_test_info()
         self.parameters = []
         secondary_parameters = []
@@ -251,7 +294,6 @@ class TestGenerateForm(forms.ModelForm):
                     highest_iterable = parameter["iterable_values"][-1][0]
                     for iterable, value in parameter["iterable_values"]:
                         subwidget = forms.NumberInput(attrs={
-                                "class": "form-control",
                                 "type": ("text" if iterable not in [0, highest_iterable] else "number"),
                                 "id": "linspace-field-{}".format(str(iterable)),
                                 "value": round(value, (3 if parameter["units"] in ["mm", "-"] else 0)),
@@ -263,8 +305,10 @@ class TestGenerateForm(forms.ModelForm):
                         if iterable not in [0, highest_iterable]:
                             subwidget.attrs["type"] = "text"
                             subwidget.attrs["readonly"] = "readonly"
+                            subwidget.attrs["class"] = "form-control"
                         else:
                             subwidget.attrs["type"] = "number"
+                            subwidget.attrs["class"] = "form-control optimizer-input"
                         widgets.append(subwidget)
 
                     self.fields[field_id] = MinMaxField(
@@ -293,14 +337,19 @@ class TestGenerateForm(forms.ModelForm):
                 param = forms.DecimalField(min_value=parameter["min_max"][0], max_value=parameter["min_max"][1])
             param.label = "{} ({})".format(parameter["name"].capitalize(), (
                     "°C" if parameter["units"] == "degC" else parameter["units"]))
-            param.widget.attrs["class"] = "col-sm-2"
+            param.widget.attrs["class"] = "col-sm-2 optimizer-input"
             param.initial = parameter["values"]
             if not parameter["active"]:
-                param.widget.attrs['readonly'] = True
-                inactives[parameter["programmatic_name"]] = param
+                # TODO reintroduce functionality to show previously tested params
+                if not show_inactives:
+                    continue
+                # param.widget.attrs['readonly'] = True
+                # inactives[parameter["programmatic_name"]] = param
             elif parameter["programmatic_name"] in session.get_previously_tested_parameters():
-                param.widget.attrs['readonly'] = True
-                inactives[parameter["programmatic_name"]] = param
+                if not show_inactives:
+                    continue
+                # param.widget.attrs['readonly'] = True
+                # inactives[parameter["programmatic_name"]] = param
             else:
                 actives[parameter["programmatic_name"]] = param
                 if parameter["hint_active"]:
@@ -334,10 +383,12 @@ class TestGenerateForm(forms.ModelForm):
                 logging.getLogger("views").info("Currently saving {}: {}".format(parameter, self.cleaned_data[parameter]))
                 self.instance.__setattr__(parameter, self.cleaned_data[parameter])
             else:
-                self.instance.__setattr__(parameter, [self.cleaned_data[info["programmatic_name"]]])
+                if info["programmatic_name"] in self.cleaned_data:
+                    self.instance.__setattr__(parameter, [self.cleaned_data[info["programmatic_name"]]])
         for setting in self.secondary_parameters_programmatic_names:
-            logging.getLogger("views").info("Currently saving {}: {}".format(setting, self.cleaned_data[setting]))
-            settings.__setattr__(setting, self.cleaned_data[setting])
+            if setting in self.cleaned_data:
+                logging.getLogger("views").info("Currently saving {}: {}".format(setting, self.cleaned_data[setting]))
+                settings.__setattr__(setting, self.cleaned_data[setting])
         settings.save()
 
         return super(TestGenerateForm, self).save(commit=commit)

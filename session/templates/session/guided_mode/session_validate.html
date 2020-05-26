@@ -1,0 +1,48 @@
+{% load crispy_forms_tags %}
+{% load static %}
+<iframe width="1" height="1" frameborder="0" src="{% url 'gcode' object.pk %}"></iframe>
+<form class="" action="" method="POST">
+  <div class="row pt-3">
+    <div class="col-sm-12">
+      <p class='small'><a href="{% url 'gcode' object.pk %}">Redownload GCODE here</a>, if it didn't download automatically.</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm">
+      {% if questions %}
+      <div class="pt-4 pb-2">
+        <h4>Describe the printed results</h4>
+      </div>
+      {% crispy question_form %}
+      <div class="pt-4 pb-2">
+        <h4>Select the best test structure</h4>
+      </div>
+      {% endif %}
+      {% crispy form %}
+    </div>
+  </div>
+  <div class="row pt-2">
+    <div class="col">
+      <button class="btn btn-secondary" onclick="location.href='{% url 'session_validate_back' object.pk %}'" type="button" name="button">Back</button>
+    </div>
+    <div class="col text-right">
+      <button type="submit" name="btnprimary" class="btn btn-primary">Next test</button>
+    </div>
+  </div>
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+	 $('[data-toggle="popover"]').popover({
+          trigger: 'focus',
+		  trigger: 'hover',
+          html: true,
+          content: function () {
+				return '<img class="img-fluid" src="'+$(this).data('img') + '" />';
+          },
+          title: 'Toolbox'
+    })
+});
+</script>
+{% if request.user.onboarding %}
+{% include 'session/tour.html' %}
+{% endif %}

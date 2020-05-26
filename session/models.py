@@ -6,12 +6,12 @@ from django.utils import timezone
 from django.http import Http404
 from django.conf import settings
 from authentication.models import User
+from payments.models import Plan
 from optimizer_api import api_client
-from .choices import TEST_NUMBER_CHOICES, TARGET_CHOICES, SLICER_CHOICES, TOOL_CHOICES, FORM_CHOICES, UNITS
+from .choices import TEST_NUMBER_CHOICES, TARGET_CHOICES, SLICER_CHOICES, TOOL_CHOICES, FORM_CHOICES, UNITS, MODE_CHOICES, WIZARD_MODES
+from authentication.choices import PLAN_CHOICES
 
 # Create your models here.
-
-PREVENT_DELETION_MODELS = (User,)
 
 
 def recursive_delete(instance, using=None, keep_parents=False):
@@ -259,10 +259,40 @@ class Settings(models.Model):
         return output
 
 
+class SessionMode(models.Model):
+    """
+    Used to store information regarding different testing modes - the types of tests that are included, who these modes
+    are available to.
+    """
+    name = models.CharField(max_length=64, default='Untitled')
+    type = models.CharField(max_length=64, choices=WIZARD_MODES, default='normal')
+    public = models.BooleanField(default=True)
+
+    # Private variables, for getters, setters
+    _plan_availability = models.CharField(default='basic', choices=PLAN_CHOICES, max_length=64)
+    _included_tests = models.CharField(max_length=200,
+                                       default="['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13']")
+
+    @property
+    def plan_availability(self):
+        if self._plan_availability == 'premium':
+            return ['basic', self._plan_availability]
+        else:
+            return [self._plan_availability]
+
+    @property
+    def included_tests(self):
+        return ast.literal_eval(str(self._included_tests))
+
+    def __str__(self):
+        return f'{self.name}'
+
+
 class Session(models.Model, DependenciesCopyMixin):
     """
     Used to store testing session progress, relevant assets (machine, material) and test data.
     """
+    mode = models.ForeignKey(SessionMode, null=True, on_delete=models.CASCADE)
     number = models.IntegerField(default=0)
     name = models.CharField(default="Untitled", max_length=20)
     corporation = models.ForeignKey('payments.Corporation', on_delete=models.CASCADE, null=True)
@@ -331,7 +361,6 @@ class Session(models.Model, DependenciesCopyMixin):
                     output = []
             else:
                 output = self.get_last_min_max_speed()
-            names = [param["programmatic_name"] for param in self.min_max_parameters]
             if parameter["parameter"].endswith("one"):
                 self.min_max_parameter_one = output
             elif parameter["parameter"].endswith("two"):
@@ -631,13 +660,7 @@ class Session(models.Model, DependenciesCopyMixin):
         :param value:
         :return:
         """
-        time_limited_plans = settings.TIME_LIMITED_PLANS
-        allowed_numbers = []
-        if self.owner.plan == 'basic':
-            allowed_numbers = settings.FREE_TESTS
-        elif self.owner.plan in time_limited_plans:
-            allowed_numbers = [number for number in api_client.get_routine(mode='full')]
-        if value in allowed_numbers:
+        if value in self.mode.included_tests:
             self._test_info = ""
             self._test_number = value
             self.update_test_info()
@@ -662,30 +685,41 @@ class Session(models.Model, DependenciesCopyMixin):
         :return:
         """
         routine = api_client.get_routine()
-        test_names = [name for name, _ in routine.items()]
+        if self.mode.type == 'normal':
+            test_names = [name for name, _ in routine.items()]
 
-        next_test = None
-        next_primary_test = None
+            next_test = None
+            next_primary_test = None
 
-        current_found = False
-        for i, test_info in enumerate(routine.items()):
-            if current_found:
-                if test_info[1]["priority"] == "primary":
-                    next_primary_test = test_names[i]
-                    break
-            if test_info[0] == self.test_number:
-                try:
-                    next_test = test_names[i + 1]
-                except IndexError:
-                    next_primary_test = next_test = self.test_number
-                current_found = True
-        if primary:
-            if next_primary_test in settings.FREE_TESTS:
-                return next_primary_test
+            current_found = False
+            for i, test_info in enumerate(routine.items()):
+                if current_found:
+                    if test_info[1]["priority"] == "primary":
+                        next_primary_test = test_names[i]
+                        break
+                if test_info[0] == self.test_number:
+                    try:
+                        next_test = test_names[i + 1]
+                    except IndexError:
+                        next_primary_test = next_test = self.test_number
+                    current_found = True
+            if primary:
+                if next_primary_test in settings.FREE_TESTS:
+                    return next_primary_test
+                else:
+                    return self.test_number
             else:
-                return self.test_number
-        else:
-            return next_test
+                return next_test
+        elif self.mode.type == 'guided':
+            current_test = self.test_number
+            next_tests = list(filter(lambda x: int(x.lstrip('0')) > int(current_test.lstrip('0')), self.mode.included_tests))
+            for test in next_tests:
+                if test in routine:
+                    if routine[test]['priority'] == 'primary':
+                        return test
+            return current_test
+            # Atgriezt nākošo primary, ja tas ir pieejams, ja nav - atgriezt tagadējo
+
 
     @property
     def tested_values(self):
@@ -760,9 +794,6 @@ class Session(models.Model, DependenciesCopyMixin):
         self.persistence = temp_persistence
         self.update_persistence()
 
-    def __str__(self):
-        return "{} (target: {})".format(self.name, self.target)
-
     @property
     def __json__(self) -> dict:
         """
@@ -789,28 +820,28 @@ class Session(models.Model, DependenciesCopyMixin):
         return output
 
 
-class TestInfo(models.Model):
-    test_name = models.CharField(max_length=64, choices=[(x, x) for y, x in TEST_NUMBER_CHOICES])
-    test_number = models.CharField(max_length=64, choices=[(y, y) for y, x in TEST_NUMBER_CHOICES])
-    executed = models.BooleanField(default=True)
+class PrintDescriptor(models.Model):
+    """
+    Contains a statement about print quality and a pointer to a respective test, should the statement be selected as true
+    """
+    statement = models.CharField(max_length=512, default="There's a problem with the print")
+    target_test = models.CharField(max_length=4, choices=TEST_NUMBER_CHOICES, default="")
+    hint = models.CharField(max_length=512, null=True, blank=True)
+    image = models.ImageField(upload_to='descriptors', null=True, blank=True)
 
-    # Save raw json strings to be serialized/unserialized
-    tested_parameter_one_values = models.TextField(max_length=10000, blank=True)
-    tested_parameter_two_values = models.TextField(max_length=10000, blank=True)
-    tested_parameter_three_values = models.TextField(max_length=10000, blank=True)
-    tested_volumetric_flow_rate_values = models.TextField(max_length=10000, blank=True)
+    def __str__(self):
+        return f'"{self.statement}" > {self.target_test}'
 
-    selected_parameter_one_value = models.DecimalField(max_digits=4, decimal_places=3, default=0, blank=True)
-    selected_parameter_two_value = models.DecimalField(max_digits=4, decimal_places=3, default=0, blank=True)
-    selected_parameter_three_value = models.DecimalField(max_digits=4, decimal_places=3, default=0, blank=True)
-    selected_volumetric_flow_rate_value = models.DecimalField(max_digits=4, decimal_places=3, default=0, blank=True)
-    parameter_one_name = models.CharField(max_length=64, default="first-layer track height")
-    parameter_two_name = models.CharField(max_length=64, default="first-layer printing speed")
-    parameter_one_units = models.CharField(max_length=12, choices=UNITS, default="mm")
-    parameter_two_units = models.CharField(max_length=12, choices=UNITS, default="mm/s")
-    parameter_one_precision = "{:.3f}"
-    parameter_two_precision = "{:.1f}"
-    comments = 0
-    datetime_info = models.DateTimeField(default=timezone.now, blank=True)
-    extruded_filament_mm = 841.53
-    estimated_printing_time = "0:09:28"
+
+class Junction(models.Model):
+    """
+    Contains descriptor objects relevant for each test
+    """
+    base_test = models.CharField(max_length=4, default="", choices=TEST_NUMBER_CHOICES)
+    descriptors = models.ManyToManyField(PrintDescriptor, blank=True)
+
+    def __str__(self):
+        return f"Junction for {self.base_test}"
+
+
+PREVENT_DELETION_MODELS = (User, SessionMode)

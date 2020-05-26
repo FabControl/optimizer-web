@@ -275,6 +275,10 @@ class SessionView(SessionTestsSelectionMixin, LoginRequiredMixin, generic.Update
         return redirect('session_detail', pk=session.pk)
 
 
+class GuidedSessionView(SessionView):
+    template_name = 'session/guided_mode/guided_session.html'
+
+
 class SessionValidateView(SessionView):
     form_class = TestValidateForm
 
@@ -292,9 +296,43 @@ class SessionValidateView(SessionView):
         return redirect('session_validate_back', pk=session.pk)
 
 
+class GuidedValidateView(GuidedSessionView):
+    form_class = TestValidateForm
+
+    def get_context_data(self, **kwargs):
+        session = self.object
+        session.is_owner(self.request.user)
+        context = super().get_context_data(**kwargs)
+        context['question_form'] = ValidateFormTestDescriptionForm(instance=self.object)
+        context['questions'] = Junction.objects.get(base_test=session.test_number).descriptors.all()
+        return context
+
+    def form_valid(self, form):
+        session = form.save(commit=False)
+        session.alter_previous_tests(-1, "validated", True)
+        session = form.save(commit=True)
+        questions = [PrintDescriptor.objects.get(pk=int(y)) for y in [self.request.POST[x] for x in self.request.POST if x.startswith('question')]]
+        questions.sort(key=lambda x: int(x.target_test.lstrip('0')))  # sort the selected questions by target tests.
+        if len(questions) > 0:
+            # Select the highest priority test. Lower test number = higher priority
+            # first element will have the lowest test number
+            q1 = questions[0]
+            if q1.hint is not None:
+                messages.info(self.request, q1.hint)
+            if q1.target_test == session.test_number:
+                session.delete_previous_test(q1.target_test)
+                session.save()
+            return redirect('test_switch', number=q1.target_test, pk=session.pk)
+        return redirect('session_next_test', pk=session.pk, priority='primary')
+
+    def form_invalid(self, form):
+        session = form.save(commit=False)
+        return redirect('session_validate_back', pk=session.pk)
+
+
 class SessionOverview(SessionTestsSelectionMixin, LoginRequiredMixin, ModelOwnershipCheckMixin, generic.DetailView):
     model = Session
-    template_name = "session/session.html"
+    template_name = "session/session_overview.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -303,8 +341,22 @@ class SessionOverview(SessionTestsSelectionMixin, LoginRequiredMixin, ModelOwner
         return context
 
 
+class GuidedSessionOverview(SessionOverview):
+    template_name = 'session/session_overview.html'
+
+
 @login_required
-def generate_or_validate(request, pk):
+def overview_dispatcher(request, pk):
+    session = get_object_or_404(Session, model_ownership_query(request.user), pk=pk)
+
+    if session.mode.type == 'guided':
+        return GuidedSessionOverview.as_view()(request, pk=pk)
+    elif session.mode.type == 'normal':
+        return SessionOverview.as_view()(request, pk=pk)
+
+
+@login_required
+def session_dispatcher(request, pk):
     session = get_object_or_404(Session, model_ownership_query(request.user), pk=pk)
 
     # Check if user still is onboarding
@@ -313,12 +365,22 @@ def generate_or_validate(request, pk):
             request.user.onboarding = False
             request.user.save()
 
-    if session.executed:
-        logging.getLogger("views").info("{} is initializing Session validation view!".format(request.user))
-        return SessionValidateView.as_view()(request, pk=pk)
-    else:
-        logging.getLogger("views").info("{} is initializing Session generation view!".format(request.user))
-        return SessionView.as_view()(request, pk=pk)
+    if session.mode.type == 'normal':
+        # Check if session should be in Generate or Validate state
+        if session.executed:
+            logging.getLogger("views").info("{} is initializing Session validation view!".format(request.user))
+            return SessionValidateView.as_view()(request, pk=pk)
+        else:
+            logging.getLogger("views").info("{} is initializing Session generation view!".format(request.user))
+            return SessionView.as_view()(request, pk=pk)
+
+    elif session.mode.type == 'guided':
+        if session.executed:
+            logging.getLogger("views").info("{} is initializing Session validation view!".format(request.user))
+            return GuidedValidateView.as_view()(request, pk=pk)
+        else:
+            logging.getLogger("views").info("{} is initializing Session generation view!".format(request.user))
+            return GuidedSessionView.as_view()(request, pk=pk)
 
 
 class SessionDelete(LoginRequiredMixin, ModelOwnershipCheckMixin, generic.DeleteView):
@@ -494,7 +556,7 @@ def terms_of_use(request):
 @login_required
 def new_session(request):
     if request.method == 'POST':
-        form = SessionForm(request.POST, ownership=model_ownership_query(request.user))
+        form = SessionForm(request.POST, ownership=model_ownership_query(request.user), user=request.user)
 
         if form.is_valid():
             session = form.save(commit=False)
@@ -518,7 +580,7 @@ def new_session(request):
         return HttpResponse(status=204)
 
     else:
-        form = SessionForm(ownership=model_ownership_query(request.user))
+        form = SessionForm(ownership=model_ownership_query(request.user), user=request.user)
         if "machine" in request.session:
             form.fields["machine"].initial = request.session["machine"]
 

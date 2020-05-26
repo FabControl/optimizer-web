@@ -1,5 +1,5 @@
 {% load staticfiles %}
-<nav class="navbar navbar-expand-lg navbar-light shadow-sm bg-light" style="min-height: max-content;">
+<nav class="navbar navbar-expand-lg navbar-light" style="min-height: max-content;">
   <div class="container">
     <a class="navbar-brand {% if "/dashboard/" not in request.path %}lead{% endif %}" href="{% url 'dashboard' %}"><img width="40px" class="d-inline-block" src="{% static 'session/img/logo.svg' %}" alt="Logo"> 3DOptimizer</a>
     {% if user.is_authenticated %}
@@ -9,23 +9,6 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
-        <li class="nav-item {% if "/sessions/" in request.path %}active{% endif %}">
-          <a id="testing_sessions" class="nav-link" href="{% url 'session_manager' %}">Tests</a>
-        </li>
-        <li class="nav-item {% if "/resources/machines" in request.path %}active{% endif %} dropdown">
-          <a class="nav-link" href="{% url 'machine_manager' %}">Printers</a>
-        </li>
-        <li class="nav-item {% if "/resources/materials" in request.path %}active{% endif %} dropdown">
-          <a class="nav-link" href="{% url 'material_manager' %}">Materials</a>
-        </li>
-        <li class="nav-item {% if "/help/" in request.path %}active{% endif %} dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="helpDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Help
-          </a>
-          <div class="dropdown-menu" aria-labelledby="helpDropdown">
-            <a class="dropdown-item" href="https://3doptimizer.helpscoutdocs.com/">Help center</a>
-          </div>
-        </li>
       </ul>
       <ul class="navbar-nav">
         <li class="nav-item">
@@ -36,7 +19,7 @@
               <p class="nav-link text-success">{{request.user.member_of_corporation.name}}</p>
             {% endif %}
           {% else %}
-            <a class="nav-link text-success" href="{% url 'plans' %}">{{request.user.plan_navbar_text}}</a>
+          <button type="button" class="btn btn-outline-primary" onclick="location.href='{% url 'plans' %}'" name="upgrade-button">{{request.user.plan_navbar_text}}</button>
           {% endif %}
         </li>
         {% if user.is_staff %}
@@ -63,6 +46,32 @@
         </li>
       </ul>
     </div>
-    {% endif %}
   </div>
 </nav>
+<div class="container">
+  <div class="card navbar-optimizer">
+    <ul class="nav nav-optimizer mr-auto">
+      <li class="nav-item px-0 {% if "/dashboard/" in request.path %}active{% endif %}">
+        <a id="dash" class="nav-link {% if "/dashboard/" in request.path %}active{% endif %}" href="{% url 'dashboard' %}">Dashboard</a>
+      </li>
+      <li class="nav-item px-0 {% if "/sessions/" in request.path %}active{% endif %}">
+        <a id="testing_sessions" class="nav-link {% if "/sessions/" in request.path %}active{% endif %}" href="{% url 'session_manager' %}">Testing Sessions</a>
+      </li>
+      <li class="nav-item px-0 {% if "/resources/machines" in request.path %}active{% endif %} dropdown">
+        <a class="nav-link {% if "/resources/machines" in request.path %}active{% endif %}" href="{% url 'machine_manager' %}">Printers</a>
+      </li>
+      <li class="nav-item px-0 {% if "/resources/materials" in request.path %}active{% endif %} dropdown">
+        <a class="nav-link {% if "/resources/materials" in request.path %}active{% endif %}" href="{% url 'material_manager' %}">Materials</a>
+      </li>
+      <li class="nav-item px-0 {% if "/help/" in request.path %}active{% endif %} dropdown">
+        <a class="nav-link dropdown-toggle {% if "/help/" in request.path %}active{% endif %}" href="#" id="helpDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Help
+        </a>
+        <div class="dropdown-menu" aria-labelledby="helpDropdown">
+          <a class="dropdown-item" href="https://3doptimizer.helpscoutdocs.com/">Help center</a>
+        </div>
+      </li>
+    </ul>
+  </div>
+  {% endif %}
+</div>

@@ -10,7 +10,6 @@
       <p class='lead'><font size='6'>Welcome to 3DOptimizer!</font></p>
     </div>
   </div>
-<div class="container pt-3">
   <div class="row pt-2">
     <div class="col-sm">
       {% if invitations %}
@@ -28,7 +27,7 @@
   </div>
   <div class="row">
     <div class="col-sm">
-      <p>A video overview, user manual and other support options are available in the Help menu.</p>
+      <p>Video overview and user manual are available in <a href="https://3doptimizer.helpscoutdocs.com/">Help Center</a></p>
       <p>When you return, this page will show your recent testing sessions.</p>
     </div>
   </div>
@@ -65,6 +64,7 @@
         <thead>
           <tr>
             <th>Session name</th>
+            <th>Mode</th>
             <th>Printer</th>
             <th>Material</th>
             <th>Target</th>
@@ -81,6 +81,7 @@
             {% else %}
               <td><a class="text-secondary" href="{% url 'session_detail' session.pk %}">{{ session.name }}</a></td>
             {% endif %}
+            <td>{{ session.mode.name }}</td>
             <td><a class="text-secondary">{{ session.machine.model }}</a></td>
             <td><a class="text-secondary">{{ session.material.name }}</a></td>
             <td>{{session.get_target_display}}</td>
