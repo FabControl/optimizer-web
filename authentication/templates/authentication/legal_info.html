@@ -145,7 +145,7 @@
                       </thead>
                       <tbody>
                         {# ROW CONTENTS #}
-                        {% for user in corporation.team.all %}
+                        {% for user in corporation.team_sorted %}
                         <tr{% if user == corporation.owner %} data-disablesort="true"{% endif %}>
                           <td>{{ user.first_name }} {{ user.last_name }}</td>
                           <td>{{ user.email }}</td>
