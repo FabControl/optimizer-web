@@ -40,6 +40,8 @@
             </div>
           </div>
         </div>
+        {% if request.user.member_of_corporation and request.user.member_of_corporation.owner != request.user %}
+        {% else %}
         <div class="card">
           <div class="card-header" id="headingTwo" data-toggle="collapse" data-target="#subscriptionInfo">
             <a name="subscription">
@@ -75,6 +77,7 @@
             </div>
           </div>
         </div>
+        {% endif %}
         <div class="card">
           <div class="card-header" id="headingThree" data-toggle="collapse" data-target="#corporationInfo">
             <a name="corporation">
