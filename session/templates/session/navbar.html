@@ -30,7 +30,11 @@
       <ul class="navbar-nav">
         <li class="nav-item">
           {% if request.user.member_of_corporation %}
-            <p class="nav-link text-success">{{request.user.member_of_corporation.name}}</p>
+            {% if request.user.member_of_corporation.owner == request.user %}
+              <a class="nav-link text-success" href="{% url 'plans' %}#corporate">{{request.user.member_of_corporation.name}}</a>
+            {% else %}
+              <p class="nav-link text-success">{{request.user.member_of_corporation.name}}</p>
+            {% endif %}
           {% else %}
             <a class="nav-link text-success" href="{% url 'plans' %}">{{request.user.plan_navbar_text}}</a>
           {% endif %}

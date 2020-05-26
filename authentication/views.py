@@ -301,13 +301,13 @@ def use_affiliate(request, uidb64, token):
 
 
 @login_required
-def legal_information_view(request):
+def legal_information_view(request, category=None):
     if request.method == 'POST':
+        category = 'legal_info'
         form = LegalInformationForm(request.POST, instance=request.user)
         if form.is_valid():
             form.save(commit=True)
             messages.success(request, 'Account changed successfully')
-            return redirect(reverse('account_legal_info'))
         else:
             form_errors = (str(m.as_text()).lstrip('* ') for m in dict(form.errors).values())
             message = "<br>".join(form_errors)
@@ -315,17 +315,18 @@ def legal_information_view(request):
 
     else:
         form = LegalInformationForm(instance=request.user)
-        subscription = None
-        try:
-            subscription = Subscription.objects.get(user=request.user,
-                                                    state__in=(Subscription.ACTIVE, Subscription.FAILURE_NOTIFIED))
-        except Subscription.DoesNotExist:
-            pass
+    subscription = None
+    try:
+        subscription = Subscription.objects.get(user=request.user,
+                                                state__in=(Subscription.ACTIVE, Subscription.FAILURE_NOTIFIED))
+    except Subscription.DoesNotExist:
+        pass
 
     return render(request,
                   'authentication/legal_info.html',
                   dict(legal_info=form,
                       corporate_invitation=CorporationInviteForm(),
+                      category=category,
                       subscription=subscription))
 
 def _change_corporation_user(make_changes):
@@ -340,7 +341,7 @@ def _change_corporation_user(make_changes):
             if target_user != corporation.owner:
                 make_changes(target_user, corporation)
                 target_user.save()
-                return redirect(reverse(request.POST.get('next', 'account_legal_info')))
+                return redirect(reverse('account_legal_info', kwargs=dict(category='corporation')) + '#corporation')
 
         raise Http404()
 

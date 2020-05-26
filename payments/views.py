@@ -79,12 +79,12 @@ def _decorate_checkout(method):
         if checkout.user != request.user:
             raise Http404()
 
-        landing_url = method(request, checkout)
+        landing_url,kwargs,section = method(request, checkout)
 
         if checkout.is_cancelled:
             messages.error(request, 'Your checkout was cancelled')
 
-        return redirect(reverse(landing_url))
+        return redirect(reverse(landing_url, kwargs=kwargs) + section)
 
     return _method
 
@@ -99,13 +99,15 @@ def checkout_completed(request, checkout):
                         'Your full access was extended for {0.days} days'.format(checkout.payment_plan.subscription_period))
         else:
             messages.success(request, 'Successfuly initialized subscription')
+            if checkout.payment_plan.type == 'corporate':
+                return 'account_legal_info', dict(category='corporation'), '#corporation'
 
     # this should never happen in real life with webhooks, but better safe than sorry
     else:
         messages.warning(request,
                         'We haven\'t received your payment yet. Please check after few minutes')
 
-    return 'plans'
+    return 'plans',None,''
 
 
 @_decorate_checkout
@@ -114,7 +116,7 @@ def checkout_cancelled(request, checkout):
         messages.error(request, 'Your session has expired')
     elif not checkout.is_paid:
         checkout.cancel()
-    return 'plans'
+    return 'plans',None,''
 
 @login_required
 def update_payment_method(request, subscription_id):
@@ -156,14 +158,14 @@ def card_details_updated(request, checkout):
     else:
         messages.error(request, 'Something went wrong. Please try again later.')
 
-    return 'account_legal_info'
+    return 'account_legal_info', dict(category='subscription'), '#subscription'
 
 
 @_decorate_checkout
 def card_details_unchanged(request, checkout):
     # checkout is no longer required
     checkout.delete()
-    return 'account_legal_info'
+    return 'account_legal_info', dict(category='subscription'), '#subscription'
 
 
 @login_required
@@ -174,7 +176,7 @@ def cancel_subscription(request, subscription_id):
     Subscription.update_from_stripe(data)
 
     messages.success(request, 'Subscription cancelled')
-    return redirect(reverse('account_legal_info'))
+    return redirect(reverse('account_legal_info', kwargs=dict(category='subscription')) + '#subscription')
 
 
 @geoRestrictExempt
