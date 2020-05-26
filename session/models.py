@@ -498,6 +498,17 @@ class Session(models.Model, DependenciesCopyMixin):
         self.save()
         return temp_info
 
+    @property
+    def display_test_name(self):
+        return self.test_info["name"].title().replace('Vs', 'vs')
+
+    @property
+    def display_test_type(self):
+        if self.test_number in settings.FREE_TESTS:
+            return "Free"
+        else:
+            return "Premium"
+
     def update_test_info(self):
         """
         Contacts Optimizer API to retrieve test_info for the current persistence data.
