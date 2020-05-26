@@ -18,7 +18,10 @@ def notify_failures_middleware(get_response):
             except Subscription.DoesNotExist:
                 pass
             else:
-                messages.warning(request, safestring.mark_safe('Your subscription payment has feiled.<br>Check e-mail for details or <a href="{}">Update card</a>.'.format(reverse('account_legal_info'))))
+                messages.warning(request, 
+                                safestring.mark_safe(
+                                        'Your subscription payment has failed.<br>Check e-mail for details or <a href="{}#subscription">Update card</a>.'.format(
+                                                reverse('account_legal_info', kwargs={section:'subscription'}))))
                 subscription.state = Subscription.FAILURE_NOTIFIED
                 subscription.save()
 

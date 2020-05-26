@@ -28,6 +28,7 @@ urlpatterns = [
             name='password_change'),
     path('activate_account/<uidb64>/<token>/', views.activate_account, name='activate_account'),
     path('account_legal_info/', views.legal_information_view, name='account_legal_info'),
+    path('account_legal_info/<category>/', views.legal_information_view, name='account_legal_info'),
     path('my_affiliates', views.MyAffiliatesView.as_view(), name='my_affiliates'),
     path('corporation/assign_manager/', views.assign_manager_role, name='assign_manager_role'),
     path('corporation/resign_manager/', views.resign_manager_role, name='resign_manager_role'),

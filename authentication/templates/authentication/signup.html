@@ -1,26 +1,63 @@
 {% extends "session/base.html" %}
 {% block content %}
-<div class="container">
-  <form class="" action="" method="post">
-    <div class="row">
-      <div class="col-sm-5">
-        {% load crispy_forms_tags %}
-        {% csrf_token %}
-        {% crispy form %}
-        <div class="row">
-          <div class="col">
-            <button type="submit" class="btn btn-primary">Sign up</button>
-          </div>
+<div class="container pt-3">
+  <div class="row pt-2">
+    <div class="col-sm">
+      <p class='lead'><font size='6'>Sign up</font></p>
+    </div>
+  </div>
+  <div class="accordion" id="myAccordion">
+    <div class="card">
+      <div class="card-header" id="headingOne" data-toggle="collapse" data-target="#IndividualSignupForm">
+          <h2 class="mb-0">
+            <button type="button" class="btn btn-link">Individual account</button>
+          </h2>
+      </div>
+      <div id="IndividualSignupForm" class="collapse{% if open_form == form %} show {% endif %}" aria-labelledby="headingOne" data-parent="#myAccordion">
+        <div class="card-body col-md-7">
+          <form class="" action="" method="post">
+            <div class="row">
+              <div class="col-sm-10">
+                {% load crispy_forms_tags %}
+                {% csrf_token %}
+                {% crispy form %}
+                <div class="row">
+                  <div class="col">
+                    <button type="submit" class="btn btn-primary">Sign up</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
         </div>
       </div>
-      <div class="col-sm">
+    </div>
+    <div class="card">
+      <div class="card-header" id="headingOne" data-toggle="collapse" data-target="#CorporateSignupForm">
+          <h2 class="mb-0">
+            <button type="button" class="btn btn-link">Business account</button>
+          </h2>
+      </div>
+      <div id="CorporateSignupForm" class="collapse{% if open_form == corporation_form %} show {% endif %}" aria-labelledby="headingOne" data-parent="#myAccordion">
+        <div class="card-body col-md-7">
+          <form class="" action="" method="post">
+            <div class="row">
+              <div class="col-sm-10">
+                {% load crispy_forms_tags %}
+                {% csrf_token %}
+                {% crispy corporation_form %}
+                <div class="row">
+                  <div class="col">
+                    <button type="submit" class="btn btn-primary">Sign up</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-sm">
-      </div>
-    </div>
-  </form>
+  </div>
 </div>
 <script type="text/javascript">
   function validate_p1() {

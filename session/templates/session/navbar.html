@@ -13,7 +13,11 @@
       <ul class="navbar-nav">
         <li class="nav-item">
           {% if request.user.member_of_corporation %}
-          <p class="nav-link text-success">{{request.user.member_of_corporation.name}}</p>
+            {% if request.user.member_of_corporation.owner == request.user %}
+              <a class="nav-link text-success" href="{% url 'plans' %}#corporate">{{request.user.member_of_corporation.name}}</a>
+            {% else %}
+              <p class="nav-link text-success">{{request.user.member_of_corporation.name}}</p>
+            {% endif %}
           {% else %}
           <button type="button" class="btn btn-outline-primary" onclick="location.href='{% url 'plans' %}'" name="upgrade-button">{{request.user.plan_navbar_text}}</button>
           {% endif %}
@@ -32,7 +36,10 @@
             <a class="dropdown-item" href="{% url 'invoices' %}">Invoices</a>
             {% endif %}
             <a class="dropdown-item" href="{% url 'account_legal_info' %}">Account settings</a>
+            {% if request.user.member_of_corporation %}
+            {% else %}
             <a class="dropdown-item" href="{% url 'my_affiliates' %}">My invitations</a>
+            {% endif %}
             <a class="dropdown-item" href="{% url 'password_change' %}">Change password</a>
             <a class="dropdown-item" href="{% url 'signout' %}">Sign out</a>
           </div>

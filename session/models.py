@@ -65,17 +65,6 @@ class Material(models.Model, CopyableModelMixin):
     notes = models.CharField(max_length=240, null=True)
     pub_date = models.DateTimeField(default=timezone.now, blank=True)
 
-    def is_owner(self, user: User):
-        """
-            Checks whether instance.owner is a supplied user. Returns 403 if it isn't.
-            :param user:
-            :return:
-            """
-        if self.owner != user:
-            raise Http404
-        else:
-            return True
-
     def __str__(self):
         return "{} ({} mm)".format(self.name, str(self.size_od))
 
@@ -171,18 +160,6 @@ class Machine(models.Model, CopyableModelMixin):
 
     def __str__(self):
         return "{} ({} mm)".format(self.model, str(self.extruder.nozzle.size_id))
-
-    def is_owner(self, user: User):
-        """
-            Checks whether instance.owner is a supplied user. Returns 403 if it isn't.
-            :param user:
-            :return:
-            """
-        if self.owner != user:
-
-            raise Http404
-        else:
-            return True
 
     @property
     def __json__(self):
@@ -352,19 +329,6 @@ class Session(models.Model, DependenciesCopyMixin):
         per["settings"] = self.settings.__json__
         self._persistence = json.dumps(per)
         return per
-
-    def is_owner(self, user: User):
-        """
-            Checks whether instance.owner is a supplied user. Returns 403 if it isn't.
-            :param user:
-            :return:
-            """
-        if self.owner != user:
-            raise Http404
-        elif self.owner.plan not in self.mode.plan_availability:
-            raise Http404
-        else:
-            return True
 
     def init_settings(self):
         """

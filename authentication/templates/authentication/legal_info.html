@@ -16,13 +16,14 @@
       <div class="accordion" id="myAccordion">
         <div class="card">
           <div class="card-header" id="headingOne" data-toggle="collapse" data-target="#legalInfoForm">
+            <a name="ļegal_info">
             <h2 class="mb-0">
               <button type="button" class="btn btn-link">Account legal information</button>
             </h2>
           </div>
-          <div id="legalInfoForm" class="collapse" aria-labelledby="headingOne" data-parent="#myAccordion">
+          <div id="legalInfoForm" class="collapse{% if category == 'legal_info' %} show {% endif %}" aria-labelledby="headingOne" data-parent="#myAccordion">
             <div class="card-body col-md-7">
-              <form class="" action="" method="post" id="id_form">
+              <form class="" action="{% url 'account_legal_info' %}" method="post" id="id_form">
                 {% csrf_token %}
                 {{ legal_info.first_name | as_crispy_field }}
                 {{ legal_info.last_name | as_crispy_field }}
@@ -41,11 +42,12 @@
         </div>
         <div class="card">
           <div class="card-header" id="headingTwo" data-toggle="collapse" data-target="#subscriptionInfo">
+            <a name="subscription">
             <h2 class="mb-0">
               <button type="button" class="btn btn-link collapsed">Subscription information</button>
             </h2>
           </div>
-          <div id="subscriptionInfo" class="collapse" aria-labelledby="headingTwo" data-parent="#myAccordion">
+          <div id="subscriptionInfo" class="collapse{% if category == 'subscription' %} show {% endif %}" aria-labelledby="headingTwo" data-parent="#myAccordion">
             <div class="card-body">
               {% if subscription %}
               <p>Active subscription: <b>{{ subscription.payment_plan.name }}</b> <a data-toggle="modal" data-target="#cancelationPrompt" href="">Cancel subscription</a></p>
@@ -75,11 +77,12 @@
         </div>
         <div class="card">
           <div class="card-header" id="headingThree" data-toggle="collapse" data-target="#corporationInfo">
+            <a name="corporation">
             <h2 class="mb-0">
               <button type="button" class="btn btn-link collapsed">Corporation settings</button>
             </h2>
           </div>
-          <div id="corporationInfo" class="collapse" aria-labelledby="headingThree" data-parent="#myAccordion">
+          <div id="corporationInfo" class="collapse{% if category == 'corporation' %} show {% endif %}" aria-labelledby="headingThree" data-parent="#myAccordion">
             <div class="card-body col-md-11">
               {% if request.user.member_of_corporation %}
                 {% with corporation=request.user.member_of_corporation %}
@@ -260,28 +263,33 @@
                           </td>
                         </tr>
                         {% endfor %}
-                        <tr  data-disablesort='true'>
-                          <form class="form-inline" action="{% url 'invite_into_corporation' %}" method="post">
-                            <td>{{ corporate_invitation.name }}</td>
-                            <td>{{ corporate_invitation.email }}</td>
-                            <td></td>
-                            <td></td>
-                            <td>
-                              {% csrf_token %}
-                              <button class="btn btn-primary" type="submit">Add</button>
-                            </td>
-                          </form>
-                        </tr>
+                        {% if corporation.allow_invites %}
+                          <tr  data-disablesort='true'>
+                            <form class="form-inline" action="{% url 'invite_into_corporation' %}" method="post">
+                              <td>{{ corporate_invitation.name }}</td>
+                              <td>{{ corporate_invitation.email }}</td>
+                              <td></td>
+                              <td></td>
+                              <td>
+                                {% csrf_token %}
+                                <button class="btn btn-primary" type="submit">Add</button>
+                              </td>
+                            </form>
+                          </tr>
+                        {% endif %}
                       </tbody>
                     </table>
                   </div>
-                    <div>
-                    </div>
+                  {% if not corporation.allow_invites %}
+                  <div class='row'><p></p></div>
+                  <div class='row'><p></p></div>
+                  {% endif %}
                   {% endif %}
 
                 {% endwith %}
               {% else %}
-                <p>You don't have a corporate account. Upgrade</p>
+                <p>You don't have a corporate account.<br></p>
+                <button type="button" onclick="location.href='{% url 'plans' %}#corporate'" class="btn btn-primary btn">Upgrade</button>
               {% endif %}
             </div>
           </div>
