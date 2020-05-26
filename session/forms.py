@@ -138,7 +138,7 @@ class MaterialForm(forms.ModelForm):
 class SessionForm(forms.ModelForm):
     class Meta:
         model = Session
-        fields = ('name', 'machine', 'material', 'target')
+        fields = ('name', 'target', 'mode', 'machine', 'material')
 
     def __init__(self, *args, **kwargs):
         ownership = kwargs.pop("ownership", None)
@@ -147,12 +147,12 @@ class SessionForm(forms.ModelForm):
         self.fields["material"] = forms.ModelChoiceField(queryset=Material.objects.filter(ownership))
         self.fields["machine"] = forms.ModelChoiceField(queryset=Machine.objects.filter(ownership))
 
-        if self.user.plan == 'premium':
-            queryset = SessionMode.objects.filter(public=True)
-            initial = SessionMode.objects.get(name='Guided').pk
+        if self.user.plan == 'basic':
+            # Hide advanced mode from basic users
+            queryset = SessionMode.objects.filter(public=True, type='guided')
         else:
-            queryset = SessionMode.objects.filter(public=True, _plan_availability=self.user.plan)
-            initial = SessionMode.objects.get(name='Core').pk
+            queryset = SessionMode.objects.filter(public=True)
+        initial = SessionMode.objects.filter(type='guided')[0].pk
 
         self.fields["mode"] = forms.ModelChoiceField(initial=initial, queryset=queryset, widget=forms.RadioSelect, empty_label=None)
         self.fields["name"].label = "Session name"
@@ -161,7 +161,7 @@ class SessionForm(forms.ModelForm):
         self.fields["material"].help_text = mark_safe('<a href="{}?next={}">+ New Material</a>'.format(reverse_lazy('material_form'), reverse_lazy('new_session')))
         self.fields["machine"].label = "Printer"
         self.fields["machine"].help_text = mark_safe('<a href="{}?next={}">+ New Printer</a>'.format(reverse_lazy('machine_form'), reverse_lazy('new_session')))
-        self.fields["target"].label = "Optimization Strategy"
+        self.fields["target"].label = "Target"
 
         self.helper = FormHelper()
         self.helper.form_tag = False
