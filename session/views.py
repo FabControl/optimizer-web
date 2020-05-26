@@ -255,6 +255,7 @@ class SessionTestsSelectionMixin:
         routine = api_client.get_routine()
         for (k, v) in routine.items():
             v['free'] = True if k in settings.FREE_TESTS else False
+            v['name'] = v['name'].title().replace('Vs', 'vs')
             v['name'] = v['name'].replace(' vs ', ' vs<br>')
         context['routine'] = routine
         return context
