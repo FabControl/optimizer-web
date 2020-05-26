@@ -5,7 +5,7 @@ from django.utils import timezone
 from django.contrib import messages
 from django.views.generic.edit import BaseFormView
 from django.views.generic import ListView, TemplateView
-from .models import Plan, Checkout, Invoice, TaxationCountry, Subscription, Currency
+from .models import Plan, Checkout, Invoice, TaxationCountry, Subscription, Currency, Corporation
 from django.urls import reverse
 from .forms import PaymentPlanForm
 from django.contrib.auth.decorators import login_required
@@ -43,8 +43,10 @@ class PaymentPlansView(BaseFormView):
             currencies = Currency.objects.filter(name='USD')
 
         plans = Plan.objects.filter(type='premium', currency__in=currencies).order_by('price')
+        corporation_plans = Plan.objects.filter(type='corporate', currency__in=currencies).order_by('price')
 
         context = {'plans': plans,
+                   'corporation_plans': corporation_plans,
                 # Should work correctly if database contains
                 #   only one instance of Plan with type 'basic'
                 'core': Plan.objects.get(type='basic')}
@@ -77,12 +79,12 @@ def _decorate_checkout(method):
         if checkout.user != request.user:
             raise Http404()
 
-        landing_url = method(request, checkout)
+        landing_url,kwargs,section = method(request, checkout)
 
         if checkout.is_cancelled:
             messages.error(request, 'Your checkout was cancelled')
 
-        return redirect(reverse(landing_url))
+        return redirect(reverse(landing_url, kwargs=kwargs) + section)
 
     return _method
 
@@ -97,13 +99,15 @@ def checkout_completed(request, checkout):
                         'Your full access was extended for {0.days} days'.format(checkout.payment_plan.subscription_period))
         else:
             messages.success(request, 'Successfuly initialized subscription')
+            if checkout.payment_plan.type == 'corporate':
+                return 'account_legal_info', dict(category='corporation'), '#corporation'
 
     # this should never happen in real life with webhooks, but better safe than sorry
     else:
         messages.warning(request,
                         'We haven\'t received your payment yet. Please check after few minutes')
 
-    return 'plans'
+    return 'plans',None,''
 
 
 @_decorate_checkout
@@ -112,7 +116,7 @@ def checkout_cancelled(request, checkout):
         messages.error(request, 'Your session has expired')
     elif not checkout.is_paid:
         checkout.cancel()
-    return 'plans'
+    return 'plans',None,''
 
 @login_required
 def update_payment_method(request, subscription_id):
@@ -154,14 +158,14 @@ def card_details_updated(request, checkout):
     else:
         messages.error(request, 'Something went wrong. Please try again later.')
 
-    return 'account_legal_info'
+    return 'account_legal_info', dict(category='subscription'), '#subscription'
 
 
 @_decorate_checkout
 def card_details_unchanged(request, checkout):
     # checkout is no longer required
     checkout.delete()
-    return 'account_legal_info'
+    return 'account_legal_info', dict(category='subscription'), '#subscription'
 
 
 @login_required
@@ -172,7 +176,7 @@ def cancel_subscription(request, subscription_id):
     Subscription.update_from_stripe(data)
 
     messages.success(request, 'Subscription cancelled')
-    return redirect(reverse('account_legal_info'))
+    return redirect(reverse('account_legal_info', kwargs=dict(category='subscription')) + '#subscription')
 
 
 @geoRestrictExempt
@@ -211,9 +215,19 @@ def handle_stripe_event(request):
                                         payment_plan=checkout.payment_plan,
                                         user=checkout.user)
             try:
-                Subscription.objects.get(**subscription_args)
+                subscription = Subscription.objects.get(**subscription_args)
             except Subscription.DoesNotExist:
-                Subscription.objects.create(**subscription_args)
+                subscription = Subscription.objects.create(**subscription_args)
+
+            if subscription.payment_plan.type == 'corporate':
+                user = subscription.user
+                if len(user.corporation_set.all()) < 1:
+                    corp_name = user.company_name if user.company_name != '' else f"{user.first_name}'s corporation"
+                    corp = Corporation.objects.create(owner=user,
+                                                name=corp_name)
+                    user.member_of_corporation = corp
+                    user.manager_of_corporation = corp
+                    user.save()
 
             checkout.stripe_id = event_object['subscription']
             checkout.is_paid = True
@@ -244,7 +258,7 @@ def handle_stripe_event(request):
         Subscription.update_from_stripe(event_object)
 
     elif event_type in ('plan.created','plan.updated','plan.deleted'):
-        if event_object['product'] == settings.STRIPE_SUBSCRIPTION_PRODUCT_ID:
+        if event_object['product'] in (settings.STRIPE_BUSINESS_PRODUCT_ID, settings.STRIPE_SUBSCRIPTION_PRODUCT_ID):
             plan = Plan.from_stripe(event_object)
             if event_type == 'plan.deleted':
                 plan.type = 'deleted'

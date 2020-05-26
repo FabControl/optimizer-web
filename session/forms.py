@@ -109,6 +109,13 @@ class RangeSliderWidget(forms.widgets.Input):
             return None
 
 
+class NewTestForm(forms.Form):
+    session_name = forms.CharField(label='Session name', max_length=20,
+                                   error_messages={'required': 'Please enter session name'})
+    comments = forms.CharField(label='Comments', max_length=20, required=False, help_text='100 characters max.')
+    test_number = forms.ChoiceField(choices=TEST_NUMBER_CHOICES)
+
+
 class MachineForm(forms.ModelForm):
     class Meta:
         model = Machine
@@ -131,13 +138,15 @@ class MaterialForm(forms.ModelForm):
 class SessionForm(forms.ModelForm):
     class Meta:
         model = Session
-        fields = ('name', 'target', 'mode', 'machine', 'material')
+        fields = ('name', 'machine', 'material', 'target')
 
     def __init__(self, *args, **kwargs):
+        ownership = kwargs.pop("ownership", None)
         self.user = kwargs.pop("user", None)
         super(SessionForm, self).__init__(*args, **kwargs)
+        self.fields["material"] = forms.ModelChoiceField(queryset=Material.objects.filter(ownership))
+        self.fields["machine"] = forms.ModelChoiceField(queryset=Machine.objects.filter(ownership))
 
-        # Make sure that premium users can also access free plans
         if self.user.plan == 'premium':
             queryset = SessionMode.objects.filter(public=True)
             initial = SessionMode.objects.get(name='Guided').pk
@@ -146,8 +155,6 @@ class SessionForm(forms.ModelForm):
             initial = SessionMode.objects.get(name='Core').pk
 
         self.fields["mode"] = forms.ModelChoiceField(initial=initial, queryset=queryset, widget=forms.RadioSelect, empty_label=None)
-        self.fields["material"] = forms.ModelChoiceField(queryset=Material.objects.filter(owner=self.user))
-        self.fields["machine"] = forms.ModelChoiceField(queryset=Machine.objects.filter(owner=self.user))
         self.fields["name"].label = "Session name"
         self.fields["mode"].label = "Session mode"
         self.fields["material"].label = 'Material'

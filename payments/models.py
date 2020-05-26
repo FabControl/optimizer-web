@@ -62,7 +62,14 @@ class Plan(ModelDiffMixin, models.Model):
     type = models.CharField(max_length=32, choices=(('corporate', 'Corporate'), ('premium', 'Premium'), ('basic', 'Basic'), ('deleted', 'Deleted')), default='basic')
     stripe_plan_id = models.CharField(max_length=32, default="", editable=False)
     currency = models.ForeignKey('Currency', on_delete=models.CASCADE, default='EUR')
+    max_users_allowed = models.PositiveIntegerField(default=0)
+    extra_info_text = models.TextField(default='', blank=True)
 
+    @property
+    def extra_info_text_lines(self):
+        if self.extra_info_text == '':
+            return []
+        return self.extra_info_text.split('\n')
     @property
     def is_one_time(self):
         return self.stripe_plan_id == ''
@@ -86,6 +93,9 @@ class Plan(ModelDiffMixin, models.Model):
             plan = cls.objects.get(stripe_plan_id=stripe_plan['id'])
         except cls.DoesNotExist:
             plan = cls(stripe_plan_id=stripe_plan['id'])
+            if stripe_plan['product'] == settings.STRIPE_BUSINESS_PRODUCT_ID:
+                plan.max_users_allowed = 5
+
 
         try:
             currency = Currency.objects.get(name=stripe_plan['currency'].upper())
@@ -94,7 +104,10 @@ class Plan(ModelDiffMixin, models.Model):
 
         plan.name = stripe_plan['nickname']
         plan.price = stripe_plan['amount'] / 100.0
-        plan.type = 'premium' if stripe_plan['active'] else 'deleted'
+        if stripe_plan['active']:
+            plan.type = 'corporate' if stripe_plan['product'] == settings.STRIPE_BUSINESS_PRODUCT_ID else 'premium'
+        else: 
+            plan.type = 'deleted'
         plan.currency = currency
         # subscriptin_period does not matter, since stripe is handling subscription extension
         return plan
@@ -136,7 +149,7 @@ class Checkout(models.Model):
         return timezone.now() > self.created + timedelta(days=1)
 
     def confirm_payment(self):
-        if self.is_paid: 
+        if self.is_paid:
             return
 
         self.user.extend_subscription(self.payment_plan.subscription_period)
@@ -303,4 +316,18 @@ class Corporation(models.Model):
     def remove_invitation(self, user):
         self._invited_users = self._invited_users.replace(user.email + ' ', '')
         self.save()
+
+    @property
+    def allow_invites(self):
+        if self.owner.plan != 'premium':
+            return False
+        try:
+            plan = self.owner.subscription_set.get(state__in=(Subscription.ACTIVE, Subscription.FAILURE_NOTIFIED)).payment_plan
+        except Subscription.DoesNotExist:
+            return False
+
+        if plan.type != 'corporate':
+            return False
+
+        return plan.max_users_allowed > len(self.team.all()) + len(self.invited_users) + len(self.affiliate_set.all())
 

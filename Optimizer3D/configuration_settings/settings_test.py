@@ -40,6 +40,7 @@ STRIPE_API_KEY = 'Some very secret key'
 STRIPE_PUBLIC_KEY = 'Some not so secret key'
 STRIPE_ENDPOINT_SECRET = 'Another secret key'
 STRIPE_SUBSCRIPTION_PRODUCT_ID = 'Product id here'
+STRIPE_BUSINESS_PRODUCT_ID = 'Another product id here'
 
 GA_TRACKING_ID = 'UA_STEAL_ALL_YOR_DATA'
 
