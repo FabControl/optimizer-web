@@ -288,9 +288,8 @@
 
                 {% endwith %}
               {% else %}
-                <p>You don't have a corporate account.
-                <a class="nav-link text-success" href="{% url 'plans' %}#corporate">Upgrade</a>
-                </p>
+                <p>You don't have a corporate account.<br></p>
+                <button type="button" onclick="location.href='{% url 'plans' %}#corporate'" class="btn btn-primary btn">Upgrade</button>
               {% endif %}
             </div>
           </div>
