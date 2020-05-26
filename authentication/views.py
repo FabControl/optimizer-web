@@ -319,9 +319,9 @@ def use_affiliate(request, uidb64, token):
 
         country = request.geolocation['county']['code'] if hasattr(request, 'geolocation') else ''
         if default_form is None:
-            default_form = SignUpForm(initial=dict(email=affiliate.email, first_name=affiliate.name, company_country=county))
-        if corporation_form is None:
-            corporation_form = CorporationSignUpForm(initial=dict(email=affiliate.email, first_name=affiliate.name, company_country=county))
+            default_form = SignUpForm(initial=dict(email=affiliate.email, first_name=affiliate.name, company_country=country))
+        if corporation_form is None and not corporate_affiliate:
+            corporation_form = CorporationSignUpForm(initial=dict(email=affiliate.email, first_name=affiliate.name, company_country=country))
 
 
         context = {"form": default_form,
