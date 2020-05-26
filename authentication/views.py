@@ -481,7 +481,8 @@ def accept_corporation_invitation(request, corp_id):
 
         for corp in Corporation.objects.filter(_invited_users__contains= ' ' + user.email + ' '):
             corp.remove_invitation(user)
-        messages.success(request, f'You are now momber of {corporation.name} team')
+        user.save()
+        messages.success(request, f'You are now member of {corporation.name} team')
         return redirect(reverse('dashboard'))
 
     raise Http404()
