@@ -356,7 +356,7 @@ def overview_dispatcher(request, pk):
 
 
 @login_required
-def session_dispatcher(request, pk):
+def session_dispatcher(request, pk, download=False):
     session = get_object_or_404(Session, model_ownership_query(request.user), pk=pk)
 
     # Check if user still is onboarding
@@ -369,7 +369,7 @@ def session_dispatcher(request, pk):
         # Check if session should be in Generate or Validate state
         if session.executed:
             logging.getLogger("views").info("{} is initializing Session validation view!".format(request.user))
-            return SessionValidateView.as_view()(request, pk=pk)
+            return SessionValidateView.as_view()(request, pk=pk, download=download)
         else:
             logging.getLogger("views").info("{} is initializing Session generation view!".format(request.user))
             return SessionView.as_view()(request, pk=pk)
@@ -377,7 +377,7 @@ def session_dispatcher(request, pk):
     elif session.mode.type == 'guided':
         if session.executed:
             logging.getLogger("views").info("{} is initializing Session validation view!".format(request.user))
-            return GuidedValidateView.as_view()(request, pk=pk)
+            return GuidedValidateView.as_view()(request, pk=pk, download=download)
         else:
             logging.getLogger("views").info("{} is initializing Session generation view!".format(request.user))
             return GuidedSessionView.as_view()(request, pk=pk)
