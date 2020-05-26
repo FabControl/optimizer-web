@@ -222,8 +222,9 @@ def handle_stripe_event(request):
             if subscription.payment_plan.type == 'corporate':
                 user = subscription.user
                 if len(user.corporation_set.all()) < 1:
+                    corp_name = user.company_name if user.company_name != '' else f"{user.first_name}'s corporation"
                     corp = Corporation.objects.create(owner=user,
-                                                name=f"{user.first_name}'s corporation")
+                                                name=corp_name)
                     user.member_of_corporation = corp
                     user.manager_of_corporation = corp
                     user.save()
