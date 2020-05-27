@@ -51,8 +51,7 @@ class PaymentPlansView(LoginRequiredMixin, BaseFormView):
         days_remaining = request.user.subscription_expiration - timezone.now()
         context['expiration'] = days_remaining.days + 1
         context['section'] = self.kwargs.get('section', None)
-        context['active_subscriptions'] = Subscription.objects.filter(user=request.user,
-                                                                   state=Subscription.ACTIVE)
+        context['active_subscriptions'] = request.user.active_subscriptions
 
         return render(request, 'payments/plans.html', context)
 
