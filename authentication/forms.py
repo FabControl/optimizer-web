@@ -11,6 +11,7 @@ from django.contrib.auth import get_user_model
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from payments.countries import codes_iso3166
+from payments.models import Corporation
 
 
 # class UserForm(forms.ModelForm):
@@ -69,6 +70,17 @@ class CorporationSignUpForm(SignUpForm):
     class Meta:
         model = User
         fields = ('email', 'first_name', 'last_name', 'password1', 'password2', 'company_country', 'company_name')
+
+    def save(self, *a, **k):
+        user = super().save(*a, **k)
+        if len(user.corporation_set.all()) < 1:
+            corp_name = user.company_name if user.company_name != '' else f"{user.first_name}'s corporation"
+            corp = Corporation.objects.create(owner=user,
+                                        name=corp_name)
+            user.member_of_corporation = corp
+            user.manager_of_corporation = corp
+            user.save()
+        return user
 
 
 class ResetPasswordForm(PasswordResetForm):

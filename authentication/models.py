@@ -97,7 +97,7 @@ class User(AbstractUser):
 
     @plan.setter
     def plan(self, val:str):
-        if self.member_of_corporation is None:
+        if self.member_of_corporation is None or self.member_of_corporation.owner == self:
             self._plan = val
 
 
