@@ -311,8 +311,10 @@ class GuidedValidateView(GuidedSessionView):
         session = form.save(commit=False)
         session.alter_previous_tests(-1, "validated", True)
         session = form.save(commit=True)
-        questions = [PrintDescriptor.objects.get(pk=int(y)) for y in [self.request.POST[x] for x in self.request.POST if x.startswith('question')]]
-        questions.sort(key=lambda x: int(x.target_test.lstrip('0')))  # sort the selected questions by target tests.
+        # filter any items in request.POST with key that starts with 'question' and has any value other than 'null'
+        questions = [PrintDescriptor.objects.get(pk=int(y)) for y in [self.request.POST[x] for x in self.request.POST if x.startswith('question')] if y != 'null']
+        # sort the selected questions by target tests as numbers.
+        questions.sort(key=lambda x: int(x.target_test.lstrip('0')))
         if len(questions) > 0:
             # Select the highest priority test. Lower test number = higher priority
             # first element will have the lowest test number
@@ -323,6 +325,7 @@ class GuidedValidateView(GuidedSessionView):
                 session.delete_previous_test(q1.target_test)
                 session.save()
             return redirect('test_switch', number=q1.target_test, pk=session.pk)
+        # Go to next primary if not directed elsewhere
         return redirect('session_next_test', pk=session.pk, priority='primary')
 
     def form_invalid(self, form):
