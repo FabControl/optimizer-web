@@ -248,8 +248,17 @@
                       </tbody>
                     </table>
                   </div>
+                  <div class="row pt-8">
+                    <div class="col-md-8">
+                      <p>{{ corporation.user_count }} of {{ corporation.max_allowed }} users registered</p>
+                    </div>
+                  </div>
                   {% if not corporation.allow_invites %}
-                  <div class="row pt-8"><p></p></div>
+                  <div class="row pt-8">
+                    <div class="col-md-8">
+                      <p><a href="{% url 'plans' %}">Upgrade to add more users</a></p>
+                    </div>
+                  </div>
                   {% endif %}
                 {% endwith %}
             </div>
