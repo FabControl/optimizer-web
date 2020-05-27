@@ -803,6 +803,28 @@ class Session(models.Model, DependenciesCopyMixin):
         self.update_persistence()
 
     @property
+    def test_youtube_id(self):
+        """
+        Returns youtube video ID for each of test quick guides.
+        :return:
+        """
+        links = {
+            '01': 'y-m5xiDV_DE',
+            '02': 'Q6hdUmra8Aw',
+            '03': 'yLw0gENAF48',
+            '04': 'Qc1zRGTr64A',
+            '05': 'Cu6MRoVObxI',
+            '06': 'a_3ZKYi1vRE',
+            '07': 'Vr90FsKknK4',
+            '08': 'iepoAqo5QF0',
+            '09': 'Wf3BuSvzuWE',
+            '10': 'olK4nvE75-U',
+            '11': 'Tji51MubyAI',
+            '13': 'TR3nOTzwB18',
+        }
+        return links[self.test_number]
+
+    @property
     def __json__(self) -> dict:
         """
         Returns ["session"] persistent data block representation of the current session state.
