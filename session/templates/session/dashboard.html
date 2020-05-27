@@ -54,6 +54,9 @@
     <div class="col-sm">
       <p>Video overview and user manual are available in <a href="https://3doptimizer.helpscoutdocs.com/">Help Center</a></p>
       <p>When you return, this page will show your recent testing sessions.</p>
+      {% if request.user.manager_of_corporation and request.user.manager_of_corporation.owner == request.user %}
+      <a href="{% url 'plans' %}">Upgrade to add multiple users</a>
+      {% endif %}
     </div>
   </div>
   {% else %}
