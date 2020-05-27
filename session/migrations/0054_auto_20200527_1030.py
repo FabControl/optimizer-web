@@ -3,32 +3,23 @@
 from django.db import migrations, models
 
 
-def delete_all_modes(app, schema_editor):
-    db_alias = schema_editor.connection.alias
-    SessionMode = app.get_model('session', 'SessionMode')
-
-    modes = SessionMode.objects.using(db_alias).all()
-    for mode in modes:
-        mode.delete()
-
-
-def populate_testing_modes(app, schema_editor):
+def rename_testing_modes(app, schema_editor):
     db_alias = schema_editor.connection.alias
 
     SessionMode = app.get_model('session', 'SessionMode')
 
-    SessionMode.objects.using(db_alias).create(name='Advanced',
-                                               type='normal',
-                                               _plan_availability="['premium']")
+    advanced = SessionMode.objects.using(db_alias).get(name='Advanced')
+    advanced._plan_availability = "['premium']"
+    advanced.save()
 
-    SessionMode.objects.using(db_alias).create(name='Guided',
-                                               type='guided',
-                                               _plan_availability="['premium']")
+    guided = SessionMode.objects.using(db_alias).get(name='Guided')
+    guided._plan_availability = "['premium']"
+    guided.save()
 
-    SessionMode.objects.using(db_alias).create(name='Guided (Free Tests Only)',
-                                               type='guided',
-                                               _included_tests="['01', '03', '10']",
-                                               _plan_availability="['basic']")
+    core = SessionMode.objects.using(db_alias).get(name='Core')
+    core._plan_availability = "['basic']"
+    core.name = 'Guided (Free Tests Only)'
+    core.save()
 
 class Migration(migrations.Migration):
 
@@ -42,6 +33,5 @@ class Migration(migrations.Migration):
             name='_plan_availability',
             field=models.CharField(default='["basic", "premium"]', max_length=64),
         ),
-        migrations.RunPython(delete_all_modes),
-        migrations.RunPython(populate_testing_modes)
+        migrations.RunPython(rename_testing_modes)
     ]
