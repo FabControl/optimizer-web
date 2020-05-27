@@ -14,9 +14,7 @@
         <li class="nav-item">
           {% if request.user.member_of_corporation %}
             {% if request.user.member_of_corporation.owner == request.user %}
-              <a class="nav-link text-success" href="{% url 'plans' %}#corporate">{{request.user.member_of_corporation.name}}</a>
-            {% else %}
-              <p class="nav-link text-success">{{request.user.member_of_corporation.name}}</p>
+              <a class="nav-link" href="{% url 'account_legal_info' 'corporation' %}#corporation">{{request.user.member_of_corporation.name}}</a>
             {% endif %}
           {% else %}
           <button type="button" class="btn btn-outline-primary" onclick="location.href='{% url 'plans' %}'" name="upgrade-button">{{request.user.plan_navbar_text}}</button>
