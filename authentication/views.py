@@ -210,8 +210,6 @@ def activate_account(request, uidb64, token):
 
         login(request, user)
         messages.success(request, 'Your email address was confirmed and account activated.')
-        if user.company_name != '':
-            return redirect(reverse('plans') + '#corporate')
         return redirect('dashboard')
 
     return render(request, 'authentication/invalid_activation_link.html')

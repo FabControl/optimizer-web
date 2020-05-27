@@ -96,7 +96,7 @@ def checkout_completed(request, checkout):
             messages.success(request,
                         'Your full access was extended for {0.days} days'.format(checkout.payment_plan.subscription_period))
         else:
-            messages.success(request, 'Successfuly initialized subscription')
+            messages.success(request, 'Subscription successful')
             if checkout.payment_plan.type == 'corporate':
                 return 'account_legal_info', dict(category='corporation'), '#corporation'
 

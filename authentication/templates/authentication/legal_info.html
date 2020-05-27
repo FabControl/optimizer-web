@@ -52,7 +52,7 @@
           <div id="subscriptionInfo" class="collapse{% if category == 'subscription' %} show {% endif %}" aria-labelledby="headingTwo" data-parent="#myAccordion">
             <div class="card-body">
               {% if subscription %}
-              <p>Active subscription: <b>{{ subscription.payment_plan.name }}</b> <a data-toggle="modal" data-target="#cancelationPrompt" href="">Cancel subscription</a></p>
+              <p>Active subscription: <b><a href="{% url 'plans' %}">{{ subscription.payment_plan.name }}</a></b> | <a data-toggle="modal" data-target="#cancelationPrompt" href="">Cancel subscription</a></p>
               <div class="modal fade" id="cancelationPrompt" role="dialog">
                 <div class="modal-dialog">
                   <div class="modal-content">
@@ -72,7 +72,8 @@
               </div>
               <p>Payment method: {{ subscription.card_info|title }} <a href="{% url 'update_payment_method' subscription.pk %}">Change</a></p>
               {% else %}
-                <p>You don't have any active subscriptions.</p>
+                <p>You don't have active subscription.</p>
+                <button type="button" onclick="location.href='{% url 'plans' %}'" class="btn btn-primary btn">Purchase</button>
               {% endif %}
             </div>
           </div>
@@ -248,8 +249,17 @@
                       </tbody>
                     </table>
                   </div>
+                  <div class="row pt-8">
+                    <div class="col-md-8">
+                      <p>{{ corporation.user_count }} of {{ corporation.max_allowed }} users registered</p>
+                    </div>
+                  </div>
                   {% if not corporation.allow_invites %}
-                  <div class="row pt-8"><p></p></div>
+                  <div class="row pt-8">
+                    <div class="col-md-8">
+                      <p><a href="{% url 'plans' %}">Upgrade to add more users</a></p>
+                    </div>
+                  </div>
                   {% endif %}
                 {% endwith %}
             </div>

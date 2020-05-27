@@ -19,19 +19,7 @@
       {% endif %}
     </div>
   </div>
-  {% if cards.sessions.len < 1 %}
-  <div class="row pt-5 pb-5">
-    <div class="col-sm text-center">
-      <button type="button" onclick="location.href='{% url 'new_session' %}'" class="btn-lg btn-primary">Start a new testing session</button>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-sm">
-      <p>Video overview and user manual are available in <a href="https://3doptimizer.helpscoutdocs.com/">Help Center</a></p>
-      <p>When you return, this page will show your recent testing sessions.</p>
-    </div>
-  </div>
-  {% else %}
+  {% if request.user.member_of_corporation or latest_sessions|length %}
   <div class="row pt-2">
     <div class="col-sm">
       <div class="card p-2 text-center shadow-sm" style='background: #f8f9fa'>
@@ -55,6 +43,23 @@
       </div>
     </div>
   </div>
+  {% endif %}
+  {% if latest_sessions|length < 1 %}
+  <div class="row pt-5 pb-5">
+    <div class="col-sm text-center">
+      <button type="button" onclick="location.href='{% url 'new_session' %}'" class="btn-lg btn-primary">Start a new testing session</button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm">
+      <p>Video overview and user manual are available in <a href="https://3doptimizer.helpscoutdocs.com/">Help Center</a></p>
+      <p>When you return, this page will show your recent testing sessions.</p>
+      {% if request.user.manager_of_corporation and request.user.manager_of_corporation.owner == request.user %}
+      <a href="{% url 'plans' %}">Upgrade to add multiple users</a>
+      {% endif %}
+    </div>
+  </div>
+  {% else %}
   <div class="row pt-3">
     <div class="col-sm">
       <div class="pt-3 pb-2">
