@@ -95,8 +95,7 @@
                   <hr>
                   <p>All tests<br>
                   All testing modes<br>
-                  Multi-user mode<br>
-                  Up to {{ plan.max_users_allowed }} users<br>
+                  {{ plan.max_users_allowed }} users included<br>
                   Yearly subscription
                   {% for line in plan.extra_info_text_lines %}
                     <br>{{ line }}
