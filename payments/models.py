@@ -331,3 +331,6 @@ class Corporation(models.Model):
 
         return plan.max_users_allowed > len(self.team.all()) + len(self.invited_users) + len(self.affiliate_set.all())
 
+    @property
+    def team_sorted(self):
+        return self.team.all().order_by(models.F('corporation').desc(nulls_first=False))

@@ -6,14 +6,16 @@
       <p class='lead'><font size='6'>Sign up</font></p>
     </div>
   </div>
+  {% if corporation_form %}
   <div class="accordion" id="myAccordion">
     <div class="card">
       <div class="card-header" id="headingOne" data-toggle="collapse" data-target="#IndividualSignupForm">
           <h2 class="mb-0">
-            <button type="button" class="btn btn-link">Individual account</button>
+            <button type="button" class="btn btn-link">Individual account (single user)</button>
           </h2>
       </div>
       <div id="IndividualSignupForm" class="collapse{% if open_form == form %} show {% endif %}" aria-labelledby="headingOne" data-parent="#myAccordion">
+  {% endif %}
         <div class="card-body col-md-7">
           <form class="" action="" method="post">
             <div class="row">
@@ -30,12 +32,13 @@
             </div>
           </form>
         </div>
+  {% if corporation_form %}
       </div>
     </div>
     <div class="card">
       <div class="card-header" id="headingOne" data-toggle="collapse" data-target="#CorporateSignupForm">
           <h2 class="mb-0">
-            <button type="button" class="btn btn-link">Business account</button>
+            <button type="button" class="btn btn-link">Business account (multi-user)</button>
           </h2>
       </div>
       <div id="CorporateSignupForm" class="collapse{% if open_form == corporation_form %} show {% endif %}" aria-labelledby="headingOne" data-parent="#myAccordion">
@@ -58,6 +61,7 @@
       </div>
     </div>
   </div>
+  {% endif %}
 </div>
 <script type="text/javascript">
   function validate_p1() {
