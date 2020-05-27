@@ -1,33 +1,13 @@
 {% extends "session/base.html" %}
 {% block content %}
 <div class="container">
-  {% if not request.user.is_authenticated %}
-  <div class="row pt-4 text-center">
-    <div class="col">
-      <div class="card p-4">
-        <input type="hidden" name="plan_id" value="{{ plan.pk }}">
-        <div class="row justify-content-center">
-          <div class="col-sm-12 text-left">
-            <h1 class="display-4">Basic</h1>
-            <p class="lead text-primary">{{core.pretty_price}} EUR</p>
-            <hr>
-            <p>Access to basic features</p>
-            <button onclick="window.location.href = '{% url 'signup' %}'" class="btn-lg btn-primary" name="signup">Sign up for free</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  {% else %}
-
-  {% if request.user.plan == 'premium' %}
+  {% if request.user.plan == 'premium' and not active_subscriptions %}
   <div class="row pt-5 text-center justify-content-center">
     <div class="col-sm">
       <h1 class="display-4"><b>{{expiration}} days</b> of full access remaining.</h1>
       <hr>
     </div>
   </div>
-  {% endif %}
   {% endif %}
   <div class="col-sm pt-5">
     <h3>Individual payment plans</h2>
