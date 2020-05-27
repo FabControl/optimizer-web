@@ -21,7 +21,8 @@ from optimizer_api import api_client
 
 def model_ownership_query(user):
     if user.member_of_corporation is None:
-        return Q(owner=user)
+        # if user leaves corporation, he des not see resources he created within corp.
+        return Q(owner=user) & Q(corporation=None)
     return (Q(owner=user) |
             (Q(corporation=user.member_of_corporation) & Q(owner__in=user.member_of_corporation.team.all())))
 
