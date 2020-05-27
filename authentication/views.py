@@ -361,35 +361,37 @@ def legal_information_view(request, category=None):
                       category=category,
                       subscription=subscription))
 
-def _change_corporation_user(make_changes):
-    @login_required
-    def wrapped(request):
-        if request.method == 'POST' and request.user.manager_of_corporation is not None:
-            corporation = request.user.manager_of_corporation
-            target_user = get_object_or_404(get_user_model(),
-                                        member_of_corporation=corporation,
-                                        pk=request.POST.get('uid', ''))
+def _change_corporation_user(allow_self=False):
+    def wrapper(make_changes):
+        @login_required
+        def wrapped(request):
+            if request.method == 'POST' and request.user.manager_of_corporation is not None or (allow_self and request.user.member_of_corporation is not None):
+                corporation = request.user.member_of_corporation
+                target_user = get_object_or_404(get_user_model(),
+                                            member_of_corporation=corporation,
+                                            pk=request.POST.get('uid', ''))
 
-            if target_user != corporation.owner:
-                make_changes(target_user, corporation)
-                target_user.save()
-                return redirect(reverse('account_legal_info', kwargs=dict(category='corporation')) + '#corporation')
+                if target_user != corporation.owner:
+                    make_changes(target_user, corporation)
+                    target_user.save()
+                    return redirect(reverse('account_legal_info', kwargs=dict(category='corporation')) + '#corporation')
 
-        raise Http404()
+            raise Http404()
 
-    return wrapped
+        return wrapped
+    return wrapper
 
-@_change_corporation_user
+@_change_corporation_user()
 def assign_manager_role(user, corporation):
     user.manager_of_corporation = corporation
 
 
-@_change_corporation_user
+@_change_corporation_user()
 def resign_manager_role(user, corporation):
     user.manager_of_corporation = None
 
 
-@_change_corporation_user
+@_change_corporation_user(True)
 def remove_from_corporation(user, corporation):
     user.member_of_corporation = None
     user.manager_of_corporation = None
