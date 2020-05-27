@@ -89,14 +89,13 @@
                     {% if plan.is_one_time %}
                       <small>One-time payment</small>
                     {% else %}
-                      <small>Recurring payment</small>
+                      <small>Recurring yearly payment</small>
                     {% endif %}
                   </p>
                   <hr>
                   <p>All tests<br>
                   All testing modes<br>
-                  {{ plan.max_users_allowed }} users included<br>
-                  Yearly subscription
+                  {{ plan.max_users_allowed }} users included
                   {% for line in plan.extra_info_text_lines %}
                     <br>{{ line }}
                   {% endfor %}
