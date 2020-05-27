@@ -147,12 +147,15 @@ class SessionForm(forms.ModelForm):
         self.fields["material"] = forms.ModelChoiceField(queryset=Material.objects.filter(ownership))
         self.fields["machine"] = forms.ModelChoiceField(queryset=Machine.objects.filter(ownership))
 
-        if self.user.plan == 'basic':
-            # Hide advanced mode from basic users
-            queryset = SessionMode.objects.filter(public=True, type='guided')
-        else:
-            queryset = SessionMode.objects.filter(public=True)
-        initial = SessionMode.objects.filter(type='guided')[0].pk
+        modes = []
+        initial = None
+        for mode in SessionMode.objects.all():
+            if self.user.plan in mode.plan_availability:
+                modes.append(mode.pk)
+                if mode.type == 'guided':
+                    initial = mode
+
+        queryset = SessionMode.objects.filter(pk__in=modes)
 
         self.fields["mode"] = forms.ModelChoiceField(initial=initial, queryset=queryset, widget=forms.RadioSelect, empty_label=None)
         self.fields["name"].label = "Session name"
