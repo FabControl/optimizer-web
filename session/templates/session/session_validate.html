@@ -1,14 +1,14 @@
 {% load crispy_forms_tags %}
 <iframe width="1" height="1" frameborder="0" src="{% url 'gcode' object.pk %}"></iframe>
-<div class="row pt-4 text-center">
-  <div class="col-sm-12">
-    <button class="btn btn-primary" onclick="location.href='{% url 'gcode' object.pk %}'" type="button" name="button">Download .GCODE file</button>
+<div class="row pt-2">
+  <div class="col">
+    <p class='small'><a href="{% url 'gcode' object.pk %}">Redownload GCODE here</a>, if it didn't download automatically.</p>
   </div>
 </div>
-<div class="row pt-4">
+<div class="row pt-2">
   <div class="col-sm">
     {% if object.test_info.hint_valid %}
-    <div class="help-box">
+    <div class="card p-2">
       {{ object.test_info.hint_valid|safe }}
       <a href="https://3doptimizer.helpscoutdocs.com/test/{{object.test_number}}" class='font-weight-light' target="_blank"><small>Read more in Help Center</small></a>
     </div>
