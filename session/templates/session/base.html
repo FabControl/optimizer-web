@@ -54,6 +54,13 @@
     }
   </style>
   <footer class="footer mt-auto py-3">
+    {% if request.user.is_authenticated %}
+    {% if request.user.member_of_corporation is None  and not request.user.active_subscriptions %}
+    <div class="container text-center">
+      <span class="text-muted"><small>Earn a free week of full access to 3DOptimizer — <a href="{% url 'my_affiliates' %}">invite a friend!</a></small></span>
+    </div>
+    {% endif %}
+    {% endif %}
     <div class="container text-center">
       <span class="text-muted"><small>© FabControl SIA</small></span>
     </div>

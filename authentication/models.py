@@ -181,6 +181,9 @@ class User(AbstractUser):
             return False
         return True
 
+    @property
+    def active_subscriptions(self):
+        return self.subscription_set.filter(state__in=(Subscription.ACTIVE, Subscription.FAILURE_NOTIFIED))
 
 class Affiliate(models.Model):
     date_created = models.DateTimeField(auto_now_add=True, editable=False)

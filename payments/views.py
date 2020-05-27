@@ -51,8 +51,7 @@ class PaymentPlansView(LoginRequiredMixin, BaseFormView):
         days_remaining = request.user.subscription_expiration - timezone.now()
         context['expiration'] = days_remaining.days + 1
         context['section'] = self.kwargs.get('section', None)
-        context['active_subscriptions'] = Subscription.objects.filter(user=request.user,
-                                                                   state=Subscription.ACTIVE)
+        context['active_subscriptions'] = request.user.active_subscriptions
 
         return render(request, 'payments/plans.html', context)
 
@@ -96,7 +95,7 @@ def checkout_completed(request, checkout):
             messages.success(request,
                         'Your full access was extended for {0.days} days'.format(checkout.payment_plan.subscription_period))
         else:
-            messages.success(request, 'Successfuly initialized subscription')
+            messages.success(request, 'Subscription successful')
             if checkout.payment_plan.type == 'corporate':
                 return 'account_legal_info', dict(category='corporation'), '#corporation'
 
