@@ -9,11 +9,7 @@
       {% include "session/session_info.html" %}
       <hr>
       <p class='lead'>Test description</p>
-      {% if object.executed %}
-      <span class='font-weight-light'>{{ object.test_info.hint_valid|safe }}</span>
-      {% else %}
       <span class='font-weight-light'>{{ object.test_info.hint_init|safe }}</span>
-      {% endif %}
       <div class="pt-3">
         <iframe class='embed-responsive' width="560" height="315" src="https://www.youtube.com/embed/bQrWrnlgQ24" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       </div>

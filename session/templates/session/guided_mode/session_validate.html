@@ -7,7 +7,14 @@
       <p class='small'><a href="{% url 'gcode' object.pk %}">Redownload GCODE here</a>, if it didn't download automatically.</p>
     </div>
   </div>
-  <div class="row">
+  <div class="row pt-1">
+    <div class="col-sm">
+      <div class="card p-3">
+        <span class='font-weight-light'>{{ object.test_info.hint_valid|safe }}</span>
+      </div>
+    </div>
+  </div>
+  <div class="row pt-3">
     <div class="col-sm">
       {% if questions %}
       <div class="pt-4 pb-2">
