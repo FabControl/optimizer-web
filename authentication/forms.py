@@ -192,8 +192,8 @@ class LegalInformationForm(forms.ModelForm):
 
 
 class CorporationInviteForm(forms.Form):
-    email = forms.EmailField()
-    name = forms.CharField(max_length=20)
+    email = forms.EmailField(widget=forms.TextInput(attrs={'placeholder': 'email'}))
+    name = forms.CharField(max_length=20, widget=forms.TextInput(attrs={'placeholder': 'name'}))
 
     class Meta:
         fields = ['email', 'name']
