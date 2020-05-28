@@ -632,6 +632,12 @@ class Session(models.Model, DependenciesCopyMixin):
         """
         return len(self.previous_tests)
 
+    def progress_percentage(self):
+        """
+        Returns current test progress as a percentage of the total session length.
+        """
+        return int((int(self.test_number)-1)/13*100)
+
     @property
     def executed(self):
         """
