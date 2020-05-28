@@ -254,9 +254,7 @@ class ValidateFormTestDescriptionForm(forms.ModelForm):
                 q.label = question.statement
             q.required = False
             q.widget.attrs.update({'value': question.pk})
-            """
-            <input type="checkbox" checked data-toggle="toggle" data-on="There are no gaps between tracks" data-off="There are gaps between tracks" data-onstyle="outline-primary" data-offstyle="danger" data-width="300" data-height="40">
-            """
+            q.widget.attrs.update({'target': question.target_test})
             self.fields[question_name] = q
 
     class Meta:
