@@ -370,6 +370,14 @@ def session_dispatcher(request, pk, download=False):
             request.user.onboarding = False
             request.user.save()
 
+    # Make sure that the user is not where they shouldn't be
+    if session.test_number not in request.user.available_tests:
+        session.test_number = session.test_number_next()
+        messages.warning(request, mark_safe("Your next preferred test is available in the premium mode only. "
+                                            "You can skip it and go to the next free test or "
+                                            f"<a href={reverse_lazy('plans')}>purchase premium right now.</a>"))
+        session.save()
+
     if session.mode.type == 'normal':
         # Check if session should be in Generate or Validate state
         if session.executed:
@@ -396,14 +404,12 @@ class SessionDelete(LoginRequiredMixin, ModelOwnershipCheckMixin, generic.Delete
         raise Http404("Page not found")
 
 
-
 class MachineDelete(LoginRequiredMixin, ModelOwnershipCheckMixin, generic.DeleteView):
     model = Machine
     success_url = reverse_lazy('machine_manager')
 
     def get(self, request, *args, **kwargs):
         raise Http404("Page not found")
-
 
 
 class MaterialDelete(LoginRequiredMixin, ModelOwnershipCheckMixin, generic.DeleteView):
