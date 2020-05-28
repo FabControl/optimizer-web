@@ -11,6 +11,7 @@ from django.utils.encoding import force_bytes
 from payments.models import TaxationCountry, Subscription
 from payments.countries import codes_iso3166
 from django.conf import settings
+from optimizer_api import api_client
 
 from .choices import PLAN_CHOICES
 
@@ -87,6 +88,13 @@ class User(AbstractUser):
     REQUIRED_FIELDS = []
 
     objects = UserManager()
+
+    @property
+    def available_tests(self):
+        if self.plan == 'basic':
+            return settings.FREE_TESTS
+        else:
+            return [test_number for test_number, _ in api_client.get_routine()]
 
     @property
     def plan(self):
