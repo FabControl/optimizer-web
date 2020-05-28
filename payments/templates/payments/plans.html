@@ -23,7 +23,7 @@
       <div class="row pt-5 text-center">
         {% for plan in plans %}
         <div class="col">
-          <div class="card p-4 {% if request.user.is_authenticated %} {% if active_subscriptions %} {% if active_subscriptions.0.payment_plan == plan %}alert-success{% endif %}{% endif %}{% endif %}">
+          <div class="card p-4 {% if active_subscriptions %} {% if active_subscriptions.0.payment_plan == plan %}alert-success{% endif %}{% endif %}">
             <form class="" action="" method="post">
               {% csrf_token %}
               <input type="hidden" name="plan_id" value="{{ plan.pk }}">
@@ -32,15 +32,12 @@
                   <h1 class="display-4">{{plan.name}}</h1>
                   <p class="text-primary"><span class='lead'>{{plan.pretty_price}} {{ plan.currency.name }}</span>
                     <br>
-                    {% if plan.is_one_time %}
-                      <small>One-time payment</small>
-                    {% else %}
-                      <small>Recurring payment</small>
-                    {% endif %}
+                    <small>{{ plan.payment_frequency_string }}</small>
                   </p>
                   <hr>
                   <p>All tests<br>
-                  All testing modes
+                  All testing modes<br>
+                  Email support
                   {% for line in plan.extra_info_text_lines %}
                     <br>{{ line }}
                   {% endfor %}
@@ -86,16 +83,13 @@
                   <h1 class="display-4">{{plan.name}}</h1>
                   <p class="text-primary"><span class='lead'>{{plan.pretty_price}} {{ plan.currency.name }}</span>
                     <br>
-                    {% if plan.is_one_time %}
-                      <small>One-time payment</small>
-                    {% else %}
-                      <small>Recurring yearly payment</small>
-                    {% endif %}
+                    <small>Recurring yearly payment</small>
                   </p>
                   <hr>
                   <p>All tests<br>
                   All testing modes<br>
-                  {{ plan.max_users_allowed }} users included
+                  {{ plan.max_users_allowed }} users included<br>
+                  Email support
                   {% for line in plan.extra_info_text_lines %}
                     <br>{{ line }}
                   {% endfor %}
