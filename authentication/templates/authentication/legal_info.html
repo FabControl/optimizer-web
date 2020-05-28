@@ -27,6 +27,7 @@
                 {% csrf_token %}
                 {{ legal_info.first_name | as_crispy_field }}
                 {{ legal_info.last_name | as_crispy_field }}
+                <a href="{% url 'password_change' %}">Change password</a>
                 {{ legal_info.company_country | as_crispy_field }}
                 {{ legal_info.company_account | as_crispy_field }}
                 <div id='company_form_content'>

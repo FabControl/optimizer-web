@@ -171,7 +171,7 @@ def password_reset(request):
 class PasswordChangeView(auth_views.PasswordContextMixin, FormView):
     template_name='authentication/password_change.html'
     form_class=ChangePasswordForm
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy('account_legal_info', kwargs={'category':'legal_info'})
     title = ''
 
     @method_decorator(sensitive_post_parameters())
