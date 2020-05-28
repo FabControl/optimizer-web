@@ -283,6 +283,10 @@ class SessionMode(models.Model):
     def included_tests(self):
         return ast.literal_eval(str(self._included_tests))
 
+    @property
+    def included_free_tests(self):
+        return [test for test in settings.FREE_TESTS if test in self.included_tests]
+
     def __str__(self):
         return f'{self.name}'
 
