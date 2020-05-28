@@ -75,6 +75,15 @@ class Plan(ModelDiffMixin, models.Model):
         return self.stripe_plan_id == ''
 
     @property
+    def payment_frequency_string(self):
+        if self.is_one_time:
+            return 'One-time payment'
+        if self.name in ('Month', 'Year'):
+            return f'Recurring {self.name}ly payment'
+        return 'Recurring payment'
+
+
+    @property
     def pretty_price(self):
         return str(self.price).replace('.00', ',-')
 
@@ -106,7 +115,7 @@ class Plan(ModelDiffMixin, models.Model):
         plan.price = stripe_plan['amount'] / 100.0
         if stripe_plan['active']:
             plan.type = 'corporate' if stripe_plan['product'] == settings.STRIPE_BUSINESS_PRODUCT_ID else 'premium'
-        else: 
+        else:
             plan.type = 'deleted'
         plan.currency = currency
         # subscriptin_period does not matter, since stripe is handling subscription extension

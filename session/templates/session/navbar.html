@@ -31,12 +31,11 @@
             {% if request.user.can_collect_invoices %}
             <a class="dropdown-item" href="{% url 'invoices' %}">Invoices</a>
             {% endif %}
-            <a class="dropdown-item" href="{% url 'account_legal_info' %}">Account settings</a>
+            <a class="dropdown-item" href="{% url 'account_legal_info' %}">Account Settings</a>
             {% if request.user.member_of_corporation is None  and not request.user.active_subscriptions %}
-            <a class="dropdown-item" href="{% url 'my_affiliates' %}">Invite a friend</a>
+            <a class="dropdown-item" href="{% url 'my_affiliates' %}">Invite a Friend</a>
             {% endif %}
-            <a class="dropdown-item" href="{% url 'password_change' %}">Change password</a>
-            <a class="dropdown-item" href="{% url 'signout' %}">Sign out</a>
+            <a class="dropdown-item" href="{% url 'signout' %}">Sign Out</a>
           </div>
         </li>
       </ul>
@@ -63,7 +62,7 @@
           Help
         </a>
         <div class="dropdown-menu" aria-labelledby="helpDropdown">
-          <a class="dropdown-item" href="https://3doptimizer.helpscoutdocs.com/">Help center</a>
+          <a class="dropdown-item" href="https://3doptimizer.helpscoutdocs.com/">Help Center</a>
         </div>
       </li>
     </ul>

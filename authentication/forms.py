@@ -160,6 +160,7 @@ class LegalInformationForm(forms.ModelForm):
         self.fields['company_registration_number'].label = 'Company registration number*'
         self.fields['company_vat_number'].label = 'Company VAT number'
         self.fields['company_account'].initial = self.instance.is_company_account
+        self.fields['company_account'].label = 'Show legal info (for EU companies)'
 
     def clean(self):
         cleaned_data = super().clean()
