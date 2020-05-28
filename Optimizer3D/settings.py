@@ -52,7 +52,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'Optimizer3D.middleware.EnforceSubscriptionMiddleware.enforce_subscription_middleware'
+    'Optimizer3D.middleware.EnforceSubscriptionMiddleware.enforce_subscription_middleware',
+    'payments.middleware.NotifySubscriptionChargeFailuresMiddleware.notify_failures_middleware'
 ]
 
 ROOT_URLCONF = 'Optimizer3D.urls'
@@ -158,6 +159,10 @@ PAYMENTS_COMPANY_SWIFT = 'NDEALV2X'
 PAYMENTS_COMPANY_ACCOUNT = 'LV59NDEA0000085924321'
 
 AFFILIATE_BONUS_DAYS = 7
+SUBSCRIPTION_EXTRA_DAYS = 5
 
 FREE_TESTS = ['01', '03', '10']
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
 

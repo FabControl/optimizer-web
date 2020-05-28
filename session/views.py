@@ -9,14 +9,27 @@ from django.shortcuts import render_to_response
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.forms.models import model_to_dict
+from django.db.models import Q
 
 from .models import *
 from django.views import generic
 from .forms import *
-from payments.models import Checkout
+from payments.models import Checkout, Corporation
 
 from config import config
 from optimizer_api import api_client
+
+def model_ownership_query(user):
+    if user.member_of_corporation is None:
+        # if user leaves corporation, he des not see resources he created within corp.
+        return Q(owner=user) & Q(corporation=None)
+    return (Q(owner=user) |
+            (Q(corporation=user.member_of_corporation) & Q(owner__in=user.member_of_corporation.team.all())))
+
+class ModelOwnershipCheckMixin:
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.filter(model_ownership_query(self.request.user))
 
 # Create your views here.
 
@@ -30,29 +43,31 @@ def index(request):
 def dashboard(request):
     latest_sessions = Session.objects.filter(owner=request.user).order_by('-pub_date')[:5]
 
-    len_printers = len(Machine.objects.filter(owner=request.user))
-    len_materials = len(Material.objects.filter(owner=request.user))
-    len_sessions = len(Session.objects.filter(owner=request.user))
+    ownership = model_ownership_query(request.user)
+    len_printers = len(Machine.objects.filter(ownership))
+    len_materials = len(Material.objects.filter(ownership))
+    len_sessions = len(Session.objects.filter(ownership))
 
     cards = {'printers': {'len': len_printers},
              'materials': {'len': len_materials},
              'sessions': {'len': len_sessions}}
 
     context = {'latest_sessions': latest_sessions,
+               'invitations': Corporation.objects.filter(_invited_users__contains=' '+ request.user.email + ' '),
                'cards': cards}
     return render(request, 'session/dashboard.html', context)
 
 
-class MaterialsView(LoginRequiredMixin, generic.ListView):
+class MaterialsView(LoginRequiredMixin, ModelOwnershipCheckMixin, generic.ListView):
     template_name = "session/material_manager.html"
     context_object_name = 'materials'
+    model = Material
 
     def get_queryset(self):
-        queryset = Material.objects.filter(owner=self.request.user).order_by('pub_date')
-        return queryset
+        return super().get_queryset().order_by('pub_date')
 
 
-class MaterialView(LoginRequiredMixin, generic.UpdateView):
+class MaterialView(LoginRequiredMixin, ModelOwnershipCheckMixin, generic.UpdateView):
     model = Material
     template_name = 'session/material_detail.html'
     form_class = MaterialForm
@@ -60,11 +75,6 @@ class MaterialView(LoginRequiredMixin, generic.UpdateView):
 
     def __init__(self):
         super(MaterialView, self).__init__()
-
-    def get_object(self, queryset=None):
-        material = super(MaterialView, self).get_object(queryset)
-        material.is_owner(self.request.user)
-        return material
 
 
 @login_required
@@ -75,6 +85,7 @@ def material_form(request):
         if form.is_valid():
             material = form.save(commit=False)
             material.owner = request.user
+            material.corporation = request.user.member_of_corporation
             messages.success(request, 'Material "{}" has been created!'.format(material.name))
             material.save()
             if "next" in request.POST:
@@ -93,7 +104,8 @@ def material_form(request):
 @login_required
 def machine_edit_view(request, pk):
     context = {}
-    machine = get_object_or_404(Machine, pk=pk, owner=request.user)
+    machine = get_object_or_404(Machine, model_ownership_query(request.user), pk=pk)
+
     if request.method == 'POST':
         self_form = NewMachineForm(request.POST, instance=machine)
         extruder_form = NewExtruderForm(request.POST, instance=machine.extruder, prefix="extruder")
@@ -136,25 +148,19 @@ def machine_edit_view(request, pk):
     return render(request, 'session/machine_detail.html', context)
 
 
-class MachineView(LoginRequiredMixin, generic.UpdateView):
+class MachineView(LoginRequiredMixin, ModelOwnershipCheckMixin, generic.UpdateView):
     form_class = NewMachineForm
     model = Machine
     template_name = 'session/machine_detail.html'
 
-    def get_context_data(self, **kwargs):
-        machine = self.object
-        machine.is_owner(self.request.user)
-        context = super(MachineView, self).get_context_data(**kwargs)
-        return context
 
-
-class MachinesView(LoginRequiredMixin, generic.ListView):
+class MachinesView(LoginRequiredMixin, ModelOwnershipCheckMixin, generic.ListView):
     template_name = "session/machine_manager.html"
     context_object_name = 'machines'
+    model = Machine
 
     def get_queryset(self):
-        queryset = Machine.objects.filter(owner=self.request.user).order_by('pub_date')
-        return queryset
+        return super().get_queryset().order_by('pub_date')
 
 
 @login_required
@@ -180,6 +186,7 @@ def machine_form(request):
                 machine.printbed = printbed_form.save()
             messages.success(request, 'Machine "{}" has been created!'.format(machine.model))
             machine.extruder = extruder
+            machine.corporation = request.user.member_of_corporation
             machine.save()
             if "next" in request.POST:
                 request.session["machine"] = machine.pk
@@ -235,13 +242,13 @@ class SettingsView(LoginRequiredMixin, generic.ListView):
         return Settings.objects.order_by('pub_date')
 
 
-class SessionListView(LoginRequiredMixin, generic.ListView):
+class SessionListView(LoginRequiredMixin, ModelOwnershipCheckMixin, generic.ListView):
     template_name = "session/session_manager.html"
     context_object_name = 'sessions'
+    model = Session
 
     def get_queryset(self):
-        queryset = Session.objects.filter(owner=self.request.user).order_by('pub_date')
-        return queryset
+        return super().get_queryset().order_by('pub_date')
 
 
 class SessionTestsSelectionMixin:
@@ -250,6 +257,7 @@ class SessionTestsSelectionMixin:
         routine = api_client.get_routine()
         for (k, v) in routine.items():
             v['free'] = True if k in settings.FREE_TESTS else False
+            v['name'] = v['name'].title().replace('Vs', 'vs')
             v['name'] = v['name'].replace(' vs ', ' vs<br>')
         context['routine'] = routine
         return context
@@ -270,6 +278,10 @@ class SessionView(SessionTestsSelectionMixin, LoginRequiredMixin, generic.Update
         return redirect('session_detail', pk=session.pk)
 
 
+class GuidedSessionView(SessionView):
+    template_name = 'session/guided_mode/guided_session.html'
+
+
 class SessionValidateView(SessionView):
     form_class = TestValidateForm
 
@@ -287,23 +299,70 @@ class SessionValidateView(SessionView):
         return redirect('session_validate_back', pk=session.pk)
 
 
-class SessionOverview(SessionTestsSelectionMixin, LoginRequiredMixin, generic.DetailView):
-    model = Session
-    template_name = "session/session.html"
+class GuidedValidateView(GuidedSessionView):
+    form_class = TestValidateForm
 
     def get_context_data(self, **kwargs):
         session = self.object
-        session.is_owner(self.request.user)
+        context = super().get_context_data(**kwargs)
+        context['question_form'] = ValidateFormTestDescriptionForm(instance=self.object)
+        context['questions'] = Junction.objects.get(base_test=session.test_number).descriptors.all()
+        return context
+
+    def form_valid(self, form):
+        session = form.save(commit=False)
+        session.alter_previous_tests(-1, "validated", True)
+        session = form.save(commit=True)
+        # filter any items in request.POST with key that starts with 'question' and has any value other than 'null'
+        questions = [PrintDescriptor.objects.get(pk=int(y)) for y in [self.request.POST[x] for x in self.request.POST if x.startswith('question')] if y != 'null']
+        # sort the selected questions by target tests as numbers.
+        questions.sort(key=lambda x: int(x.target_test.lstrip('0')))
+        if len(questions) > 0:
+            # Select the highest priority test. Lower test number = higher priority
+            # first element will have the lowest test number
+            q1 = questions[0]
+            if q1.hint is not None:
+                messages.info(self.request, q1.hint)
+            if q1.target_test == session.test_number:
+                session.delete_previous_test(q1.target_test)
+                session.save()
+            return redirect('test_switch', number=q1.target_test, pk=session.pk)
+        # Go to next primary if not directed elsewhere
+        return redirect('session_next_test', pk=session.pk, priority='primary')
+
+    def form_invalid(self, form):
+        session = form.save(commit=False)
+        return redirect('session_validate_back', pk=session.pk)
+
+
+class SessionOverview(SessionTestsSelectionMixin, LoginRequiredMixin, ModelOwnershipCheckMixin, generic.DetailView):
+    model = Session
+    template_name = "session/session_overview.html"
+
+    def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['default_quality_type'] = 'normal'
         context['other_quality_types'] = common_cura_qulity_types
         return context
 
 
+class GuidedSessionOverview(SessionOverview):
+    template_name = 'session/session_overview.html'
+
+
 @login_required
-def generate_or_validate(request, pk):
-    session = get_object_or_404(Session, pk=pk)
-    session.is_owner(request.user)
+def overview_dispatcher(request, pk):
+    session = get_object_or_404(Session, model_ownership_query(request.user), pk=pk)
+
+    if session.mode.type == 'guided':
+        return GuidedSessionOverview.as_view()(request, pk=pk)
+    elif session.mode.type == 'normal':
+        return SessionOverview.as_view()(request, pk=pk)
+
+
+@login_required
+def session_dispatcher(request, pk, download=False):
+    session = get_object_or_404(Session, model_ownership_query(request.user), pk=pk)
 
     # Check if user still is onboarding
     if request.user.onboarding:
@@ -311,52 +370,53 @@ def generate_or_validate(request, pk):
             request.user.onboarding = False
             request.user.save()
 
-    if session.executed:
-        logging.getLogger("views").info("{} is initializing Session validation view!".format(request.user))
-        return SessionValidateView.as_view()(request, pk=pk)
-    else:
-        logging.getLogger("views").info("{} is initializing Session generation view!".format(request.user))
-        return SessionView.as_view()(request, pk=pk)
+    # Make sure that the user is not where they shouldn't be
+    if session.test_number not in request.user.available_tests:
+        if session.test_number_next() not in request.user.available_tests:
+            session.test_number = request.user.available_tests[-1]
+            return overview_dispatcher(request, pk=pk)
+        else:
+            session.test_number = session.test_number_next()
+            messages.error(request, mark_safe("Your next test is available in the premium mode only. "
+                                                "You can skip it and go to the next free test or "
+                                                f"<a href={reverse_lazy('plans')}>purchase premium.</a>"))
+        session.save()
+
+    if session.mode.type == 'normal':
+        # Check if session should be in Generate or Validate state
+        if session.executed:
+            logging.getLogger("views").info("{} is initializing Session validation view!".format(request.user))
+            return SessionValidateView.as_view()(request, pk=pk, download=download)
+        else:
+            logging.getLogger("views").info("{} is initializing Session generation view!".format(request.user))
+            return SessionView.as_view()(request, pk=pk)
+
+    elif session.mode.type == 'guided':
+        if session.executed:
+            logging.getLogger("views").info("{} is initializing Session validation view!".format(request.user))
+            return GuidedValidateView.as_view()(request, pk=pk, download=download)
+        else:
+            logging.getLogger("views").info("{} is initializing Session generation view!".format(request.user))
+            return GuidedSessionView.as_view()(request, pk=pk)
 
 
-class SessionDelete(LoginRequiredMixin, generic.DeleteView):
+class SessionDelete(LoginRequiredMixin, ModelOwnershipCheckMixin, generic.DeleteView):
     model = Session
     success_url = reverse_lazy('session_manager')
 
-    def delete(self, request, *args, **kwargs):
-        """
-        Call the delete() method on the fetched object and then redirect to the
-        success URL.
-        """
-        if Session.objects.get(pk=self.kwargs["pk"]).owner != self.request.user:
-            raise Exception('Session not owned by user.')
-        self.object = self.get_object()
-        success_url = self.get_success_url()
-        self.object.delete()
-        return HttpResponseRedirect(success_url)
+    def get(self, request, *args, **kwargs):
+        raise Http404("Page not found")
 
 
-class MachineDelete(LoginRequiredMixin, generic.DeleteView):
+class MachineDelete(LoginRequiredMixin, ModelOwnershipCheckMixin, generic.DeleteView):
     model = Machine
     success_url = reverse_lazy('machine_manager')
 
     def get(self, request, *args, **kwargs):
         raise Http404("Page not found")
 
-    def delete(self, request, *args, **kwargs):
-        """
-        Call the delete() method on the fetched object and then redirect to the
-        success URL.
-        """
-        self.object = self.get_object()
-        if not self.object.is_owner(self.request.user):
-            raise Http404("Page not found")
-        success_url = self.get_success_url()
-        self.object.delete()
-        return HttpResponseRedirect(success_url)
 
-
-class MaterialDelete(LoginRequiredMixin, generic.DeleteView):
+class MaterialDelete(LoginRequiredMixin, ModelOwnershipCheckMixin, generic.DeleteView):
     model = Material
     success_url = reverse_lazy('material_manager')
 
@@ -364,23 +424,10 @@ class MaterialDelete(LoginRequiredMixin, generic.DeleteView):
         raise Http404("Page not found")
 
 
-    def delete(self, request, *args, **kwargs):
-        """
-        Call the delete() method on the fetched object and then redirect to the
-        success URL.
-        """
-        self.object = self.get_object()
-        if not self.object.is_owner(self.request.user):
-            raise Http404("Page not found")
-        success_url = self.get_success_url()
-        self.object.delete()
-        return HttpResponseRedirect(success_url)
-
 
 @login_required
 def session_validate_undo(request, pk):
-    session = Session.objects.get(pk=pk)
-    session.is_owner(request.user)
+    session = get_object_or_404(Session, model_ownership_query(request.user), pk=pk)
     session.remove_last_test()
 
     previously_tested_parameters = session.previously_tested_parameters
@@ -393,8 +440,7 @@ def session_validate_undo(request, pk):
 
 @login_required
 def session_validate_revert(request, pk):
-    session = Session.objects.get(pk=pk)
-    session.is_owner(request.user)
+    session = get_object_or_404(Session, model_ownership_query(request.user), pk=pk)
 
     routine = api_client.get_routine()
     test_names = [name for name, _ in routine.items()]
@@ -418,8 +464,7 @@ def session_validate_revert(request, pk):
 
 @login_required
 def test_switch(request, pk, number):
-    session = Session.objects.get(pk=pk)
-    session.is_owner(request.user)
+    session = get_object_or_404(Session, model_ownership_query(request.user), pk=pk)
     session.test_number = number
     session.save()
     return redirect('session_detail', pk=pk)
@@ -427,8 +472,7 @@ def test_switch(request, pk, number):
 
 @login_required
 def next_test_switch(request, pk, priority: str):
-    session = get_object_or_404(Session, pk=pk)
-    session.is_owner(request.user)
+    session = get_object_or_404(Session, model_ownership_query(request.user), pk=pk)
     num = session.test_number
     if priority == "primary":
         session.test_number = session.test_number_next()
@@ -443,8 +487,7 @@ def next_test_switch(request, pk, priority: str):
 
 @login_required
 def serve_gcode(request, pk):
-    session = Session.objects.get(pk=pk)
-    session.is_owner(request.user)
+    session = get_object_or_404(Session, model_ownership_query(request.user), pk=pk)
     response = FileResponse(session.get_gcode, content_type='text/plain')
     response['Content-Type'] = 'text/plain'
     response['Content-Disposition'] = 'attachment; filename={}.gcode'.format(session.name.replace(" ", "_") + "_" + session.test_number)
@@ -455,8 +498,8 @@ def serve_gcode(request, pk):
 def serve_config(request, pk, slicer):
     supported_slicers = ["simplify3d", "slic3r_pe", 'cura']
     assert slicer in supported_slicers
-    session = get_object_or_404(Session, pk=pk)
-    session.is_owner(request.user)
+    session = get_object_or_404(Session, model_ownership_query(request.user), pk=pk)
+
     quality_type = ''
     if request.method == 'POST':
         quality_type = request.POST.get('quality_type', '')
@@ -471,8 +514,7 @@ def serve_config(request, pk, slicer):
 @login_required
 def serve_report(request, pk):
     from io import BytesIO
-    session = get_object_or_404(Session, pk=pk)
-    session.is_owner(request.user)
+    session = get_object_or_404(Session, model_ownership_query(request.user), pk=pk)
     report_file, report_file_format = api_client.get_report(session.persistence)
     f = BytesIO(report_file)
     response = FileResponse(f, content_type='application/pdf')
@@ -529,11 +571,12 @@ def terms_of_use(request):
 @login_required
 def new_session(request):
     if request.method == 'POST':
-        form = SessionForm(request.POST, user=request.user)
+        form = SessionForm(request.POST, ownership=model_ownership_query(request.user), user=request.user)
 
         if form.is_valid():
             session = form.save(commit=False)
             session.owner = request.user
+            session.corporation = request.user.member_of_corporation
 
             session.settings = Settings.objects.create(name=session.name)
 
@@ -552,7 +595,7 @@ def new_session(request):
         return HttpResponse(status=204)
 
     else:
-        form = SessionForm(user=request.user)
+        form = SessionForm(ownership=model_ownership_query(request.user), user=request.user)
         if "machine" in request.session:
             form.fields["machine"].initial = request.session["machine"]
 

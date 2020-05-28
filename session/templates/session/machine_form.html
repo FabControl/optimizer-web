@@ -16,6 +16,8 @@
         Load from preset
       </label>
       <select class="select form-control" id="id_preset_selector" name="preset" placeholder="Printer preset">
+        <option value="" disabled selected>Select from list</option>
+        <option value="" disabled>--------------------</option>
         {% for machine in sample_machines %}
         <option value="{{machine.pk}}">{{machine.model}}</option>
         {{machine}}
@@ -78,7 +80,7 @@
         {% if next %}
         <input type="hidden" value="{{ next }}" name="next">
         {% endif %}
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary">Create</button>
       </form>
     </div>
   </div>

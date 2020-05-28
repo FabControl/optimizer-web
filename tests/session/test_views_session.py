@@ -19,6 +19,8 @@ class SessionSessionTest(TestCase):
                                                          is_active=True,
                                                          password='SomeSecretPassword')
 
+        self.mode = models.SessionMode.objects.create()
+
         self.material = models.Material.objects.create(owner=self.user)
 
         self.machine = models.Machine.objects.create(owner=self.user,
@@ -103,7 +105,8 @@ class SessionSessionTest(TestCase):
         persistence['session']['previous_tests'] = []
         persistence = json.dumps(persistence)
         for s_name in 'some testing session instances'.split(' '):
-            session = models.Session(name=s_name,
+            session = models.Session(mode=models.SessionMode.objects.get(pk=self.mode.pk),
+                                     name=s_name,
                                      material=models.Material.objects.get(pk=self.material.pk),
                                      settings=models.Settings.objects.create(),
                                      machine=models.Machine.objects.get(pk=self.machine.pk))
@@ -163,7 +166,8 @@ class SessionSessionTest(TestCase):
         persistence = json.loads(BLANK_PERSISTENCE)['persistence']
         persistence['session']['previous_tests'] = json.loads(EXECUTED_LAST_TEST)
         persistence = json.dumps(persistence)
-        session = models.Session(name='redirection test',
+        session = models.Session(mode=models.SessionMode.objects.get(pk=self.mode.pk),
+                                 name='redirection test',
                                  owner=self.user,
                                  material=models.Material.objects.get(pk=self.material.pk),
                                  settings=models.Settings.objects.create(),
@@ -234,7 +238,11 @@ class SessionSessionTest(TestCase):
                 for attr, val in attrs:
                     if attr == 'selected':
                         return True
+                    if attr == 'checked':
+                        return True
                     elif attr == 'name' and val == 'name':
+                        return True
+                    elif attr == 'name' and val == 'mode':
                         return True
                 return False
 
@@ -255,9 +263,11 @@ class SessionSessionTest(TestCase):
         resp = self.client.get(tst_url)
         self.assertEqual(resp.status_code, 200)
         # make sure defaults are selected
-        name, material, machine, tst_type = extract_data(resp.content)
+        name, tst_type, mode, mode2, machine, material = extract_data(resp.content)
 
         #Probably space from template
+        self.assertEqual(mode, ('3', '\n            Guided (Free Tests Only)\n        '))
+        self.assertEqual(mode2, ('4', '\n            Untitled\n        '))
         self.assertEqual(name, ('Untitled', ' '))
         self.assertEqual(material, ('', '---------'))
         self.assertEqual(machine, ('', '---------'))
@@ -267,9 +277,10 @@ class SessionSessionTest(TestCase):
         # load new session page and check defaults
         resp = self.client.get(tst_url)
         self.assertEqual(resp.status_code, 200)
-        name, machine, material, tst_type = extract_data(resp.content)
-
+        name, tst_type, mode, mode2, machine, material = extract_data(resp.content)
         #Probably space from template
+        self.assertEqual(mode, ('3', '\n            Guided (Free Tests Only)\n        '))
+        self.assertEqual(mode2, ('4', '\n            Untitled\n        '))
         self.assertEqual(name, (patched_name, ' '))
         self.assertEqual(material, ('', '---------'))
         self.assertEqual(machine, ('', '---------'))
@@ -278,8 +289,7 @@ class SessionSessionTest(TestCase):
                                 dict(name='Material name', size_od=1.25, next=tst_url),
                                 follow=True)
         self.assertEqual(resp.status_code, 200)
-        name, machine, material, tst_type = extract_data(resp.content)
-
+        name, tst_type, mode, mode2, machine, material = extract_data(resp.content)
         self.assertEqual(name, (patched_name, ' '))
         self.assertFalse(material == ('', '---------'))
         self.assertEqual(machine, ('', '---------'))
@@ -309,7 +319,7 @@ class SessionSessionTest(TestCase):
             }
         resp = self.client.post(reverse('machine_form'), machine_props, follow=True)
         self.assertEqual(resp.status_code, 200)
-        name, machine, material, tst_type = extract_data(resp.content)
+        name, tst_type, mode, mode2, machine, material = extract_data(resp.content)
 
         self.assertEqual(name, (patched_name, ' '))
         self.assertFalse(material == ('', '---------'))
@@ -319,18 +329,21 @@ class SessionSessionTest(TestCase):
         p = json.loads(BLANK_PERSISTENCE)['persistence']
         with patch('optimizer_api.ApiClient.get_template', return_value=p):
             resp = self.client.post(tst_url,
-                                    dict(name=name[0],
-                                            material=material[0],
-                                            machine=machine[0],
-                                            target=tst_type[0]))
+                                    dict(mode=mode[0],
+                                         name=name[0],
+                                         material=material[0],
+                                         machine=machine[0],
+                                         target=tst_type[0]))
         self.assertEqual(resp.status_code, 302)
 
         # load new session page
         resp = self.client.get(tst_url)
         self.assertEqual(resp.status_code, 200)
         # cache should be cleared now
-        name, material, machine, tst_type = extract_data(resp.content)
+        name, tst_type, mode, mode2, machine, material = extract_data(resp.content)
 
+        self.assertEqual(mode, ('3', '\n            Guided (Free Tests Only)\n        '))
+        self.assertEqual(mode2, ('4', '\n            Untitled\n        '))
         self.assertEqual(name, ('Untitled', ' '))
         self.assertEqual(material, ('', '---------'))
         self.assertEqual(machine, ('', '---------'))

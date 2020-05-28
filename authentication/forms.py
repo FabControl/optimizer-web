@@ -11,6 +11,7 @@ from django.contrib.auth import get_user_model
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from payments.countries import codes_iso3166
+from payments.models import Corporation
 
 
 # class UserForm(forms.ModelForm):
@@ -40,7 +41,6 @@ class SignUpForm(UserCreationForm):
     email = forms.EmailField(max_length=254, help_text='We will not share your email address with 3rd parties.')
     first_name = forms.CharField(max_length=30, required=True)
     last_name = forms.CharField(max_length=30, required=True)
-    company = forms.CharField(max_length=30, required=False)
     termsofuse = forms.BooleanField()
     termsofuse.label = safestring.mark_safe('<label class="small">I agree to <a href="/help/terms_of_use" target="blank">terms of use</a></label>')
 
@@ -53,14 +53,33 @@ class SignUpForm(UserCreationForm):
         self.fields['password2'].widget.attrs["maxlength"] = 32
         self.fields['password1'].widget.attrs["minlength"] = 8
         self.fields['password2'].widget.attrs["minlength"] = 8
+        self.fields['company_country'].label = 'Country'
 
     class Meta:
         model = User
-        fields = ('email', 'first_name', 'last_name', 'password1', 'password2',)
+        fields = ('email', 'first_name', 'last_name', 'password1', 'password2', 'company_country')
 
     def save_and_notify(self, request):
         user = self.save()
         user.send_account_activation(request)
+        return user
+
+
+class CorporationSignUpForm(SignUpForm):
+    company_name = forms.CharField(max_length=30, required=True)
+    class Meta:
+        model = User
+        fields = ('email', 'first_name', 'last_name', 'password1', 'password2', 'company_country', 'company_name')
+
+    def save(self, *a, **k):
+        user = super().save(*a, **k)
+        if len(user.corporation_set.all()) < 1:
+            corp_name = user.company_name if user.company_name != '' else f"{user.first_name}'s corporation"
+            corp = Corporation.objects.create(owner=user,
+                                        name=corp_name)
+            user.member_of_corporation = corp
+            user.manager_of_corporation = corp
+            user.save()
         return user
 
 
@@ -134,11 +153,14 @@ class LegalInformationForm(forms.ModelForm):
     def __init__(self, *a, **k):
         super().__init__(*a, **k)
         self.fields['company_name'].label = 'Company name*'
-        self.fields['company_country'].label = 'Company country*'
+        self.fields['first_name'].required = True
+        self.fields['last_name'].required = True
+        self.fields['company_country'].label = 'Country'
         self.fields['company_legal_address'].label = 'Company legal address*'
         self.fields['company_registration_number'].label = 'Company registration number*'
         self.fields['company_vat_number'].label = 'Company VAT number'
         self.fields['company_account'].initial = self.instance.is_company_account
+        self.fields['company_account'].label = 'Show legal info (for EU companies)'
 
     def clean(self):
         cleaned_data = super().clean()
@@ -153,7 +175,7 @@ class LegalInformationForm(forms.ModelForm):
                 if v == '' or v is None:
                     missing.append(self.fields[f].label)
 
-            else:
+            elif f != 'company_country':
                 cleaned_data[f] = ''
 
         if len(missing) > 0:
@@ -169,3 +191,10 @@ class LegalInformationForm(forms.ModelForm):
 
         return cleaned_data
 
+
+class CorporationInviteForm(forms.Form):
+    email = forms.EmailField(widget=forms.TextInput(attrs={'placeholder': 'email'}))
+    name = forms.CharField(max_length=20, widget=forms.TextInput(attrs={'placeholder': 'name'}))
+
+    class Meta:
+        fields = ['email', 'name']

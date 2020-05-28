@@ -1,9 +1,10 @@
 from django.contrib import admin
-from .models import Plan, Checkout, TaxationCountry
+from .models import Plan, Checkout, TaxationCountry, Subscription, Currency, Corporation
+from .forms import CurrencyAdminForm
 
 # Register your models here.
-admin.site.register(Plan)
 admin.site.register(TaxationCountry)
+admin.site.register(Corporation)
 
 def mark_checkout_paid(modeladmin, request, queryset):
     for c in queryset:
@@ -32,3 +33,30 @@ class CheckoutModelAdmin(admin.ModelAdmin):
             return 'expired'
         return 'in progress'
 
+@admin.register(Plan)
+class PlanModelAdmin(admin.ModelAdmin):
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
+@admin.register(Subscription)
+class SubscriptionModelAdmin(admin.ModelAdmin):
+    list_display = ('created', 'user', 'payment_plan', 'state', 'stripe_id')
+    sortable_by = ('created', 'user', 'payment_plan', 'state', 'stripe_id')
+    date_hierarchy = 'created'
+
+    list_display_links = None
+
+    def has_delete_permission(self, request):
+        return False
+
+    def has_add_permission(self, request):
+        return False
+
+
+@admin.register(Currency)
+class CurrencyModelAdmin(admin.ModelAdmin):
+    form = CurrencyAdminForm
+
+    def has_delete_permission(self, request, obj=None):
+        return False

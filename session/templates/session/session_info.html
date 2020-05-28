@@ -1,4 +1,27 @@
-<a>Session: <b>{{ object.name }}</b></a>
-<a>Printer: <b>{{ object.machine }}</b></a>
-<a>Material: <b>{{ object.material }}</b></a>
-<a>Strategy: <b>{{ object.get_target_display }}</b></a>
+<table style="width:100%" class="">
+  <tbody>
+    <tr>
+      <th scope="row">Session</th>
+      <td>{{ object.name }}</td>
+    </tr>
+    <tr>
+      <th scope="row"><span class="test-muted">Target</span></th>
+      <td>{{ object.get_target_display }}</td>
+    </tr>
+    <tr>
+      <th scope="row">Mode</th>
+      <td>{{ object.mode.name }}</td>
+    </tr>
+    <tr>
+      <th scope="row">Printer</th>
+      <td>{{ object.machine }}</td>
+    </tr>
+    <tr>
+      <th scope="row">Material</th>
+      <td>{{ object.material }}</td>
+    </tr>
+  </tbody>
+</table>
+<div class="pt-3">
+  <button type="button" onclick="location.href='{% url 'session_overview' object.pk %}'" class="btn btn-outline-primary" href="{% url 'session_overview' object.pk %}"{% if not object.previous_tests %} disabled{% endif %}>Results</button>
+</div>

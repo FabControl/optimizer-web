@@ -9,6 +9,7 @@ import stripe
 from unittest.mock import Mock, patch
 from payments.models import Plan, Checkout
 from datetime import timedelta
+from copy import deepcopy
 
 
 # helper class
@@ -78,6 +79,13 @@ class PaymentPlansViewTest(TestCase):
             for k in ['amount', 'currency', 'name', 'quantity']:
                 self.assertTrue(k in keys, msg='"{0}" not in {1}'.format(k, i))
 
+        if mode is None:
+            if line_items is not None:
+                mode = 'payment'
+            elif subscription_data is not None:
+                mode = 'subscription'
+
+
         test_item = CheckoutTestItem(cancel_url, success_url,
                                      line_items, client_reference_id)
         test_item.session_value = {
@@ -112,7 +120,8 @@ class PaymentPlansViewTest(TestCase):
         self.user.refresh_from_db()
         current_expiration = self.user.subscription_expiration
         plan = self.plans[2]
-        result_timestamp_min = (max(current_expiration, timezone.now()) + plan.subscription_period).replace(hour=23, minute=59, second=59)
+        result_timestamp_min = (max(current_expiration, timezone.now()) + plan.subscription_period).replace(hour=23, minute=59, second=59, microsecond=0)
+        result_timestamp_max = result_timestamp_min + timedelta(seconds=1)
 
         # ask for premium plan extension
         checkout_mock = Mock(side_effect=self.checkout_dummy)
@@ -133,18 +142,17 @@ class PaymentPlansViewTest(TestCase):
                                           'type' : 'checkout.session.completed'})
         with patch('stripe.Webhook.construct_event', webhook_mock):
             c = Client(HTTP_STRIPE_SIGNATURE='checkout complete')
-            resp = c.post(reverse('confirm_payment'), {'data': ''})
+            resp = c.post(reverse('handle_stripe_event'), {'data': ''})
         self.assertEqual(resp.status_code, 200)
 
         # check subscription expiration time
         self.user.refresh_from_db()
-        result_timestamp_max = (max(current_expiration, timezone.now()) + plan.subscription_period).replace(hour=23, minute=59, second=59)
 
         self.assertTrue(self.user.subscription_expiration >= result_timestamp_min)
         self.assertTrue(self.user.subscription_expiration <= result_timestamp_max)
 
     def test_webhook_validation(self):
-        test_url = reverse('confirm_payment')
+        test_url = reverse('handle_stripe_event')
         self.user.refresh_from_db()
         expiration_base = self.user.subscription_expiration
         # create checkout object
@@ -203,7 +211,8 @@ class PaymentPlansViewTest(TestCase):
         # make sure correct event works
         def correct_event(p, s, k):
             return {'type' : 'checkout.session.completed',
-                    'data': {'object': {'client_reference_id': checkout.pk}}}
+                    'data': {'object': {'client_reference_id': checkout.pk,
+                                        'mode': 'payment'}}}
 
         with patch('stripe.Webhook.construct_event', side_effect=correct_event):
             resp = self.client.post(test_url, {'data':''},
@@ -262,7 +271,7 @@ class PaymentPlansViewTest(TestCase):
         self.user.refresh_from_db()
         self.assertFalse(checkout.is_cancelled)
         self.assertEqual(self.user.subscription_expiration, expiration_base)
-        self.assertTrue(b'Your checkout session has expired' in resp.content)
+        self.assertTrue(b'Your session has expired' in resp.content)
 
         # check if checkout can be cancelled
         resp = self.client.get(test_url, follow=True)
@@ -325,7 +334,7 @@ class PaymentPlansViewTest(TestCase):
         self.user.refresh_from_db()
         self.assertFalse(checkout.is_paid)
         self.assertEqual(self.user.subscription_expiration, expiration_base)
-        self.assertTrue(b'Your checkout session has expired' in resp.content)
+        self.assertTrue(b'Your session has expired' in resp.content)
 
         # check warning message, if not confirmed
         resp = self.client.get(test_url, follow=True)
@@ -341,10 +350,11 @@ class PaymentPlansViewTest(TestCase):
         # notify about checkout completion
         def correct_event(p, s, k):
             return {'type' : 'checkout.session.completed',
-                    'data': {'object': {'client_reference_id': checkout.pk}}}
+                    'data': {'object': {'client_reference_id': checkout.pk,
+                                        'mode': 'payment'}}}
 
         with patch('stripe.Webhook.construct_event', side_effect=correct_event):
-            resp = self.client.post(reverse('confirm_payment'), {'data':''},
+            resp = self.client.post(reverse('handle_stripe_event'), {'data':''},
                                     content_type='application/json',
                                     HTTP_STRIPE_SIGNATURE='SecretSignatureFromStripe')
 
@@ -362,3 +372,136 @@ class PaymentPlansViewTest(TestCase):
         self.user.refresh_from_db()
         self.assertTrue(checkout.is_paid)
         self.assertTrue(self.user.subscription_expiration > expiration_base)
+
+class StripeHookHandlerTest(TestCase):
+    @classmethod
+    def setUpClass(self):
+        self.url = reverse('handle_stripe_event')
+
+    @classmethod
+    def tearDownClass(self):
+        pass
+
+    def test_payment_plan_updates(self):
+        event = {
+            "id": "evt_1Gg8DAIyp4fvmVpEmtwbfBF8",
+            "object": "event",
+            "api_version": "2019-11-05",
+            "created": 1588852100,
+            "data": {
+                "object": {
+                    "id": "plan_HEbQWLvbXgOTM3",
+                    "object": "plan",
+                    "active": True,
+                    "aggregate_usage": None,
+                    "amount": 200,
+                    "amount_decimal": "200",
+                    "billing_scheme": "per_unit",
+                    "created": 1588852100,
+                    "currency": "eur",
+                    "interval": "month",
+                    "interval_count": 1,
+                    "livemode": False,
+                    "metadata": {
+                        },
+                    "nickname": "Some plan",
+                    "product": "prod_HDoK9LmTymCvzj",
+                    "tiers": None,
+                    "tiers_mode": None,
+                    "transform_usage": None,
+                    "trial_period_days": None,
+                    "usage_type": "licensed"
+                    }
+                },
+            "livemode": False,
+            "pending_webhooks": 2,
+            "request": {
+                "id": "req_KssFb78f4XSgBx",
+                "idempotency_key": None
+                },
+            "type": "plan.created"
+            }
+
+        stripe_plan = event['data']['object']
+        # create arbitrary plan
+        Plan.objects.create()
+        plan_count = len(Plan.objects.all())
+        # create new plan from stripe with different product id
+        with patch('stripe.Webhook.construct_event', return_value=deepcopy(event)):
+            resp = self.client.post(self.url, {'data':''},
+                                    content_type='application/json',
+                                    HTTP_STRIPE_SIGNATURE='SecretSignatureFromStripe')
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(plan_count, len(Plan.objects.all()))
+
+        # create plan with correct product id
+        stripe_plan['product'] = settings.STRIPE_SUBSCRIPTION_PRODUCT_ID
+        with patch('stripe.Webhook.construct_event', return_value=deepcopy(event)):
+            resp = self.client.post(self.url, {'data':''},
+                                    content_type='application/json',
+                                    HTTP_STRIPE_SIGNATURE='SecretSignatureFromStripe')
+        self.assertEqual(resp.status_code, 200)
+        plan_count += 1
+        self.assertEqual(plan_count, len(Plan.objects.all()))
+        # if plan creaeted correctly, this should not fail
+        Plan.objects.get(name=stripe_plan['nickname'],
+                        price=stripe_plan['amount'] / 100.0,
+                        type='premium',
+                        stripe_plan_id=stripe_plan['id'])
+
+        # post same event, to check new plan creation
+        with patch('stripe.Webhook.construct_event', return_value=deepcopy(event)):
+            resp = self.client.post(self.url, {'data':''},
+                                    content_type='application/json',
+                                    HTTP_STRIPE_SIGNATURE='SecretSignatureFromStripe')
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(plan_count, len(Plan.objects.all()))
+        # if plan was not created again, this should not fail
+        Plan.objects.get(name=stripe_plan['nickname'],
+                        price=stripe_plan['amount'] / 100.0,
+                        type='premium',
+                        stripe_plan_id=stripe_plan['id'])
+
+        # update plan
+        stripe_plan['nickname'] = 'Updated stripe plan'
+        event['type'] = 'plan.updated'
+        with patch('stripe.Webhook.construct_event', return_value=deepcopy(event)):
+            resp = self.client.post(self.url, {'data':''},
+                                    content_type='application/json',
+                                    HTTP_STRIPE_SIGNATURE='SecretSignatureFromStripe')
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(plan_count, len(Plan.objects.all()))
+        # if plan updated correctly, this should not fail
+        Plan.objects.get(name=stripe_plan['nickname'],
+                        price=stripe_plan['amount'] / 100.0,
+                        type='premium',
+                        stripe_plan_id=stripe_plan['id'])
+
+        # make plan inactive
+        stripe_plan['active'] = False
+        with patch('stripe.Webhook.construct_event', return_value=deepcopy(event)):
+            resp = self.client.post(self.url, {'data':''},
+                                    content_type='application/json',
+                                    HTTP_STRIPE_SIGNATURE='SecretSignatureFromStripe')
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(plan_count, len(Plan.objects.all()))
+        # if plan disabled correctly, this should not fail
+        Plan.objects.get(name=stripe_plan['nickname'],
+                        price=stripe_plan['amount'] / 100.0,
+                        type='deleted',
+                        stripe_plan_id=stripe_plan['id'])
+        # delete plan
+        event['type'] = 'plan.deleted'
+        with patch('stripe.Webhook.construct_event', return_value=deepcopy(event)):
+            resp = self.client.post(self.url, {'data':''},
+                                    content_type='application/json',
+                                    HTTP_STRIPE_SIGNATURE='SecretSignatureFromStripe')
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(plan_count, len(Plan.objects.all()))
+        # plan should not actually be deleted
+        Plan.objects.get(name=stripe_plan['nickname'],
+                        price=stripe_plan['amount'] / 100.0,
+                        type='deleted',
+                        stripe_plan_id=stripe_plan['id'])
+
+

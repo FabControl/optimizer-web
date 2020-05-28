@@ -4,7 +4,7 @@
   <!--This file was converted to xhtml by LibreOffice - see https://cgit.freedesktop.org/libreoffice/core/tree/filter/source/xslt for the code.-->
   <head profile="http://dublincore.org/documents/dcmi-terms/">
     <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8"/>
-    <title xml:lang="en-US">Tax invoice: {{ checkout.invoice_number }}</title>
+    <title xml:lang="en-US">Tax invoice: {{ invoice.invoice_number }}</title>
     <meta name="DCTERMS.title" content="" xml:lang="en-US"/>
     <meta name="DCTERMS.language" content="en-US" scheme="DCTERMS.RFC4646"/>
     <meta name="DCTERMS.source" content="http://xml.openoffice.org/odf2xhtml"/>
@@ -162,7 +162,7 @@
       <tr class="ro5">
         <td style="text-align:left;width:0.2283in; " class="ce2"> </td>
         <td colspan="5" style="text-align:left;width:1.3953in; " class="ce7">
-          <p>Tax invoice: {{ checkout.invoice_number }}</p>
+          <p>Tax invoice: {{ invoice.invoice_number }}</p>
         </td>
         <td style="text-align:left;width:0.778in; " class="ce6"> </td>
         <td style="text-align:left;width:0.4764in; " class="ce2"> </td>
@@ -200,7 +200,7 @@
         </td>
         <td style="text-align:left;width:0.9992in; " class="ce8">
           {% load tz %}
-          <p>{{ checkout.created|utc|date:"Y-m-d" }}</p>
+          <p>{{ invoice.date_paid|utc|date:"Y-m-d" }}</p>
         </td>
         <td style="text-align:left;width:0.778in; " class="ce8"> </td>
         <td style="text-align:left;width:0.4764in; " class="ce2"> </td>
@@ -319,7 +319,7 @@
           <p>Service recipient:</p>
         </td>
         <td style="text-align:left;width:1.1957in; " class="ce13">
-          <p>{{ checkout.user.company_name }}</p>
+          <p>{{ invoice.user.company_name }}</p>
         </td>
         <td style="text-align:left;width:0.4874in; " class="ce13"> </td>
         <td style="text-align:left;width:1.1in; " class="ce13"> </td>
@@ -359,7 +359,7 @@
           <p>Registration number:</p>
         </td>
         <td style="text-align:left;width:1.1957in; " class="ce8">
-          <p>{{ checkout.user.company_registration_number }}</p>
+          <p>{{ invoice.user.company_registration_number }}</p>
         </td>
         <td style="text-align:left;width:0.4874in; " class="ce8"> </td>
         <td style="text-align:left;width:1.1in; " class="ce8"> </td>
@@ -374,7 +374,7 @@
           <p>VAT number:</p>
         </td>
         <td style="text-align:left;width:1.1957in; " class="ce8">
-          <p>{{ checkout.user.company_vat_number }}</p>
+          <p>{{ invoice.user.company_vat_number }}</p>
         </td>
         <td style="text-align:left;width:0.4874in; " class="ce8"> </td>
         <td style="text-align:left;width:1.1in; " class="ce8"> </td>
@@ -411,7 +411,7 @@
           <p>Service description</p>
         </td>
         <td style="text-align:left;width:0.778in; " class="ce28">
-          <p>Amount, EUR</p>
+          <p>Amount, {{ invoice.payment_plan.currency.name }}</p>
         </td>
         <td style="text-align:left;width:0.4764in; " class="ce2"> </td>
         <td style="text-align:left;width:0.889in; " class="ce2"> </td>
@@ -419,7 +419,7 @@
       <tr class="ro13">
         <td style="text-align:left;width:0.2283in; " class="ce3"> </td>
         <td colspan="5" style="text-align:left;width:1.3953in; " class="ce15">
-          <p>{{ request.META.HTTP_HOST }} - {{ checkout.payment_plan.name }} full access</p>
+          <p>{{ request.META.HTTP_HOST }} - {{ invoice.payment_plan.name }} full access</p>
         </td>
         <td style="text-align:right; width:0.778in; " class="ce29">
           <p>{{ calculated_price }}</p>
@@ -444,10 +444,10 @@
         <td style="text-align:left;width:1.1957in; " class="ce17"> </td>
         <td style="text-align:left;width:0.4874in; " class="ce17"> </td>
         <td colspan="2" style="text-align:left;width:1.1in; " class="ce24">
-          <p>Total amount to pay €</p>
+          <p>Total amount to pay {{ invoice.payment_plan.currency.name }}</p>
         </td>
         <td style="text-align:right; width:0.778in; " class="ce31">
-          <p>{{ checkout.payment_plan.price }}</p>
+          <p>{{ invoice.payment_plan.price }}</p>
         </td>
         <td style="text-align:left;width:0.4764in; " class="ce2"> </td>
         <td style="text-align:left;width:0.889in; " class="ce2"> </td>

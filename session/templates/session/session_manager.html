@@ -18,16 +18,18 @@
   <div class="row pt-3">
     <div class="col-sm-12">
       <div class="card p-2">
-        <table class="table sortable-theme-bootstrap" data-sortable>
+        <table class="table sortable sortable-theme-bootstrap" data-sortable>
           <thead>
             <tr>
-              <th data-sortable="true">Name</th>
-              <th data-sortable="true">Material</th>
-              <th data-sortable="true">Printer</th>
-              <th data-sortable="true">Target</th>
-              <th data-sortable="true">Tests</th>
-              <th data-sorted="true" data-sortable="true">Created</th>
-              <th data-sortable="false"></th>
+              <th>Name</th>
+              <th>Mode</th>
+              <th>Material</th>
+              <th>Printer</th>
+              <th>Target</th>
+              <th>Tests</th>
+              <th data-defaultsort="asc">Created</th>
+              {% if request.user.member_of_corporation %}<th>Performer</th>{% endif %}
+              <th data-defaultsort='disabled'></th>
             </tr>
           </thead>
           <tbody>
@@ -39,11 +41,13 @@
               {% else %}
               <td><a class="text-secondary" href="{% url 'session_detail' session.pk %}">{{ session.name }}</a></td>
               {% endif %}
+              <td>{{ session.mode.name }}</td>
               <td><a class="text-secondary" href="#">{{ session.material.name }}</a></td>
               <td><a class="text-secondary" href="#">{{ session.machine.model }}</a></td>
               <td>{{ session.get_target_display }}</td>
               <td>{{ session.completed_tests }}</td>
               <td>{{ session.pub_date }}</td>
+              {% if request.user.member_of_corporation %}<td>{{ session.owner.first_name }} {{ session.owner.last_name }}</td>{% endif %}
               <td>
                 <div class="dropdown">
                   <button class="btn-sm btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

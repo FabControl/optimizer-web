@@ -8,13 +8,13 @@
   <div class="row pt-3">
     <div class="col-sm-12">
       <div class="card p-2">
-        <table class="sortable-theme-bootstrap table" data-sortable>
+        <table class="sortable sortable-theme-bootstrap table" data-sortable>
           <thead>
             <tr>
-              <th data-sorted="true" data-sortable="true">Invoice</th>
-              <th data-sortable="true">Date</th>
-              <th data-sortable="true">Amount paid</th>
-              <th data-sortable="false"></th>
+              <th data-defaultsort="asc">Invoice</th>
+              <th>Date</th>
+              <th>Amount paid</th>
+              <th data-defaultsort='disabled'></th>
             </tr>
           </thead>
           <tbody>
@@ -22,8 +22,8 @@
             {% for invoice in invoices %}
             <tr>
               <td><a href="{% url 'view_invoice' invoice.pk %}" target="_blank">{{ invoice.invoice_number }}</a></td>
-              <td>{{ invoice.created }}</td>
-              <td>{{ invoice.payment_plan.price }}</td>
+              <td>{{ invoice.date_paid }}</td>
+              <td>{{ invoice.payment_plan.price }} {{ invoice.payment_plan.currency.name }}</td>
               <td>
                 <button class="btn-sm btn-primary" type="button" onclick="location.href='{% url 'download_invoice' invoice.pk %}'">Download</button>
               </td>

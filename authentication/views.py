@@ -1,6 +1,6 @@
 from django.contrib.auth import views as auth_views
 import simplejson as json
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash, get_user_model
 from django.utils.datastructures import MultiValueDictKeyError
 from .forms import SignUpForm, ResetPasswordForm
@@ -16,8 +16,8 @@ from crispy_forms.layout import Submit, Layout, Div
 from django.contrib.auth.decorators import login_required
 from django.utils.datastructures import MultiValueDictKeyError
 from django.urls import reverse_lazy, reverse
-from django.shortcuts import render, redirect
-from .forms import ResetPasswordForm, SignUpForm, LoginForm, ChangePasswordForm, LegalInformationForm
+from django.shortcuts import render, redirect, get_object_or_404
+from .forms import ResetPasswordForm, SignUpForm, LoginForm, ChangePasswordForm, LegalInformationForm, CorporationInviteForm, CorporationSignUpForm
 from .tokens import account_activation_token, affiliate_token_generator
 from django.utils.encoding import force_text, force_bytes
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
@@ -25,6 +25,7 @@ from messaging import email
 from django.contrib.auth.tokens import default_token_generator
 from .models import Affiliate
 from django.contrib.auth.mixins import LoginRequiredMixin
+from payments.models import Subscription, Corporation
 
 
 # Create your views here.
@@ -59,19 +60,28 @@ def user_login(request):
 
 
 def user_signup(request):
-    context = {"form": SignUpForm}
     if request.user.is_authenticated:
         return redirect('dashboard')
+    default_form = None
+    corporation_form = None
+    form = None
+
     if request.method == 'POST':
-        form = SignUpForm(request.POST)
+        if 'company_name' in request.POST:
+            form = CorporationSignUpForm(request.POST)
+            corporation_form = form
+        else:
+            form = SignUpForm(request.POST)
+            default_form = form
+
         if form.is_valid():
             form.save_and_notify(request)
-            return render(request, 'authentication/check_email.html', context)
+            return render(request, 'authentication/check_email.html', {})
         else:
-            known_email = 'Email must be unique'
-            form_errors = list(filter(lambda x: x != known_email,
-                (str(m.as_text()).lstrip('* ') for m in dict(form.errors).values())))
-            if len(form_errors) < 1:
+            if form.has_error('email', 'unique'):
+                del form._errors['email']
+
+            if form.is_valid():
                 # someone is attempting to register twice with same email
                 # or checking if account with email exists
                 user_email = request.POST['email'].strip()
@@ -82,11 +92,13 @@ def user_signup(request):
                                      token=default_token_generator.make_token(user),
                                      uid=urlsafe_base64_encode(force_bytes(user.pk))
                                      )
-                return render(request, 'authentication/check_email.html', context)
+                return render(request, 'authentication/check_email.html', {})
 
 
-            message = "<br>".join(form_errors)
-            messages.error(request, mark_safe(message))
+    country = request.geolocation['county']['code'] if hasattr(request, 'geolocation') else ''
+    context = {"form": SignUpForm(initial={'company_country':country}) if default_form is None else default_form,
+                "open_form": form,
+                "corporation_form": CorporationSignUpForm(initial={'company_country':country}) if corporation_form is None else corporation_form}
     return render(request, 'authentication/signup.html', context)
 
 
@@ -159,7 +171,7 @@ def password_reset(request):
 class PasswordChangeView(auth_views.PasswordContextMixin, FormView):
     template_name='authentication/password_change.html'
     form_class=ChangePasswordForm
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy('account_legal_info', kwargs={'category':'legal_info'})
     title = ''
 
     @method_decorator(sensitive_post_parameters())
@@ -232,7 +244,7 @@ class MyAffiliatesView(LoginRequiredMixin, ModelFormMixin, generic.ListView, Pro
         form.helper.add_input(Submit('submit', 'Send', css_class='btn btn-primary'))
         form.helper.method = 'POST'
         form.helper.layout = Layout(Div(Div(Div('email', 'name', css_class='col'),
-                                            Div('message', css_class='col'), 
+                                            Div('message', css_class='col'),
                                             css_class='row'),
                                         css_class='container'))
         return form
@@ -268,8 +280,22 @@ def use_affiliate(request, uidb64, token):
         affiliate_token_generator.check_token(affiliate, token) and
         len(get_user_model().objects.filter(email=affiliate.email)) == 0):
 
+        default_form = None
+        corporation_form = None
+        form = None
+
+        corporate_affiliate = False
+        if affiliate.sender is not None:
+            corporate_affiliate = affiliate.sender.member_of_corporation is not None
+
         if request.method == 'POST':
-            form = SignUpForm(request.POST)
+            if not corporate_affiliate and 'company_name' in request.POST:
+                form = CorporationSignUpForm(request.POST)
+                corporation_form = form
+            else:
+                form = SignUpForm(request.POST)
+                default_form = form
+
             if form.is_valid():
                 if form.cleaned_data['email'] == affiliate.email:
                     new_user = form.save(commit=False)
@@ -278,6 +304,8 @@ def use_affiliate(request, uidb64, token):
                     affiliate.receiver = new_user
                     affiliate.confirm(request)
                     login(request, new_user)
+                    if new_user.member_of_corporation is None and new_user.company_name != '':
+                        return redirect(reverse('plans') + '#corporate')
                     return redirect('dashboard')
 
                 else:
@@ -286,26 +314,30 @@ def use_affiliate(request, uidb64, token):
                     affiliate.save()
                     return render(request, 'authentication/check_email.html', {})
 
-            else:
-                form_errors = [str(m.as_text()).lstrip('* ') for m in dict(form.errors).values()]
-                messages.error(request, '<br>'.join(form_errors))
 
-        else:
-            form = SignUpForm(initial=dict(email=affiliate.email, first_name=affiliate.name))
+        country = request.geolocation['county']['code'] if hasattr(request, 'geolocation') else ''
+        if default_form is None:
+            default_form = SignUpForm(initial=dict(email=affiliate.email, first_name=affiliate.name, company_country=country))
+        if corporation_form is None and not corporate_affiliate:
+            corporation_form = CorporationSignUpForm(initial=dict(email=affiliate.email, first_name=affiliate.name, company_country=country))
 
-        return render(request, 'authentication/signup.html', dict(form=form))
+
+        context = {"form": default_form,
+                    "open_form": form,
+                    "corporation_form": corporation_form}
+        return render(request, 'authentication/signup.html', context)
 
     return render(request, 'authentication/invalid_affiliate_url.html')
 
 
 @login_required
-def legal_information_view(request):
+def legal_information_view(request, category=None):
     if request.method == 'POST':
+        category = 'legal_info'
         form = LegalInformationForm(request.POST, instance=request.user)
         if form.is_valid():
             form.save(commit=True)
             messages.success(request, 'Account changed successfully')
-            return redirect(reverse('dashboard'))
         else:
             form_errors = (str(m.as_text()).lstrip('* ') for m in dict(form.errors).values())
             message = "<br>".join(form_errors)
@@ -313,6 +345,159 @@ def legal_information_view(request):
 
     else:
         form = LegalInformationForm(instance=request.user)
+    subscription = None
+    try:
+        subscription = Subscription.objects.get(user=request.user,
+                                                state__in=(Subscription.ACTIVE, Subscription.FAILURE_NOTIFIED))
+    except Subscription.DoesNotExist:
+        pass
+
     return render(request,
                   'authentication/legal_info.html',
-                  dict(legal_info=form))
+                  dict(legal_info=form,
+                      corporate_invitation=CorporationInviteForm(),
+                      category=category,
+                      subscription=subscription))
+
+def _change_corporation_user(allow_self=False):
+    def wrapper(make_changes):
+        @login_required
+        def wrapped(request):
+            if request.method == 'POST' and request.user.manager_of_corporation is not None or (allow_self and request.user.member_of_corporation is not None):
+                corporation = request.user.member_of_corporation
+                target_user = get_object_or_404(get_user_model(),
+                                            member_of_corporation=corporation,
+                                            pk=request.POST.get('uid', ''))
+
+                if target_user != corporation.owner:
+                    make_changes(target_user, corporation)
+                    target_user.save()
+                    return redirect(reverse('account_legal_info', kwargs=dict(category='corporation')) + '#corporation')
+
+            raise Http404()
+
+        return wrapped
+    return wrapper
+
+@_change_corporation_user()
+def assign_manager_role(user, corporation):
+    user.manager_of_corporation = corporation
+
+
+@_change_corporation_user()
+def resign_manager_role(user, corporation):
+    user.manager_of_corporation = None
+
+
+@_change_corporation_user(True)
+def remove_from_corporation(user, corporation):
+    user.member_of_corporation = None
+    user.manager_of_corporation = None
+
+@login_required
+def cancel_corporation_invitation(request):
+    if request.method == 'POST' and request.user.manager_of_corporation is not None:
+        corporation = request.user.manager_of_corporation
+        try:
+            target_user = get_user_model().objects.get(email=request.POST.get('email'))
+        except get_user_model().DoesNotExist:
+            try:
+                affiliate = corporation.affiliate_set.get(email=request.POST.get('email'))
+            except Affiliate.DoesNotExist:
+                pass
+            else:
+                affiliate.requester = None
+                affiliate.corporation = None
+                affiliate.save()
+        else:
+            corporation.remove_invitation(user)
+
+
+        return redirect(reverse(request.POST.get('next', 'account_legal_info')))
+
+    raise Http404()
+
+
+@login_required
+def delete_or_leave_corporation(request):
+    corp = request.user.member_of_corporation
+    if corp is not None:
+        user = request.user
+        if user == corp.owner:
+            corp.delete()
+        else:
+            user.member_of_corporation = None
+            user.manager_of_corporation = None
+            user.save()
+    return redirect(reverse('account_legal_info'))
+
+
+@login_required
+def invite_into_corporation(request):
+    if request.method == 'POST' and request.user.manager_of_corporation is not None:
+        corporation = request.user.manager_of_corporation
+        if not corporation.allow_invites:
+            raise Http404()
+
+        form = CorporationInviteForm(request.POST)
+        invitation_sent = False
+        if form.is_valid():
+            try:
+                recipient = get_user_model().objects.get(email=form.cleaned_data['email'])
+            except get_user_model().DoesNotExist:
+                try:
+                    Affiliate.objects.get(email=form.cleaned_data['email'])
+                except Affiliate.DoesNotExist:
+                    affiliate = Affiliate.objects.create(email=form.cleaned_data['email'],
+                                                        name=form.cleaned_data['name'],
+                                                        sender=request.user,
+                                                        corporation=corporation)
+                    email.send_to_single(affiliate.email, 'affiliate_invitation', request,
+                                        affiliate=affiliate,
+                                        uid=urlsafe_base64_encode(force_bytes(affiliate.pk)),
+                                        token=affiliate_token_generator.make_token(affiliate))
+
+                    invitation_sent = True
+
+            else:
+                if recipient.member_of_corporation is None:
+                    corporation.invite_user(recipient)
+                    invitation_sent = True
+
+        if not invitation_sent:
+            messages.error(request,
+                            '{} already invited or joined another corporation'.format(form.cleaned_data['email']))
+
+        return redirect(reverse('account_legal_info', kwargs=dict(category='corporation')) + '#corporation')
+
+
+    raise Http404()
+
+@login_required
+def accept_corporation_invitation(request, corp_id):
+    user = request.user
+    if user.member_of_corporation is None:
+        corporation = get_object_or_404(Corporation,
+                                        pk=corp_id,
+                                        _invited_users__contains= ' ' + user.email + ' ')
+
+        user.member_of_corporation = corporation
+
+        for corp in Corporation.objects.filter(_invited_users__contains= ' ' + user.email + ' '):
+            corp.remove_invitation(user)
+        user.save()
+        messages.success(request, f'You are now member of {corporation.name} team')
+        return redirect(reverse('dashboard'))
+
+    raise Http404()
+
+
+@login_required
+def decline_corporation_invitation(request, corp_id):
+    try:
+        Corporation.objects.get(pk=corp_id).remove_invitation(request.user)
+    except Corporation.DoesNotExist:
+        pass
+
+    return redirect(reverse('dashboard'))
+

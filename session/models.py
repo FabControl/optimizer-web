@@ -6,12 +6,12 @@ from django.utils import timezone
 from django.http import Http404
 from django.conf import settings
 from authentication.models import User
+from payments.models import Plan
 from optimizer_api import api_client
-from .choices import TEST_NUMBER_CHOICES, TARGET_CHOICES, SLICER_CHOICES, TOOL_CHOICES, FORM_CHOICES, UNITS
+from .choices import TEST_NUMBER_CHOICES, TARGET_CHOICES, SLICER_CHOICES, TOOL_CHOICES, FORM_CHOICES, UNITS, MODE_CHOICES, WIZARD_MODES
+from authentication.choices import PLAN_CHOICES
 
 # Create your models here.
-
-PREVENT_DELETION_MODELS = (User,)
 
 
 def recursive_delete(instance, using=None, keep_parents=False):
@@ -59,21 +59,11 @@ class CopyableModelMixin(DependenciesCopyMixin):
 
 class Material(models.Model, CopyableModelMixin):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    corporation = models.ForeignKey('payments.Corporation', on_delete=models.CASCADE, null=True)
     size_od = models.DecimalField(default=1.75, max_digits=3, decimal_places=2)
     name = models.CharField(max_length=60)
     notes = models.CharField(max_length=240, null=True)
     pub_date = models.DateTimeField(default=timezone.now, blank=True)
-
-    def is_owner(self, user: User):
-        """
-            Checks whether instance.owner is a supplied user. Returns 403 if it isn't.
-            :param user:
-            :return:
-            """
-        if self.owner != user:
-            raise Http404
-        else:
-            return True
 
     def __str__(self):
         return "{} ({} mm)".format(self.name, str(self.size_od))
@@ -149,6 +139,7 @@ class Printbed(models.Model, CopyableModelMixin):
 
 class Machine(models.Model, CopyableModelMixin):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    corporation = models.ForeignKey('payments.Corporation', on_delete=models.CASCADE, null=True)
     pub_date = models.DateTimeField(default=timezone.now, blank=True)
     model = models.CharField(max_length=30, default="Unknown")
     buildarea_maxdim1 = models.IntegerField(default=0)
@@ -157,7 +148,8 @@ class Machine(models.Model, CopyableModelMixin):
     extruder = models.ForeignKey(Extruder, on_delete=models.CASCADE)
     chamber = models.ForeignKey(Chamber, on_delete=models.CASCADE, blank=True)
     printbed = models.ForeignKey(Printbed, on_delete=models.CASCADE, blank=True)
-    extruder_type = models.CharField(max_length=20, choices=(('bowden', 'Bowden'), ('directdrive', 'Direct drive')), default='bowden')
+    extruder_type = models.CharField(max_length=20, choices=(('bowden', 'Bowden'), ('directdrive', 'Direct drive')),
+                                     default='bowden')
     gcode_header = models.TextField(default='')
     gcode_footer = models.TextField(default='G28 ; Move to home position\nM84 ; Disable motors')
     homing_sequence = models.TextField(default='G28 ; Move to home position')
@@ -169,18 +161,6 @@ class Machine(models.Model, CopyableModelMixin):
 
     def __str__(self):
         return "{} ({} mm)".format(self.model, str(self.extruder.nozzle.size_id))
-
-    def is_owner(self, user: User):
-        """
-            Checks whether instance.owner is a supplied user. Returns 403 if it isn't.
-            :param user:
-            :return:
-            """
-        if self.owner != user:
-
-            raise Http404
-        else:
-            return True
 
     @property
     def __json__(self):
@@ -280,12 +260,45 @@ class Settings(models.Model):
         return output
 
 
+class SessionMode(models.Model):
+    """
+    Used to store information regarding different testing modes - the types of tests that are included, who these modes
+    are available to.
+    """
+    name = models.CharField(max_length=64, default='Untitled')
+    type = models.CharField(max_length=64, choices=WIZARD_MODES, default='normal')
+    public = models.BooleanField(default=True)
+
+    # Private variables, for getters, setters
+    test_list = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13']
+    _plan_availability = models.CharField(default='["basic", "premium"]', max_length=64)
+    _included_tests = models.CharField(max_length=200,
+                                       default=str(test_list))
+
+    @property
+    def plan_availability(self):
+        return ast.literal_eval(str(self._plan_availability))
+
+    @property
+    def included_tests(self):
+        return ast.literal_eval(str(self._included_tests))
+
+    @property
+    def included_free_tests(self):
+        return [test for test in settings.FREE_TESTS if test in self.included_tests]
+
+    def __str__(self):
+        return f'{self.name}'
+
+
 class Session(models.Model, DependenciesCopyMixin):
     """
     Used to store testing session progress, relevant assets (machine, material) and test data.
     """
+    mode = models.ForeignKey(SessionMode, null=True, on_delete=models.CASCADE)
     number = models.IntegerField(default=0)
     name = models.CharField(default="Untitled", max_length=20)
+    corporation = models.ForeignKey('payments.Corporation', on_delete=models.CASCADE, null=True)
     pub_date = models.DateTimeField(default=timezone.now, blank=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     target = models.CharField(max_length=20, choices=TARGET_CHOICES, default="mechanical_strength")
@@ -320,17 +333,6 @@ class Session(models.Model, DependenciesCopyMixin):
         self._persistence = json.dumps(per)
         return per
 
-    def is_owner(self, user: User):
-        """
-            Checks whether instance.owner is a supplied user. Returns 403 if it isn't.
-            :param user:
-            :return:
-            """
-        if self.owner != user:
-            raise Http404
-        else:
-            return True
-
     def init_settings(self):
         """
         Initializes settings and sets some initial values for certain fields with machine-specific values.
@@ -362,7 +364,6 @@ class Session(models.Model, DependenciesCopyMixin):
                     output = []
             else:
                 output = self.get_last_min_max_speed()
-            names = [param["programmatic_name"] for param in self.min_max_parameters]
             if parameter["parameter"].endswith("one"):
                 self.min_max_parameter_one = output
             elif parameter["parameter"].endswith("two"):
@@ -500,6 +501,17 @@ class Session(models.Model, DependenciesCopyMixin):
         self.save()
         return temp_info
 
+    @property
+    def display_test_name(self):
+        return self.test_info["name"].title().replace('Vs', 'vs')
+
+    @property
+    def display_test_type(self):
+        if self.test_number in settings.FREE_TESTS:
+            return "Free"
+        else:
+            return "Premium"
+
     def update_test_info(self):
         """
         Contacts Optimizer API to retrieve test_info for the current persistence data.
@@ -607,7 +619,7 @@ class Session(models.Model, DependenciesCopyMixin):
                 if parameter["programmatic_name"] is None: continue
                 if "speed_printing" in parameter["programmatic_name"]:
                     selected = test['selected_parameter_{}_value'.format(
-                                                    ('one','two','three')[i])]
+                        ('one', 'two', 'three')[i])]
                     return [selected, selected * 2]
 
         return [0, 0]
@@ -619,6 +631,12 @@ class Session(models.Model, DependenciesCopyMixin):
         :return:
         """
         return len(self.previous_tests)
+
+    def progress_percentage(self):
+        """
+        Returns current test progress as a percentage of the total session length.
+        """
+        return int((int(self.test_number)-1)/13*100)
 
     @property
     def executed(self):
@@ -662,13 +680,7 @@ class Session(models.Model, DependenciesCopyMixin):
         :param value:
         :return:
         """
-        time_limited_plans = settings.TIME_LIMITED_PLANS
-        allowed_numbers = []
-        if self.owner.plan == 'basic':
-            allowed_numbers = settings.FREE_TESTS
-        elif self.owner.plan in time_limited_plans:
-            allowed_numbers = [number for number in api_client.get_routine(mode='full')]
-        if value in allowed_numbers:
+        if value in self.mode.included_tests:
             self._test_info = ""
             self._test_number = value
             self.update_test_info()
@@ -693,30 +705,41 @@ class Session(models.Model, DependenciesCopyMixin):
         :return:
         """
         routine = api_client.get_routine()
-        test_names = [name for name, _ in routine.items()]
+        if self.mode.type == 'normal':
+            test_names = [name for name, _ in routine.items()]
 
-        next_test = None
-        next_primary_test = None
+            next_test = None
+            next_primary_test = None
 
-        current_found = False
-        for i, test_info in enumerate(routine.items()):
-            if current_found:
-                if test_info[1]["priority"] == "primary":
-                    next_primary_test = test_names[i]
-                    break
-            if test_info[0] == self.test_number:
-                try:
-                    next_test = test_names[i + 1]
-                except IndexError:
-                    next_primary_test = next_test = self.test_number
-                current_found = True
-        if primary:
-            if next_primary_test in settings.FREE_TESTS:
-                return next_primary_test
+            current_found = False
+            for i, test_info in enumerate(routine.items()):
+                if current_found:
+                    if test_info[1]["priority"] == "primary":
+                        next_primary_test = test_names[i]
+                        break
+                if test_info[0] == self.test_number:
+                    try:
+                        next_test = test_names[i + 1]
+                    except IndexError:
+                        next_primary_test = next_test = self.test_number
+                    current_found = True
+            if primary:
+                if next_primary_test in settings.FREE_TESTS:
+                    return next_primary_test
+                else:
+                    return self.test_number
             else:
-                return self.test_number
-        else:
-            return next_test
+                return next_test
+        elif self.mode.type == 'guided':
+            current_test = self.test_number
+            next_tests = list(
+                filter(lambda x: int(x.lstrip('0')) > int(current_test.lstrip('0')), self.mode.included_tests))
+            for test in next_tests:
+                if test in routine:
+                    if routine[test]['priority'] == 'primary':
+                        return test
+            return current_test
+
 
     @property
     def tested_values(self):
@@ -791,8 +814,27 @@ class Session(models.Model, DependenciesCopyMixin):
         self.persistence = temp_persistence
         self.update_persistence()
 
-    def __str__(self):
-        return "{} (target: {})".format(self.name, self.target)
+    @property
+    def test_youtube_id(self):
+        """
+        Returns youtube video ID for each of test quick guides.
+        :return:
+        """
+        links = {
+            '01': 'y-m5xiDV_DE',
+            '02': 'Q6hdUmra8Aw',
+            '03': 'yLw0gENAF48',
+            '04': 'Qc1zRGTr64A',
+            '05': 'Cu6MRoVObxI',
+            '06': 'a_3ZKYi1vRE',
+            '07': 'Vr90FsKknK4',
+            '08': 'iepoAqo5QF0',
+            '09': 'Wf3BuSvzuWE',
+            '10': 'olK4nvE75-U',
+            '11': 'Tji51MubyAI',
+            '13': 'TR3nOTzwB18',
+        }
+        return links[self.test_number]
 
     @property
     def __json__(self) -> dict:
@@ -820,28 +862,28 @@ class Session(models.Model, DependenciesCopyMixin):
         return output
 
 
-class TestInfo(models.Model):
-    test_name = models.CharField(max_length=64, choices=[(x, x) for y, x in TEST_NUMBER_CHOICES])
-    test_number = models.CharField(max_length=64, choices=[(y, y) for y, x in TEST_NUMBER_CHOICES])
-    executed = models.BooleanField(default=True)
+class PrintDescriptor(models.Model):
+    """
+    Contains a statement about print quality and a pointer to a respective test, should the statement be selected as true
+    """
+    statement = models.CharField(max_length=512, default="There's a problem with the print")
+    target_test = models.CharField(max_length=4, choices=TEST_NUMBER_CHOICES, default="")
+    hint = models.CharField(max_length=512, null=True, blank=True)
+    image = models.ImageField(upload_to='descriptors', null=True, blank=True)
 
-    # Save raw json strings to be serialized/unserialized
-    tested_parameter_one_values = models.TextField(max_length=10000, blank=True)
-    tested_parameter_two_values = models.TextField(max_length=10000, blank=True)
-    tested_parameter_three_values = models.TextField(max_length=10000, blank=True)
-    tested_volumetric_flow_rate_values = models.TextField(max_length=10000, blank=True)
+    def __str__(self):
+        return f'"{self.statement}" > {self.target_test}'
 
-    selected_parameter_one_value = models.DecimalField(max_digits=4, decimal_places=3, default=0, blank=True)
-    selected_parameter_two_value = models.DecimalField(max_digits=4, decimal_places=3, default=0, blank=True)
-    selected_parameter_three_value = models.DecimalField(max_digits=4, decimal_places=3, default=0, blank=True)
-    selected_volumetric_flow_rate_value = models.DecimalField(max_digits=4, decimal_places=3, default=0, blank=True)
-    parameter_one_name = models.CharField(max_length=64, default="first-layer track height")
-    parameter_two_name = models.CharField(max_length=64, default="first-layer printing speed")
-    parameter_one_units = models.CharField(max_length=12, choices=UNITS, default="mm")
-    parameter_two_units = models.CharField(max_length=12, choices=UNITS, default="mm/s")
-    parameter_one_precision = "{:.3f}"
-    parameter_two_precision = "{:.1f}"
-    comments = 0
-    datetime_info = models.DateTimeField(default=timezone.now, blank=True)
-    extruded_filament_mm = 841.53
-    estimated_printing_time = "0:09:28"
+
+class Junction(models.Model):
+    """
+    Contains descriptor objects relevant for each test
+    """
+    base_test = models.CharField(max_length=4, default="", choices=TEST_NUMBER_CHOICES)
+    descriptors = models.ManyToManyField(PrintDescriptor, blank=True)
+
+    def __str__(self):
+        return f"Junction for {self.base_test}"
+
+
+PREVENT_DELETION_MODELS = (User, SessionMode)
