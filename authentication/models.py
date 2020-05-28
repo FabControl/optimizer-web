@@ -128,16 +128,16 @@ class User(AbstractUser):
         if self.plan == 'basic':
             return "Upgrade to Full Access"
         elif self.plan == 'permanent':
-            return "Permanent license"
+            return "Permanent License"
         elif self.plan == "education":
-            return "Student's license ({} days)".format(expiration_delta.days + 1)
+            return "Student's License ({} Days)".format(expiration_delta.days + 1)
         elif self.plan == "premium":
             if len(Subscription.objects.filter(user=self, state__in=(Subscription.ACTIVE, Subscription.FAILURE_NOTIFIED))) == 0:
-                return "Full access ({} days)".format(expiration_delta.days + 1)
+                return "Full Access ({} Days)".format(expiration_delta.days + 1)
             else:
-                return "Full access"
+                return "Full Access"
         elif self.plan == "test":
-            return "Test access ({} days)".format(expiration_delta.days + 1)
+            return "Test Access ({} Days)".format(expiration_delta.days + 1)
 
     def extend_subscription(self, delta: timedelta):
         """
