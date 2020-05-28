@@ -182,6 +182,9 @@ class User(AbstractUser):
         return True
 
     @property
+    def company_fields_accessible(self):
+        return self.member_of_corporation is None or self.member_of_corporation.owner == self
+    @property
     def can_collect_invoices(self):
         if not self.is_company_account:
             return False
