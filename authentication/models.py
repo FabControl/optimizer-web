@@ -94,7 +94,7 @@ class User(AbstractUser):
         if self.plan == 'basic':
             return settings.FREE_TESTS
         else:
-            return [test_number for test_number, _ in api_client.get_routine()]
+            return [test_number for test_number in api_client.get_routine()]
 
     @property
     def plan(self):
