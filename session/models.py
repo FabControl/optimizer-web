@@ -148,7 +148,8 @@ class Machine(models.Model, CopyableModelMixin):
     extruder = models.ForeignKey(Extruder, on_delete=models.CASCADE)
     chamber = models.ForeignKey(Chamber, on_delete=models.CASCADE, blank=True)
     printbed = models.ForeignKey(Printbed, on_delete=models.CASCADE, blank=True)
-    extruder_type = models.CharField(max_length=20, choices=(('bowden', 'Bowden'), ('directdrive', 'Direct drive')), default='bowden')
+    extruder_type = models.CharField(max_length=20, choices=(('bowden', 'Bowden'), ('directdrive', 'Direct drive')),
+                                     default='bowden')
     gcode_header = models.TextField(default='')
     gcode_footer = models.TextField(default='G28 ; Move to home position\nM84 ; Disable motors')
     homing_sequence = models.TextField(default='G28 ; Move to home position')
@@ -269,9 +270,10 @@ class SessionMode(models.Model):
     public = models.BooleanField(default=True)
 
     # Private variables, for getters, setters
+    test_list = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13']
     _plan_availability = models.CharField(default='["basic", "premium"]', max_length=64)
     _included_tests = models.CharField(max_length=200,
-                                       default="['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13']")
+                                       default=str(test_list))
 
     @property
     def plan_availability(self):
@@ -613,7 +615,7 @@ class Session(models.Model, DependenciesCopyMixin):
                 if parameter["programmatic_name"] is None: continue
                 if "speed_printing" in parameter["programmatic_name"]:
                     selected = test['selected_parameter_{}_value'.format(
-                                                    ('one','two','three')[i])]
+                        ('one', 'two', 'three')[i])]
                     return [selected, selected * 2]
 
         return [0, 0]
@@ -720,13 +722,13 @@ class Session(models.Model, DependenciesCopyMixin):
                 return next_test
         elif self.mode.type == 'guided':
             current_test = self.test_number
-            next_tests = list(filter(lambda x: int(x.lstrip('0')) > int(current_test.lstrip('0')), self.mode.included_tests))
+            next_tests = list(
+                filter(lambda x: int(x.lstrip('0')) > int(current_test.lstrip('0')), self.mode.included_tests))
             for test in next_tests:
                 if test in routine:
                     if routine[test]['priority'] == 'primary':
                         return test
             return current_test
-            # Atgriezt nākošo primary, ja tas ir pieejams, ja nav - atgriezt tagadējo
 
 
     @property
