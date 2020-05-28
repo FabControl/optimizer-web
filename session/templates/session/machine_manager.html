@@ -34,7 +34,7 @@
             {% for machine in machines %}
             <tr>
               <td><a href="{% url 'machine_detail' machine.pk %}">{{ machine.model }}</a></td>
-              <td>{{ machine.form }}</td>
+              <td>{{ machine.get_form_display }}</td>
               <td>{{machine.extruder.nozzle.size_id}}</td>
               <td>{{ machine.pub_date }}</td>
               {% if request.user.member_of_corporation %}<td>{{ machine.owner.first_name }} {{ machine.owner.last_name }}</td>{% endif %}
