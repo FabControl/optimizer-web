@@ -268,7 +268,7 @@
                       <p>{{ corporation.user_count }} of {{ corporation.max_allowed }} users registered</p>
                     </div>
                   </div>
-                  {% if not corporation.allow_invites %}
+                  {% if not corporation.allow_invites and request.user == corporation.owner %}
                   <div class="row pt-8">
                     <div class="col-md-8">
                       <p><a href="{% url 'plans' %}">Upgrade to add more users</a></p>
