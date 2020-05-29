@@ -106,7 +106,4 @@
   </div>
   {%  endif %}
 </div>
-{% if request.user.onboarding and 'dashboard' in request.user.onboarding_sections %}
-{% include 'session/tour.html' %}
-{% endif %}
 {% endblock %}

@@ -134,23 +134,27 @@
                                   <button class="dropdown-item" type="submit">{% if user.manager_of_corporation %}Resign manager role{% else %}Assign manager role{% endif %}</button>
                                 </form>
                                 {% endif %}
-                                <button class="dropdown-item" data-toggle="modal" data-target="#removeFromCorporationPrompt{{ user.pk }}">Remove</button>
+                                <button class="dropdown-item" data-toggle="modal" data-target="#removeFromCorporationPrompt{{ user.pk }}">{% if request.user == user %}Leave{% else %}Remove{% endif %}</button>
                               </div>
                               <div class="modal fade" id="removeFromCorporationPrompt{{ user.pk }}" role="dialog">
                                 <div class="modal-dialog">
                                   <div class="modal-content">
                                     <div class="modal-header">
-                                      <h4 class="modal-title">Remove from company</h4>
+                                      <h4 class="modal-title">{% if request.user == user %}Leave{% else %}Remove from{% endif %} company</h4>
                                       <button type="button" class="close" data-dismiss="modal">&times;</button>
                                     </div>
                                     <div class="modal-body">
-                                      <p>By pressing "Remove", you confirm removal of <b>{{ user.first_name }} {{ user.last_name }}</b> from your corporation.</p>
+                                      {% if request.user == user %}
+                                      <p>If you leave company, you won't have access to it's printers, materials and testing sessions.</p>
+                                      {% else %}
+                                      <p>By pressing "Remove", you confirm removal of <b>{{ user.first_name }} {{ user.last_name }}</b> from your company.</p>
+                                      {% endif %}
                                     </div>
                                     <div class="modal-footer">
                                       <form class="" action="{% url 'remove_from_corporation' %}" method="post">
                                         {% csrf_token %}
                                         <input type="hidden" name="uid" value="{{ user.pk }}">
-                                        <button class="btn btn-danger" type="submit">Remove</button>
+                                        <button class="btn btn-danger" type="submit">{% if request.user == user %}Leave{% else %}Remove{% endif %}</button>
                                       </form>
                                     </div>
                                   </div>
@@ -264,7 +268,7 @@
                       <p>{{ corporation.user_count }} of {{ corporation.max_allowed }} users registered</p>
                     </div>
                   </div>
-                  {% if not corporation.allow_invites %}
+                  {% if not corporation.allow_invites and request.user == corporation.owner %}
                   <div class="row pt-8">
                     <div class="col-md-8">
                       <p><a href="{% url 'plans' %}">Upgrade to add more users</a></p>
