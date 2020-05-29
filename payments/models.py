@@ -117,6 +117,7 @@ class Plan(ModelDiffMixin, models.Model):
         else:
             plan.type = 'deleted'
         plan.currency = currency
+        plan.interval = stripe_plan['interval']
 
         # subscriptin_period does not matter, since stripe is handling subscription extension
         return plan
