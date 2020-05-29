@@ -83,7 +83,7 @@
                   <h1 class="display-4">{{plan.name}}</h1>
                   <p class="text-primary"><span class='lead'>{{plan.pretty_price}} {{ plan.currency.name }}</span>
                     <br>
-                    <small>Recurring yearly payment</small>
+                    <small>{{ plan.payment_frequency_string }}</small>
                   </p>
                   <hr>
                   <p>All tests<br>

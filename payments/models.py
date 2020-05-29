@@ -15,7 +15,7 @@ import stripe
 class ModelDiffMixin(object):
     """
     A model mixin that tracks model fields' values and provide some useful api
-    to know what fields have been changed.
+    to know what fields have been changed. Works only on editable fields.
     """
 
     def __init__(self, *args, **kwargs):
@@ -64,6 +64,7 @@ class Plan(ModelDiffMixin, models.Model):
     currency = models.ForeignKey('Currency', on_delete=models.CASCADE, default='EUR')
     max_users_allowed = models.PositiveIntegerField(default=0)
     extra_info_text = models.TextField(default='', blank=True)
+    interval = models.CharField(max_length=15, default='')
 
     @property
     def extra_info_text_lines(self):
@@ -78,9 +79,7 @@ class Plan(ModelDiffMixin, models.Model):
     def payment_frequency_string(self):
         if self.is_one_time:
             return 'One-time payment'
-        if self.name in ('Month', 'Year'):
-            return f'Recurring {self.name}ly payment'
-        return 'Recurring payment'
+        return f'Recurring {self.interval}ly payment'
 
 
     @property
@@ -118,6 +117,8 @@ class Plan(ModelDiffMixin, models.Model):
         else:
             plan.type = 'deleted'
         plan.currency = currency
+        plan.interval = stripe_plan['interval']
+
         # subscriptin_period does not matter, since stripe is handling subscription extension
         return plan
 
