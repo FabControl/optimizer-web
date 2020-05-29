@@ -37,9 +37,3 @@
     </div>
   </div>
 </form>
-{% if user.plan == 'basic' %}
-{% include 'session/paywall_modal.html' %}
-{% endif %}
-{% if request.user.onboarding %}
-{% include 'session/tour.html' %}
-{% endif %}
