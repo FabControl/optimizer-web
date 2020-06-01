@@ -11,6 +11,7 @@ from django.utils.encoding import force_bytes
 from payments.models import TaxationCountry, Subscription
 from payments.countries import codes_iso3166
 from django.conf import settings
+from optimizer_api import api_client
 
 from .choices import PLAN_CHOICES
 
@@ -89,6 +90,13 @@ class User(AbstractUser):
     objects = UserManager()
 
     @property
+    def available_tests(self):
+        if self.plan == 'basic':
+            return settings.FREE_TESTS
+        else:
+            return [test_number for test_number in api_client.get_routine()]
+
+    @property
     def plan(self):
         if self.member_of_corporation is None:
             return self._plan
@@ -97,7 +105,7 @@ class User(AbstractUser):
 
     @plan.setter
     def plan(self, val:str):
-        if self.member_of_corporation is None:
+        if self.member_of_corporation is None or self.member_of_corporation.owner == self:
             self._plan = val
 
 
@@ -120,16 +128,16 @@ class User(AbstractUser):
         if self.plan == 'basic':
             return "Upgrade to Full Access"
         elif self.plan == 'permanent':
-            return "Permanent license"
+            return "Permanent License"
         elif self.plan == "education":
-            return "Student's license ({} days)".format(expiration_delta.days + 1)
+            return "Student's License ({} Days)".format(expiration_delta.days + 1)
         elif self.plan == "premium":
             if len(Subscription.objects.filter(user=self, state__in=(Subscription.ACTIVE, Subscription.FAILURE_NOTIFIED))) == 0:
-                return "Full access ({} days)".format(expiration_delta.days + 1)
+                return "Full Access ({} Days)".format(expiration_delta.days + 1)
             else:
-                return "Full access"
+                return "Full Access"
         elif self.plan == "test":
-            return "Test access ({} days)".format(expiration_delta.days + 1)
+            return "Test Access ({} Days)".format(expiration_delta.days + 1)
 
     def extend_subscription(self, delta: timedelta):
         """
@@ -174,6 +182,9 @@ class User(AbstractUser):
         return True
 
     @property
+    def company_fields_accessible(self):
+        return self.member_of_corporation is None or self.member_of_corporation.owner == self
+    @property
     def can_collect_invoices(self):
         if not self.is_company_account:
             return False
@@ -181,6 +192,9 @@ class User(AbstractUser):
             return False
         return True
 
+    @property
+    def active_subscriptions(self):
+        return self.subscription_set.filter(state__in=(Subscription.ACTIVE, Subscription.FAILURE_NOTIFIED))
 
 class Affiliate(models.Model):
     date_created = models.DateTimeField(auto_now_add=True, editable=False)

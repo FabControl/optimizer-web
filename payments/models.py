@@ -15,7 +15,7 @@ import stripe
 class ModelDiffMixin(object):
     """
     A model mixin that tracks model fields' values and provide some useful api
-    to know what fields have been changed.
+    to know what fields have been changed. Works only on editable fields.
     """
 
     def __init__(self, *args, **kwargs):
@@ -64,6 +64,7 @@ class Plan(ModelDiffMixin, models.Model):
     currency = models.ForeignKey('Currency', on_delete=models.CASCADE, default='EUR')
     max_users_allowed = models.PositiveIntegerField(default=0)
     extra_info_text = models.TextField(default='', blank=True)
+    interval = models.CharField(max_length=15, default='')
 
     @property
     def extra_info_text_lines(self):
@@ -73,6 +74,13 @@ class Plan(ModelDiffMixin, models.Model):
     @property
     def is_one_time(self):
         return self.stripe_plan_id == ''
+
+    @property
+    def payment_frequency_string(self):
+        if self.is_one_time:
+            return 'One-time payment'
+        return f'Recurring {self.interval}ly payment'
+
 
     @property
     def pretty_price(self):
@@ -106,9 +114,11 @@ class Plan(ModelDiffMixin, models.Model):
         plan.price = stripe_plan['amount'] / 100.0
         if stripe_plan['active']:
             plan.type = 'corporate' if stripe_plan['product'] == settings.STRIPE_BUSINESS_PRODUCT_ID else 'premium'
-        else: 
+        else:
             plan.type = 'deleted'
         plan.currency = currency
+        plan.interval = stripe_plan['interval']
+
         # subscriptin_period does not matter, since stripe is handling subscription extension
         return plan
 
@@ -319,15 +329,25 @@ class Corporation(models.Model):
 
     @property
     def allow_invites(self):
+        return self.max_allowed > self.user_count
+
+    @property
+    def team_sorted(self):
+        return self.team.all().order_by(models.F('corporation').desc(nulls_first=False))
+
+    @property
+    def user_count(self):
+        return len(self.team.all()) + len(self.invited_users) + len(self.affiliate_set.all())
+    @property
+    def max_allowed(self):
         if self.owner.plan != 'premium':
-            return False
+            return self.user_count
         try:
             plan = self.owner.subscription_set.get(state__in=(Subscription.ACTIVE, Subscription.FAILURE_NOTIFIED)).payment_plan
         except Subscription.DoesNotExist:
-            return False
+            return self.user_count
 
         if plan.type != 'corporate':
-            return False
+            return self.user_count
 
-        return plan.max_users_allowed > len(self.team.all()) + len(self.invited_users) + len(self.affiliate_set.all())
-
+        return plan.max_users_allowed

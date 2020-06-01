@@ -23,7 +23,7 @@ from Optimizer3D.middleware.GeoRestrictAccessMiddleware import geoRestrictExempt
 
 stripe.api_key = settings.STRIPE_API_KEY
 
-class PaymentPlansView(BaseFormView):
+class PaymentPlansView(LoginRequiredMixin, BaseFormView):
     form_class = PaymentPlanForm
 
     def get(self, request, *a, **k):
@@ -46,15 +46,12 @@ class PaymentPlansView(BaseFormView):
         corporation_plans = Plan.objects.filter(type='corporate', currency__in=currencies).order_by('price')
 
         context = {'plans': plans,
-                   'corporation_plans': corporation_plans,
-                # Should work correctly if database contains
-                #   only one instance of Plan with type 'basic'
-                'core': Plan.objects.get(type='basic')}
-        if request.user.is_authenticated:
-            days_remaining = request.user.subscription_expiration - timezone.now()
-            context['expiration'] = days_remaining.days + 1
-            context['active_subscriptions'] = Subscription.objects.filter(user=request.user,
-                                                                       state=Subscription.ACTIVE)
+                   'corporation_plans': corporation_plans}
+
+        days_remaining = request.user.subscription_expiration - timezone.now()
+        context['expiration'] = days_remaining.days + 1
+        context['section'] = self.kwargs.get('section', None)
+        context['active_subscriptions'] = request.user.active_subscriptions
 
         return render(request, 'payments/plans.html', context)
 
@@ -98,7 +95,7 @@ def checkout_completed(request, checkout):
             messages.success(request,
                         'Your full access was extended for {0.days} days'.format(checkout.payment_plan.subscription_period))
         else:
-            messages.success(request, 'Successfuly initialized subscription')
+            messages.success(request, 'Subscription successful')
             if checkout.payment_plan.type == 'corporate':
                 return 'account_legal_info', dict(category='corporation'), '#corporation'
 

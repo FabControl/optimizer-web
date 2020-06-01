@@ -23,5 +23,5 @@
   </tbody>
 </table>
 <div class="pt-3">
-  <button type="button" onclick="location.href='{% url 'session_overview' object.pk %}'" class="btn btn-outline-primary" href="{% url 'session_overview' object.pk %}">Results</button>
+  <button type="button" onclick="location.href='{% url 'session_overview' object.pk %}'" class="btn btn-outline-primary" href="{% url 'session_overview' object.pk %}"{% if not object.previous_tests %} disabled{% endif %}>Results</button>
 </div>

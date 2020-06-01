@@ -148,7 +148,8 @@ class Machine(models.Model, CopyableModelMixin):
     extruder = models.ForeignKey(Extruder, on_delete=models.CASCADE)
     chamber = models.ForeignKey(Chamber, on_delete=models.CASCADE, blank=True)
     printbed = models.ForeignKey(Printbed, on_delete=models.CASCADE, blank=True)
-    extruder_type = models.CharField(max_length=20, choices=(('bowden', 'Bowden'), ('directdrive', 'Direct drive')), default='bowden')
+    extruder_type = models.CharField(max_length=20, choices=(('bowden', 'Bowden'), ('directdrive', 'Direct drive')),
+                                     default='bowden')
     gcode_header = models.TextField(default='')
     gcode_footer = models.TextField(default='G28 ; Move to home position\nM84 ; Disable motors')
     homing_sequence = models.TextField(default='G28 ; Move to home position')
@@ -269,20 +270,22 @@ class SessionMode(models.Model):
     public = models.BooleanField(default=True)
 
     # Private variables, for getters, setters
-    _plan_availability = models.CharField(default='basic', choices=PLAN_CHOICES, max_length=64)
+    test_list = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13']
+    _plan_availability = models.CharField(default='["basic", "premium"]', max_length=64)
     _included_tests = models.CharField(max_length=200,
-                                       default="['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13']")
+                                       default=str(test_list))
 
     @property
     def plan_availability(self):
-        if self._plan_availability == 'premium':
-            return ['basic', self._plan_availability]
-        else:
-            return [self._plan_availability]
+        return ast.literal_eval(str(self._plan_availability))
 
     @property
     def included_tests(self):
         return ast.literal_eval(str(self._included_tests))
+
+    @property
+    def included_free_tests(self):
+        return [test for test in settings.FREE_TESTS if test in self.included_tests]
 
     def __str__(self):
         return f'{self.name}'
@@ -616,7 +619,7 @@ class Session(models.Model, DependenciesCopyMixin):
                 if parameter["programmatic_name"] is None: continue
                 if "speed_printing" in parameter["programmatic_name"]:
                     selected = test['selected_parameter_{}_value'.format(
-                                                    ('one','two','three')[i])]
+                        ('one', 'two', 'three')[i])]
                     return [selected, selected * 2]
 
         return [0, 0]
@@ -628,6 +631,12 @@ class Session(models.Model, DependenciesCopyMixin):
         :return:
         """
         return len(self.previous_tests)
+
+    def progress_percentage(self):
+        """
+        Returns current test progress as a percentage of the total session length.
+        """
+        return int((int(self.test_number)-1)/13*100)
 
     @property
     def executed(self):
@@ -723,13 +732,13 @@ class Session(models.Model, DependenciesCopyMixin):
                 return next_test
         elif self.mode.type == 'guided':
             current_test = self.test_number
-            next_tests = list(filter(lambda x: int(x.lstrip('0')) > int(current_test.lstrip('0')), self.mode.included_tests))
+            next_tests = list(
+                filter(lambda x: int(x.lstrip('0')) > int(current_test.lstrip('0')), self.mode.included_tests))
             for test in next_tests:
                 if test in routine:
                     if routine[test]['priority'] == 'primary':
                         return test
             return current_test
-            # Atgriezt nākošo primary, ja tas ir pieejams, ja nav - atgriezt tagadējo
 
 
     @property
@@ -804,6 +813,28 @@ class Session(models.Model, DependenciesCopyMixin):
         del temp_persistence["session"]["previous_tests"][-1]
         self.persistence = temp_persistence
         self.update_persistence()
+
+    @property
+    def test_youtube_id(self):
+        """
+        Returns youtube video ID for each of test quick guides.
+        :return:
+        """
+        links = {
+            '01': 'y-m5xiDV_DE',
+            '02': 'Q6hdUmra8Aw',
+            '03': 'yLw0gENAF48',
+            '04': 'Qc1zRGTr64A',
+            '05': 'Cu6MRoVObxI',
+            '06': 'a_3ZKYi1vRE',
+            '07': 'Vr90FsKknK4',
+            '08': 'iepoAqo5QF0',
+            '09': 'Wf3BuSvzuWE',
+            '10': 'olK4nvE75-U',
+            '11': 'Tji51MubyAI',
+            '13': 'TR3nOTzwB18',
+        }
+        return links[self.test_number]
 
     @property
     def __json__(self) -> dict:

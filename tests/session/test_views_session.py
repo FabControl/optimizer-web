@@ -266,8 +266,8 @@ class SessionSessionTest(TestCase):
         name, tst_type, mode, mode2, machine, material = extract_data(resp.content)
 
         #Probably space from template
-        self.assertEqual(mode, ('2', '\n            Guided\n        '))
-        self.assertEqual(mode2, ('3', '\n            Core\n        '))
+        self.assertEqual(mode, ('3', '\n            Guided (Free Tests Only)\n        '))
+        self.assertEqual(mode2, ('4', '\n            Untitled\n        '))
         self.assertEqual(name, ('Untitled', ' '))
         self.assertEqual(material, ('', '---------'))
         self.assertEqual(machine, ('', '---------'))
@@ -279,8 +279,8 @@ class SessionSessionTest(TestCase):
         self.assertEqual(resp.status_code, 200)
         name, tst_type, mode, mode2, machine, material = extract_data(resp.content)
         #Probably space from template
-        self.assertEqual(mode, ('2', '\n            Guided\n        '))
-        self.assertEqual(mode2, ('3', '\n            Core\n        '))
+        self.assertEqual(mode, ('3', '\n            Guided (Free Tests Only)\n        '))
+        self.assertEqual(mode2, ('4', '\n            Untitled\n        '))
         self.assertEqual(name, (patched_name, ' '))
         self.assertEqual(material, ('', '---------'))
         self.assertEqual(machine, ('', '---------'))
@@ -342,8 +342,8 @@ class SessionSessionTest(TestCase):
         # cache should be cleared now
         name, tst_type, mode, mode2, machine, material = extract_data(resp.content)
 
-        self.assertEqual(mode, ('2', '\n            Guided\n        '))
-        self.assertEqual(mode2, ('3', '\n            Core\n        '))
+        self.assertEqual(mode, ('3', '\n            Guided (Free Tests Only)\n        '))
+        self.assertEqual(mode2, ('4', '\n            Untitled\n        '))
         self.assertEqual(name, ('Untitled', ' '))
         self.assertEqual(material, ('', '---------'))
         self.assertEqual(machine, ('', '---------'))

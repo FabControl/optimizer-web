@@ -147,12 +147,15 @@ class SessionForm(forms.ModelForm):
         self.fields["material"] = forms.ModelChoiceField(queryset=Material.objects.filter(ownership))
         self.fields["machine"] = forms.ModelChoiceField(queryset=Machine.objects.filter(ownership))
 
-        if self.user.plan == 'basic':
-            # Hide advanced mode from basic users
-            queryset = SessionMode.objects.filter(public=True, type='guided')
-        else:
-            queryset = SessionMode.objects.filter(public=True)
-        initial = SessionMode.objects.filter(type='guided')[0].pk
+        modes = []
+        initial = None
+        for mode in SessionMode.objects.all():
+            if self.user.plan in mode.plan_availability:
+                modes.append(mode.pk)
+                if mode.type == 'guided':
+                    initial = mode
+
+        queryset = SessionMode.objects.filter(pk__in=modes)
 
         self.fields["mode"] = forms.ModelChoiceField(initial=initial, queryset=queryset, widget=forms.RadioSelect, empty_label=None)
         self.fields["name"].label = "Session name"
@@ -243,17 +246,15 @@ class ValidateFormTestDescriptionForm(forms.ModelForm):
         questions = Junction.objects.get(base_test=session.test_number).descriptors.all()
         for i, question in enumerate(questions):
             question_name = f'question_{str(i)}'
-            choices = ((question.pk, "Yes"), (None, "No"))
-            q = forms.TypedChoiceField(choices=choices, widget=forms.RadioSelect, required=True)
+            choices = ((question.pk, "Yes"), ("null", "No"))
+            q = forms.TypedChoiceField(choices=choices, initial="null", widget=forms.RadioSelect, required=True)
             if question.image:
                 q.label = mark_safe(f"""<a type="button" href="#" class="" data-toggle="popover" data-trigger="focus" title=" " data-img='{question.image.url}'>{question.statement}</a>""")
             else:
                 q.label = question.statement
             q.required = False
             q.widget.attrs.update({'value': question.pk})
-            """
-            <input type="checkbox" checked data-toggle="toggle" data-on="There are no gaps between tracks" data-off="There are gaps between tracks" data-onstyle="outline-primary" data-offstyle="danger" data-width="300" data-height="40">
-            """
+            q.widget.attrs.update({'target': question.target_test})
             self.fields[question_name] = q
 
     class Meta:

@@ -171,7 +171,7 @@ def password_reset(request):
 class PasswordChangeView(auth_views.PasswordContextMixin, FormView):
     template_name='authentication/password_change.html'
     form_class=ChangePasswordForm
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy('account_legal_info', kwargs={'category':'legal_info'})
     title = ''
 
     @method_decorator(sensitive_post_parameters())
@@ -210,8 +210,6 @@ def activate_account(request, uidb64, token):
 
         login(request, user)
         messages.success(request, 'Your email address was confirmed and account activated.')
-        if user.company_name != '':
-            return redirect(reverse('plans') + '#corporate')
         return redirect('dashboard')
 
     return render(request, 'authentication/invalid_activation_link.html')
@@ -286,8 +284,12 @@ def use_affiliate(request, uidb64, token):
         corporation_form = None
         form = None
 
+        corporate_affiliate = False
+        if affiliate.sender is not None:
+            corporate_affiliate = affiliate.sender.member_of_corporation is not None
+
         if request.method == 'POST':
-            if 'company_name' in request.POST:
+            if not corporate_affiliate and 'company_name' in request.POST:
                 form = CorporationSignUpForm(request.POST)
                 corporation_form = form
             else:
@@ -315,9 +317,9 @@ def use_affiliate(request, uidb64, token):
 
         country = request.geolocation['county']['code'] if hasattr(request, 'geolocation') else ''
         if default_form is None:
-            default_form = SignUpForm(initial=dict(email=affiliate.email, first_name=affiliate.name, company_country=county))
-        if corporation_form is None:
-            corporation_form = CorporationSignUpForm(initial=dict(email=affiliate.email, first_name=affiliate.name, company_country=county))
+            default_form = SignUpForm(initial=dict(email=affiliate.email, first_name=affiliate.name, company_country=country))
+        if corporation_form is None and not corporate_affiliate:
+            corporation_form = CorporationSignUpForm(initial=dict(email=affiliate.email, first_name=affiliate.name, company_country=country))
 
 
         context = {"form": default_form,
@@ -357,35 +359,37 @@ def legal_information_view(request, category=None):
                       category=category,
                       subscription=subscription))
 
-def _change_corporation_user(make_changes):
-    @login_required
-    def wrapped(request):
-        if request.method == 'POST' and request.user.manager_of_corporation is not None:
-            corporation = request.user.manager_of_corporation
-            target_user = get_object_or_404(get_user_model(),
-                                        member_of_corporation=corporation,
-                                        pk=request.POST.get('uid', ''))
+def _change_corporation_user(allow_self=False):
+    def wrapper(make_changes):
+        @login_required
+        def wrapped(request):
+            if request.method == 'POST' and request.user.manager_of_corporation is not None or (allow_self and request.user.member_of_corporation is not None):
+                corporation = request.user.member_of_corporation
+                target_user = get_object_or_404(get_user_model(),
+                                            member_of_corporation=corporation,
+                                            pk=request.POST.get('uid', ''))
 
-            if target_user != corporation.owner:
-                make_changes(target_user, corporation)
-                target_user.save()
-                return redirect(reverse('account_legal_info', kwargs=dict(category='corporation')) + '#corporation')
+                if target_user != corporation.owner:
+                    make_changes(target_user, corporation)
+                    target_user.save()
+                    return redirect(reverse('account_legal_info', kwargs=dict(category='corporation')) + '#corporation')
 
-        raise Http404()
+            raise Http404()
 
-    return wrapped
+        return wrapped
+    return wrapper
 
-@_change_corporation_user
+@_change_corporation_user()
 def assign_manager_role(user, corporation):
     user.manager_of_corporation = corporation
 
 
-@_change_corporation_user
+@_change_corporation_user()
 def resign_manager_role(user, corporation):
     user.manager_of_corporation = None
 
 
-@_change_corporation_user
+@_change_corporation_user(True)
 def remove_from_corporation(user, corporation):
     user.member_of_corporation = None
     user.manager_of_corporation = None
@@ -464,7 +468,7 @@ def invite_into_corporation(request):
             messages.error(request,
                             '{} already invited or joined another corporation'.format(form.cleaned_data['email']))
 
-        return redirect(reverse('account_legal_info'))
+        return redirect(reverse('account_legal_info', kwargs=dict(category='corporation')) + '#corporation')
 
 
     raise Http404()
@@ -481,7 +485,8 @@ def accept_corporation_invitation(request, corp_id):
 
         for corp in Corporation.objects.filter(_invited_users__contains= ' ' + user.email + ' '):
             corp.remove_invitation(user)
-        messages.success(request, f'You are now momber of {corporation.name} team')
+        user.save()
+        messages.success(request, f'You are now member of {corporation.name} team')
         return redirect(reverse('dashboard'))
 
     raise Http404()

@@ -1,7 +1,7 @@
 {% load staticfiles %}
 <nav class="navbar navbar-expand-lg navbar-light" style="min-height: max-content;">
   <div class="container">
-    <a class="navbar-brand {% if "/dashboard/" not in request.path %}lead{% endif %}" href="{% url 'dashboard' %}"><img width="40px" class="d-inline-block" src="{% static 'session/img/logo.svg' %}" alt="Logo"> 3DOptimizer</a>
+    <a class="navbar-brand" href="{% url 'dashboard' %}"><img width="40px" class="d-inline-block" src="{% static 'session/img/logo.svg' %}" alt="Logo"> 3DOptimizer</a>
     {% if user.is_authenticated %}
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -13,11 +13,7 @@
       <ul class="navbar-nav">
         <li class="nav-item">
           {% if request.user.member_of_corporation %}
-            {% if request.user.member_of_corporation.owner == request.user %}
-              <a class="nav-link text-success" href="{% url 'plans' %}#corporate">{{request.user.member_of_corporation.name}}</a>
-            {% else %}
-              <p class="nav-link text-success">{{request.user.member_of_corporation.name}}</p>
-            {% endif %}
+              <a class="nav-link" href="{% url 'account_legal_info' 'corporation' %}#corporation">{{request.user.member_of_corporation.name}}</a>
           {% else %}
           <button type="button" class="btn btn-outline-primary" onclick="location.href='{% url 'plans' %}'" name="upgrade-button">{{request.user.plan_navbar_text}}</button>
           {% endif %}
@@ -35,13 +31,11 @@
             {% if request.user.can_collect_invoices %}
             <a class="dropdown-item" href="{% url 'invoices' %}">Invoices</a>
             {% endif %}
-            <a class="dropdown-item" href="{% url 'account_legal_info' %}">Account settings</a>
-            {% if request.user.member_of_corporation %}
-            {% else %}
-            <a class="dropdown-item" href="{% url 'my_affiliates' %}">My invitations</a>
+            <a class="dropdown-item" href="{% url 'account_legal_info' %}">Account Settings</a>
+            {% if request.user.member_of_corporation is None  and not request.user.active_subscriptions %}
+            <a class="dropdown-item" href="{% url 'my_affiliates' %}">Invite a Friend</a>
             {% endif %}
-            <a class="dropdown-item" href="{% url 'password_change' %}">Change password</a>
-            <a class="dropdown-item" href="{% url 'signout' %}">Sign out</a>
+            <a class="dropdown-item" href="{% url 'signout' %}">Sign Out</a>
           </div>
         </li>
       </ul>
@@ -63,12 +57,15 @@
       <li class="nav-item px-0 {% if "/resources/materials" in request.path %}active{% endif %} dropdown">
         <a class="nav-link {% if "/resources/materials" in request.path %}active{% endif %}" href="{% url 'material_manager' %}">Materials</a>
       </li>
+      <li class="nav-item px-0 {% if "/team_stats" in request.path %}active{% endif %} dropdown">
+        <a class="nav-link {% if "/team_stats" in request.path %}active{% endif %}" href="{% url 'team_stats' %}">Users</a>
+      </li>
       <li class="nav-item px-0 {% if "/help/" in request.path %}active{% endif %} dropdown">
         <a class="nav-link dropdown-toggle {% if "/help/" in request.path %}active{% endif %}" href="#" id="helpDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Help
         </a>
         <div class="dropdown-menu" aria-labelledby="helpDropdown">
-          <a class="dropdown-item" href="https://3doptimizer.helpscoutdocs.com/">Help center</a>
+          <a class="dropdown-item" href="https://3doptimizer.helpscoutdocs.com/">Help Center</a>
         </div>
       </li>
     </ul>

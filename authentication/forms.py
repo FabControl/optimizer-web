@@ -11,6 +11,7 @@ from django.contrib.auth import get_user_model
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from payments.countries import codes_iso3166
+from payments.models import Corporation
 
 
 # class UserForm(forms.ModelForm):
@@ -69,6 +70,17 @@ class CorporationSignUpForm(SignUpForm):
     class Meta:
         model = User
         fields = ('email', 'first_name', 'last_name', 'password1', 'password2', 'company_country', 'company_name')
+
+    def save(self, *a, **k):
+        user = super().save(*a, **k)
+        if len(user.corporation_set.all()) < 1:
+            corp_name = user.company_name if user.company_name != '' else f"{user.first_name}'s corporation"
+            corp = Corporation.objects.create(owner=user,
+                                        name=corp_name)
+            user.member_of_corporation = corp
+            user.manager_of_corporation = corp
+            user.save()
+        return user
 
 
 class ResetPasswordForm(PasswordResetForm):
@@ -148,6 +160,7 @@ class LegalInformationForm(forms.ModelForm):
         self.fields['company_registration_number'].label = 'Company registration number*'
         self.fields['company_vat_number'].label = 'Company VAT number'
         self.fields['company_account'].initial = self.instance.is_company_account
+        self.fields['company_account'].label = 'Show legal info (for EU companies)'
 
     def clean(self):
         cleaned_data = super().clean()
@@ -180,8 +193,8 @@ class LegalInformationForm(forms.ModelForm):
 
 
 class CorporationInviteForm(forms.Form):
-    email = forms.EmailField()
-    name = forms.CharField(max_length=20)
+    email = forms.EmailField(widget=forms.TextInput(attrs={'placeholder': 'email'}))
+    name = forms.CharField(max_length=20, widget=forms.TextInput(attrs={'placeholder': 'name'}))
 
     class Meta:
         fields = ['email', 'name']

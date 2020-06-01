@@ -9,7 +9,8 @@ from django.shortcuts import render_to_response
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.forms.models import model_to_dict
-from django.db.models import Q
+from django.db.models import Q, Count, Max
+from django.utils import timezone
 
 from .models import *
 from django.views import generic
@@ -18,10 +19,12 @@ from payments.models import Checkout, Corporation
 
 from config import config
 from optimizer_api import api_client
+from datetime import timedelta
 
 def model_ownership_query(user):
     if user.member_of_corporation is None:
-        return Q(owner=user)
+        # if user leaves corporation, he des not see resources he created within corp.
+        return Q(owner=user) & Q(corporation=None)
     return (Q(owner=user) |
             (Q(corporation=user.member_of_corporation) & Q(owner__in=user.member_of_corporation.team.all())))
 
@@ -42,9 +45,10 @@ def index(request):
 def dashboard(request):
     latest_sessions = Session.objects.filter(owner=request.user).order_by('-pub_date')[:5]
 
-    len_printers = len(Machine.objects.filter(owner=request.user))
-    len_materials = len(Material.objects.filter(owner=request.user))
-    len_sessions = len(Session.objects.filter(owner=request.user))
+    ownership = model_ownership_query(request.user)
+    len_printers = len(Machine.objects.filter(ownership))
+    len_materials = len(Material.objects.filter(ownership))
+    len_sessions = len(Session.objects.filter(ownership))
 
     cards = {'printers': {'len': len_printers},
              'materials': {'len': len_materials},
@@ -311,8 +315,10 @@ class GuidedValidateView(GuidedSessionView):
         session = form.save(commit=False)
         session.alter_previous_tests(-1, "validated", True)
         session = form.save(commit=True)
-        questions = [PrintDescriptor.objects.get(pk=int(y)) for y in [self.request.POST[x] for x in self.request.POST if x.startswith('question')]]
-        questions.sort(key=lambda x: int(x.target_test.lstrip('0')))  # sort the selected questions by target tests.
+        # filter any items in request.POST with key that starts with 'question' and has any value other than 'null'
+        questions = [PrintDescriptor.objects.get(pk=int(y)) for y in [self.request.POST[x] for x in self.request.POST if x.startswith('question')] if y != 'null']
+        # sort the selected questions by target tests as numbers.
+        questions.sort(key=lambda x: int(x.target_test.lstrip('0')))
         if len(questions) > 0:
             # Select the highest priority test. Lower test number = higher priority
             # first element will have the lowest test number
@@ -323,6 +329,7 @@ class GuidedValidateView(GuidedSessionView):
                 session.delete_previous_test(q1.target_test)
                 session.save()
             return redirect('test_switch', number=q1.target_test, pk=session.pk)
+        # Go to next primary if not directed elsewhere
         return redirect('session_next_test', pk=session.pk, priority='primary')
 
     def form_invalid(self, form):
@@ -365,6 +372,18 @@ def session_dispatcher(request, pk, download=False):
             request.user.onboarding = False
             request.user.save()
 
+    # Make sure that the user is not where they shouldn't be
+    if session.test_number not in request.user.available_tests:
+        if session.test_number_next() not in request.user.available_tests:
+            session.test_number = request.user.available_tests[-1]
+            return overview_dispatcher(request, pk=pk)
+        else:
+            session.test_number = session.test_number_next()
+            messages.error(request, mark_safe("Your next test is available in the premium mode only. "
+                                                "You can skip it and go to the next free test or "
+                                                f"<a href={reverse_lazy('plans')}>purchase premium.</a>"))
+        session.save()
+
     if session.mode.type == 'normal':
         # Check if session should be in Generate or Validate state
         if session.executed:
@@ -391,14 +410,12 @@ class SessionDelete(LoginRequiredMixin, ModelOwnershipCheckMixin, generic.Delete
         raise Http404("Page not found")
 
 
-
 class MachineDelete(LoginRequiredMixin, ModelOwnershipCheckMixin, generic.DeleteView):
     model = Machine
     success_url = reverse_lazy('machine_manager')
 
     def get(self, request, *args, **kwargs):
         raise Http404("Page not found")
-
 
 
 class MaterialDelete(LoginRequiredMixin, ModelOwnershipCheckMixin, generic.DeleteView):
@@ -620,6 +637,36 @@ def session_test_info(request, pk):
         context = {"test_info": json.dumps(session.test_info, indent=4)}
         return render(request, "session/test_info.html", context=context)
 
+
+class TeamStatsView(LoginRequiredMixin, generic.ListView):
+    template_name = "session/team_stats.html"
+    context_object_name = 'team'
+
+    def get_queryset(self):
+        if self.request.user.member_of_corporation is None:
+            raise Http404()
+
+        corp = self.request.user.member_of_corporation
+        now = timezone.now()
+
+        ownership_filter = Q(session__corporation=corp)
+        seven_days_filter = ownership_filter & Q(session__pub_date__gt=(now - timedelta(days=7)))
+        thirty_days_filter = ownership_filter & Q(session__pub_date__gt=(now - timedelta(days=30)))
+        ninety_days_filter = ownership_filter & Q(session__pub_date__gt=(now - timedelta(days=90)))
+
+        result = self.request.user.member_of_corporation.team.annotate(
+                latest_session=Max('session', filter=ownership_filter),
+                tests_total=Count('session', filter=ownership_filter),
+                tests_seven=Count('session', filter=seven_days_filter),
+                tests_thirty=Count('session', filter=thirty_days_filter),
+                tests_ninety=Count('session', filter=ninety_days_filter))
+
+        # should be ok, since we iterate over items in template anyways
+        for user in result:
+            if user.latest_session is not None:
+                user.latest_session = Session.objects.get(pk=user.latest_session)
+
+        return result
 
 @login_required
 def privacy_statement(request):
