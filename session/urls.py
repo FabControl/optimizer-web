@@ -32,6 +32,7 @@ urlpatterns = [
     path('sessions/<int:pk>/overview/', views.overview_dispatcher, name='session_overview'),
     path('sessions/<int:pk>/switch/<str:number>/', views.test_switch, name='test_switch'),
     path('sessions/new/', views.new_session, name='new_session'),
+    path('team_stats/', views.TeamStatsView.as_view(), name='team_stats'),
 
     path('help/FAQ/', views.faq, name="faq"),
     path('help/quick_start/', views.quick_start, name="quickstart"),

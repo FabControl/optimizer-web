@@ -57,6 +57,9 @@
       <li class="nav-item px-0 {% if "/resources/materials" in request.path %}active{% endif %} dropdown">
         <a class="nav-link {% if "/resources/materials" in request.path %}active{% endif %}" href="{% url 'material_manager' %}">Materials</a>
       </li>
+      <li class="nav-item px-0 {% if "/team_stats" in request.path %}active{% endif %} dropdown">
+        <a class="nav-link {% if "/team_stats" in request.path %}active{% endif %}" href="{% url 'team_stats' %}">Users</a>
+      </li>
       <li class="nav-item px-0 {% if "/help/" in request.path %}active{% endif %} dropdown">
         <a class="nav-link dropdown-toggle {% if "/help/" in request.path %}active{% endif %}" href="#" id="helpDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Help
