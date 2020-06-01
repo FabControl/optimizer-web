@@ -9,7 +9,8 @@ from django.shortcuts import render_to_response
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.forms.models import model_to_dict
-from django.db.models import Q
+from django.db.models import Q, Count, Max
+from django.utils import timezone
 
 from .models import *
 from django.views import generic
@@ -18,6 +19,7 @@ from payments.models import Checkout, Corporation
 
 from config import config
 from optimizer_api import api_client
+from datetime import timedelta
 
 def model_ownership_query(user):
     if user.member_of_corporation is None:
@@ -635,6 +637,36 @@ def session_test_info(request, pk):
         context = {"test_info": json.dumps(session.test_info, indent=4)}
         return render(request, "session/test_info.html", context=context)
 
+
+class TeamStatsView(LoginRequiredMixin, generic.ListView):
+    template_name = "session/team_stats.html"
+    context_object_name = 'team'
+
+    def get_queryset(self):
+        if self.request.user.member_of_corporation is None:
+            raise Http404()
+
+        corp = self.request.user.member_of_corporation
+        now = timezone.now()
+
+        ownership_filter = Q(session__corporation=corp)
+        seven_days_filter = ownership_filter & Q(session__pub_date__gt=(now - timedelta(days=7)))
+        thirty_days_filter = ownership_filter & Q(session__pub_date__gt=(now - timedelta(days=30)))
+        ninety_days_filter = ownership_filter & Q(session__pub_date__gt=(now - timedelta(days=90)))
+
+        result = self.request.user.member_of_corporation.team.annotate(
+                latest_session=Max('session', filter=ownership_filter),
+                tests_total=Count('session', filter=ownership_filter),
+                tests_seven=Count('session', filter=seven_days_filter),
+                tests_thirty=Count('session', filter=thirty_days_filter),
+                tests_ninety=Count('session', filter=ninety_days_filter))
+
+        # should be ok, since we iterate over items in template anyways
+        for user in result:
+            if user.latest_session is not None:
+                user.latest_session = Session.objects.get(pk=user.latest_session)
+
+        return result
 
 @login_required
 def privacy_statement(request):
