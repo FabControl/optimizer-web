@@ -28,7 +28,7 @@
             <span class="tag-secondary">Test {{object.test_number}}</span>
             <span class="tag-secondary">{{object.display_test_type}} Test</span>
           </div>
-          <h3>{{object.test_info.name | capfirst}}</h3>
+          <h3>{{object.display_test_name}}</h3>
         </div>
 
         {% include "session/session_nav.html" %}
