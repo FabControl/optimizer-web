@@ -292,7 +292,7 @@ class SessionValidateView(SessionView):
         session.alter_previous_tests(-1, "validated", True)
         session = form.save(commit=True)
         if self.request.method == "POST" and "btnprimary" in self.request.POST:
-            return redirect('session_next_test', pk=session.pk, priority="primary")
+            return redirect('session_next_test', pk=session.pk, priority="any")
         else:
             return redirect('session_next_test', pk=session.pk, priority="any")
 
