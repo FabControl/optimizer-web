@@ -632,11 +632,21 @@ class Session(models.Model, DependenciesCopyMixin):
         """
         return len(self.previous_tests)
 
+    @property
     def progress_percentage(self):
         """
         Returns current test progress as a percentage of the total session length.
         """
-        return int((int(self.test_number)-1)/13*100)
+        validated_tests = list(filter(lambda x: x['validated'], self.previous_tests))
+        return int((len(validated_tests)/13*100))
+
+    @property
+    def progress_percentage_display(self):
+        """
+        Makes sure that progress number is not 0 so that the progress bar could be perceived as such
+        :return:
+        """
+        return min(100, self.progress_percentage + 2)
 
     @property
     def executed(self):
