@@ -638,7 +638,7 @@ class Session(models.Model, DependenciesCopyMixin):
         Returns current test progress as a percentage of the total session length.
         """
         validated_tests = list(filter(lambda x: x['validated'], self.previous_tests))
-        return int((len(validated_tests)/13*100))
+        return int((len(validated_tests)/len(self.mode.included_tests)*100))
 
     @property
     def progress_percentage_display(self):
