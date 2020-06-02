@@ -277,7 +277,7 @@ class SessionView(SessionTestsSelectionMixin, LoginRequiredMixin, generic.Update
         session.persistence = api_client.return_data(session.persistence, "persistence")
         session.update_test_info()
         session.save()
-        return redirect('session_detail', pk=session.pk)
+        return redirect('gcode_redirect', pk=session.pk)
 
 
 class GuidedSessionView(SessionView):
@@ -494,6 +494,13 @@ def serve_gcode(request, pk):
     response['Content-Type'] = 'text/plain'
     response['Content-Disposition'] = 'attachment; filename={}.gcode'.format(session.name.replace(" ", "_") + "_" + session.test_number)
     return response
+
+
+@login_required
+def serve_gcode_and_redirect(request, pk):
+    session = get_object_or_404(Session, model_ownership_query(request.user), pk=pk)
+    context = {'object': session}
+    return render(request, 'session/serve_gcode.html', context)
 
 
 @login_required
