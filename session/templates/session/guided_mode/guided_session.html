@@ -7,11 +7,6 @@
   <div class="row pt-4">
     <div class="col-sm-5">
       {% include "session/session_info.html" %}
-      <div class="pt-3 pb-2">
-        <div class="progress" style="height: 10px;">
-          <div class="progress-bar" role="progressbar" style="width: {{object.progress_percentage}}%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-        </div>
-      </div>
       <p class='lead'>Test description</p>
       <span class='font-weight-light'>{{ object.test_info.hint_init|safe }}</span>
       <div class="pt-3">
