@@ -64,9 +64,15 @@ class Material(models.Model, CopyableModelMixin):
     name = models.CharField(max_length=60)
     notes = models.CharField(max_length=240, null=True)
     pub_date = models.DateTimeField(default=timezone.now, blank=True)
+    min_temperature = models.IntegerField(null=True, blank=True)
+    max_temperature = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         return "{} ({} mm)".format(self.name, str(self.size_od))
+
+    @property
+    def display_notes(self):
+        return self.notes or '--'
 
     @property
     def __json__(self):
