@@ -7,13 +7,17 @@
   <div class="row pt-4">
     <div class="col-sm-5">
       {% include "session/session_info.html" %}
-      <p class='lead'>Test description</p>
-      <span class='font-weight-light'>{{ object.test_info.hint_init|safe }}</span>
-      <div class="pt-3">
-        <iframe class='embed-responsive' width="560" height="315" src="https://www.youtube.com/embed/{{object.test_youtube_id}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      <div class="pb-3">
+        <span class="tag-secondary">TEST {{object.test_number}}</span>
+        <span class="tag-secondary" style='text-transform: uppercase'>{{object.display_test_type}}</span>
       </div>
-      <div class="pt-1">
-        <a href="https://3doptimizer.helpscoutdocs.com/test/{{object.test_number}}" class='font-weight-light' target="_blank"><small>Read more in Help Center</small></a>
+      <h4>{{object.display_test_name}}</h4>
+      <span>{{ object.test_info.hint_init|safe }}</span>
+      <div class="pt-3">
+        <span>Read more in <a href="https://3doptimizer.helpscoutdocs.com/test/{{object.test_number}}" class='font-weight-light' target="_blank"><b>Help Center</b></a></span>
+      </div>
+      <div class="pt-4">
+        <iframe class='embed-responsive' width="560" height="315" src="https://www.youtube.com/embed/{{object.test_youtube_id}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       </div>
       <div class="pt-3">
         {% if object.mode.type == 'normal' %}
@@ -22,16 +26,8 @@
       </div>
     </div>
     <div class="col-sm">
+      {% include "session/session_nav.html" %}
       <div class="test-box">
-        <div class="pt-1">
-          <div class="pb-2">
-            <span class="tag-secondary">Test {{object.test_number}}</span>
-            <span class="tag-secondary">{{object.display_test_type}} Test</span>
-          </div>
-          <h3>{{object.display_test_name}}</h3>
-        </div>
-
-        {% include "session/session_nav.html" %}
         {% csrf_token %}
         {% if not object.executed %}
         {% include "session/guided_mode/session_generate.html" %}
