@@ -23,7 +23,7 @@
   <div class="row pt-2">
     <div class="col-sm">
       <div class="card p-2 text-center shadow-sm" style='background: #f8f9fa'>
-        <p class='lead'>Testing sessions</p>
+        <p class='lead'>Testing Sessions</p>
         <p class='display-2'>{{cards.sessions.len}}</p>
         <a href="{% url 'session_manager' %}">View all sessions</a>
       </div>
@@ -32,7 +32,7 @@
       <div class="card p-2 text-center shadow-sm" style='background: #f8f9fa'>
         <p class='lead'>Printers</p>
         <p class='display-2'>{{cards.printers.len}}</p>
-        <a href="{% url 'machine_manager' %}">View all printers</a>
+        <a href="{% url 'machine_manager' %}">View all 3D printers</a>
       </div>
     </div>
     <div class="col-sm">
@@ -63,18 +63,18 @@
   <div class="row pt-3">
     <div class="col-sm">
       <div class="pt-3 pb-2">
-        <h3>Recent testing sessions</h3>
+        <h4>Recent Testing Sessions</h4>
       </div>
       <table class="sortable sortable-theme-bootstrap table" data-sortable>
         <thead>
           <tr>
-            <th>Session name</th>
-            <th>Mode</th>
-            <th>Printer</th>
-            <th>Material</th>
-            <th>Target</th>
-            <th>Completed tests</th>
-            <th data-defaultsort="asc">Date</th>
+            <th class='caps'>Name</th>
+            <th class='caps'>Mode</th>
+            <th class='caps'>Target</th>
+            <th class='caps'>3D Printer</th>
+            <th class='caps'>Material</th>
+            <th class='caps'>Tests</th>
+            <th class='caps' data-defaultsort="desc">Created</th>
           </tr>
         </thead>
         <tbody>
@@ -87,9 +87,9 @@
               <td><a class="text-secondary" href="{% url 'session_detail' session.pk %}">{{ session.name }}</a></td>
             {% endif %}
             <td>{{ session.mode.name }}</td>
+            <td>{{session.get_target_display}}</td>
             <td><a class="text-secondary">{{ session.machine.model }}</a></td>
             <td><a class="text-secondary">{{ session.material.name }}</a></td>
-            <td>{{session.get_target_display}}</td>
             <td>{{session.completed_tests}}</td>
             <td>{{session.pub_date}}</td>
           </tr>
@@ -101,7 +101,7 @@
   </div>
   <div class="row">
     <div class="col-sm">
-      <button type="button" onclick="location.href='{% url 'new_session' %}'" class="btn btn-primary">Start a new testing session</button>
+      <button type="button" onclick="location.href='{% url 'new_session' %}'" class="btn btn-primary">+ New Testing Session</button>
     </div>
   </div>
   {%  endif %}
