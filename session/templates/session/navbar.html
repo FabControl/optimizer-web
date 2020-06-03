@@ -52,7 +52,7 @@
         <a id="testing_sessions" class="nav-link {% if "/sessions/" in request.path %}active{% endif %}" href="{% url 'session_manager' %}">Testing Sessions</a>
       </li>
       <li class="nav-item px-0 {% if "/resources/machines" in request.path %}active{% endif %} dropdown">
-        <a class="nav-link {% if "/resources/machines" in request.path %}active{% endif %}" href="{% url 'machine_manager' %}">Printers</a>
+        <a class="nav-link {% if "/resources/machines" in request.path %}active{% endif %}" href="{% url 'machine_manager' %}">3D Printers</a>
       </li>
       <li class="nav-item px-0 {% if "/resources/materials" in request.path %}active{% endif %} dropdown">
         <a class="nav-link {% if "/resources/materials" in request.path %}active{% endif %}" href="{% url 'material_manager' %}">Materials</a>
