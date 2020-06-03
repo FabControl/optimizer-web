@@ -125,13 +125,23 @@ class MachineForm(forms.ModelForm):
 class MaterialForm(forms.ModelForm):
     class Meta:
         model = Material
-        fields = ('name', 'size_od', 'notes')
+        fields = ('name', 'size_od', 'min_temperature', 'max_temperature', 'notes')
 
     def __init__(self, *args, **kwargs):
         super(MaterialForm, self).__init__(*args, **kwargs)
+
+        self.fields['min_temperature'].label = "Min temperature (°C)"
+        self.fields['min_temperature'].help_text = mark_safe("Manufacturer's suggested temperature. After the testing process you might end up with a different temperature. If you do not have this data, here is a method to determine it <a href='https://3doptimizer.helpscoutdocs.com/article/42-determining-initial-printing-temperature'>here</a>.")
+
+        self.fields['max_temperature'].label = "Max temperature (°C)"
+        self.fields['max_temperature'].help_text = "Same as above."
+
         self.fields['name'].label = "Name"
         self.fields['size_od'].label = "Filament diameter (mm)"
+        self.fields['notes'].widget = forms.Textarea()
+        self.fields['notes'].widget.attrs.update({'rows': '1'})
         self.fields['notes'].label = "Notes"
+        self.fields['notes'].help_text = "(Batch number, color, SKU etc.)"
         self.fields['notes'].required = False
 
 
@@ -158,12 +168,12 @@ class SessionForm(forms.ModelForm):
         queryset = SessionMode.objects.filter(pk__in=modes)
 
         self.fields["mode"] = forms.ModelChoiceField(initial=initial, queryset=queryset, widget=forms.RadioSelect, empty_label=None)
-        self.fields["name"].label = "Session name"
-        self.fields["mode"].label = "Session mode"
+        self.fields["name"].label = "Name"
+        self.fields["mode"].label = "Mode"
         self.fields["material"].label = 'Material'
         self.fields["material"].help_text = mark_safe('<a href="{}?next={}">+ New Material</a>'.format(reverse_lazy('material_form'), reverse_lazy('new_session')))
-        self.fields["machine"].label = "Printer"
-        self.fields["machine"].help_text = mark_safe('<a href="{}?next={}">+ New Printer</a>'.format(reverse_lazy('machine_form'), reverse_lazy('new_session')))
+        self.fields["machine"].label = "3D Printer"
+        self.fields["machine"].help_text = mark_safe('<a href="{}?next={}">+ New 3D Printer</a>'.format(reverse_lazy('machine_form'), reverse_lazy('new_session')))
         self.fields["target"].label = "Target"
 
         self.helper = FormHelper()
@@ -216,7 +226,7 @@ class TestValidateForm(forms.ModelForm):
             self.fields["min_max_parameter_three"] = param
 
         self.fields["comments"] = forms.CharField(max_length=256,
-                                                  required=False, label='My Comment (optional)')
+                                                  required=False, label='My notes (optional)')
 
         self.helper = FormHelper()
         self.helper.form_tag = False
@@ -406,45 +416,48 @@ class NewMachineForm(forms.ModelForm):
         self.helper = FormHelper()
         self.helper.form_tag = False
 
-        self.fields["model"].label = "Printer model"
-        self.fields["buildarea_maxdim1"].label = "Maximum dimension on X axis (mm)"
-        self.fields["buildarea_maxdim2"].label = "Maximum dimension on Y axis (mm)"
+        self.fields["model"].label = "3D Printer model"
+        self.fields["buildarea_maxdim1"].label = "Max dimension on X axis (mm)"
+        self.fields["buildarea_maxdim2"].label = "Max dimension on Y axis (mm)"
 
         self.fields["offset_1"].label = "Offset on X axis (mm)"
         self.fields["offset_2"].label = "Offset on Y axis (mm)"
 
-        self.fields["form"].label = "Build area form factor"
+        self.fields["form"].label = "Type"
 
         self.fields["gcode_header"].label = "Header"
         self.fields["gcode_header"].required = False
+        self.fields["gcode_header"].widget.attrs.update({'rows': '4'})
         self.fields["gcode_footer"].label = "Footer"
         self.fields["gcode_footer"].required = False
+        self.fields["gcode_footer"].widget.attrs.update({'rows': '4'})
         self.fields["homing_sequence"].required = True
         self.fields["homing_sequence"].label = "Homing script"
-
+        self.fields["homing_sequence"].widget.attrs.update({'rows': '4'})
         self.helper.layout = Layout(
             Row(
                 Column("model", css_class='form-group col-md'),
                 css_class='form-row'
             ),
             Row(
-                Column("buildarea_maxdim1", css_class='form-group col-md'),
-                Column("buildarea_maxdim2", css_class='form-group col-md')
+                Column("form", css_class='form-group col-md')
             ),
             Row(
-                Column("form", css_class='form-group col-md')
+                Column("buildarea_maxdim1", css_class='form-group col-md'),
+                Column("buildarea_maxdim2", css_class='form-group col-md')
             ),
             Row(
                 Column("extruder_type", css_class='form-group col-md')
             ),
         )
 
+
     class Meta:
         model = Machine
         fields = ["model",
+                  "form",
                   "buildarea_maxdim1",
                   "buildarea_maxdim2",
-                  "form",
                   "extruder_type",
                   "gcode_header",
                   "gcode_footer",
@@ -460,7 +473,7 @@ class NewExtruderForm(forms.ModelForm):
         self.helper.form_tag = False
 
         self.fields["tool"].label = "Gcode tool index"
-        self.fields["temperature_max"].label = "Maximum temperature (°C)"
+        self.fields["temperature_max"].label = "Max temperature (°C)"
 
     class Meta:
         model = Extruder
@@ -488,7 +501,7 @@ class NewChamberForm(forms.ModelForm):
 
         self.fields["tool"].label = "Gcode tool index"
         self.fields["gcode_command"].label = "Gcode syntax"
-        self.fields["temperature_max"].label = "Maximum temperature (°C)"
+        self.fields["temperature_max"].label = "Max temperature (°C)"
 
     class Meta:
         model = Chamber
@@ -501,7 +514,7 @@ class NewPrintbedForm(forms.ModelForm):
         self.helper = FormHelper()
         self.helper.form_tag = False
 
-        self.fields["temperature_max"].label = "Maximum temperature (°C)"
+        self.fields["temperature_max"].label = "Max temperature (°C)"
         self.fields["printbed_heatable"].label = "Print bed heatable"
 
     class Meta:

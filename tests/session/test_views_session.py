@@ -199,14 +199,14 @@ class SessionSessionTest(TestCase):
             # make session completed and test if user gets redirected to overview
             with patch('optimizer_api.ApiClient.get_test_info', side_effect=get_test_info):
                 resp = self.client.post(session_link,
-                                        {"validation":"[2,1]",
-                                            "comments":"",
-                                            "btnprimary":""},
+                                        {"validation": "[2,1]",
+                                            "comments": "",
+                                            "btnprimary": ""},
                                         follow=True)
 
             self.assertEqual(resp.status_code, 200)
             self.assertTrue(len(resp.redirect_chain) > 0)
-            self.assertEqual(resp.redirect_chain[-1][0], overview_link)
+            self.assertEqual(resp.template_name[0], 'session/session_overview.html')
 
             # test dashboard and sessions list contain overview link
             for dest in ('dashboard', 'session_manager'):

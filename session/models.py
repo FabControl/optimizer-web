@@ -64,9 +64,15 @@ class Material(models.Model, CopyableModelMixin):
     name = models.CharField(max_length=60)
     notes = models.CharField(max_length=240, null=True)
     pub_date = models.DateTimeField(default=timezone.now, blank=True)
+    min_temperature = models.IntegerField(null=True, blank=True)
+    max_temperature = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         return "{} ({} mm)".format(self.name, str(self.size_od))
+
+    @property
+    def display_notes(self):
+        return self.notes or '--'
 
     @property
     def __json__(self):
@@ -508,9 +514,9 @@ class Session(models.Model, DependenciesCopyMixin):
     @property
     def display_test_type(self):
         if self.test_number in settings.FREE_TESTS:
-            return "Free"
+            return "Core"
         else:
-            return "Premium"
+            return "Optional"
 
     def update_test_info(self):
         """
@@ -632,11 +638,21 @@ class Session(models.Model, DependenciesCopyMixin):
         """
         return len(self.previous_tests)
 
+    @property
     def progress_percentage(self):
         """
         Returns current test progress as a percentage of the total session length.
         """
-        return int((int(self.test_number)-1)/13*100)
+        validated_tests = list(filter(lambda x: x['validated'], self.previous_tests))
+        return int((len(validated_tests)/len(self.mode.included_tests)*100))
+
+    @property
+    def progress_percentage_display(self):
+        """
+        Makes sure that progress number is not 0 so that the progress bar could be perceived as such
+        :return:
+        """
+        return min(100, self.progress_percentage + 2)
 
     @property
     def executed(self):
@@ -821,18 +837,18 @@ class Session(models.Model, DependenciesCopyMixin):
         :return:
         """
         links = {
-            '01': 'y-m5xiDV_DE',
-            '02': 'Q6hdUmra8Aw',
-            '03': 'yLw0gENAF48',
-            '04': 'Qc1zRGTr64A',
-            '05': 'Cu6MRoVObxI',
-            '06': 'a_3ZKYi1vRE',
-            '07': 'Vr90FsKknK4',
-            '08': 'iepoAqo5QF0',
-            '09': 'Wf3BuSvzuWE',
-            '10': 'olK4nvE75-U',
-            '11': 'Tji51MubyAI',
-            '13': 'TR3nOTzwB18',
+            '01': 'G_bCqU9JQqE',
+            '02': 'AnIhj_xiWfM',
+            '03': '9ilzihuCtg0',
+            '04': 'UxtTNY78nlQ',
+            '05': 'Vmja2Uc4ON4',
+            '06': 'culOoFW_aCs',
+            '07': 'ozDm9oCjciY',
+            '08': 'BTfnuXCr29I',
+            '09': 'FhPyKSwgM8o',
+            '10': 'a649psnjxfg',
+            '11': 'FgjBDjrh3Zw',
+            '13': 'jk9yXhhBZMU',
         }
         return links[self.test_number]
 

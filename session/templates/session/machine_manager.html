@@ -13,7 +13,7 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-sm-9"><button type="button" onclick="location.href='{% url 'machine_form' %}'" class="btn btn-primary btn">+ New Printer</button></div>
+    <div class="col-sm-9"><button type="button" onclick="location.href='{% url 'machine_form' %}'" class="btn btn-primary btn">+ New 3D Printer</button></div>
   </div>
   <div class="row pt-3">
     <div class="col-sm-12">
@@ -21,12 +21,12 @@
         <table class="sortable sortable-theme-bootstrap table" data-sortable>
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Form factor</th>
-              <th>Nozzle diameter (mm)</th>
-              <th data-defaultsort="asc">Created</th>
-              {% if request.user.member_of_corporation %}<th>Owner</th>{% endif %}
-              <th data-defaultsort='disabled'></th>
+              <th class='caps'>Name</th>
+              <th class='caps'>Type</th>
+              <th class='caps'>Nozzle diameter (mm)</th>
+              <th class='caps' data-defaultsort="asc">Created</th>
+              {% if request.user.member_of_corporation %}<th class='caps'>Owner</th>{% endif %}
+              <th class='caps' data-defaultsort='disabled'></th>
             </tr>
           </thead>
           <tbody>

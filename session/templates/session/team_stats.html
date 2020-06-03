@@ -1,0 +1,67 @@
+
+{% extends "session/base.html" %}
+
+{% block content %}
+{% load static %}
+<script src="{% static 'session/js/sortable.min.js' %}"></script>
+<link rel="stylesheet" href="{% static 'session/css/sortable-theme-bootstrap.css' %}" />
+<div class="container pt-3">
+  <div class="row">
+    <div class="col-sm">
+      <p class="lead">
+        <font size="6">{{ request.user.member_of_corporation.name }} Users</font>
+      </p>
+    </div>
+  </div>
+  {% if request.user.manager_of_corporation %}
+  <div class="row">
+    <div class="col-sm-9"><button type="button" onclick="location.href='{% url 'account_legal_info' 'corporation' %}#corporation'" class="btn btn-primary btn">Manage users</button></div>
+  </div>
+  {% endif %}
+  <div class="row pt-3">
+    <div class="col-sm-12">
+      <div class="card p-2">
+        <table class="sortable sortable-theme-bootstrap table" data-sortable>
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Last active</th>
+              <th>Latest session</th>
+              <th>Last 7 days</th>
+              <th>Last 30 days</th>
+              <th>Last 90 days</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {# ROW CONTENTS #}
+            {% for user in team %}
+            <tr>
+              <td>{{ user.first_name }} {{ user.last_name }}</td>
+              <td>{{ user.last_active }}</td>
+
+              {% if user.latest_session %}
+              {% with user.latest_session as session %}
+                {% if  session.completed %}
+                <td><a href="{% url 'session_overview' session.pk %}">{{ session.name }}</a></td>
+                {% else %}
+                <td><a href="{% url 'session_detail' session.pk %}">{{ session.name }}</a></td>
+                {% endif %}
+              {% endwith %}
+              {% else %}
+              <td>-</td>
+              {% endif %}
+              <td>{{ user.tests_seven }}</td>
+              <td>{{ user.tests_thirty }}</td>
+              <td>{{ user.tests_ninety }}</td>
+              <td>{{ user.tests_total }}</td>
+            </tr>
+            {% endfor %}
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

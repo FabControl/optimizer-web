@@ -7,6 +7,7 @@ from unittest.mock import Mock, patch
 import re
 from .testing_helpers import BLANK_PERSISTENCE
 from django.conf import settings
+from payments.models import Corporation
 
 
 REDIRECT_MATCHER = re.compile(r'((?:[/\w-])+)\??')
@@ -123,6 +124,7 @@ class SessionViewsTest(TestCase):
                 ('revert_to_test', {'pk': test_session.pk}),
                 ('session_next_test', {'pk': test_session.pk, 'priority': 'priority'}),
                 ('gcode', {'pk': test_session.pk}),
+                ('gcode_redirect', {'pk': test_session.pk}),
                 ('config', {'pk': test_session.pk, 'slicer': 'slicer'}),
                 ('report', {'pk': test_session.pk}),
                 ('session_delete', {'pk': test_session.pk}),
@@ -133,7 +135,7 @@ class SessionViewsTest(TestCase):
                 ("quickstart", {}),
                 ("support", {}),
                 ('testing_session', {}),
-                ('privacy_statement', {})
+                ('privacy_statement', {}),
                 ]
 
         no_login_urls = [
@@ -144,8 +146,12 @@ class SessionViewsTest(TestCase):
         investor_only_urls = [
                 ('stats', {})
                 ]
+
+        business_only_urls = [
+                ('team_stats', {})
+                ]
         # we do not check index, since it redirects to dashboard
-        self.assertEqual(len(login_req_urls) + len(no_login_urls) + len(staff_only_urls) + len(investor_only_urls),
+        self.assertEqual(len(login_req_urls) + len(no_login_urls) + len(staff_only_urls) + len(investor_only_urls) + len(investor_only_urls),
                          len(urls.urlpatterns) - 1,
                          msg='Have You added/removed some views and forgot about tests?')
 
@@ -205,6 +211,21 @@ class SessionViewsTest(TestCase):
             self.assertEqual(resp.status_code, 200, msg='Url name: {}'.format(url_name))
 
         self.user.can_access_investor_dashboard = False
+        self.user.save()
+
+        # These urls are Busness account only, otherwise 404
+        for url_name, kwargs in business_only_urls:
+            resp = self.client.get(reverse(url_name, kwargs=kwargs), follow=True)
+            self.assertEqual(resp.status_code, 404, msg='Url name: {}'.format(url_name))
+
+        self.user.member_of_corporation = Corporation.objects.create(owner=self.user)
+        self.user.save()
+
+        for url_name, kwargs in business_only_urls:
+            resp = self.client.get(reverse(url_name, kwargs=kwargs), follow=True)
+            self.assertEqual(resp.status_code, 200, msg='Url name: {}'.format(url_name))
+
+        self.user.member_of_corporation = None
         self.user.save()
 
     def test_terms_of_use(self):
