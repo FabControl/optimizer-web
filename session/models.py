@@ -514,9 +514,9 @@ class Session(models.Model, DependenciesCopyMixin):
     @property
     def display_test_type(self):
         if self.test_number in settings.FREE_TESTS:
-            return "Free"
+            return "Core"
         else:
-            return "Premium"
+            return "Optional"
 
     def update_test_info(self):
         """
