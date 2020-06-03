@@ -1,7 +1,7 @@
 <table style="width:100%" class="">
   <tbody>
     <tr>
-      <th scope="row">Session</th>
+      <th scope="row">Name</th>
       <td>{{ object.name }}</td>
     </tr>
     <tr>
@@ -13,7 +13,7 @@
       <td>{{ object.mode.name }}</td>
     </tr>
     <tr>
-      <th scope="row">Printer</th>
+      <th scope="row">3D Printer</th>
       <td>{{ object.machine }}</td>
     </tr>
     <tr>
@@ -33,6 +33,10 @@
   </tbody>
 </table>
 <div class="pt-3">
+  {% if "overview" in request.path %}
+  <button type="button" onclick="location.href='{% url 'session_detail' object.pk %}'" class="btn btn-outline-primary" href="{% url 'session_overview' object.pk %}">Back to Session</button>
+  {% else %}
   <button type="button" onclick="location.href='{% url 'session_overview' object.pk %}'" class="btn btn-outline-primary" href="{% url 'session_overview' object.pk %}" {% if not object.previous_tests %} disabled{% endif %}>Results</button>
+  {% endif %}
 </div>
 <hr>
