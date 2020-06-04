@@ -74,7 +74,7 @@
       <div class="row pt-5 text-center">
         {% for plan in corporation_plans %}
         <div class="col">
-          <div class="card h-100 p-4 {% if request.user.is_authenticated %} {% if active_subscriptions %} {% if active_subscriptions.0.payment_plan == plan %}alert-success{% endif %}{% endif %}{% endif %}">
+          <div class="card h-100 p-4 {% if request.user.is_authenticated %} {% if active_subscriptions %} {% if active_subscriptions.0.payment_plan == plan %}alert-success{% endif %}{% else %}bg-light{% endif %}{% endif %}">
             <form class="" action="" method="post">
               {% csrf_token %}
               <input type="hidden" name="plan_id" value="{{ plan.pk }}">
