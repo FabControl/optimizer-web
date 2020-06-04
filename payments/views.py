@@ -19,6 +19,7 @@ from decimal import Decimal
 from django.template.loader import get_template
 from Optimizer3D.middleware.GeoRestrictAccessMiddleware import geoRestrictExempt
 from django.contrib.staticfiles.templatetags.staticfiles import static
+from django.db import models
 
 # Create your views here.
 
@@ -49,7 +50,14 @@ class PaymentPlansView(LoginRequiredMixin, BaseFormView):
             if plan.interval == 'month':
                 plan.popular_badge = True
 
-        corporation_plans = Plan.objects.filter(type='corporate', currency__in=currencies).order_by('price')
+        corporation_plans = Plan.objects.filter(type='corporate', 
+                                                currency__in=currencies
+                                                ).order_by('price').annotate(
+                                                        popular_badge=models.Case(
+                                                                    models.When(max_users_allowed=5, then=True),
+                                                                    default=False,
+                                                                    output_field=models.BooleanField()))
+
 
         context = {'plans': plans,
                    'corporation_plans': corporation_plans}
