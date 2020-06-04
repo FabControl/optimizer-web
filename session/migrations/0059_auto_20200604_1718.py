@@ -7,7 +7,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('session', '0057_auto_20200603_1719'),
+        ('session', '0058_auto_20200604_1423'),
     ]
 
     operations = [
@@ -15,11 +15,6 @@ class Migration(migrations.Migration):
             model_name='machine',
             name='corporation',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='payments.Corporation'),
-        ),
-        migrations.AlterField(
-            model_name='machine',
-            name='form',
-            field=models.CharField(choices=[('elliptic', 'Delta'), ('cartesian', 'Cartesian')], default='cartesian', max_length=20),
         ),
         migrations.AlterField(
             model_name='material',
