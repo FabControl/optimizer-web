@@ -54,7 +54,9 @@ class PaymentPlansView(LoginRequiredMixin, BaseFormView):
                                                 currency__in=currencies
                                                 ).order_by('price').annotate(
                                                         popular_badge=models.Case(
-                                                                    models.When(max_users_allowed=5, then=True),
+                                                                    models.When(max_users_allowed=5, 
+                                                                                interval='year',
+                                                                                then=True),
                                                                     default=False,
                                                                     output_field=models.BooleanField()))
 
