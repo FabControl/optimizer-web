@@ -22,21 +22,21 @@
   {% if request.user.member_of_corporation or latest_sessions|length %}
   <div class="row pt-2">
     <div class="col-sm">
-      <div class="card p-2 text-center shadow-sm" style='background: #f8f9fa'>
+      <div class="card p-2 text-center shadow-sm bg-light">
         <p class='lead'>Testing Sessions</p>
         <p class='display-2'>{{cards.sessions.len}}</p>
         <a href="{% url 'session_manager' %}">View all sessions</a>
       </div>
     </div>
     <div class="col-sm">
-      <div class="card p-2 text-center shadow-sm" style='background: #f8f9fa'>
-        <p class='lead'>Printers</p>
+      <div class="card p-2 text-center shadow-sm bg-light">
+        <p class='lead'>3D Printers</p>
         <p class='display-2'>{{cards.printers.len}}</p>
         <a href="{% url 'machine_manager' %}">View all 3D printers</a>
       </div>
     </div>
     <div class="col-sm">
-      <div class="card p-2 text-center shadow-sm" style='background: #f8f9fa'>
+      <div class="card p-2 text-center shadow-sm bg-light">
         <p class='lead'>Materials</p>
         <p class='display-2'>{{cards.materials.len}}</p>
         <a href="{% url 'material_manager' %}">View all materials</a>
