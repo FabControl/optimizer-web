@@ -89,7 +89,8 @@
                   </div>
                   <hr>
                   <p>All tests<br>
-                  Guided and advanced testing modes<br>
+                  Full guided testing mode<br>
+                  Advanced testing mode<br>
                   Email support
                   {% for line in plan.extra_info_text_lines %}
                     <br>{{ line }}
@@ -111,7 +112,7 @@
         </div>
         {% endfor %}
       </div>
-      <div class="row pt-5 text-center">
+      <div class="row pt-5 justify-content-center">
         <p>If you’re not happy with our software for any reason, we’ll refund your money within a week from payment date no-questions-asked.</p>
       </div>
     </div>
@@ -140,7 +141,8 @@
                   </p>
                   <hr>
                   <p>All tests<br>
-                  Guided and advanced testing modes<br>
+                  Full guided testing mode<br>
+                  Advanced testing mode<br>
                   {{ plan.max_users_allowed }} users included<br>
                   Email support
                   {% for line in plan.extra_info_text_lines %}
@@ -163,7 +165,7 @@
         </div>
         {% endfor %}
       </div>
-      <div class="row pt-5 text-center">
+      <div class="row pt-5 justify-content-center">
         <p>If you need different setup or more users, contact <a href="mailto:sales@fabcontrol.com">sales@fabcontrol.com</a></p>
       </div>
   {% if request.user.member_of_corporation is None %}
