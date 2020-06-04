@@ -23,7 +23,7 @@
       <div class="row pt-5 text-center">
         {% for plan in plans %}
         <div class="col">
-          <div class="card p-4 {% if active_subscriptions %} {% if active_subscriptions.0.payment_plan == plan %}alert-success{% endif %}{% endif %}">
+          <div class="card p-4 {% if active_subscriptions %} {% if active_subscriptions.0.payment_plan == plan %}alert-success{% endif %}{% else %}bg-light{% endif %}">
             <form class="" action="" method="post">
               {% csrf_token %}
               <input type="hidden" name="plan_id" value="{{ plan.pk }}">
