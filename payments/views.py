@@ -18,6 +18,7 @@ from django_weasyprint.views import WeasyTemplateResponseMixin
 from decimal import Decimal
 from django.template.loader import get_template
 from Optimizer3D.middleware.GeoRestrictAccessMiddleware import geoRestrictExempt
+from django.contrib.staticfiles.templatetags.staticfiles import static
 
 # Create your views here.
 
@@ -43,6 +44,11 @@ class PaymentPlansView(LoginRequiredMixin, BaseFormView):
             currencies = Currency.objects.filter(name='USD')
 
         plans = Plan.objects.filter(type='premium', currency__in=currencies).order_by('price')
+        for plan in plans:
+            plan.banner_image = static('payments/images/' + ('week' if plan.interval is '' else plan.interval) + '.png')
+            if plan.interval == 'month':
+                plan.popular_badge = True
+
         corporation_plans = Plan.objects.filter(type='corporate', currency__in=currencies).order_by('price')
 
         context = {'plans': plans,
