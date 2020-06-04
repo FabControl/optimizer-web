@@ -124,7 +124,6 @@ class SessionViewsTest(TestCase):
                 ('revert_to_test', {'pk': test_session.pk}),
                 ('session_next_test', {'pk': test_session.pk, 'priority': 'priority'}),
                 ('gcode', {'pk': test_session.pk}),
-                ('gcode_redirect', {'pk': test_session.pk}),
                 ('config', {'pk': test_session.pk, 'slicer': 'slicer'}),
                 ('report', {'pk': test_session.pk}),
                 ('session_delete', {'pk': test_session.pk}),

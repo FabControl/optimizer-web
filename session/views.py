@@ -21,12 +21,14 @@ from config import config
 from optimizer_api import api_client
 from datetime import timedelta
 
+
 def model_ownership_query(user):
     if user.member_of_corporation is None:
         # if user leaves corporation, he des not see resources he created within corp.
         return Q(owner=user) & Q(corporation=None)
     return (Q(owner=user) |
             (Q(corporation=user.member_of_corporation) & Q(owner__in=user.member_of_corporation.team.all())))
+
 
 class ModelOwnershipCheckMixin:
     def get_queryset(self):
@@ -277,7 +279,7 @@ class SessionView(SessionTestsSelectionMixin, LoginRequiredMixin, generic.Update
         session.persistence = api_client.return_data(session.persistence, "persistence")
         session.update_test_info()
         session.save()
-        return redirect('gcode_redirect', pk=session.pk)
+        return redirect('session_detail', pk=session.pk)
 
 
 class GuidedSessionView(SessionView):
@@ -494,13 +496,6 @@ def serve_gcode(request, pk):
     response['Content-Type'] = 'text/plain'
     response['Content-Disposition'] = 'attachment; filename={}.gcode'.format(session.name.replace(" ", "_") + "_" + session.test_number)
     return response
-
-
-@login_required
-def serve_gcode_and_redirect(request, pk):
-    session = get_object_or_404(Session, model_ownership_query(request.user), pk=pk)
-    context = {'object': session}
-    return render(request, 'session/serve_gcode.html', context)
 
 
 @login_required

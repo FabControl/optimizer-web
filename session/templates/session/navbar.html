@@ -63,12 +63,7 @@
       </li>
       {% endif %}
       <li class="nav-item px-0 {% if "/help/" in request.path %}active{% endif %} dropdown">
-        <a class="nav-link dropdown-toggle {% if "/help/" in request.path %}active{% endif %}" href="#" id="helpDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Help
-        </a>
-        <div class="dropdown-menu" aria-labelledby="helpDropdown">
-          <a class="dropdown-item" href="https://3doptimizer.helpscoutdocs.com/">Help Center</a>
-        </div>
+        <a class="nav-link {% if "/help/" in request.path %}active{% endif %}" href="https://3doptimizer.helpscoutdocs.com" target="_blank">Help Center</a>
       </li>
     </ul>
   </div>
