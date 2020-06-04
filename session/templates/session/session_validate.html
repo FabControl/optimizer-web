@@ -6,17 +6,18 @@
 </div>
 <div class="row">
   <div class="col-sm">
-    <p><b>Inspect the printed test structure.</b></p>
+    <p><b>Inspect the printed test structure</b></p>
   </div>
 </div>
 <div class="row">
   <div class="col-sm">
     {% if object.test_info.hint_valid %}
     <span>{{ object.test_info.hint_valid|safe }}</span>
-      <span>Read more in  <a href="https://3doptimizer.helpscoutdocs.com/test/{{object.test_number}}" target="_blank">Help Center</a></span>
     {% endif %}
   </div>
 </div>
+<br>
+<p><b>Select the best parameter combination</b></p>
 <form class="" action="" method="POST">
   <div class="pt-3">
     <div>

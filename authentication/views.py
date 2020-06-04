@@ -246,7 +246,7 @@ class MyAffiliatesView(LoginRequiredMixin, ModelFormMixin, generic.ListView, Pro
         form.helper.layout = Layout(Div(Div(Div('email', 'name', css_class='col'),
                                             Div('message', css_class='col'),
                                             css_class='row'),
-                                        css_class='container'))
+                                        css_class=''))
         return form
 
     def form_valid(self, form):

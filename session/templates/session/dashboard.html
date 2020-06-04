@@ -22,21 +22,21 @@
   {% if request.user.member_of_corporation or latest_sessions|length %}
   <div class="row pt-2">
     <div class="col-sm">
-      <div class="card p-2 text-center shadow-sm" style='background: #f8f9fa'>
+      <div class="card p-2 text-center shadow-sm bg-light">
         <p class='lead'>Testing Sessions</p>
         <p class='display-2'>{{cards.sessions.len}}</p>
         <a href="{% url 'session_manager' %}">View all sessions</a>
       </div>
     </div>
     <div class="col-sm">
-      <div class="card p-2 text-center shadow-sm" style='background: #f8f9fa'>
-        <p class='lead'>Printers</p>
+      <div class="card p-2 text-center shadow-sm bg-light">
+        <p class='lead'>3D Printers</p>
         <p class='display-2'>{{cards.printers.len}}</p>
         <a href="{% url 'machine_manager' %}">View all 3D printers</a>
       </div>
     </div>
     <div class="col-sm">
-      <div class="card p-2 text-center shadow-sm" style='background: #f8f9fa'>
+      <div class="card p-2 text-center shadow-sm bg-light">
         <p class='lead'>Materials</p>
         <p class='display-2'>{{cards.materials.len}}</p>
         <a href="{% url 'material_manager' %}">View all materials</a>
@@ -82,14 +82,14 @@
           {% for session in latest_sessions %}
           <tr>
             {% if  session.completed %}
-              <td><a class="text-secondary" href="{% url 'session_overview' session.pk %}">{{ session.name }}</a></td>
+              <td><a class="" href="{% url 'session_overview' session.pk %}">{{ session.name }}</a></td>
             {% else %}
-              <td><a class="text-secondary" href="{% url 'session_detail' session.pk %}">{{ session.name }}</a></td>
+              <td><a class="" href="{% url 'session_detail' session.pk %}">{{ session.name }}</a></td>
             {% endif %}
             <td>{{ session.mode.name }}</td>
             <td>{{session.get_target_display}}</td>
-            <td><a class="text-secondary">{{ session.machine.model }}</a></td>
-            <td><a class="text-secondary">{{ session.material.name }}</a></td>
+            <td>{{ session.machine.model }}</td>
+            <td>{{ session.material.name }}</td>
             <td>{{session.completed_tests}}</td>
             <td>{{session.pub_date}}</td>
           </tr>

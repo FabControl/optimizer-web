@@ -58,7 +58,7 @@
     {% if request.user.member_of_corporation is None  and not request.user.active_subscriptions %}
     <div class="container text-center">
       <div class="pt-5 pb-2">
-        <span class="text-muted alert alert-primary" style="padding: 0.3rem 0.7rem;"><small><b>Earn a free week of full access to 3DOptimizer — <a href="{% url 'my_affiliates' %}">Invite a Friend!</a></b></small></span>
+        <span class="text-muted alert alert-primary" style="padding: 0.3rem 0.7rem;"><small><b><a href="{% url 'my_affiliates' %}">Invite a friend and get full access to 3DOptimizer for a week!</a></b></small></span>
       </div>
       {% endif %}
       {% endif %}

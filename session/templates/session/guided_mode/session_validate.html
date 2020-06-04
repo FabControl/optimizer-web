@@ -8,20 +8,19 @@
   </div>
   <div class="row">
     <div class="col-sm">
-      <p><b>Inspect the printed test structure.</b></p>
+      <p><b>Inspect the printed test structure</b></p>
     </div>
   </div>
   <div class="row">
     <div class="col-sm">
+      {% if not object.test_info.hint_valid == " " %}
       <span>{{ object.test_info.hint_valid|safe }}</span>
+      {% endif %}
     </div>
   </div>
-  <div class="row pt-3">
+  <div class="row">
     <div class="col-sm">
       {% if questions %}
-      <div class="pt-4 pb-2">
-        <p><b>Describe the printed results</b></p>
-      </div>
       {% crispy question_form %}
       <div class="pt-4 pb-2">
         <p><b>Select the best parameter combination</b></p>
