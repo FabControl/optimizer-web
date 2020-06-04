@@ -1,4 +1,5 @@
 {% load crispy_forms_tags %}
+{% if request.path in request.META.HTTP_REFERER %}<iframe width="1" height="1" frameborder="0" src="{% url 'gcode' object.pk %}"></iframe>{% endif %}
 <div class="row pt-2">
   <div class="col">
     <p><b>Print the downloaded test file</b><br>If the test gcode didn't download, you can get it <a href="{% url 'gcode' object.pk %}">here</a>.</p>
