@@ -21,6 +21,20 @@
       <td>{{ object.material }}</td>
     </tr>
     <tr>
+      <th scope="row">Date Created</th>
+      <td>{{ object.pub_date }}</td>
+    </tr>
+    {% if object.completed_tests > 0 %}
+    <tr>
+      <th scope="row">Completed</th>
+      {% if object.completed_tests == 1 %}
+      <td>{{ object.completed_tests }} Test</td>
+      {% else %}
+      <td>{{ object.completed_tests }} Tests</td>
+      {% endif %}
+    </tr>
+    {% endif %}
+    <tr>
       <th scope="row">Progress</th>
       <td>
         <div class="pt-1">
@@ -36,7 +50,9 @@
   {% if "overview" in request.path %}
   <button type="button" onclick="location.href='{% url 'session_detail' object.pk %}'" class="btn btn-outline-primary" href="{% url 'session_overview' object.pk %}">Back to Session</button>
   {% else %}
-  <button type="button" onclick="location.href='{% url 'session_overview' object.pk %}'" class="btn btn-outline-primary" href="{% url 'session_overview' object.pk %}" {% if not object.previous_tests %} disabled{% endif %}>Results</button>
+  {% if object.previous_tests %}
+  <button type="button" onclick="location.href='{% url 'session_overview' object.pk %}'" class="btn btn-outline-primary" href="{% url 'session_overview' object.pk %}">Results</button>
+  {% endif %}
   {% endif %}
 </div>
 <hr>
