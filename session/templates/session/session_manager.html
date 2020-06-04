@@ -42,8 +42,8 @@
               {% endif %}
               <td>{{ session.mode.name }}</td>
               <td>{{ session.get_target_display }}</td>
-              <td><a href="#">{{ session.machine.model }}</a></td>
-              <td><a href="#">{{ session.material.name }}</a></td>
+              <td>{{ session.machine.model }}</td>
+              <td>{{ session.material.name }}</td>
               <td>{{ session.completed_tests }}</td>
               <td>{{ session.pub_date }}</td>
               {% if request.user.member_of_corporation %}<td>{{ session.owner.first_name }} {{ session.owner.last_name }}</td>{% endif %}

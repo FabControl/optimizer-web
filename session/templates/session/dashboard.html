@@ -82,14 +82,14 @@
           {% for session in latest_sessions %}
           <tr>
             {% if  session.completed %}
-              <td><a class="text-secondary" href="{% url 'session_overview' session.pk %}">{{ session.name }}</a></td>
+              <td><a class="" href="{% url 'session_overview' session.pk %}">{{ session.name }}</a></td>
             {% else %}
-              <td><a class="text-secondary" href="{% url 'session_detail' session.pk %}">{{ session.name }}</a></td>
+              <td><a class="" href="{% url 'session_detail' session.pk %}">{{ session.name }}</a></td>
             {% endif %}
             <td>{{ session.mode.name }}</td>
             <td>{{session.get_target_display}}</td>
-            <td><a class="text-secondary">{{ session.machine.model }}</a></td>
-            <td><a class="text-secondary">{{ session.material.name }}</a></td>
+            <td>{{ session.machine.model }}</td>
+            <td>{{ session.material.name }}</td>
             <td>{{session.completed_tests}}</td>
             <td>{{session.pub_date}}</td>
           </tr>
