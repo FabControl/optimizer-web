@@ -1,8 +1,8 @@
 <ul class="nav nav-tabs">
   <li class="nav-item">
-    <a class="nav-link {% if not object.executed and not '/overview' in request.path %}active{% endif %} disabled">Setup</a>
+    <a class="nav-link {% if not object.executed and not '/overview' in request.path %}active opti-yellow{% endif %} disabled">Setup</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link {% if object.executed and not '/overview' in request.path %}active{% endif %} disabled" href="#">Print and validate</a>
+    <a class="nav-link {% if object.executed and not '/overview' in request.path %}active opti-yellow{% endif %} disabled" href="#">Print and validate</a>
   </li>
 </ul>
