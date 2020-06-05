@@ -30,7 +30,7 @@
   {% if 'session_detail' not in request.resolver_match.url_name %}
   {% if ga_tracking_id %}
   {% block analytics %}
-    {% include "session/google_analytics.html" %}
+  {% include "session/google_analytics.html" %}
   {% endblock %}
   {% endif %}
   <title>3DOptimizer</title>
@@ -43,7 +43,7 @@
 
   <!-- Message notification -->
   {% if messages %}
-    {% include "session/message.html" %}
+  {% include "session/message.html" %}
   {% endif %}
   {% block content %}
   {% endblock %}
@@ -57,18 +57,20 @@
     {% if request.user.is_authenticated %}
     {% if request.user.member_of_corporation is None  and not request.user.active_subscriptions %}
     <div class="container text-center">
-      <span class="text-muted"><small>Earn a free week of full access to 3DOptimizer — <a href="{% url 'my_affiliates' %}">invite a friend!</a></small></span>
-    </div>
-    {% endif %}
-    {% endif %}
-    <div class="container text-center">
-      <span class="text-muted"><small>© FabControl SIA</small></span>
+      <div class="pt-5 pb-2">
+        <span class="text-muted alert alert-primary" style="padding: 0.3rem 0.7rem;"><small><b><a href="{% url 'my_affiliates' %}">Invite a friend and get full access to 3DOptimizer for a week!</a></b></small></span>
+      </div>
+      {% endif %}
+      {% endif %}
+      <div class="container text-center">
+        <span class="text-muted"><small>© FabControl SIA</small></span>
+      </div>
     </div>
   </footer>
   {% block javascript %}
   {% endblock %}
   {% block beacon %}
-    {% include "session/beacon.html" %}
+  {% include "session/beacon.html" %}
   {% endblock %}
 </body>
 

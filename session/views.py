@@ -21,12 +21,14 @@ from config import config
 from optimizer_api import api_client
 from datetime import timedelta
 
+
 def model_ownership_query(user):
     if user.member_of_corporation is None:
         # if user leaves corporation, he des not see resources he created within corp.
         return Q(owner=user) & Q(corporation=None)
     return (Q(owner=user) |
             (Q(corporation=user.member_of_corporation) & Q(owner__in=user.member_of_corporation.team.all())))
+
 
 class ModelOwnershipCheckMixin:
     def get_queryset(self):
@@ -292,7 +294,7 @@ class SessionValidateView(SessionView):
         session.alter_previous_tests(-1, "validated", True)
         session = form.save(commit=True)
         if self.request.method == "POST" and "btnprimary" in self.request.POST:
-            return redirect('session_next_test', pk=session.pk, priority="primary")
+            return redirect('session_next_test', pk=session.pk, priority="any")
         else:
             return redirect('session_next_test', pk=session.pk, priority="any")
 

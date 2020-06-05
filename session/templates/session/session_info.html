@@ -1,27 +1,58 @@
 <table style="width:100%" class="">
   <tbody>
     <tr>
-      <th scope="row">Session</th>
+      <th scope="row" class='session-info'>Name</th>
       <td>{{ object.name }}</td>
     </tr>
     <tr>
-      <th scope="row"><span class="test-muted">Target</span></th>
+      <th scope="row" class='session-info'><span class="test-muted">Target</span></th>
       <td>{{ object.get_target_display }}</td>
     </tr>
     <tr>
-      <th scope="row">Mode</th>
+      <th scope="row" class='session-info'>Mode</th>
       <td>{{ object.mode.name }}</td>
     </tr>
     <tr>
-      <th scope="row">Printer</th>
+      <th scope="row" class='session-info'>3D Printer</th>
       <td>{{ object.machine }}</td>
     </tr>
     <tr>
-      <th scope="row">Material</th>
+      <th scope="row" class='session-info'>Material</th>
       <td>{{ object.material }}</td>
+    </tr>
+    <tr>
+      <th scope="row" class='session-info'>Created</th>
+      <td>{{ object.pub_date }}</td>
+    </tr>
+    {% if object.completed_tests > 0 %}
+    <tr>
+      <th scope="row"; class='session-info'>Completed</th>
+      {% if object.completed_tests == 1 %}
+      <td>{{ object.completed_tests }} Test</td>
+      {% else %}
+      <td>{{ object.completed_tests }} Tests</td>
+      {% endif %}
+    </tr>
+    {% endif %}
+    <tr>
+      <th scope="row" class='session-info'>Progress</th>
+      <td>
+        <div class="pt-1">
+          <div class="progress" style="height: 10px;">
+            <div class="progress-bar" role="progressbar" style="width: {{object.progress_percentage_display}}%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
+        </div>
+      </td>
     </tr>
   </tbody>
 </table>
 <div class="pt-3">
-  <button type="button" onclick="location.href='{% url 'session_overview' object.pk %}'" class="btn btn-outline-primary" href="{% url 'session_overview' object.pk %}"{% if not object.previous_tests %} disabled{% endif %}>Results</button>
+  {% if "overview" in request.path %}
+  <button type="button" onclick="location.href='{% url 'session_detail' object.pk %}'" class="btn btn-outline-primary" href="{% url 'session_overview' object.pk %}">Back to Session</button>
+  {% else %}
+  {% if object.previous_tests %}
+  <button type="button" onclick="location.href='{% url 'session_overview' object.pk %}'" class="btn btn-outline-primary" href="{% url 'session_overview' object.pk %}">Results</button>
+  {% endif %}
+  {% endif %}
 </div>
+<hr>

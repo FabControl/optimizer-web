@@ -1,39 +1,43 @@
 {% load crispy_forms_tags %}
 {% load static %}
-<iframe width="1" height="1" frameborder="0" src="{% url 'gcode' object.pk %}"></iframe>
+{% if request.path in request.META.HTTP_REFERER %}<iframe width="1" height="1" frameborder="0" src="{% url 'gcode' object.pk %}"></iframe>{% endif %}
 <form id="validation-form" class="" action="" method="POST">
   <div class="row pt-3">
     <div class="col-sm-12">
-      <p class='small'><a href="{% url 'gcode' object.pk %}">Redownload GCODE here</a>, if it didn't download automatically.</p>
+      <p><b>Print the downloaded test file</b><br>If the test gcode didn't download, you can get it <a href="{% url 'gcode' object.pk %}">here</a>.</p>
     </div>
   </div>
-  <div class="row pt-1">
+  <div class="row">
     <div class="col-sm">
-      <div class="card p-3">
-        <span class='font-weight-light'>{{ object.test_info.hint_valid|safe }}</span>
-      </div>
+      <p><b>Inspect the printed test structure</b></p>
     </div>
   </div>
-  <div class="row pt-3">
+  <div class="row">
+    <div class="col-sm">
+      {% if not object.test_info.hint_valid == " " %}
+      <span>{{ object.test_info.hint_valid|safe }}</span>
+      {% endif %}
+    </div>
+  </div>
+  <div class="row">
     <div class="col-sm">
       {% if questions %}
-      <div class="pt-4 pb-2">
-        <h4>Describe the printed results</h4>
-      </div>
       {% crispy question_form %}
       <div class="pt-4 pb-2">
-        <h4>Select the best test structure</h4>
+        <p><b>Select the best parameter combination</b></p>
       </div>
       {% endif %}
-      {% crispy form %}
+      <div class="valid-form">
+        {% crispy form %}
+      </div>
     </div>
   </div>
   <div class="row pt-2">
     <div class="col">
-      <button class="btn btn-secondary" onclick="location.href='{% url 'session_validate_back' object.pk %}'" type="button" name="button">Back</button>
+      <button class="btn btn-secondary" onclick="location.href='{% url 'session_validate_back' object.pk %}'" type="button" name="button">Back to Setup</button>
     </div>
     <div class="col text-right">
-      <button type="submit" name="btnprimary" class="btn btn-primary">Next test</button>
+      <button type="submit" name="btnprimary" class="btn btn-primary">Next Test</button>
     </div>
   </div>
 </form>

@@ -8,7 +8,7 @@
   <div class="row">
     <div class="col-sm">
       <p class="lead">
-        <font size="6">Testing sessions</font>
+        <font size="6">Testing Sessions</font>
       </p>
     </div>
   </div>
@@ -21,15 +21,14 @@
         <table class="table sortable sortable-theme-bootstrap" data-sortable>
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Mode</th>
-              <th>Material</th>
-              <th>Printer</th>
-              <th>Target</th>
-              <th>Tests</th>
-              <th data-defaultsort="asc">Created</th>
-              {% if request.user.member_of_corporation %}<th>Performer</th>{% endif %}
-              <th data-defaultsort='disabled'></th>
+              <th class='caps'>Name</th>
+              <th class='caps'>Mode</th>
+              <th class='caps'>Target</th>
+              <th class='caps'>3D Printer</th>
+              <th class='caps'>Material</th>
+              <th class='caps'>Tests</th>
+              <th class='caps' data-defaultsort="desc">Created</th>
+              {% if request.user.member_of_corporation %}<th class='caps'>Performer</th>{% endif %}
             </tr>
           </thead>
           <tbody>
@@ -37,14 +36,14 @@
             {% for session in sessions %}
             <tr>
               {% if  session.completed %}
-              <td><a class="text-secondary" href="{% url 'session_overview' session.pk %}">{{ session.name }}</a></td>
+              <td><a href="{% url 'session_overview' session.pk %}">{{ session.name }}</a></td>
               {% else %}
-              <td><a class="text-secondary" href="{% url 'session_detail' session.pk %}">{{ session.name }}</a></td>
+              <td><a href="{% url 'session_detail' session.pk %}">{{ session.name }}</a></td>
               {% endif %}
               <td>{{ session.mode.name }}</td>
-              <td><a class="text-secondary" href="#">{{ session.material.name }}</a></td>
-              <td><a class="text-secondary" href="#">{{ session.machine.model }}</a></td>
               <td>{{ session.get_target_display }}</td>
+              <td>{{ session.machine.model }}</td>
+              <td>{{ session.material.name }}</td>
               <td>{{ session.completed_tests }}</td>
               <td>{{ session.pub_date }}</td>
               {% if request.user.member_of_corporation %}<td>{{ session.owner.first_name }} {{ session.owner.last_name }}</td>{% endif %}

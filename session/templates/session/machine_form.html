@@ -6,7 +6,7 @@
   <div class="row">
     <div class="col-sm">
       <p class="lead">
-        <font size="6">New 3D printer</font>
+        <font size="6">New 3D Printer</font>
       </p>
     </div>
   </div>
@@ -30,23 +30,37 @@
     <div class="col-md-6">
       <form class="" action="" method="post" id="id_form">
         {% csrf_token %}
-        <p>
-          {% crispy self_form %}
-          <div class="text-center">
-            <a class='link' id='id_advanced_toggle' style='cursor: pointer'>Advanced <i class="fas fa-angle-down"></i></a>
+        {% crispy self_form %}
+        <div class="">
+          <h4>Extruder</h4>
+          <div class="card p-3">
+            {% crispy extruder_form %}
+            {% crispy nozzle_form %}
           </div>
-          <div id='id_advanced_toggle_content'>
-            <br>
-            <h4>Custom GCODE scripts</h4>
-            <div class="card p-3">
-              {{ self_form.gcode_header | as_crispy_field }}
-              <small class='text-muted'>Header is prepended to test routine GCODEs. This can be altered to better accomodate certain printer features, such as autocalibration.</small>
-              {{ self_form.homing_sequence | as_crispy_field }}
-              <small class='text-muted'>Homing script is executed after printer has heated up, but before actual printing starts.</small>
-              {{ self_form.gcode_footer | as_crispy_field }}
-              <small class='text-muted'>Footer is appended to test routine GCODEs. Homing command is recommended here, to move the nozzle away from the printed structure.</small>
-            </div>
-            <br>
+        </div>
+        <div class='pt-3'>
+          <h4>Heating chamber</h4>
+          <div class="card p-3">
+            {% crispy chamber_form %}
+          </div>
+        </div>
+        <div class='pt-3'>
+          <h4>Print bed</h4>
+          <div class="card p-3">
+            {% crispy printbed_form %}
+          </div>
+        </div>
+        <div class='pt-3 pb-3'>
+          <h4>Custom GCODE scripts</h4>
+          <div class="card p-3">
+            {{ self_form.gcode_header | as_crispy_field }}
+            <small class='text-muted'>Header is prepended to test routine GCODEs. This can be altered to better accomodate certain printer features, such as autocalibration.</small>
+            {{ self_form.homing_sequence | as_crispy_field }}
+            <small class='text-muted'>Homing script is executed after printer has heated up, but before actual printing starts.</small>
+            {{ self_form.gcode_footer | as_crispy_field }}
+            <small class='text-muted'>Footer is appended to test routine GCODEs. Homing command is recommended here, to move the nozzle away from the printed structure.</small>
+          </div>
+          <div class='pt-3'>
             <h4>Offset from center of printbed</h4>
             <div class="card p-3">
               {{ self_form.offset_1 | as_crispy_field }}
@@ -54,29 +68,7 @@
               <small class='text-muted'>Test structure is centered on the printbed by default. Offset may be used to shift the test structure on build-plate.</small>
             </div>
           </div>
-        </p>
-        <p>
-          <h4> Extruder parameters </h4>
-          <div class="card p-3">
-            {% crispy extruder_form %}
-            {% crispy nozzle_form %}
-          </div>
-        </p>
-        <p>
-          <h4>Heating chamber parameters</h4>
-          <div class="card p-3">
-            {% crispy chamber_form %}
-          </div>
-        </p>
-        <p>
-          <h4>Print bed parameters</h4>
-          <div class="card p-3">
-            {% crispy printbed_form %}
-          </div>
-          <div class="" id='id_advanced_collapsible'>
-
-          </div>
-        </p>
+        </div>
         {% if next %}
         <input type="hidden" value="{{ next }}" name="next">
         {% endif %}
@@ -146,11 +138,5 @@
       });
     });
   })
-</script>
-<script type="text/javascript">
-  $('#id_advanced_toggle_content').slideUp(0);
-  $('#id_advanced_toggle').click(function() {
-    $('#id_advanced_toggle_content').slideToggle();
-  });
 </script>
 {% endblock %}

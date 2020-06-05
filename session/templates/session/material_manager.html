@@ -21,11 +21,12 @@
         <table class="sortable sortable-theme-bootstrap table" data-sortable>
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Filament diameter (mm)</th>
-              <th data-defaultsort="asc">Created</th>
-              {% if request.user.member_of_corporation %}<th>Owner</th>{% endif %}
-              <th data-defaultsort='disabled'></th>
+              <th class='caps'>Name</th>
+              <th class='caps'>Filament diameter (mm)</th>
+              <th class='caps'>Notes</th>
+              <th class='caps' data-defaultsort="asc">Created</th>
+              {% if request.user.member_of_corporation %}<th class='caps'>Owner</th>{% endif %}
+              <th class='caps' data-defaultsort='disabled'></th>
             </tr>
           </thead>
           <tbody>
@@ -34,6 +35,7 @@
             <tr>
               <td><a href="{% url 'material_detail' material.pk %}">{{ material.name }}</a></td>
               <td>{{ material.size_od }}</td>
+              <td>{{ material.display_notes }}</td>
               <td>{{ material.pub_date }}</td>
               {% if request.user.member_of_corporation %}<td>{{ material.owner.first_name }} {{ material.owner.last_name }}</td>{% endif %}
               <td>
@@ -53,7 +55,6 @@
               </td>
             </tr>
             {% endfor %}
-
           </tbody>
         </table>
       </div>
