@@ -3,6 +3,12 @@
   <div class="container">
     <a class="navbar-brand" href="{% url 'dashboard' %}"><img width="40px" class="d-inline-block" src="{% static 'session/img/logo.svg' %}" alt="Logo"> 3DOptimizer</a>
     {% if user.is_authenticated %}
+    {% if user.client_of %}
+    {% with user.client_of as partner %}
+      <span style='padding:1em;'>Provided by</span>
+      <a class="navbar-brand" href="{{ partner.homepage }}"><img height="40px" class="d-inline-block" src="data:image/png;base64,{{ partner.logo }}" alt="{{ partner.name }}"></a>
+    {% endwith %}
+    {% endif %}
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>

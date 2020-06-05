@@ -2,13 +2,16 @@ from django import forms
 from .models import Checkout, Plan, Currency, Partner, Voucher
 import stripe
 from django.http.request import HttpRequest
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from .countries import codes_iso3166
 from django.utils.safestring import mark_safe
 from base64 import b64encode
 from django.contrib.admin.widgets import AdminDateWidget
 import datetime
 from uuid import uuid4
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Submit, Layout
+from crispy_forms.bootstrap import FieldWithButtons
 
 
 class PaymentPlanForm(forms.Form):
@@ -47,6 +50,46 @@ class PaymentPlanForm(forms.Form):
         checkout.save()
 
         return bill['id']
+
+class VoucherRedeemForm(forms.Form):
+    voucher = forms.CharField(max_length=60,
+                            label='Redeem a voucher ')
+
+    helper = FormHelper()
+    helper.form_action = reverse_lazy('redeem_voucher')
+    helper.form_class = 'form-horizontal'
+    helper.layout = Layout(FieldWithButtons('voucher',
+                        Submit('submit', 'Redeem', css_class='btn-primary'),
+                        style='column-gap: 1em;'))
+
+    def __init__(self, *a, **k):
+        super().__init__(*a, **k)
+        self.fields['voucher'].widget.attrs['placeholder'] = 'voucher code'
+
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        ids = cleaned_data['voucher'].split('-')
+        try:
+            partner = Partner.objects.get(pk='-'.join(ids[:-2]))
+        except Partner.DoesNotExist:
+            raise forms.ValidationError('Invalid voucher prefix')
+        else:
+            try:
+                voucher = partner.voucher_set.get(number='-'.join(ids[-2:]))
+            except Voucher.DoesNotExist:
+                raise forms.ValidationError('Invalid voucher number')
+            else:
+                if voucher.valid_till < datetime.date.today():
+                    raise forms.ValidationError('Voucher expired')
+                if voucher.max_uses <= voucher.redeemed_by.count():
+                    raise forms.ValidationError('Voucher used max times')
+
+                cleaned_data['voucher_instance'] = voucher
+
+        return cleaned_data
+
 
 class CurrencyAdminForm(forms.ModelForm):
     countries = forms.MultipleChoiceField(choices=codes_iso3166, widget=forms.widgets.CheckboxSelectMultiple)

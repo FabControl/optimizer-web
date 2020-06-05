@@ -15,4 +15,5 @@ urlpatterns = [
     path('invoices/', views.InvoicesView.as_view(), name='invoices'),
     path('invoices/pdf/<invoice_id>', views.InvoicePdfDownload.as_view(), name='download_invoice'),
     path('invoices/html/<invoice_id>', views.InvoiceHtmlView.as_view(), name='view_invoice'),
+    path('redeem_voucher', views.redeem_voucher, name='redeem_voucher'),
 ]

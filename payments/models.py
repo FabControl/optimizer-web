@@ -374,6 +374,16 @@ class Voucher(models.Model):
     def __str__(self):
         return self.partner.voucher_prefix + '-' + self.number
 
+    def use_voucher(self, user):
+        if user in self.redeemed_by.all():
+            return False
+
+        # order does matter
+        user.extend_subscription(timedelta(days=self.bonus_days))
+        RedeemedVoucher.objects.create(user=user, voucher=self)
+
+        return True
+
 
 class RedeemedVoucher(models.Model):
     voucher = models.ForeignKey('Voucher', on_delete=models.SET_NULL, null=True)

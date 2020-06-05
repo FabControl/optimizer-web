@@ -8,7 +8,7 @@ from messaging import email
 from .tokens import account_activation_token
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
-from payments.models import TaxationCountry, Subscription
+from payments.models import TaxationCountry, Subscription, RedeemedVoucher
 from payments.countries import codes_iso3166
 from django.conf import settings
 from optimizer_api import api_client
@@ -150,9 +150,23 @@ class User(AbstractUser):
         self.subscription_expiration = new_date.replace(hour=23, minute=59, second=59)
         self.save()
 
+        try:
+            redeemed = RedeemedVoucher.objects.get(user=self, visible_to_user=True)
+        except RedeemedVoucher.DoesNotExist:
+            return
+        redeemed.visible_to_user = False
+        redeemed.save()
+
     def subscribe_till(self, target_date:datetime):
         self.subscription_expiration = target_date.replace(hour=23, minute=59, second=59)
         self.save()
+
+        try:
+            redeemed = RedeemedVoucher.objects.get(user=self, visible_to_user=True)
+        except RedeemedVoucher.DoesNotExist:
+            return
+        redeemed.visible_to_user = False
+        redeemed.save()
 
     def expire(self):
         """
@@ -195,6 +209,14 @@ class User(AbstractUser):
     @property
     def active_subscriptions(self):
         return self.subscription_set.filter(state__in=(Subscription.ACTIVE, Subscription.FAILURE_NOTIFIED))
+
+    @property
+    def client_of(self):
+        try:
+            redeemed = RedeemedVoucher.objects.get(user=self, visible_to_user=True)
+        except RedeemedVoucher.DoesNotExist:
+            return None
+        return redeemed.voucher.partner
 
 class Affiliate(models.Model):
     date_created = models.DateTimeField(auto_now_add=True, editable=False)
