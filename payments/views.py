@@ -7,7 +7,7 @@ from django.views.generic.edit import BaseFormView
 from django.views.generic import ListView, TemplateView
 from .models import Plan, Checkout, Invoice, TaxationCountry, Subscription, Currency, Corporation
 from django.urls import reverse
-from .forms import PaymentPlanForm
+from .forms import PaymentPlanForm, VoucherRedeemForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.http import Http404, HttpResponse
@@ -50,11 +50,11 @@ class PaymentPlansView(LoginRequiredMixin, BaseFormView):
             if plan.interval == 'month':
                 plan.popular_badge = True
 
-        corporation_plans = Plan.objects.filter(type='corporate', 
+        corporation_plans = Plan.objects.filter(type='corporate',
                                                 currency__in=currencies
                                                 ).order_by('price').annotate(
                                                         popular_badge=models.Case(
-                                                                    models.When(max_users_allowed=5, 
+                                                                    models.When(max_users_allowed=5,
                                                                                 interval='year',
                                                                                 then=True),
                                                                     default=False,
@@ -62,6 +62,7 @@ class PaymentPlansView(LoginRequiredMixin, BaseFormView):
 
 
         context = {'plans': plans,
+                    'voucher_form': VoucherRedeemForm(),
                    'corporation_plans': corporation_plans}
 
         days_remaining = request.user.subscription_expiration - timezone.now()
@@ -341,4 +342,19 @@ class InvoicePdfDownload(WeasyTemplateResponseMixin, InvoiceHtmlView):
     def get_pdf_filename(self):
         return Invoice.objects.get(pk=self.kwargs['invoice_id']).invoice_number + '.pdf'
 
+@login_required
+def redeem_voucher(request):
+    if request.method == 'POST' and request.user.member_of_corporation is None and len(request.user.active_subscriptions) < 1:
+        form = VoucherRedeemForm(request.POST)
+        success = False
+        if form.is_valid():
+            voucher = form.cleaned_data['voucher_instance']
+            success = voucher.use_voucher(request.user)
 
+
+        if success:
+            messages.success(request,
+                        'Your full access was extended for {0} days'.format(voucher.bonus_days))
+        else:
+            messages.error(request, 'Provided voucher code is not valid')
+    return redirect(reverse('plans'))

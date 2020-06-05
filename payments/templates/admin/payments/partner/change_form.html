@@ -1,0 +1,76 @@
+{% extends "admin/change_form.html" %}
+{% block content %}
+{{ block.super }}
+
+{% if original %}
+{% with original.voucher_set.all as vouchers %}
+<div>
+  <h3 style="padding: 15px;">Create voucher</h3>
+  <form action="{% url 'admin:create_voucher' %}" method="post">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    {% for hidden_field in voucher_form.hidden_fields %}
+      {{ hidden_field.errors }}
+      {{ hidden_field }}
+    {% endfor %}
+    <table>
+      <tbody>
+        {% for field in voucher_form.visible_fields %}
+        <tr>
+          <th>{{ field.label_tag }}</th>
+          <td>
+            {{ field.errors }}
+            {{ field }}
+            {{ field.help_text }}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div class="submit-row"><p class="deletelink-box"><input type="submit" value="Create" name="create_voucher"></p></div>
+  </form>
+</div>
+<div class="result">
+  <h3 style="padding: 15px;">Vouchers</h3>
+{% if vouchers %}
+  <table id="result_list"  style="width: 100%;">
+    <thead>
+      <tr>
+        <th>
+          <div class="text">Code</div>
+        </th>
+        <th>
+          <div class="text">Bonus days</div>
+        </th>
+        <th>
+          <div class="text">Valid till</div>
+        </th>
+        <th>
+          <div class="text">Max uses</div>
+        </th>
+        <th>
+          <div class="text">Used</div>
+        </th>
+        <th>
+          <div class="text">Action</div>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for voucher in vouchers %}
+      <tr>
+        <td>{{ voucher }}</td>
+        <td>{{ voucher.bonus_days }}</td>
+        <td>{{ voucher.valid_till }}</td>
+        <td>{{ voucher.max_uses }}</td>
+        <td>{{ voucher.redeemed_by.count }}</td>
+        <td><a href="{% url 'admin:payments_voucher_change' voucher.pk %}">Modify</a> | <a href="{% url 'admin:payments_voucher_delete' voucher.pk %}">Delete</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endif %}
+</div>
+{% endwith %}
+{% endif %}
+{% endblock %}
