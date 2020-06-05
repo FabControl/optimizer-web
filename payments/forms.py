@@ -1,9 +1,14 @@
 from django import forms
-from .models import Checkout, Plan, Currency
+from .models import Checkout, Plan, Currency, Partner, Voucher
 import stripe
 from django.http.request import HttpRequest
 from django.urls import reverse
 from .countries import codes_iso3166
+from django.utils.safestring import mark_safe
+from base64 import b64encode
+from django.contrib.admin.widgets import AdminDateWidget
+import datetime
+from uuid import uuid4
 
 
 class PaymentPlanForm(forms.Form):
@@ -64,3 +69,71 @@ class CurrencyAdminForm(forms.ModelForm):
         if commit:
             result.save()
         return result
+
+
+class PartnerAdminForm(forms.ModelForm):
+    logo_image = forms.FileField()
+
+    class Meta:
+        model = Partner
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        instance = kwargs.get('instance', None)
+
+        if instance is not None:
+            if 'initial' not in kwargs or kwargs['initial'] is None:
+                kwargs['initial'] = {}
+
+            kwargs['initial']['logo_image'] = 'logo.png'
+
+        super().__init__(*args, **kwargs)
+
+        if instance is not None:
+            self.fields['logo_image'].help_text = mark_safe('<img src="data:image/png;base64,{}"/>'.format(instance.logo))
+
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+
+        if 'logo_image' in self.files:
+            instance.logo = b64encode(self.files['logo_image'].read()).decode("utf-8")
+
+        if commit:
+            instance.save()
+
+        return instance
+
+
+class VoucherAdminForm(forms.ModelForm):
+
+    class Meta:
+        model = Voucher
+        fields = '__all__'
+        widgets = {'number':forms.HiddenInput()}
+
+    def __init__(self, *a, **k):
+        initial = k.get('initial', {})
+        if 'bonus_days' not in initial:
+            initial['bonus_days'] = 14
+        if 'max_uses' not in initial:
+            initial['max_uses'] = 5
+        if 'valid_till' not in initial:
+            initial['valid_till'] = datetime.date.today() + datetime.timedelta(days=180)
+
+        if 'partner' in initial and 'instance' not in k:
+            voucher_set = initial['partner'].voucher_set.values('number')
+            print(voucher_set)
+            for i in range(100):
+                code = '-'.join(str(uuid4()).split('-')[1:3])
+                if code not in voucher_set:
+                    initial['number'] = code
+                    break
+
+
+        k['initial'] = initial
+
+        super().__init__(*a, **k)
+        self.fields['valid_till'].help_text = 'YYYY-MM-DD'
+
+

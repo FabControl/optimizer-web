@@ -351,3 +351,32 @@ class Corporation(models.Model):
             return self.user_count
 
         return plan.max_users_allowed
+
+
+class Partner(models.Model):
+    name = models.CharField(max_length=50)
+    homepage = models.URLField(max_length=350)
+    logo = models.TextField(editable=False)
+    voucher_prefix = models.CharField(max_length=20, primary_key=True)
+
+    def __str__(self):
+        return f'{self.name} ({self.voucher_prefix})'
+
+
+class Voucher(models.Model):
+    number = models.CharField(max_length=9)
+    max_uses = models.PositiveIntegerField()
+    valid_till = models.DateField()
+    partner = models.ForeignKey('Partner', on_delete=models.CASCADE)
+    redeemed_by = models.ManyToManyField(settings.AUTH_USER_MODEL, through='RedeemedVoucher', editable=False)
+    bonus_days = models.PositiveIntegerField()
+
+    def __str__(self):
+        return self.partner.voucher_prefix + '-' + self.number
+
+
+class RedeemedVoucher(models.Model):
+    voucher = models.ForeignKey('Voucher', on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+    date_redeemed = models.DateTimeField(auto_now_add=True)
+    visible_to_user = models.BooleanField(default=True)
