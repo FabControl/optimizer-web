@@ -59,7 +59,7 @@ class CopyableModelMixin(DependenciesCopyMixin):
 
 class Material(models.Model, CopyableModelMixin):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    corporation = models.ForeignKey('payments.Corporation', on_delete=models.CASCADE, null=True)
+    corporation = models.ForeignKey('payments.Corporation', on_delete=models.CASCADE, null=True, blank=True)
     size_od = models.DecimalField(default=1.75, max_digits=3, decimal_places=2)
     name = models.CharField(max_length=60)
     notes = models.CharField(max_length=240, null=True)
@@ -145,7 +145,7 @@ class Printbed(models.Model, CopyableModelMixin):
 
 class Machine(models.Model, CopyableModelMixin):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    corporation = models.ForeignKey('payments.Corporation', on_delete=models.CASCADE, null=True)
+    corporation = models.ForeignKey('payments.Corporation', on_delete=models.CASCADE, null=True, blank=True)
     pub_date = models.DateTimeField(default=timezone.now, blank=True)
     model = models.CharField(max_length=30, default="Unknown")
     buildarea_maxdim1 = models.IntegerField(default=0)
