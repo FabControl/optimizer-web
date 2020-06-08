@@ -113,8 +113,10 @@
         {% endfor %}
       </div>
       <div class="row pt-5 justify-content-center">
+        {% if not active_subscriptions %}
           {% load crispy_forms_tags %}
           {% crispy voucher_form %}
+        {% endif %}
         <p>If you’re not happy with our software for any reason, we’ll refund your money within a week from payment date no-questions-asked.</p>
       </div>
     </div>

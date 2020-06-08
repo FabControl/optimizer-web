@@ -57,10 +57,9 @@ class VoucherRedeemForm(forms.Form):
 
     helper = FormHelper()
     helper.form_action = reverse_lazy('redeem_voucher')
-    helper.form_class = 'form-horizontal'
     helper.layout = Layout(FieldWithButtons('voucher',
                         Submit('submit', 'Redeem', css_class='btn-primary'),
-                        style='column-gap: 1em;'))
+                        style='text-align: center !important;'))
 
     def __init__(self, *a, **k):
         super().__init__(*a, **k)
@@ -150,6 +149,14 @@ class PartnerAdminForm(forms.ModelForm):
 
 class VoucherAdminForm(forms.ModelForm):
 
+    @classmethod
+    def generate_new_number(cls, partner):
+            voucher_set = partner.voucher_set.values('number')
+            for i in range(100):
+                code = '-'.join(str(uuid4()).split('-')[1:3])
+                if code not in voucher_set:
+                    return code
+
     class Meta:
         model = Voucher
         fields = '__all__'
@@ -165,13 +172,7 @@ class VoucherAdminForm(forms.ModelForm):
             initial['valid_till'] = datetime.date.today() + datetime.timedelta(days=180)
 
         if 'partner' in initial and 'instance' not in k:
-            voucher_set = initial['partner'].voucher_set.values('number')
-            print(voucher_set)
-            for i in range(100):
-                code = '-'.join(str(uuid4()).split('-')[1:3])
-                if code not in voucher_set:
-                    initial['number'] = code
-                    break
+            initial['number'] = self.generate_new_number(initial['partner'])
 
 
         k['initial'] = initial
