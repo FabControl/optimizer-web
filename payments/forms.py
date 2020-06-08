@@ -163,19 +163,20 @@ class VoucherAdminForm(forms.ModelForm):
         widgets = {'number':forms.HiddenInput()}
 
     def __init__(self, *a, **k):
-        initial = k.get('initial', {})
-        if 'bonus_days' not in initial:
-            initial['bonus_days'] = 14
-        if 'max_uses' not in initial:
-            initial['max_uses'] = 5
-        if 'valid_till' not in initial:
-            initial['valid_till'] = datetime.date.today() + datetime.timedelta(days=180)
+        if 'instance' not in k:
+            initial = k.get('initial', {})
+            if 'bonus_days' not in initial:
+                initial['bonus_days'] = 14
+            if 'max_uses' not in initial:
+                initial['max_uses'] = 5
+            if 'valid_till' not in initial:
+                initial['valid_till'] = datetime.date.today() + datetime.timedelta(days=180)
 
-        if 'partner' in initial and 'instance' not in k:
-            initial['number'] = self.generate_new_number(initial['partner'])
+            if 'partner' in initial:
+                initial['number'] = self.generate_new_number(initial['partner'])
 
 
-        k['initial'] = initial
+            k['initial'] = initial
 
         super().__init__(*a, **k)
         self.fields['valid_till'].help_text = 'YYYY-MM-DD'
