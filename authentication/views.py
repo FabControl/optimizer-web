@@ -21,6 +21,7 @@ from .forms import ResetPasswordForm, SignUpForm, LoginForm, ChangePasswordForm,
 from .tokens import account_activation_token, affiliate_token_generator
 from django.utils.encoding import force_text, force_bytes
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from django.utils.timezone import timedelta, now
 from messaging import email
 from django.contrib.auth.tokens import default_token_generator
 from .models import Affiliate
@@ -202,7 +203,9 @@ def activate_account(request, uidb64, token):
         user = None
 
     if user is not None and account_activation_token.check_token(user, token):
+        trial_end_date = now() + timedelta(days=3)  # When is the trial going to expire
         user.is_active = True
+        user.subscribe_till(trial_end_date)  # Activate trial upon account activation
         user.save()
         affiliates = Affiliate.objects.filter(receiver=user)
         if len(affiliates) > 0:
