@@ -25,6 +25,12 @@
           </td>
         </tr>
         {% endfor %}
+        <tr>
+          <th><label for="id_voucher_count">Voucher count:</label></th>
+          <td>
+            <input type="number" name="voucher_count" value="1" min="0" required="" id="id_voucher_count">
+          </td>
+        </tr>
       </tbody>
     </table>
     <div class="submit-row"><p class="deletelink-box"><input type="submit" value="Create" name="create_voucher"></p></div>

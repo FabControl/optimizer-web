@@ -97,8 +97,18 @@ class PartnerModelAdmin(admin.ModelAdmin):
 
     def create_voucher(self, request):
         if request.method == 'POST':
+            count = int(request.POST.get('voucher_count', '1'))
             form = VoucherAdminForm(request.POST)
             voucher = form.save()
+            partner = voucher.partner
+
+            if count > 1:
+                for i in range(count - 1):
+                    post = { k:v for k,v in request.POST.items() }
+                    post['number'] = VoucherAdminForm.generate_new_number(partner)
+                    form = VoucherAdminForm(post)
+                    voucher = form.save()
+
         return redirect(reverse('admin:payments_partner_change', kwargs=dict(object_id=voucher.partner.pk)))
 
 
