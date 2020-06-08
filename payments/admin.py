@@ -96,9 +96,8 @@ class PartnerModelAdmin(admin.ModelAdmin):
 
 
     def create_voucher(self, request):
-        instance = payment_models.Voucher.objects.get(pk=voucher_id)
         if request.method == 'POST':
-            form = VoucherAdminForm(request.POST, instance=instance)
+            form = VoucherAdminForm(request.POST)
             voucher = form.save()
         return redirect(reverse('admin:payments_partner_change', kwargs=dict(object_id=voucher.partner.pk)))
 
