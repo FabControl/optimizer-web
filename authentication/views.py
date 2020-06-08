@@ -21,6 +21,7 @@ from .forms import ResetPasswordForm, SignUpForm, LoginForm, ChangePasswordForm,
 from .tokens import account_activation_token, affiliate_token_generator
 from django.utils.encoding import force_text, force_bytes
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from django.utils.timezone import timedelta, now
 from messaging import email
 from django.contrib.auth.tokens import default_token_generator
 from .models import Affiliate
@@ -168,6 +169,7 @@ def password_reset(request):
 
     return render(request, 'authentication/password_reset.html', {'form': ResetPasswordForm})
 
+
 class PasswordChangeView(auth_views.PasswordContextMixin, FormView):
     template_name='authentication/password_change.html'
     form_class=ChangePasswordForm
@@ -193,6 +195,7 @@ class PasswordChangeView(auth_views.PasswordContextMixin, FormView):
         messages.success(self.request, 'Password changed')
         return super().form_valid(form)
 
+
 def activate_account(request, uidb64, token):
     u_model = get_user_model()
     try:
@@ -202,7 +205,9 @@ def activate_account(request, uidb64, token):
         user = None
 
     if user is not None and account_activation_token.check_token(user, token):
+        trial_end_date = now() + timedelta(days=3)  # When is the trial going to expire
         user.is_active = True
+        user.subscribe_till(trial_end_date)  # Activate trial upon account activation
         user.save()
         affiliates = Affiliate.objects.filter(receiver=user)
         if len(affiliates) > 0:
@@ -213,6 +218,7 @@ def activate_account(request, uidb64, token):
         return redirect('dashboard')
 
     return render(request, 'authentication/invalid_activation_link.html')
+
 
 class MyAffiliatesView(LoginRequiredMixin, ModelFormMixin, generic.ListView, ProcessFormView):
     object = None
@@ -314,17 +320,15 @@ def use_affiliate(request, uidb64, token):
                     affiliate.save()
                     return render(request, 'authentication/check_email.html', {})
 
-
         country = request.geolocation['county']['code'] if hasattr(request, 'geolocation') else ''
         if default_form is None:
             default_form = SignUpForm(initial=dict(email=affiliate.email, first_name=affiliate.name, company_country=country))
         if corporation_form is None and not corporate_affiliate:
             corporation_form = CorporationSignUpForm(initial=dict(email=affiliate.email, first_name=affiliate.name, company_country=country))
 
-
         context = {"form": default_form,
-                    "open_form": form,
-                    "corporation_form": corporation_form}
+                   "open_form": form,
+                   "corporation_form": corporation_form}
         return render(request, 'authentication/signup.html', context)
 
     return render(request, 'authentication/invalid_affiliate_url.html')
@@ -355,9 +359,10 @@ def legal_information_view(request, category=None):
     return render(request,
                   'authentication/legal_info.html',
                   dict(legal_info=form,
-                      corporate_invitation=CorporationInviteForm(),
-                      category=category,
-                      subscription=subscription))
+                       corporate_invitation=CorporationInviteForm(),
+                       category=category,
+                       subscription=subscription))
+
 
 def _change_corporation_user(allow_self=False):
     def wrapper(make_changes):
@@ -379,6 +384,7 @@ def _change_corporation_user(allow_self=False):
         return wrapped
     return wrapper
 
+
 @_change_corporation_user()
 def assign_manager_role(user, corporation):
     user.manager_of_corporation = corporation
@@ -393,6 +399,7 @@ def resign_manager_role(user, corporation):
 def remove_from_corporation(user, corporation):
     user.member_of_corporation = None
     user.manager_of_corporation = None
+
 
 @login_required
 def cancel_corporation_invitation(request):
@@ -411,8 +418,6 @@ def cancel_corporation_invitation(request):
                 affiliate.save()
         else:
             corporation.remove_invitation(user)
-
-
         return redirect(reverse(request.POST.get('next', 'account_legal_info')))
 
     raise Http404()
@@ -470,8 +475,8 @@ def invite_into_corporation(request):
 
         return redirect(reverse('account_legal_info', kwargs=dict(category='corporation')) + '#corporation')
 
-
     raise Http404()
+
 
 @login_required
 def accept_corporation_invitation(request, corp_id):
