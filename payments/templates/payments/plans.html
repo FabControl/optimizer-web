@@ -112,12 +112,14 @@
         </div>
         {% endfor %}
       </div>
+      <div class="row pt-3 justify-content-center">
+        <p>If you’re not happy with our software for any reason, we’ll refund your money within a week from payment date no-questions-asked.</p>
+      </div>
       <div class="row pt-5 justify-content-center">
         {% if not active_subscriptions %}
           {% load crispy_forms_tags %}
           {% crispy voucher_form %}
         {% endif %}
-        <p>If you’re not happy with our software for any reason, we’ll refund your money within a week from payment date no-questions-asked.</p>
       </div>
     </div>
     <div class="tab-pane fade{% if section == 'business' %} show active{% endif %}" id="business" role="tabpanel" aria-labelledby="business-tab">
@@ -169,7 +171,7 @@
         </div>
         {% endfor %}
       </div>
-      <div class="row pt-5 justify-content-center">
+      <div class="row pt-3 justify-content-center">
         <p>If you need different setup or more users, contact <a href="mailto:sales@fabcontrol.com">sales@fabcontrol.com</a></p>
       </div>
   {% if request.user.member_of_corporation is None %}
