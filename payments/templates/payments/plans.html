@@ -50,15 +50,19 @@
 
 {% block content %}
 <div class="container">
-  {% if request.user.plan == 'premium' and not active_subscriptions %}
-  <div class="row pt-5 text-center justify-content-center">
-    <div class="col-sm">
-      <h1 class="display-4"><b>{{expiration}} days</b> of full access remaining.</h1>
-      <hr>
-    </div>
-  </div>
-  {% endif %}
   {% if request.user.member_of_corporation is None %}
+    {% if request.user.plan == 'premium' and not active_subscriptions %}
+    <div class="row pt-5 text-center justify-content-center">
+      <div class="col-sm">
+        <h1 class="display-4"><b>{{expiration}} days</b> of full access remaining.</h1>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <div>
+        <small><b><a href="{% url 'my_affiliates' %}">Invite a friend and get full access to 3DOptimizer for a week!</a></b></small>
+      </div>
+    </div>
+    {% endif %}
   <ul class="nav nav-tabs justify-content-center pt-5" id="myTab" role="tablist">
     <li class="nav-item">
       <a class="nav-link{% if section is None or section == 'individual' %} active{% endif %}" id="individual-tab" data-toggle="tab" href="#individual" role="tab" aria-controls="individual" aria-selected="{% if section is None or section == 'individual' %}true{% else %}false{% endif %}">Individual</a>
