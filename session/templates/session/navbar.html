@@ -5,7 +5,7 @@
     {% if user.is_authenticated %}
     {% if user.client_of %}
     {% with user.client_of as partner %}
-      <span style='padding:1em;'>Provided by</span>
+      <a class="nav-item nav-link disabled"><small>PROVIDED BY</small></a>
       <a class="navbar-brand" href="{{ partner.homepage }}"><img height="40px" class="d-inline-block" src="data:image/png;base64,{{ partner.logo }}" alt="{{ partner.name }}"></a>
     {% endwith %}
     {% endif %}
