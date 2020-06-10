@@ -45,9 +45,11 @@ def index(request):
 
 @login_required
 def dashboard(request):
-    latest_sessions = Session.objects.filter(owner=request.user).order_by('-pub_date')[:5]
+    user = request.user
+    latest_sessions = user.session_set.filter(Q(corporation=None) | Q(corporation=user.member_of_corporation)).order_by('-pub_date')[:5]
 
-    ownership = model_ownership_query(request.user)
+    ownership = model_ownership_query(user)
+    #TODO optimize this to use sigle query and only return counts
     len_printers = len(Machine.objects.filter(ownership))
     len_materials = len(Material.objects.filter(ownership))
     len_sessions = len(Session.objects.filter(ownership))
@@ -57,7 +59,7 @@ def dashboard(request):
              'sessions': {'len': len_sessions}}
 
     context = {'latest_sessions': latest_sessions,
-               'invitations': Corporation.objects.filter(_invited_users__contains=' '+ request.user.email + ' '),
+               'invitations': Corporation.objects.filter(_invited_users__contains=' '+ user.email + ' '),
                'cards': cards}
     return render(request, 'session/dashboard.html', context)
 
