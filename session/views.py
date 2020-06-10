@@ -589,6 +589,8 @@ def new_session(request):
             session.update_persistence()
 
             session.save()
+            Session.generate_id_number(session)
+
             for k in ('machine', 'material', 'optimizer_session_name'):
                 if k in request.session:
                     del request.session[k]

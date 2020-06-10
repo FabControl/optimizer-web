@@ -355,6 +355,18 @@ class Session(models.Model, DependenciesCopyMixin):
         else:
             self.settings.retraction_speed = 30
 
+    @classmethod
+    def generate_id_number(cls, instance):
+        query = dict(corporation=instance.corporation)
+        if instance.corporation is None:
+            query['owner'] = instance.owner
+        # we risk to have two sessions within same company with equal numbers, if 
+        #  two users submit new session form at the same time.
+        # this could be fixed, by creating single database query, instead of current two queries.
+        cls.objects.filter(pk=instance.pk).update(number=max(100001,
+                                  cls.objects.filter(**query).aggregate(number_max=models.Max('number'))['number_max'] + 1))
+
+
     def clean_min_max(self, to_zero: bool = False):
         """
         Set min_max_parameter to a nominal value so that they wouldn't be carried over to other tests.
