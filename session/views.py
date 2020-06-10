@@ -233,19 +233,6 @@ def sample_machine_data(request, pk):
     return JsonResponse(result)
 
 
-class SettingView(LoginRequiredMixin, generic.DetailView):
-    model = Settings
-    template_name = 'session/settings_detail.html'
-
-
-class SettingsView(LoginRequiredMixin, generic.ListView):
-    template_name = "session/settings_manager.html"
-    context_object_name = 'settings'
-
-    def get_queryset(self):
-        return Settings.objects.order_by('pub_date')
-
-
 class SessionListView(LoginRequiredMixin, ModelOwnershipCheckMixin, generic.ListView):
     template_name = "session/session_manager.html"
     context_object_name = 'sessions'
