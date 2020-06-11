@@ -499,9 +499,11 @@ def serve_config(request, pk, slicer):
         quality_type = request.POST.get('quality_type', '')
 
     configuration_file, configuration_file_format = api_client.get_config(slicer, session.persistence, quality_type)
-    response = HttpResponse(configuration_file, content_type='text/plain')
-    response['Content-Type'] = 'application/octet-stream'
-    response['Content-Disposition'] = 'attachment; ' + 'filename={}_{}'.format(str(session.material), str(session.machine)).replace(" ", "_").replace(".", "-") + '.{}'.format(configuration_file_format)
+    response = HttpResponse(configuration_file, content_type='application/octet-stream')
+
+    filename = f'{session.number}_{session.material}_{session.machine}'
+    response['Content-Disposition'] = 'attachment; filename={}.{}'.format(filename.replace(' ', '_'), configuration_file_format)
+
     return response
 
 
