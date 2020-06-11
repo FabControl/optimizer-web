@@ -304,7 +304,7 @@ class Session(models.Model, DependenciesCopyMixin):
     mode = models.ForeignKey(SessionMode, null=True, on_delete=models.CASCADE)
     number = models.IntegerField(default=0)
     name = models.CharField(default="Untitled", max_length=20)
-    corporation = models.ForeignKey('payments.Corporation', on_delete=models.CASCADE, null=True)
+    corporation = models.ForeignKey('payments.Corporation', on_delete=models.CASCADE, null=True, blank=True)
     pub_date = models.DateTimeField(default=timezone.now, blank=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     target = models.CharField(max_length=20, choices=TARGET_CHOICES, default="mechanical_strength")
@@ -360,7 +360,7 @@ class Session(models.Model, DependenciesCopyMixin):
         query = dict(corporation=instance.corporation)
         if instance.corporation is None:
             query['owner'] = instance.owner
-        # we risk to have two sessions within same company with equal numbers, if 
+        # we risk to have two sessions within same company with equal numbers, if
         #  two users submit new session form at the same time.
         # this could be fixed, by creating single database query, instead of current two queries.
         cls.objects.filter(pk=instance.pk).update(number=max(100001,
