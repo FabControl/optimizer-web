@@ -309,6 +309,7 @@ class Session(models.Model, DependenciesCopyMixin):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     target = models.CharField(max_length=20, choices=TARGET_CHOICES, default="mechanical_strength")
     _test_number = models.CharField(max_length=20, choices=TEST_NUMBER_CHOICES, default="01")
+    gcode_download_count = models.PositiveIntegerField(default=0)
     slicer = models.CharField(max_length=20, choices=SLICER_CHOICES, default="Prusa")
     machine = models.ForeignKey(Machine, on_delete=models.CASCADE, null=False)
     material = models.ForeignKey(Material, on_delete=models.CASCADE, null=False)
@@ -547,6 +548,8 @@ class Session(models.Model, DependenciesCopyMixin):
         """
         gcode = api_client.return_data(self.persistence, output="gcode")
         self.persistence = api_client.persistence
+        self.gcode_download_count += 1
+        self.save()
         return gcode
 
     @property
@@ -710,6 +713,8 @@ class Session(models.Model, DependenciesCopyMixin):
         """
         if value in self.mode.included_tests:
             self._test_info = ""
+            if self._test_number != value:
+                self.gcode_download_count = 0
             self._test_number = value
             self.update_test_info()
             self.clean_min_max()

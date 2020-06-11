@@ -482,7 +482,7 @@ def next_test_switch(request, pk, priority: str):
 def serve_gcode(request, pk):
     session = get_object_or_404(Session, model_ownership_query(request.user), pk=pk)
     content = session.get_gcode
-    gcode_filename = f'{session.number}_{session.name}_T{session.test_number}.gcode'
+    gcode_filename = f'{session.number}_{session.name}_T{session.test_number}_V{session.gcode_download_count:02d}.gcode'
     response = HttpResponse(content, content_type='text/plain')
     response['Content-Disposition'] = 'attachment; filename={}'.format(gcode_filename.replace(' ', '_'))
     return response
