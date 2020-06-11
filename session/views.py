@@ -5,7 +5,7 @@ from .utilities import load_json, optimizer_info, common_cura_qulity_types
 from django.http import FileResponse, HttpResponseRedirect, Http404, HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, reverse
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.forms.models import model_to_dict
@@ -260,6 +260,11 @@ class SessionView(SessionTestsSelectionMixin, LoginRequiredMixin, generic.Update
     model = Session
     form_class = TestGenerateForm
     template_name = 'session/session.html'
+
+    def get_context_data(self):
+        context = super().get_context_data()
+        context['rename_form'] = SessionRenameForm(instance=self.object)
+        return context
 
     def form_valid(self, form):
         session = form.save(commit=False)
@@ -721,3 +726,12 @@ def error_500_view(request):
     response = render_to_response('session/500.html', {"user": request.user})
     response.status_code = 500
     return response
+
+@login_required
+def session_rename(request, pk):
+    if request.method == 'POST':
+        SessionRenameForm(request.POST, 
+                        model_ownership_query(request.user),
+                        instance=get_object_or_404(Session, pk=pk)).save()
+
+    return redirect(reverse('session_detail', kwargs={'pk':pk}))

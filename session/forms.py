@@ -180,6 +180,15 @@ class SessionForm(forms.ModelForm):
         self.helper.form_tag = False
 
 
+class SessionRenameForm(forms.ModelForm):
+    helper = FormHelper()
+    helper.form_tag = False
+
+    class Meta:
+        model = Session
+        fields = ('name',)
+
+
 class SettingForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
