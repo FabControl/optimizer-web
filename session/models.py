@@ -364,7 +364,7 @@ class Session(models.Model, DependenciesCopyMixin):
         # we risk to have two sessions within same company with equal numbers, if
         #  two users submit new session form at the same time.
         # this could be fixed, by creating single database query, instead of current two queries.
-        cls.objects.filter(pk=instance.pk).update(number=max(100001,
+        cls.objects.filter(pk=instance.pk).update(number=max(1001,
                                   cls.objects.filter(**query).aggregate(number_max=models.Max('number'))['number_max'] + 1))
 
 
