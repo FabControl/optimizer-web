@@ -481,9 +481,10 @@ def next_test_switch(request, pk, priority: str):
 @login_required
 def serve_gcode(request, pk):
     session = get_object_or_404(Session, model_ownership_query(request.user), pk=pk)
-    response = FileResponse(session.get_gcode, content_type='text/plain')
-    response['Content-Type'] = 'text/plain'
-    response['Content-Disposition'] = 'attachment; filename={}.gcode'.format(session.name.replace(" ", "_") + "_" + session.test_number)
+    content = session.get_gcode
+    gcode_filename = f'{session.number}_{session.name}_T{session.test_number}.gcode'
+    response = HttpResponse(content, content_type='text/plain')
+    response['Content-Disposition'] = 'attachment; filename={}'.format(gcode_filename.replace(' ', '_'))
     return response
 
 
