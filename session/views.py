@@ -341,6 +341,7 @@ class SessionOverview(SessionTestsSelectionMixin, LoginRequiredMixin, ModelOwner
         context = super().get_context_data(**kwargs)
         context['default_quality_type'] = 'normal'
         context['other_quality_types'] = common_cura_qulity_types
+        context['rename_form'] = SessionRenameForm(instance=self.object)
         return context
 
 
@@ -729,9 +730,12 @@ def error_500_view(request):
 
 @login_required
 def session_rename(request, pk):
+    return_page = 'session_detail'
     if request.method == 'POST':
-        SessionRenameForm(request.POST, 
+        SessionRenameForm(request.POST,
                         model_ownership_query(request.user),
                         instance=get_object_or_404(Session, pk=pk)).save()
 
-    return redirect(reverse('session_detail', kwargs={'pk':pk}))
+        return_page = request.POST.get('return_page', return_page)
+
+    return redirect(reverse(return_page, kwargs={'pk':pk}))

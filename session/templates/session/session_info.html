@@ -17,6 +17,7 @@
               </div>
               <form class="" action="{% url 'session_rename' session.pk %}" method="post">
                 {% csrf_token %}
+                <input type="hidden" name="return_page" value="{% if "overview" in request.path %}session_overview{% else %}session_detail{% endif %}">
                 <div class="modal-body">
                   {{ rename_form.name|as_crispy_field }}
                 </div>
