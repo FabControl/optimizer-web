@@ -304,11 +304,12 @@ class Session(models.Model, DependenciesCopyMixin):
     mode = models.ForeignKey(SessionMode, null=True, on_delete=models.CASCADE)
     number = models.IntegerField(default=0)
     name = models.CharField(default="Untitled", max_length=20)
-    corporation = models.ForeignKey('payments.Corporation', on_delete=models.CASCADE, null=True)
+    corporation = models.ForeignKey('payments.Corporation', on_delete=models.CASCADE, null=True, blank=True)
     pub_date = models.DateTimeField(default=timezone.now, blank=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     target = models.CharField(max_length=20, choices=TARGET_CHOICES, default="mechanical_strength")
     _test_number = models.CharField(max_length=20, choices=TEST_NUMBER_CHOICES, default="01")
+    gcode_download_count = models.PositiveIntegerField(default=0)
     slicer = models.CharField(max_length=20, choices=SLICER_CHOICES, default="Prusa")
     machine = models.ForeignKey(Machine, on_delete=models.CASCADE, null=False)
     material = models.ForeignKey(Material, on_delete=models.CASCADE, null=False)
@@ -354,6 +355,18 @@ class Session(models.Model, DependenciesCopyMixin):
             self.settings.retraction_speed = 100
         else:
             self.settings.retraction_speed = 30
+
+    @classmethod
+    def generate_id_number(cls, instance):
+        query = dict(corporation=instance.corporation)
+        if instance.corporation is None:
+            query['owner'] = instance.owner
+        # we risk to have two sessions within same company with equal numbers, if
+        #  two users submit new session form at the same time.
+        # this could be fixed, by creating single database query, instead of current two queries.
+        cls.objects.filter(pk=instance.pk).update(number=max(100001,
+                                  cls.objects.filter(**query).aggregate(number_max=models.Max('number'))['number_max'] + 1))
+
 
     def clean_min_max(self, to_zero: bool = False):
         """
@@ -535,6 +548,8 @@ class Session(models.Model, DependenciesCopyMixin):
         """
         gcode = api_client.return_data(self.persistence, output="gcode")
         self.persistence = api_client.persistence
+        self.gcode_download_count += 1
+        self.save()
         return gcode
 
     @property
@@ -698,6 +713,8 @@ class Session(models.Model, DependenciesCopyMixin):
         """
         if value in self.mode.included_tests:
             self._test_info = ""
+            if self._test_number != value:
+                self.gcode_download_count = 0
             self._test_number = value
             self.update_test_info()
             self.clean_min_max()

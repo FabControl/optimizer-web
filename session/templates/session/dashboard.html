@@ -68,19 +68,21 @@
       <table class="sortable sortable-theme-bootstrap table" data-sortable>
         <thead>
           <tr>
+            <th class='caps'>ID</th>
             <th class='caps'>Name</th>
             <th class='caps'>Mode</th>
             <th class='caps'>Target</th>
             <th class='caps'>3D Printer</th>
             <th class='caps'>Material</th>
             <th class='caps'>Tests</th>
-            <th class='caps' data-defaultsort="desc">Created</th>
+            <th class='caps'>Created</th>
           </tr>
         </thead>
         <tbody>
           {# ROW CONTENTS #}
           {% for session in latest_sessions %}
           <tr>
+            <td>{{ session.number }}</td>
             {% if  session.completed %}
               <td><a class="" href="{% url 'session_overview' session.pk %}">{{ session.name }}</a></td>
             {% else %}

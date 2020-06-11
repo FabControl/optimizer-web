@@ -21,6 +21,7 @@
         <table class="table sortable sortable-theme-bootstrap" data-sortable>
           <thead>
             <tr>
+              <th class='caps'>ID</th>
               <th class='caps'>Name</th>
               <th class='caps'>Mode</th>
               <th class='caps'>Target</th>
@@ -35,6 +36,7 @@
             {# ROW CONTENTS #}
             {% for session in sessions %}
             <tr>
+              <td>{{ session.number }}</td>
               {% if  session.completed %}
               <td><a href="{% url 'session_overview' session.pk %}">{{ session.name }}</a></td>
               {% else %}
