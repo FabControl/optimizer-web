@@ -31,6 +31,7 @@ urlpatterns = [
     path('sessions/<int:pk>/delete/', views.SessionDelete.as_view(), name='session_delete'),
     path('sessions/<int:pk>/overview/', views.overview_dispatcher, name='session_overview'),
     path('sessions/<int:pk>/switch/<str:number>/', views.test_switch, name='test_switch'),
+    path('sessions/<int:pk>/rename/', views.session_rename, name='session_rename'),
     path('sessions/new/', views.new_session, name='new_session'),
     path('team_stats/', views.TeamStatsView.as_view(), name='team_stats'),
 
