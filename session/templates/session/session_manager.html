@@ -11,12 +11,11 @@
         <font size="6">Testing Sessions</font>
       </p>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-sm-9">
+    <div class="col-sm text-right">
       {% if request.user.plan == 'basic' %}
+        <div><button type="button" class="btn btn-outline-primary btn" disabled>+ New Testing Session</button></div>
         {% if request.user.member_of_corporation is None or request.user.member_of_corporation.owner == request.user %}
-        <a href="{% url 'plans' %}">Upgrade to create new Testing Session</a>
+        <div><a href="{% url 'plans' %}">Upgrade to create new Testing Session</a></div>
         {% else %}
           {% with request.user.member_of_corporation.owner as corporation_owner %}
           <p>To create new Testing Sessions, ask {{ corporation_owner.last_name }} {{ corporation_owner.first_name }} to upgrade account</p>

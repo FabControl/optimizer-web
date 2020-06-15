@@ -205,7 +205,7 @@ def activate_account(request, uidb64, token):
         user = None
 
     if user is not None and account_activation_token.check_token(user, token):
-        trial_end_date = now() + timedelta(days=3)  # When is the trial going to expire
+        trial_end_date = now() + timedelta(days=6)  # When is the trial going to expire
         user.is_active = True
         user.subscribe_till(trial_end_date)  # Activate trial upon account activation
         user.save()
