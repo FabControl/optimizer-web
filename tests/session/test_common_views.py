@@ -128,6 +128,7 @@ class SessionViewsTest(TestCase):
                 ('report', {'pk': test_session.pk}),
                 ('session_delete', {'pk': test_session.pk}),
                 ('session_overview', {'pk': test_session.pk}),
+                ('session_rename', {'pk': test_session.pk}),
                 ('test_switch', {'pk': test_session.pk, 'number': '5'}),
                 ('new_session', {}),
                 ("faq", {}),

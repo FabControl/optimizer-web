@@ -11,11 +11,11 @@
         <font size="6">Materials</font>
       </p>
     </div>
+    <div class="col-sm text-right">
+      <button type="button" onclick="location.href='{% url 'material_form' %}'" class="btn btn-primary btn">+ New Material</button>
+    </div>
   </div>
   <div class="row">
-    <div class="col-sm-9"><button type="button" onclick="location.href='{% url 'material_form' %}'" class="btn btn-primary btn">+ New Material</button></div>
-  </div>
-  <div class="row pt-3">
     <div class="col-sm-12">
       <div class="card p-2">
         <table class="sortable sortable-theme-bootstrap table" data-sortable>

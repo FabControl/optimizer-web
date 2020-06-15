@@ -1,4 +1,3 @@
-
 {% extends "session/base.html" %}
 {% block content %}
 {% load static %}
@@ -7,15 +6,18 @@
 <div class="container pt-3">
   <div class="row pt-2">
     <div class="col-sm">
-      <p class='lead'><font size='6'>Welcome to 3DOptimizer!</font></p>
+      <p class='lead'>
+        <font size='6'>Welcome to 3DOptimizer!</font>
+      </p>
     </div>
   </div>
   <div class="row pt-2">
     <div class="col-sm">
       {% if invitations %}
-        {% for corporation in invitations %}
-        <p>{{ corporation.owner.first_name }} {{ corporation.owner.last_name }} invited you to collaborate in {{ corporation.name }}. <a href="{% url 'accept_corporation_invitation' corporation.pk %}">Join</a> | <a href="{% url 'decline_corporation_invitation' corporation.pk %}">Decline</a></p>
-        {% endfor %}
+      {% for corporation in invitations %}
+      <p>{{ corporation.owner.first_name }} {{ corporation.owner.last_name }} invited you to collaborate in {{ corporation.name }}. <a href="{% url 'accept_corporation_invitation' corporation.pk %}">Join</a> | <a
+          href="{% url 'decline_corporation_invitation' corporation.pk %}">Decline</a></p>
+      {% endfor %}
       {% endif %}
     </div>
   </div>
@@ -42,6 +44,15 @@
         <a href="{% url 'material_manager' %}">View all materials</a>
       </div>
     </div>
+    {% if request.user.member_of_corporation %}
+    <div class="col-sm">
+      <div class="card p-2 text-center shadow-sm bg-light">
+        <p class='lead'>Users</p>
+        <p class='display-2'>{{cards.materials.len}}</p>
+        <a href="{% url 'material_manager' %}">View all materials</a>
+      </div>
+    </div>
+    {% endif %}
   </div>
   {% endif %}
   {% if latest_sessions|length < 1 %}
@@ -62,48 +73,51 @@
   {% else %}
   <div class="row pt-3">
     <div class="col-sm">
-      <div class="pt-3 pb-2">
-        <h4>Recent Testing Sessions</h4>
-      </div>
-      <table class="sortable sortable-theme-bootstrap table" data-sortable>
-        <thead>
-          <tr>
-            <th class='caps'>Name</th>
-            <th class='caps'>Mode</th>
-            <th class='caps'>Target</th>
-            <th class='caps'>3D Printer</th>
-            <th class='caps'>Material</th>
-            <th class='caps'>Tests</th>
-            <th class='caps' data-defaultsort="desc">Created</th>
-          </tr>
-        </thead>
-        <tbody>
-          {# ROW CONTENTS #}
-          {% for session in latest_sessions %}
-          <tr>
-            {% if  session.completed %}
-              <td><a class="" href="{% url 'session_overview' session.pk %}">{{ session.name }}</a></td>
-            {% else %}
-              <td><a class="" href="{% url 'session_detail' session.pk %}">{{ session.name }}</a></td>
-            {% endif %}
-            <td>{{ session.mode.name }}</td>
-            <td>{{session.get_target_display}}</td>
-            <td>{{ session.machine.model }}</td>
-            <td>{{ session.material.name }}</td>
-            <td>{{session.completed_tests}}</td>
-            <td>{{session.pub_date}}</td>
-          </tr>
-          {% endfor %}
-
-        </tbody>
-      </table>
+      <h4>Recent Testing Sessions</h4>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-sm">
+    <div class="col-sm text-right">
       <button type="button" onclick="location.href='{% url 'new_session' %}'" class="btn btn-primary">+ New Testing Session</button>
     </div>
   </div>
-  {%  endif %}
+    <div class="row pt-3">
+      <div class="col-sm">
+        <table class="sortable sortable-theme-bootstrap table" data-sortable>
+          <thead>
+            <tr>
+              <th class='caps'>ID</th>
+              <th class='caps'>Name</th>
+              <th class='caps'>Mode</th>
+              <th class='caps'>Target</th>
+              <th class='caps'>3D Printer</th>
+              <th class='caps'>Material</th>
+              <th class='caps'>Tests</th>
+              <th class='caps'>Created</th>
+            </tr>
+          </thead>
+          <tbody>
+            {# ROW CONTENTS #}
+            {% for session in latest_sessions %}
+            <tr>
+              <td>{{ session.number }}</td>
+              {% if  session.completed %}
+              <td><a class="" href="{% url 'session_overview' session.pk %}">{{ session.name }}</a></td>
+              {% else %}
+              <td><a class="" href="{% url 'session_detail' session.pk %}">{{ session.name }}</a></td>
+              {% endif %}
+              <td>{{ session.mode.name }}</td>
+              <td>{{session.get_target_display}}</td>
+              <td>{{ session.machine.model }}</td>
+              <td>{{ session.material.name }}</td>
+              <td>{{session.completed_tests}}</td>
+              <td>{{session.pub_date}}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{%  endif %}
 </div>
 {% endblock %}

@@ -5,7 +5,7 @@ from .utilities import load_json, optimizer_info, common_cura_qulity_types
 from django.http import FileResponse, HttpResponseRedirect, Http404, HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, reverse
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.forms.models import model_to_dict
@@ -45,9 +45,11 @@ def index(request):
 
 @login_required
 def dashboard(request):
-    latest_sessions = Session.objects.filter(owner=request.user).order_by('-pub_date')[:5]
+    user = request.user
+    latest_sessions = user.session_set.filter(Q(corporation=None) | Q(corporation=user.member_of_corporation)).order_by('-pub_date')[:5]
 
-    ownership = model_ownership_query(request.user)
+    ownership = model_ownership_query(user)
+    #TODO optimize this to use sigle query and only return counts
     len_printers = len(Machine.objects.filter(ownership))
     len_materials = len(Material.objects.filter(ownership))
     len_sessions = len(Session.objects.filter(ownership))
@@ -57,7 +59,7 @@ def dashboard(request):
              'sessions': {'len': len_sessions}}
 
     context = {'latest_sessions': latest_sessions,
-               'invitations': Corporation.objects.filter(_invited_users__contains=' '+ request.user.email + ' '),
+               'invitations': Corporation.objects.filter(_invited_users__contains=' '+ user.email + ' '),
                'cards': cards}
     return render(request, 'session/dashboard.html', context)
 
@@ -233,19 +235,6 @@ def sample_machine_data(request, pk):
     return JsonResponse(result)
 
 
-class SettingView(LoginRequiredMixin, generic.DetailView):
-    model = Settings
-    template_name = 'session/settings_detail.html'
-
-
-class SettingsView(LoginRequiredMixin, generic.ListView):
-    template_name = "session/settings_manager.html"
-    context_object_name = 'settings'
-
-    def get_queryset(self):
-        return Settings.objects.order_by('pub_date')
-
-
 class SessionListView(LoginRequiredMixin, ModelOwnershipCheckMixin, generic.ListView):
     template_name = "session/session_manager.html"
     context_object_name = 'sessions'
@@ -271,6 +260,11 @@ class SessionView(SessionTestsSelectionMixin, LoginRequiredMixin, generic.Update
     model = Session
     form_class = TestGenerateForm
     template_name = 'session/session.html'
+
+    def get_context_data(self):
+        context = super().get_context_data()
+        context['rename_form'] = SessionRenameForm(instance=self.object)
+        return context
 
     def form_valid(self, form):
         session = form.save(commit=False)
@@ -347,6 +341,7 @@ class SessionOverview(SessionTestsSelectionMixin, LoginRequiredMixin, ModelOwner
         context = super().get_context_data(**kwargs)
         context['default_quality_type'] = 'normal'
         context['other_quality_types'] = common_cura_qulity_types
+        context['rename_form'] = SessionRenameForm(instance=self.object)
         return context
 
 
@@ -492,9 +487,10 @@ def next_test_switch(request, pk, priority: str):
 @login_required
 def serve_gcode(request, pk):
     session = get_object_or_404(Session, model_ownership_query(request.user), pk=pk)
-    response = FileResponse(session.get_gcode, content_type='text/plain')
-    response['Content-Type'] = 'text/plain'
-    response['Content-Disposition'] = 'attachment; filename={}.gcode'.format(session.name.replace(" ", "_") + "_" + session.test_number)
+    content = session.get_gcode
+    gcode_filename = f'{session.number}_{session.name}_T{session.test_number}_V{session.gcode_download_count:02d}.gcode'
+    response = HttpResponse(content, content_type='text/plain')
+    response['Content-Disposition'] = 'attachment; filename={}'.format(gcode_filename.replace(' ', '_'))
     return response
 
 
@@ -509,9 +505,11 @@ def serve_config(request, pk, slicer):
         quality_type = request.POST.get('quality_type', '')
 
     configuration_file, configuration_file_format = api_client.get_config(slicer, session.persistence, quality_type)
-    response = HttpResponse(configuration_file, content_type='text/plain')
-    response['Content-Type'] = 'application/octet-stream'
-    response['Content-Disposition'] = 'attachment; ' + 'filename={}_{}'.format(str(session.material), str(session.machine)).replace(" ", "_").replace(".", "-") + '.{}'.format(configuration_file_format)
+    response = HttpResponse(configuration_file, content_type='application/octet-stream')
+
+    filename = f'{session.number}_{session.material}_{session.machine}'
+    response['Content-Disposition'] = 'attachment; filename={}.{}'.format(filename.replace(' ', '_'), configuration_file_format)
+
     return response
 
 
@@ -589,6 +587,8 @@ def new_session(request):
             session.update_persistence()
 
             session.save()
+            Session.generate_id_number(session)
+
             for k in ('machine', 'material', 'optimizer_session_name'):
                 if k in request.session:
                     del request.session[k]
@@ -727,3 +727,15 @@ def error_500_view(request):
     response = render_to_response('session/500.html', {"user": request.user})
     response.status_code = 500
     return response
+
+@login_required
+def session_rename(request, pk):
+    return_page = 'session_detail'
+    if request.method == 'POST':
+        SessionRenameForm(request.POST,
+                        model_ownership_query(request.user),
+                        instance=get_object_or_404(Session, pk=pk)).save()
+
+        return_page = request.POST.get('return_page', return_page)
+
+    return redirect(reverse(return_page, kwargs={'pk':pk}))
