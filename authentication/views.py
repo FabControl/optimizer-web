@@ -205,10 +205,7 @@ def activate_account(request, uidb64, token):
         user = None
 
     if user is not None and account_activation_token.check_token(user, token):
-        trial_end_date = now() + timedelta(days=6)  # When is the trial going to expire
-        user.is_active = True
-        user.subscribe_till(trial_end_date)  # Activate trial upon account activation
-        user.save()
+        user.activate_account()
         affiliates = Affiliate.objects.filter(receiver=user)
         if len(affiliates) > 0:
             affiliates[0].confirm(request)
@@ -305,8 +302,7 @@ def use_affiliate(request, uidb64, token):
             if form.is_valid():
                 if form.cleaned_data['email'] == affiliate.email:
                     new_user = form.save(commit=False)
-                    new_user.is_active = True
-                    new_user.save()
+                    new_user.activate_account()
                     affiliate.receiver = new_user
                     affiliate.confirm(request)
                     login(request, new_user)
