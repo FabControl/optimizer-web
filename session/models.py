@@ -582,19 +582,23 @@ class Session(models.Model, DependenciesCopyMixin):
         temp_persistence["session"]["previous_tests"][index][key] = value
         self.persistence = temp_persistence
 
-    def delete_previous_test(self, number):
+    def delete_previous_test(self, number, delete_above=True):
         """
         Deletes test (or tests) from self.previous_tests, if their test_number == number
         :param number:
+        :param delete_above: Should all tests above `number` be deleted
         :return:
         """
-        persistence = self.persistence
-        temp_tests = self.previous_tests
-        for test in temp_tests:
-            if test["test_number"] == number:
-                temp_tests.remove(test)
-        persistence["session"]["previous_tests"] = temp_tests
-        self.persistence = persistence
+        temp_persistence = self.persistence
+        temp_tests = self.previous_tests.copy()
+        numbers_to_delete = [number]
+        if delete_above:
+            numbers_to_delete = []
+            for number in range(int(number), 14):
+                numbers_to_delete.append("{:02d}".format(number))
+        temp_tests = [t for t in temp_tests if t['test_number'] not in numbers_to_delete]
+        temp_persistence["session"]["previous_tests"] = temp_tests
+        self.persistence = temp_persistence
 
     def get_test_with_current_number(self):
         """
