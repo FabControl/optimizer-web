@@ -16,8 +16,9 @@ class SessionSessionTest(TestCase):
     @classmethod
     def setUpClass(self):
         self.user = get_user_model().objects.create_user(email='known_user@somewhere.com',
-                                                         is_active=True,
                                                          password='SomeSecretPassword')
+
+        self.user.activate_account()
 
         self.mode = models.SessionMode.objects.create()
 
@@ -197,12 +198,15 @@ class SessionSessionTest(TestCase):
 
             overview_link = reverse('session_overview', kwargs=dict(pk=session.pk))
             # make session completed and test if user gets redirected to overview
+            session.refresh_from_db()
             with patch('optimizer_api.ApiClient.get_test_info', side_effect=get_test_info):
-                resp = self.client.post(session_link,
-                                        {"validation": "[2,1]",
-                                            "comments": "",
-                                            "btnprimary": ""},
-                                        follow=True)
+                # we don't actually care about next test number, so this is ok
+                with patch('session.models.Session.test_number_next', side_effect=lambda primary: session.test_number):
+                    resp = self.client.post(session_link,
+                                            {"validation": "[2,1]",
+                                                "comments": "",
+                                                "btnprimary": ""},
+                                            follow=True)
 
             self.assertEqual(resp.status_code, 200)
             self.assertTrue(len(resp.redirect_chain) > 0)
@@ -263,11 +267,10 @@ class SessionSessionTest(TestCase):
         resp = self.client.get(tst_url)
         self.assertEqual(resp.status_code, 200)
         # make sure defaults are selected
-        name, tst_type, mode, mode2, machine, material = extract_data(resp.content)
+        name, mode, machine, material = extract_data(resp.content)
 
         #Probably space from template
         self.assertEqual(mode, ('3', '\n            Guided (Free Tests Only)\n        '))
-        self.assertEqual(mode2, ('4', '\n            Untitled\n        '))
         self.assertEqual(name, ('Untitled', ' '))
         self.assertEqual(material, ('', '---------'))
         self.assertEqual(machine, ('', '---------'))
@@ -277,10 +280,9 @@ class SessionSessionTest(TestCase):
         # load new session page and check defaults
         resp = self.client.get(tst_url)
         self.assertEqual(resp.status_code, 200)
-        name, tst_type, mode, mode2, machine, material = extract_data(resp.content)
+        name, mode, machine, material = extract_data(resp.content)
         #Probably space from template
         self.assertEqual(mode, ('3', '\n            Guided (Free Tests Only)\n        '))
-        self.assertEqual(mode2, ('4', '\n            Untitled\n        '))
         self.assertEqual(name, (patched_name, ' '))
         self.assertEqual(material, ('', '---------'))
         self.assertEqual(machine, ('', '---------'))
@@ -289,7 +291,7 @@ class SessionSessionTest(TestCase):
                                 dict(name='Material name', size_od=1.25, next=tst_url),
                                 follow=True)
         self.assertEqual(resp.status_code, 200)
-        name, tst_type, mode, mode2, machine, material = extract_data(resp.content)
+        name, mode, machine, material = extract_data(resp.content)
         self.assertEqual(name, (patched_name, ' '))
         self.assertFalse(material == ('', '---------'))
         self.assertEqual(machine, ('', '---------'))
@@ -319,7 +321,7 @@ class SessionSessionTest(TestCase):
             }
         resp = self.client.post(reverse('machine_form'), machine_props, follow=True)
         self.assertEqual(resp.status_code, 200)
-        name, tst_type, mode, mode2, machine, material = extract_data(resp.content)
+        name, mode, machine, material = extract_data(resp.content)
 
         self.assertEqual(name, (patched_name, ' '))
         self.assertFalse(material == ('', '---------'))
@@ -333,17 +335,16 @@ class SessionSessionTest(TestCase):
                                          name=name[0],
                                          material=material[0],
                                          machine=machine[0],
-                                         target=tst_type[0]))
+                                         target='aesthetics'))
         self.assertEqual(resp.status_code, 302)
 
         # load new session page
         resp = self.client.get(tst_url)
         self.assertEqual(resp.status_code, 200)
         # cache should be cleared now
-        name, tst_type, mode, mode2, machine, material = extract_data(resp.content)
+        name, mode, machine, material = extract_data(resp.content)
 
         self.assertEqual(mode, ('3', '\n            Guided (Free Tests Only)\n        '))
-        self.assertEqual(mode2, ('4', '\n            Untitled\n        '))
         self.assertEqual(name, ('Untitled', ' '))
         self.assertEqual(material, ('', '---------'))
         self.assertEqual(machine, ('', '---------'))

@@ -146,7 +146,7 @@ PASSWORD_RESET_TIMEOUT_DAYS = 1
 
 SAMPLE_SESSIONS_OWNER = 'sample_settings_user@fabcontrol.com'
 
-TIME_LIMITED_PLANS = ['education', 'premium', 'test']
+TIME_LIMITED_PLANS = ['education', 'premium', 'test', 'limited']
 
 PAYMENTS_COMPANY_NAME = 'SIA "FabControl"'
 PAYMENTS_COMPANY_REG_NUMBER = '40203151106'

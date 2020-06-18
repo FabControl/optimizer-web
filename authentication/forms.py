@@ -135,9 +135,11 @@ class PasswordSetForm(SetPasswordForm):
     def save(self, commit=True):
         password = self.cleaned_data["new_password1"]
         self.user.set_password(password)
-        self.user.is_active = True
-        if commit:
+        if not self.user.is_active and commit:
+            self.user.activate_account()
+        elif commit:
             self.user.save()
+
         return self.user
 
 
