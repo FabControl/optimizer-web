@@ -553,6 +553,9 @@ def terms_of_use(request):
 
 @login_required
 def new_session(request):
+    if request.user.plan == 'basic':
+        return redirect(reverse('session_manager'))
+
     if request.method == 'POST':
         form = SessionForm(request.POST, ownership=model_ownership_query(request.user), user=request.user)
 

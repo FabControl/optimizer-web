@@ -167,6 +167,8 @@ class SessionForm(forms.ModelForm):
 
         queryset = SessionMode.objects.filter(pk__in=modes)
 
+        if self.user.plan == "limited":
+            self.fields["target"].choices = [("aesthetics", "Aesthetics")]
         self.fields["mode"] = forms.ModelChoiceField(initial=initial, queryset=queryset, widget=forms.RadioSelect, empty_label=None)
         self.fields["name"].label = "Name"
         self.fields["mode"].label = "Mode"

@@ -56,7 +56,7 @@ class User(AbstractUser):
     username = None
     email = models.EmailField('email address', unique=True,
                               error_messages={'unique': 'Email must be unique'})
-    PLAN_CHOICES = [("basic", "Core"), ("premium", "Premium"), ("education", "Education"), ("permanent", "Permanent"), ("test", "Test")]
+    PLAN_CHOICES = [("basic", "Core"), ("premium", "Premium"), ("education", "Education"), ("permanent", "Permanent"), ("test", "Test"), ("limited", "Limited")]
     _plan = models.CharField(max_length=32, choices=PLAN_CHOICES, default="basic", db_column='plan')
     last_active = models.DateTimeField(null=True)
     onboarding = models.BooleanField(default=True)
@@ -138,6 +138,8 @@ class User(AbstractUser):
                 return "Full Access"
         elif self.plan == "test":
             return "Test Access ({} Days)".format(expiration_delta.days + 1)
+        elif self.plan == "limited":
+            return "Limited Access ({} Days)".format(expiration_delta.days + 1)
 
     def extend_subscription(self, delta: timedelta):
         """
@@ -147,6 +149,8 @@ class User(AbstractUser):
         """
         base = max(self.subscription_expiration, timezone.now())
         new_date = base + delta
+        if self.plan == 'limited':
+            self.plan = 'premium'
         self.subscription_expiration = new_date.replace(hour=23, minute=59, second=59)
         self.save()
 
@@ -158,6 +162,8 @@ class User(AbstractUser):
         redeemed.save()
 
     def subscribe_till(self, target_date:datetime):
+        if self.plan == 'limited':
+            self.plan = 'premium'
         self.subscription_expiration = target_date.replace(hour=23, minute=59, second=59)
         self.save()
 
@@ -167,6 +173,13 @@ class User(AbstractUser):
             return
         redeemed.visible_to_user = False
         redeemed.save()
+
+    def activate_account(self):
+        self.is_active = True
+        self.plan = 'limited'
+        self.subscription_expiration = (timezone.now() + timedelta(days=7)).replace(hour=23, minute=59, second=59)
+        self.save()
+
 
     def expire(self):
         """

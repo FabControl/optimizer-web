@@ -12,7 +12,18 @@
       </p>
     </div>
     <div class="col-sm text-right">
+      {% if request.user.plan == 'basic' %}
+        <div><button type="button" class="btn btn-outline-primary btn" disabled>+ New Testing Session</button></div>
+        {% if request.user.member_of_corporation is None or request.user.member_of_corporation.owner == request.user %}
+        <div><a href="{% url 'plans' %}">Upgrade to create new Testing Session</a></div>
+        {% else %}
+          {% with request.user.member_of_corporation.owner as corporation_owner %}
+          <p>To create new Testing Sessions, ask {{ corporation_owner.last_name }} {{ corporation_owner.first_name }} to upgrade account</p>
+          {% endwith %}
+        {% endif %}
+      {% else %}
       <button type="button" onclick="location.href='{% url 'new_session' %}'" class="btn btn-primary btn">+ New Testing Session</button>
+      {% endif %}
     </div>
   </div>
   <div class="row pt-3">
