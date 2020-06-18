@@ -367,7 +367,6 @@ class Session(models.Model, DependenciesCopyMixin):
         cls.objects.filter(pk=instance.pk).update(number=max(1001,
                                   cls.objects.filter(**query).aggregate(number_max=models.Max('number'))['number_max'] + 1))
 
-
     def clean_min_max(self, to_zero: bool = False):
         """
         Set min_max_parameter to a nominal value so that they wouldn't be carried over to other tests.
@@ -546,10 +545,10 @@ class Session(models.Model, DependenciesCopyMixin):
         Retrieves GCODE for the current persistence data.
         :return:
         """
-        gcode = api_client.return_data(self.persistence, output="gcode")
-        self.persistence = api_client.persistence
         self.gcode_download_count += 1
         self.save()
+        gcode = api_client.return_data(self.persistence, output="gcode")
+        self.persistence = api_client.persistence
         return gcode
 
     @property
