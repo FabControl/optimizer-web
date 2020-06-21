@@ -19,7 +19,7 @@ class SessionAdmin(admin.ModelAdmin):
 @admin.register(Machine)
 class MachineAdmin(admin.ModelAdmin):
     list_display = ('model', 'pub_date', 'owner', 'form')
-    search_fields = ('name', 'owner__email', 'form')
+    search_fields = ('model', 'owner__email', 'form')
     sortable_by = ('model', 'pub_date', 'owner', 'form')
     date_hierarchy = 'pub_date'
 
