@@ -427,11 +427,7 @@ class MaterialDelete(LoginRequiredMixin, ModelOwnershipCheckMixin, generic.Delet
 @login_required
 def session_validate_undo(request, pk):
     session = get_object_or_404(Session, model_ownership_query(request.user), pk=pk)
-    session.remove_last_test()
-
-    previously_tested_parameters = session.previously_tested_parameters
-    del previously_tested_parameters[session.test_number]
-    session._previously_tested_parameters = json.dumps(previously_tested_parameters)
+    session.delete_previous_test(session.test_number, delete_above=False)
     session.save()
 
     return redirect('session_detail', pk=pk)
@@ -440,22 +436,7 @@ def session_validate_undo(request, pk):
 @login_required
 def session_validate_revert(request, pk):
     session = get_object_or_404(Session, model_ownership_query(request.user), pk=pk)
-
-    routine = api_client.get_routine()
-    test_names = [name for name, _ in routine.items()]
-    removable_test_names = []
-    current_found = False
-    for name in test_names:
-        if name == session.test_number:
-            current_found = True
-        if current_found:
-            removable_test_names.append(name)
-    previously_tested_parameters = session.previously_tested_parameters
-    for previous_test, _ in session.previously_tested_parameters.items():
-        if previous_test in removable_test_names:
-            del previously_tested_parameters[previous_test]
-            session.delete_previous_test(previous_test)
-    session._previously_tested_parameters = json.dumps(previously_tested_parameters)
+    session.delete_previous_test(session.test_number)
     session.save()
 
     return redirect('session_detail', pk=pk)
@@ -572,6 +553,9 @@ def terms_of_use(request):
 
 @login_required
 def new_session(request):
+    if request.user.plan == 'basic':
+        return redirect(reverse('session_manager'))
+
     if request.method == 'POST':
         form = SessionForm(request.POST, ownership=model_ownership_query(request.user), user=request.user)
 

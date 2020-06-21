@@ -1,29 +1,26 @@
+image:
+  name: fabcontrol/images:python3.6
+  username: $DOCKER_HUB_USERNAME
+  password: $DOCKER_HUB_PASSWORD
+  # Dockerfile here
+  #FROM python:3.6-slim-buster
+  #RUN apt-get update
+  #RUN apt-get -y install zip libcairo2 libpango-1.0-0 libpangocairo-1.0-0
+  #RUN pip install boto3
+
 definitions:
   steps:
     - step: &test
         name: 'Run tests'
-        image: 'python:3.6-slim-buster'
         script:
           # mysqlclient is not required for testing
           - sed -i -e '/mysqlclient/d' req.txt
-          - apt-get update
-          - apt-get -y install libcairo2 libpango-1.0-0 libpangocairo-1.0-0
           - pip install -r req.txt
-            # update all deplyments, except test and develop
-            # regex is mached from beginning of string
           - SELECTED_SETTINGS=TESTING ./manage.py test -v 2
-    - step: &compress
-          name: 'Compress package'
-          image: 'atlassian/default-image:2'
-          script:
-            - zip -r release.zip ./ -x ./.git
-          artifacts: 
-            - release.zip
     - step: &deploy
         name: 'Deploy package'
-        image: 'python:3.7.3'
         script:
-          - pip install boto3
+          - zip -r release.zip ./ -x ./.git/**\*
             # update all deplyments, except test and develop
             # regex is mached from beginning of string
           - python deploy-aws.py release.zip '((?!(development|test)).+|(development|test).+|)$'
@@ -31,20 +28,17 @@ pipelines:
   branches:
     development:
       - step: *test
-      - step: *compress
       - step:
           <<: *deploy
           script:
-            - pip install boto3
+            - zip -r release.zip ./ -x ./.git/**\*
             - python deploy-aws.py release.zip 'develop$'
     test:
-      - step: *compress
       - step:
           <<: *deploy
           script:
-            - pip install boto3
+            - zip -r release.zip ./ -x ./.git/**\*
             - python deploy-aws.py release.zip 'test$'
 
     master:
-      - step: *compress
       - step: *deploy

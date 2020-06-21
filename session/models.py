@@ -367,7 +367,6 @@ class Session(models.Model, DependenciesCopyMixin):
         cls.objects.filter(pk=instance.pk).update(number=max(1001,
                                   cls.objects.filter(**query).aggregate(number_max=models.Max('number'))['number_max'] + 1))
 
-
     def clean_min_max(self, to_zero: bool = False):
         """
         Set min_max_parameter to a nominal value so that they wouldn't be carried over to other tests.
@@ -546,10 +545,10 @@ class Session(models.Model, DependenciesCopyMixin):
         Retrieves GCODE for the current persistence data.
         :return:
         """
-        gcode = api_client.return_data(self.persistence, output="gcode")
-        self.persistence = api_client.persistence
         self.gcode_download_count += 1
         self.save()
+        gcode = api_client.return_data(self.persistence, output="gcode")
+        self.persistence = api_client.persistence
         return gcode
 
     @property
@@ -583,19 +582,23 @@ class Session(models.Model, DependenciesCopyMixin):
         temp_persistence["session"]["previous_tests"][index][key] = value
         self.persistence = temp_persistence
 
-    def delete_previous_test(self, number):
+    def delete_previous_test(self, number, delete_above=True):
         """
         Deletes test (or tests) from self.previous_tests, if their test_number == number
         :param number:
+        :param delete_above: Should all tests above `number` be deleted
         :return:
         """
-        persistence = self.persistence
-        temp_tests = self.previous_tests
-        for test in temp_tests:
-            if test["test_number"] == number:
-                temp_tests.remove(test)
-        persistence["session"]["previous_tests"] = temp_tests
-        self.persistence = persistence
+        temp_persistence = self.persistence
+        temp_tests = self.previous_tests.copy()
+        numbers_to_delete = [number]
+        if delete_above:
+            numbers_to_delete = []
+            for number in range(int(number), 14):
+                numbers_to_delete.append("{:02d}".format(number))
+        temp_tests = [t for t in temp_tests if t['test_number'] not in numbers_to_delete]
+        temp_persistence["session"]["previous_tests"] = temp_tests
+        self.persistence = temp_persistence
 
     def get_test_with_current_number(self):
         """
