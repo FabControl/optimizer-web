@@ -377,9 +377,9 @@ def session_dispatcher(request, pk, download=False):
             return overview_dispatcher(request, pk=pk)
         else:
             session.test_number = next_test
-            messages.error(request, mark_safe("Your next test is available in the premium mode only. "
-                                                "You can skip it and go to the next free test or "
-                                                f"<a href={reverse_lazy('plans')}>purchase premium.</a>"))
+            messages.error(request, mark_safe("Your next test is available in Full Access only. "
+                                                "You can skip it and go to the next available test or "
+                                                f"<a href={reverse_lazy('plans')}>purchase Full Access.</a>"))
         session.save()
 
     if session.mode.type == 'normal':
