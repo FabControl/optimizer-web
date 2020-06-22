@@ -159,7 +159,7 @@ class SessionForm(forms.ModelForm):
 
         modes = []
         initial = None
-        for mode in SessionMode.objects.all():
+        for mode in SessionMode.objects.filter(public=True):
             if self.user.plan in mode.plan_availability:
                 modes.append(mode.pk)
                 if mode.type == 'guided':
