@@ -371,11 +371,12 @@ def session_dispatcher(request, pk, download=False):
 
     # Make sure that the user is not where they shouldn't be
     if session.test_number not in request.user.available_tests:
-        if session.test_number_next() not in request.user.available_tests:
+        next_test = session.test_number_next()
+        if next_test not in request.user.available_tests:
             session.test_number = request.user.available_tests[-1]
             return overview_dispatcher(request, pk=pk)
         else:
-            session.test_number = session.test_number_next()
+            session.test_number = next_test
             messages.error(request, mark_safe("Your next test is available in the premium mode only. "
                                                 "You can skip it and go to the next free test or "
                                                 f"<a href={reverse_lazy('plans')}>purchase premium.</a>"))
