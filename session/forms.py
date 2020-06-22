@@ -5,7 +5,7 @@ from django.utils.safestring import mark_safe
 from crispy_forms.layout import Submit, Layout, Row, Column, Field, HTML
 from crispy_forms.helper import FormHelper
 from .models import *
-from .choices import TEST_NUMBER_CHOICES
+from .choices import TEST_NUMBER_CHOICES, MODE_CHOICES
 
 
 class MinMaxWidget(forms.widgets.MultiWidget):
@@ -159,7 +159,7 @@ class SessionForm(forms.ModelForm):
 
         modes = []
         initial = None
-        for mode in SessionMode.objects.all():
+        for mode in SessionMode.objects.filter(public=True):
             if self.user.plan in mode.plan_availability:
                 modes.append(mode.pk)
                 if mode.type == 'guided':
@@ -167,8 +167,6 @@ class SessionForm(forms.ModelForm):
 
         queryset = SessionMode.objects.filter(pk__in=modes)
 
-        if self.user.plan == "limited":
-            self.fields["target"].choices = [("aesthetics", "Aesthetics")]
         self.fields["mode"] = forms.ModelChoiceField(initial=initial, queryset=queryset, widget=forms.RadioSelect, empty_label=None)
         self.fields["name"].label = "Name"
         self.fields["mode"].label = "Mode"
@@ -177,6 +175,12 @@ class SessionForm(forms.ModelForm):
         self.fields["machine"].label = "3D Printer"
         self.fields["machine"].help_text = mark_safe('<a href="{}?next={}">+ New 3D Printer</a>'.format(reverse_lazy('machine_form'), reverse_lazy('new_session')))
         self.fields["target"].label = "Target"
+
+        if self.user.plan == "limited":
+            self.fields["target"].choices = [x for x in TARGET_CHOICES if x[0] == "aesthetics"]
+            help_tail = ' require <a href="{}">Full Access</a>'.format(reverse_lazy('plans'))
+            self.fields["target"].help_text = "Mechanical Strength and Short Printing Time targets" + help_tail
+            self.fields["mode"].help_text = "Advanced mode" + help_tail
 
         self.helper = FormHelper()
         self.helper.form_tag = False
@@ -354,10 +358,8 @@ class TestGenerateForm(forms.ModelForm):
         for parameter in secondary_parameters:
             if parameter["units"] != 'mm' and parameter["programmatic_name"] != "extrusion_multiplier":
                 param = forms.IntegerField(min_value=parameter["min_max"][0], max_value=parameter["min_max"][1])
-            elif parameter["programmatic_name"] == "extrusion_multiplier":
-                param = forms.DecimalField(min_value=parameter["min_max"][0], max_value=parameter["min_max"][1])
             else:
-                param = forms.DecimalField(min_value=parameter["min_max"][0], max_value=parameter["min_max"][1])
+                param = forms.DecimalField(min_value=round(parameter["min_max"][0], 3), max_value=round(parameter["min_max"][1], 3))
             param.label = "{} ({})".format(parameter["name"].capitalize(), (
                     "°C" if parameter["units"] == "degC" else parameter["units"]))
             param.widget.attrs["class"] = "col-sm-2 optimizer-input"
