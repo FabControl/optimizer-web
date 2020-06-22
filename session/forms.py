@@ -358,10 +358,8 @@ class TestGenerateForm(forms.ModelForm):
         for parameter in secondary_parameters:
             if parameter["units"] != 'mm' and parameter["programmatic_name"] != "extrusion_multiplier":
                 param = forms.IntegerField(min_value=parameter["min_max"][0], max_value=parameter["min_max"][1])
-            elif parameter["programmatic_name"] == "extrusion_multiplier":
-                param = forms.DecimalField(min_value=parameter["min_max"][0], max_value=parameter["min_max"][1])
             else:
-                param = forms.DecimalField(min_value=parameter["min_max"][0], max_value=parameter["min_max"][1])
+                param = forms.DecimalField(min_value=round(parameter["min_max"][0], 3), max_value=round(parameter["min_max"][1], 3))
             param.label = "{} ({})".format(parameter["name"].capitalize(), (
                     "°C" if parameter["units"] == "degC" else parameter["units"]))
             param.widget.attrs["class"] = "col-sm-2 optimizer-input"
