@@ -11,7 +11,7 @@ TEST_NUMBER_CHOICES = [("01", "first-layer track height vs first-layer printing 
                        ("11", "retraction distance vs retraction speed"),
                        ("12", "bridging extrusion multiplier vs bridging printing speed")]
 SLICER_CHOICES = [("Prusa", "Slic3r PE"), ("Simplify3D", "Simplify3D"), ("Cura", "Cura")]
-TARGET_CHOICES = [("mechanical_strength", "Mechanical Strength"), ("aesthetics", "Visual Quality"), ("fast_printing", "Short printing time")]
+TARGET_CHOICES = [("mechanical_strength", "Mechanical Strength"), ("aesthetics", "Visual Quality"), ("fast_printing", "Short Printing Time")]
 MODE_CHOICES = [("core", "Core"), ("advanced", "Advanced"), ("guided", "Guided")]
 WIZARD_MODES = [("guided", "Guided"), ("normal", "Normal")]
 TOOL_CHOICES = [("T0", "T0"), ("T1", "T1"), ("T2", "T2")]

@@ -178,8 +178,8 @@ class SessionForm(forms.ModelForm):
 
         if self.user.plan == "limited":
             self.fields["target"].choices = [x for x in TARGET_CHOICES if x[0] == "aesthetics"]
-            help_tail = ' requires <a href="{}">Full Access</a>'.format(reverse_lazy('plans'))
-            self.fields["target"].help_text = "Other targets" + help_tail
+            help_tail = ' require <a href="{}">Full Access</a>'.format(reverse_lazy('plans'))
+            self.fields["target"].help_text = "Mechanical Strength and Short Printing Time targets" + help_tail
             self.fields["mode"].help_text = "Advanced mode" + help_tail
 
         self.helper = FormHelper()
