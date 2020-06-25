@@ -261,8 +261,8 @@ class SessionView(SessionTestsSelectionMixin, LoginRequiredMixin, generic.Update
     form_class = TestGenerateForm
     template_name = 'session/session.html'
 
-    def get_context_data(self):
-        context = super().get_context_data()
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         context['rename_form'] = SessionRenameForm(instance=self.object)
         return context
 
