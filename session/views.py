@@ -261,8 +261,8 @@ class SessionView(SessionTestsSelectionMixin, LoginRequiredMixin, generic.Update
     form_class = TestGenerateForm
     template_name = 'session/session.html'
 
-    def get_context_data(self):
-        context = super().get_context_data()
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         context['rename_form'] = SessionRenameForm(instance=self.object)
         return context
 
@@ -470,7 +470,14 @@ def next_test_switch(request, pk, priority: str):
 def serve_gcode(request, pk):
     session = get_object_or_404(Session, model_ownership_query(request.user), pk=pk)
     content = session.get_gcode
-    gcode_filename = f'{session.number}_{session.name}_T{session.test_number}_V{session.gcode_download_count:02d}.gcode'
+
+    gcode_filename = f'{session.number}_{{}}_T{session.test_number}_V{session.gcode_download_count:02d}.gcode'
+    session_name = session.name
+    session_name_max_length = 39 - len(gcode_filename) + 2 # include curly braces in calculation
+    if len(session_name) > session_name_max_length:
+        session_name = session_name[:session_name_max_length]
+    gcode_filename = gcode_filename.format(session_name)
+
     response = HttpResponse(content, content_type='text/plain')
     response['Content-Disposition'] = 'attachment; filename={}'.format(gcode_filename.replace(' ', '_'))
     return response

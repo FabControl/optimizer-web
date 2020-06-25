@@ -6,6 +6,7 @@ from crispy_forms.layout import Submit, Layout, Row, Column, Field, HTML
 from crispy_forms.helper import FormHelper
 from .models import *
 from .choices import TEST_NUMBER_CHOICES, MODE_CHOICES
+from decimal import Decimal
 
 
 class MinMaxWidget(forms.widgets.MultiWidget):
@@ -326,8 +327,8 @@ class TestGenerateForm(forms.ModelForm):
                                 "value": round(value, (3 if parameter["units"] in ["mm", "-"] else 0)),
                                 "step": ("0.001" if parameter["units"] in ["mm", "-"] else "1"),
                                 "onchange": "change_fields(this)",
-                                "min": round(parameter["min_max"][0], 3),
-                                "max": round(parameter["min_max"][1], 3)
+                                "min": Decimal('{0:0.3f}'.format(parameter["min_max"][0])),
+                                "max": Decimal('{0:0.3f}'.format(parameter["min_max"][1]))
                             })
                         if iterable not in [0, highest_iterable]:
                             subwidget.attrs["type"] = "text"
@@ -359,7 +360,7 @@ class TestGenerateForm(forms.ModelForm):
             if parameter["units"] != 'mm' and parameter["programmatic_name"] != "extrusion_multiplier":
                 param = forms.IntegerField(min_value=parameter["min_max"][0], max_value=parameter["min_max"][1])
             else:
-                param = forms.DecimalField(min_value=round(parameter["min_max"][0], 3), max_value=round(parameter["min_max"][1], 3))
+                param = forms.DecimalField(min_value=Decimal('{0:0.3f}'.format(parameter["min_max"][0])), max_value=Decimal('{0:0.3f}'.format(parameter["min_max"][1])))
             param.label = "{} ({})".format(parameter["name"].capitalize(), (
                     "°C" if parameter["units"] == "degC" else parameter["units"]))
             param.widget.attrs["class"] = "col-sm-2 optimizer-input"
