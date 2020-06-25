@@ -264,8 +264,8 @@ class SessionView(SessionTestsSelectionMixin, LoginRequiredMixin, generic.Update
     form_class = TestGenerateForm
     template_name = 'session/session.html'
 
-    def get_context_data(self):
-        context = super().get_context_data()
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         context['rename_form'] = SessionRenameForm(instance=self.object)
         return context
 
@@ -374,14 +374,15 @@ def session_dispatcher(request, pk, download=False):
 
     # Make sure that the user is not where they shouldn't be
     if session.test_number not in request.user.available_tests:
-        if session.test_number_next() not in request.user.available_tests:
+        next_test = session.test_number_next()
+        if next_test not in request.user.available_tests:
             session.test_number = request.user.available_tests[-1]
             return overview_dispatcher(request, pk=pk)
         else:
-            session.test_number = session.test_number_next()
-            messages.error(request, mark_safe("Your next test is available in the premium mode only. "
-                                                "You can skip it and go to the next free test or "
-                                                f"<a href={reverse_lazy('plans')}>purchase premium.</a>"))
+            session.test_number = next_test
+            messages.error(request, mark_safe("Your next test is available in Full Access only. "
+                                                "You can skip it and go to the next available test or "
+                                                f"<a href={reverse_lazy('plans')}>purchase Full Access.</a>"))
         session.save()
 
     if session.mode.type == 'normal':
@@ -472,7 +473,14 @@ def next_test_switch(request, pk, priority: str):
 def serve_gcode(request, pk):
     session = get_object_or_404(Session, model_ownership_query(request.user), pk=pk)
     content = session.get_gcode
-    gcode_filename = f'{session.number}_{session.name}_T{session.test_number}_V{session.gcode_download_count:02d}.gcode'
+
+    gcode_filename = f'{session.number}_{{}}_T{session.test_number}_V{session.gcode_download_count:02d}.gcode'
+    session_name = session.name
+    session_name_max_length = 39 - len(gcode_filename) + 2 # include curly braces in calculation
+    if len(session_name) > session_name_max_length:
+        session_name = session_name[:session_name_max_length]
+    gcode_filename = gcode_filename.format(session_name)
+
     response = HttpResponse(content, content_type='text/plain')
     response['Content-Disposition'] = 'attachment; filename={}'.format(gcode_filename.replace(' ', '_'))
     return response
