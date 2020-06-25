@@ -306,6 +306,7 @@ class TaxationCountry(models.Model):
     def __str__(self):
         return f'{self.long_name} (VAT={self.vat_charge}%)'
 
+
 class Corporation(models.Model):
     name = models.CharField(max_length=32)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -322,7 +323,6 @@ class Corporation(models.Model):
             self._invited_users += user.email + ' '
             self.save()
 
-
     def remove_invitation(self, user):
         self._invited_users = self._invited_users.replace(user.email + ' ', '')
         self.save()
@@ -338,6 +338,7 @@ class Corporation(models.Model):
     @property
     def user_count(self):
         return len(self.team.all()) + len(self.invited_users) + len(self.affiliate_set.all())
+
     @property
     def max_allowed(self):
         if self.owner.plan != 'premium':
