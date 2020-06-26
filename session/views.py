@@ -57,6 +57,9 @@ def dashboard(request):
     cards = {'printers': {'len': len_printers},
              'materials': {'len': len_materials},
              'sessions': {'len': len_sessions}}
+    # Team members if user in a team
+    if request.user.member_of_corporation:
+        cards['corporation'] = {'len': len(request.user.member_of_corporation.team_sorted)}
 
     context = {'latest_sessions': latest_sessions,
                'invitations': Corporation.objects.filter(_invited_users__contains=' '+ user.email + ' '),

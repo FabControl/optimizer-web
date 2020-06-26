@@ -82,9 +82,11 @@ class TestValidationField(forms.Field):
 
     def to_python(self, value):
         try:
+            # For 2D tests
             indices = [int(x) for x in value.strip("[]").split(",")]
             return [self.tested_values[0][indices[0]], self.tested_values[1][indices[1]]]
-        except ValueError:
+        except (ValueError, TypeError):
+            # For 1D tests
             indices = [int(x) for x in value.strip("[]").split(",")[0]]
             return [self.tested_values[0][indices[0]], None]
 
