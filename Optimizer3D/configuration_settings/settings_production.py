@@ -65,6 +65,6 @@ STRIPE_BUSINESS_PRODUCT_ID = config['STRIPE_BUSINESS_PRODUCT_ID']
 GA_TRACKING_ID = config['GA_TRACKING_ID']
 
 # GEO_RESTRICTION_WHITELIST = ['LV']
-GEO_RESTRICTION_BLACKLIST = ['IN', 'CN']
+# GEO_RESTRICTION_BLACKLIST = ['IN', 'CN']
 # If both exist, then ONLY whitelist is used
 # Country codes available https://en.wikipedia.org/wiki/ISO_3166-1
