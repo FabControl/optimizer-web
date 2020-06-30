@@ -5,6 +5,11 @@
 <form id="opti-form" class="" action="" method="post">
   {% crispy form %}
   <div class="row pt-3 justify-content-end">
+    {% if object.previous_tests %}
+    <div class="col">
+      <button class="btn btn-secondary" onclick="location.href='{% url 'session_validate_back' object.pk %}'" type="button" name="button">Back</button>
+    </div>
+    {% endif %}
     <div class="col text-right">
       <button id="gcode_button" type="submit" class="btn btn-primary">Download .GCODE</button>
     </div>

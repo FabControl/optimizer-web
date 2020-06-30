@@ -426,10 +426,14 @@ class MaterialDelete(LoginRequiredMixin, ModelOwnershipCheckMixin, generic.Delet
 
 
 @login_required
-def session_validate_undo(request, pk):
+def session_undo(request, pk):
     session = get_object_or_404(Session, model_ownership_query(request.user), pk=pk)
-    session.delete_previous_test(session.test_number, delete_above=False)
-    session.save()
+    if session.previous_tests[-1]['validated']:
+        session.alter_previous_tests(-1, "validated", False)
+        session.test_number = session.previous_tests[-1]['test_number']
+    else:
+        session.delete_previous_test(session.test_number, delete_above=False)
+        session.save()
 
     return redirect('session_detail', pk=pk)
 
