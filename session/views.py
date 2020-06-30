@@ -267,6 +267,7 @@ class SessionView(SessionTestsSelectionMixin, LoginRequiredMixin, generic.Update
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['rename_form'] = SessionRenameForm(instance=self.object)
+        context['offer_download'] = self.kwargs.get('download', 1)
         return context
 
     def form_valid(self, form):
@@ -363,7 +364,7 @@ def overview_dispatcher(request, pk):
 
 
 @login_required
-def session_dispatcher(request, pk, download=False):
+def session_dispatcher(request, pk, download=1):
     session = get_object_or_404(Session, model_ownership_query(request.user), pk=pk)
 
     # Check if user still is onboarding
@@ -434,11 +435,12 @@ def session_undo(request, pk):
     if session.previous_tests[-1]['validated']:
         session.alter_previous_tests(-1, "validated", False)
         session.test_number = session.previous_tests[-1]['test_number']
+        return redirect('session_detail', pk=pk, download=0)
+
     else:
         session.delete_previous_test(session.test_number, delete_above=False)
         session.save()
-
-    return redirect('session_detail', pk=pk)
+        return redirect('session_detail', pk=pk)
 
 
 @login_required
