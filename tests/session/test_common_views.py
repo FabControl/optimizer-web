@@ -120,6 +120,7 @@ class SessionViewsTest(TestCase):
                 ('machine_delete', {'pk': machine.pk}),
                 ("session_manager", {}),
                 ('session_detail', {'pk': test_session.pk}),
+                ('session_detail', {'pk': test_session.pk, 'download': 0}),
                 ('session_validate_back', {'pk': test_session.pk}),
                 ('revert_to_test', {'pk': test_session.pk}),
                 ('session_next_test', {'pk': test_session.pk, 'priority': 'priority'}),

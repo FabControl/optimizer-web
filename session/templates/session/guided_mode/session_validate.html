@@ -1,6 +1,6 @@
 {% load crispy_forms_tags %}
 {% load static %}
-{% if request.path in request.META.HTTP_REFERER %}<iframe width="1" height="1" frameborder="0" src="{% url 'gcode' object.pk %}"></iframe>{% endif %}
+{% if request.path in request.META.HTTP_REFERER and offer_download %}<iframe width="1" height="1" frameborder="0" src="{% url 'gcode' object.pk %}"></iframe>{% endif %}
 <form id="validation-form" class="" action="" method="POST">
   <div class="row pt-3">
     <div class="col-sm-12">
