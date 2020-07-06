@@ -558,6 +558,7 @@ class NewPrintbedForm(MultiDecimalSeperatorModelForm):
         self.helper.form_tag = False
 
         self.fields["temperature_max"].label = "Max temperature (°C)"
+        self.fields["temperature_max"].widget.attrs['min'] = 30
         self.fields["printbed_heatable"].label = "Print bed heatable"
 
     class Meta:
