@@ -23,7 +23,7 @@ definitions:
           - zip -r release.zip ./ -x ./.git/**\*
             # update all deplyments, except test and develop
             # regex is mached from beginning of string
-          - python deploy-aws.py release.zip '((?!(development|test)).+|(development|test).+|)$'
+          - python deploy-aws.py release.zip '((?!(develop|test)).+|(develop|test).+|)$'
 pipelines:
   branches:
     development:
