@@ -9,6 +9,24 @@ from .choices import TEST_NUMBER_CHOICES, MODE_CHOICES
 from decimal import Decimal
 
 
+def wrap_decimal_to_python(field):
+    to_python = field.to_python
+    def decimal_to_python(value, *a, **k):
+        return to_python(value.replace(',', '.'), *a, **k)
+
+    return decimal_to_python
+
+# Allows to submit form with comma or dot as decimal seperator
+class MultiDecimalSeperatorModelForm(forms.ModelForm):
+    def __init__(self, *a, **k):
+        super().__init__(*a, **k)
+
+        for f in self.fields:
+            field = self.fields[f]
+            if isinstance(field, forms.DecimalField):
+                field.to_python = wrap_decimal_to_python(field)
+
+
 class MinMaxWidget(forms.widgets.MultiWidget):
     def __init__(self, widgets: list, attrs=None):
         widgets = widgets
@@ -27,8 +45,11 @@ class MinMaxWidget(forms.widgets.MultiWidget):
 
 class MinMaxField(forms.MultiValueField):
     def __init__(self, fields, *args, **kwargs):
-        list_fields = fields
-        super(MinMaxField, self).__init__(list_fields, *args, **kwargs)
+        for field in fields:
+            if isinstance(field, forms.DecimalField):
+                field.to_python = wrap_decimal_to_python(field)
+
+        super(MinMaxField, self).__init__(fields, *args, **kwargs)
 
     def compress(self, data_list):
         if len(data_list) > 1:
@@ -119,13 +140,13 @@ class NewTestForm(forms.Form):
     test_number = forms.ChoiceField(choices=TEST_NUMBER_CHOICES)
 
 
-class MachineForm(forms.ModelForm):
+class MachineForm(MultiDecimalSeperatorModelForm):
     class Meta:
         model = Machine
         fields = ('model', 'buildarea_maxdim1', 'buildarea_maxdim2')
 
 
-class MaterialForm(forms.ModelForm):
+class MaterialForm(MultiDecimalSeperatorModelForm):
     class Meta:
         model = Material
         fields = ('name', 'size_od', 'min_temperature', 'max_temperature', 'notes')
@@ -198,7 +219,7 @@ class SessionRenameForm(forms.ModelForm):
         fields = ('name',)
 
 
-class SettingForm(forms.ModelForm):
+class SettingForm(MultiDecimalSeperatorModelForm):
 
     def __init__(self, *args, **kwargs):
         super(SettingForm, self).__init__(*args, **kwargs)
@@ -404,6 +425,12 @@ class TestGenerateForm(forms.ModelForm):
         self.helper.form_tag = False
         self.helper.field_template = 'session/field.html'
 
+        # Enable comma as decimal seperator
+        for f in self.fields:
+            field = self.fields[f]
+            if isinstance(field, forms.DecimalField):
+                field.to_python = wrap_decimal_to_python(field)
+
     def save(self, commit: bool = True):
         settings = self.instance.__getattribute__("settings")
         for parameter, info in self.parameters:
@@ -426,7 +453,7 @@ class TestGenerateForm(forms.ModelForm):
         fields = []
 
 
-class NewMachineForm(forms.ModelForm):
+class NewMachineForm(MultiDecimalSeperatorModelForm):
     def __init__(self, *args, **kwargs):
         super(NewMachineForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
@@ -482,7 +509,7 @@ class NewMachineForm(forms.ModelForm):
                   "offset_2"]
 
 
-class NewExtruderForm(forms.ModelForm):
+class NewExtruderForm(MultiDecimalSeperatorModelForm):
     def __init__(self, *args, **kwargs):
         super(NewExtruderForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
@@ -496,7 +523,7 @@ class NewExtruderForm(forms.ModelForm):
         fields = ["tool", "temperature_max", "part_cooling"]
 
 
-class NewNozzleForm(forms.ModelForm):
+class NewNozzleForm(MultiDecimalSeperatorModelForm):
     def __init__(self, *args, **kwargs):
         super(NewNozzleForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
@@ -509,7 +536,7 @@ class NewNozzleForm(forms.ModelForm):
         fields = ["size_id"]
 
 
-class NewChamberForm(forms.ModelForm):
+class NewChamberForm(MultiDecimalSeperatorModelForm):
     def __init__(self, *args, **kwargs):
         super(NewChamberForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
@@ -524,13 +551,14 @@ class NewChamberForm(forms.ModelForm):
         fields = ["chamber_heatable", "tool", "gcode_command", "temperature_max"]
 
 
-class NewPrintbedForm(forms.ModelForm):
+class NewPrintbedForm(MultiDecimalSeperatorModelForm):
     def __init__(self, *args, **kwargs):
         super(NewPrintbedForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_tag = False
 
         self.fields["temperature_max"].label = "Max temperature (°C)"
+        self.fields["temperature_max"].widget.attrs['min'] = 30
         self.fields["printbed_heatable"].label = "Print bed heatable"
 
     class Meta:
