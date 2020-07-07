@@ -287,14 +287,23 @@ class SignupViewTest(TestCase):
         activation_pattern = '/activate_account/[0-9a-zA-Z]{2}/[0-9a-z-]{24}/'
         activation_match = re.search(activation_pattern, m.body)
         self.assertFalse(activation_match is None)
-        # Link should be valid
-        resp = self.client.get(activation_match.group(0), follow=True)
+        # Link should be valid and user should be presented with password form
+        resp = self.client.get(activation_match.group(0), follow=False)
         self.assertEqual(resp.status_code, 200)
+        # only valid password should activate account
+        resp = self.client.post(activation_match.group(0), {'password':'not_a_password'}, follow=True)
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(len(resp.redirect_chain),  0)
+
+        usr.refresh_from_db()
+        self.assertFalse(usr.is_active)
+
         # User should be automatically logged in and redirected to dashboard
+        resp = self.client.post(activation_match.group(0), {'password':'ThisShouldBeSecretPassword'}, follow=True)
         self.assertTrue(len(resp.redirect_chain) > 0)
         self.assertEqual(resp.redirect_chain[-1][0], reverse('dashboard'))
         # Now user should be active
-        del usr.is_active
+        usr.refresh_from_db()
         self.assertTrue(usr.is_active)
         # cleanup when done
         usr.delete()
