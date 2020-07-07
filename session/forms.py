@@ -113,17 +113,19 @@ class TestValidationField(forms.Field):
 
 
 class RangeSliderWidget(forms.widgets.Input):
-    def __init__(self, value_range, units, attrs=None):
+    def __init__(self, value_range, units, step, attrs=None):
         # tested_values[0] is column, tested_values[1] is row
         super(RangeSliderWidget, self).__init__(attrs)
         self.value_range = value_range
         self.units = units
+        self.step = step
         self.template_name = "session/widgets/range_slider_widget.html"
 
     def get_context(self, name, value, attrs):
         context = super().get_context(name, value, attrs)
         context["range"] = self.value_range
         context["units"] = self.units
+        context["step"] = self.step
         return context
 
     def decompress(self, value):
@@ -257,9 +259,12 @@ class TestValidateForm(forms.ModelForm):
             parameter = session.min_max_parameters[-1]
             param = None
             if parameter["units"] != 'mm' and parameter["programmatic_name"] != "extrusion_multiplier":
-                param = forms.IntegerField(min_value=parameter["values"][0], max_value=parameter["values"][1], widget=RangeSliderWidget([parameter["values"][0], parameter["values"][1]], parameter["units"]))
+                param = forms.IntegerField(min_value=parameter["values"][0], max_value=parameter["values"][1], widget=RangeSliderWidget([parameter["values"][0], parameter["values"][1]], parameter["units"], 1))
             elif parameter["programmatic_name"] == "extrusion_multiplier":
-                param = forms.DecimalField(min_value=parameter["values"][0], max_value=parameter["values"][1], widget=RangeSliderWidget([parameter["values"][0], parameter["values"][1]], parameter["units"]))
+                param = forms.DecimalField(min_value=parameter["values"][0], max_value=parameter["values"][1], widget=RangeSliderWidget([parameter["values"][0], parameter["values"][1]], parameter["units"], 1))
+            elif parameter["programmatic_name"] == "coasting_distance":
+                param = forms.DecimalField(min_value=parameter["values"][0], max_value=parameter["values"][1], widget=RangeSliderWidget([parameter["values"][0], parameter["values"][1]], parameter["units"], 0.05))
+                param.widget.attrs.update({'step': "0.05"})
             param.label = "{}".format(parameter["name"].capitalize())
             param.help_text = "Please select the best {} along the width of the selected substructure ({} {} - {} {}):".format(parameter["name"], str(parameter["values"][0]), parameter["units"], str(parameter["values"][-1]), parameter["units"])
             self.fields["min_max_parameter_three"] = param
