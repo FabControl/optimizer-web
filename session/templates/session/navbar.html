@@ -34,6 +34,9 @@
             {{user}}
           </a>
           <div class="dropdown-menu" aria-labelledby="helpDropdown">
+            {% if request.user.plan == 'limited' %}
+            <a class="dropdown-item" href="{% url 'plans' %}">Upgrade to Full Access</a>
+            {% endif %}
             {% if request.user.can_collect_invoices %}
             <a class="dropdown-item" href="{% url 'invoices' %}">Invoices</a>
             {% endif %}
