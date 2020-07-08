@@ -385,6 +385,10 @@ class Voucher(models.Model):
 
         return True
 
+    @property
+    def redeemers(self):
+        return RedeemedVoucher.objects.filter(voucher=self).order_by('date_redeemed').reverse()
+
 
 class RedeemedVoucher(models.Model):
     voucher = models.ForeignKey('Voucher', on_delete=models.SET_NULL, null=True)
