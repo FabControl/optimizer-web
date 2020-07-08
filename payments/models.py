@@ -353,6 +353,9 @@ class Corporation(models.Model):
 
         return plan.max_users_allowed
 
+    def __str__(self):
+        return f'{self.name} ({self.owner})'
+
 
 class Partner(models.Model):
     name = models.CharField(max_length=50)
