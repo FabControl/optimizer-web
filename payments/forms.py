@@ -153,7 +153,7 @@ class VoucherAdminForm(forms.ModelForm):
     def generate_new_number(cls, partner):
             voucher_set = partner.voucher_set.values('number')
             for i in range(100):
-                code = '-'.join(str(uuid4()).split('-')[1:3])
+                code = ('-'.join(str(uuid4()).split('-')[1:3])).upper()
                 if code not in voucher_set:
                     return code
 
