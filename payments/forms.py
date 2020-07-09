@@ -71,12 +71,12 @@ class VoucherRedeemForm(forms.Form):
 
         ids = cleaned_data['voucher'].split('-')
         try:
-            partner = Partner.objects.get(pk='-'.join(ids[:-2]))
+            partner = Partner.objects.get(pk=ids[0])
         except Partner.DoesNotExist:
             raise forms.ValidationError('Invalid voucher prefix')
         else:
             try:
-                voucher = partner.voucher_set.get(number='-'.join(ids[-2:]))
+                voucher = partner.voucher_set.get(number='-'.join(ids[1:]))
             except Voucher.DoesNotExist:
                 raise forms.ValidationError('Invalid voucher number')
             else:
@@ -131,8 +131,16 @@ class PartnerAdminForm(forms.ModelForm):
 
         super().__init__(*args, **kwargs)
 
+        self.fields['voucher_prefix'].validators.append(self._validate_prefix)
+
         if instance is not None:
             self.fields['logo_image'].help_text = mark_safe('<img src="data:image/png;base64,{}"/>'.format(instance.logo))
+            self.fields['voucher_prefix'].widget.attrs['disabled'] = ''
+
+
+    def _validate_prefix(self, prefix):
+        if '-' in prefix:
+            raise forms.ValidationError('Prefix must not contain a "-"')
 
 
     def save(self, commit=True):
@@ -160,7 +168,6 @@ class VoucherAdminForm(forms.ModelForm):
     class Meta:
         model = Voucher
         fields = '__all__'
-        widgets = {'number':forms.HiddenInput()}
 
     def __init__(self, *a, **k):
         if 'instance' not in k:
