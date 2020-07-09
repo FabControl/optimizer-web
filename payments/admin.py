@@ -4,6 +4,8 @@ from .forms import CurrencyAdminForm, PartnerAdminForm, VoucherAdminForm
 from django.urls import path, reverse
 from django.shortcuts import redirect
 from django import forms
+from django.contrib import messages
+from django.utils import safestring
 
 # Register your models here.
 admin.site.register(payment_models.TaxationCountry)
@@ -99,17 +101,21 @@ class PartnerModelAdmin(admin.ModelAdmin):
         if request.method == 'POST':
             count = int(request.POST.get('voucher_count', '1'))
             form = VoucherAdminForm(request.POST)
-            voucher = form.save()
-            partner = voucher.partner
+            if form.is_valid():
+                voucher = form.save()
+                partner = voucher.partner
 
-            if count > 1:
-                for i in range(count - 1):
-                    post = { k:v for k,v in request.POST.items() }
-                    post['number'] = VoucherAdminForm.generate_new_number(partner)
-                    form = VoucherAdminForm(post)
-                    voucher = form.save()
+                if count > 1:
+                    for i in range(count - 1):
+                        post = { k:v for k,v in request.POST.items() }
+                        post['number'] = VoucherAdminForm.generate_new_number(partner)
+                        form = VoucherAdminForm(post)
+                        voucher = form.save()
+            else:
+                errors = '<br>'.join('<br>'.join(x) for x in form.errors.values())
+                messages.error(request, safestring.mark_safe(errors))
 
-        return redirect(reverse('admin:payments_partner_change', kwargs=dict(object_id=voucher.partner.pk)))
+        return redirect(reverse('admin:payments_partner_change', kwargs=dict(object_id=form.cleaned_data['partner'].pk)))
 
 
 @admin.register(payment_models.Voucher)

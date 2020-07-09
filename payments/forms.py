@@ -189,3 +189,10 @@ class VoucherAdminForm(forms.ModelForm):
         self.fields['valid_till'].help_text = 'YYYY-MM-DD'
 
 
+    def clean(self):
+        data = super().clean()
+        partner = data['partner'] if self.instance is None else self.instance.partner
+        if partner.voucher_set.filter(number=data['number']).count() > 0:
+            raise forms.ValidationError('Voucher number "{}"already in use'.format(data['number']))
+
+        return data
