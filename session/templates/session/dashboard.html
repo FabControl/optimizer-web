@@ -27,21 +27,21 @@
       <div class="card p-2 text-center shadow-sm bg-light">
         <p class='lead'>Testing Sessions</p>
         <p class='display-2'>{{cards.sessions.len}}</p>
-        <a href="{% url 'session_manager' %}">View all sessions</a>
+        <a href="{% url 'session_manager' %}">View all Sessions</a>
       </div>
     </div>
     <div class="col-sm">
       <div class="card p-2 text-center shadow-sm bg-light">
         <p class='lead'>3D Printers</p>
         <p class='display-2'>{{cards.printers.len}}</p>
-        <a href="{% url 'machine_manager' %}">View all 3D printers</a>
+        <a href="{% url 'machine_manager' %}">View all 3D Printers</a>
       </div>
     </div>
     <div class="col-sm">
       <div class="card p-2 text-center shadow-sm bg-light">
         <p class='lead'>Materials</p>
         <p class='display-2'>{{cards.materials.len}}</p>
-        <a href="{% url 'material_manager' %}">View all materials</a>
+        <a href="{% url 'material_manager' %}">View all Materials</a>
       </div>
     </div>
     {% if request.user.member_of_corporation %}
