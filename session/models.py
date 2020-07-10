@@ -868,6 +868,7 @@ class Session(models.Model, DependenciesCopyMixin):
             '09': 'FhPyKSwgM8o',
             '10': 'a649psnjxfg',
             '11': 'FgjBDjrh3Zw',
+            '12': None,
             '13': 'jk9yXhhBZMU',
         }
         return links[self.test_number]

@@ -39,8 +39,14 @@
             {% endif %}
             <a class="dropdown-item" href="{% url 'account_legal_info' %}">Account Settings</a>
             {% if request.user.member_of_corporation is None  and not request.user.active_subscriptions %}
+            {% if request.user.plan == 'limited' %}
+            <hr>
+            <a class="dropdown-item" href="{% url 'plans' %}">Upgrade to Full Access</a>
+            <a class="dropdown-item" href="{% url 'plans' %}#redeem_a_voucher">Redeem a voucher</a>
+            {% endif %}
             <a class="dropdown-item" href="{% url 'my_affiliates' %}">Invite a Friend</a>
             {% endif %}
+            <hr>
             <a class="dropdown-item" href="{% url 'signout' %}">Sign Out</a>
           </div>
         </li>

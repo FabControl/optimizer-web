@@ -35,6 +35,26 @@ class LoginForm(forms.Form):
     class Meta:
         fields = ['email', 'password']
 
+class AccountActivationForm(forms.Form):
+    password = forms.CharField(max_length=32, widget=forms.PasswordInput)
+
+    def __init__(self, *args, **kwargs):
+        self.user_instance = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_tag = False
+
+    def clean(self):
+        data = super().clean()
+        if self.user_instance is not None:
+            if self.user_instance.check_password(data.get('password')):
+                return data
+
+        raise forms.ValidationError('Password did not match our records')
+
+    class Meta:
+        fields = ['password']
+
 
 class SignUpForm(UserCreationForm):
     username = None

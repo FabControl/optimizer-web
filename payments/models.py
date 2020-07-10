@@ -353,6 +353,9 @@ class Corporation(models.Model):
 
         return plan.max_users_allowed
 
+    def __str__(self):
+        return f'{self.name} ({self.owner})'
+
 
 class Partner(models.Model):
     name = models.CharField(max_length=50)
@@ -384,6 +387,10 @@ class Voucher(models.Model):
         RedeemedVoucher.objects.create(user=user, voucher=self)
 
         return True
+
+    @property
+    def redeemers(self):
+        return RedeemedVoucher.objects.filter(voucher=self).order_by('date_redeemed').reverse()
 
 
 class RedeemedVoucher(models.Model):

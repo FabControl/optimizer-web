@@ -17,7 +17,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.datastructures import MultiValueDictKeyError
 from django.urls import reverse_lazy, reverse
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import ResetPasswordForm, SignUpForm, LoginForm, ChangePasswordForm, LegalInformationForm, CorporationInviteForm, CorporationSignUpForm
+from .forms import ResetPasswordForm, SignUpForm, LoginForm, ChangePasswordForm, LegalInformationForm, CorporationInviteForm, CorporationSignUpForm, AccountActivationForm
 from .tokens import account_activation_token, affiliate_token_generator
 from django.utils.encoding import force_text, force_bytes
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
@@ -196,8 +196,11 @@ class PasswordChangeView(auth_views.PasswordContextMixin, FormView):
         return super().form_valid(form)
 
 
+@sensitive_post_parameters()
+@csrf_protect
 def activate_account(request, uidb64, token):
     u_model = get_user_model()
+    form = None
     try:
         uid = force_text(urlsafe_base64_decode(uidb64))
         user = u_model.objects.get(pk=uid)
@@ -205,16 +208,22 @@ def activate_account(request, uidb64, token):
         user = None
 
     if user is not None and account_activation_token.check_token(user, token):
-        user.activate_account()
-        affiliates = Affiliate.objects.filter(receiver=user)
-        if len(affiliates) > 0:
-            affiliates[0].confirm(request)
+        if request.method == 'POST':
+            form = AccountActivationForm(request.POST, user=user)
+            if form.is_valid():
+                user.activate_account()
+                affiliates = Affiliate.objects.filter(receiver=user)
+                if len(affiliates) > 0:
+                    affiliates[0].confirm(request)
+                login(request, user)
+                messages.success(request, 'Your email address was confirmed and account activated.')
+                return redirect('dashboard')
 
-        login(request, user)
-        messages.success(request, 'Your email address was confirmed and account activated.')
-        return redirect('dashboard')
+        else:
+            form = AccountActivationForm(user=user)
 
-    return render(request, 'authentication/invalid_activation_link.html')
+
+    return render(request, 'authentication/account_activation.html', dict(form=form))
 
 
 class MyAffiliatesView(LoginRequiredMixin, ModelFormMixin, generic.ListView, ProcessFormView):
