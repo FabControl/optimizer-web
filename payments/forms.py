@@ -159,11 +159,11 @@ class VoucherAdminForm(forms.ModelForm):
 
     @classmethod
     def generate_new_number(cls, partner):
-            voucher_set = partner.voucher_set.values('number')
-            for i in range(100):
-                code = ('-'.join(str(uuid4()).split('-')[1:3])).upper()
-                if code not in voucher_set:
-                    return code
+        voucher_set = partner.voucher_set.values('number')
+        for i in range(100):
+            code = ('-'.join(str(uuid4()).split('-')[1:3])).upper()
+            if code not in voucher_set:
+                return code
 
     class Meta:
         model = Voucher
@@ -182,16 +182,17 @@ class VoucherAdminForm(forms.ModelForm):
             if 'partner' in initial:
                 initial['number'] = self.generate_new_number(initial['partner'])
 
-
             k['initial'] = initial
 
         super().__init__(*a, **k)
         self.fields['valid_till'].help_text = 'YYYY-MM-DD'
 
-
     def clean(self):
         data = super().clean()
-        partner = data['partner'] if self.instance is None else self.instance.partner
+        try:
+            partner = data['partner'] if self.instance is None else self.instance.partner
+        except Partner.DoesNotExist:
+            partner = data['partner']
         if partner.voucher_set.filter(number=data['number']).count() > 0:
             raise forms.ValidationError('Voucher number "{}"already in use'.format(data['number']))
 
