@@ -24,7 +24,7 @@
       {% if questions %}
       {% crispy question_form %}
       <div class="pt-4 pb-2">
-        <p><b>Select the best parameter combination</b></p>
+        <p><b>Select the best parameter combinations</b></p>
       </div>
       {% endif %}
       <div class="valid-form">
@@ -41,3 +41,13 @@
     </div>
   </div>
 </form>
+<script type="text/javascript">
+  // Client-side check that at least one checkbox has been selected
+  $('button[type="submit"]').on('click', function() {
+    $cbx_group = $("input:checkbox[name='validation']");
+    $cbx_group.prop('required', true);
+    if ($cbx_group.is(":checked")) {
+      $cbx_group.prop('required', false);
+    }
+  });
+</script>

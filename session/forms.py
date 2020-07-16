@@ -60,10 +60,9 @@ class MinMaxField(forms.MultiValueField):
             return []
 
 
-class TestValidationWidget(forms.widgets.Input):
+class TestValidationWidget(forms.widgets.SelectMultiple):
     def __init__(self, tested_values, units, attrs=None):
         # tested_values[0] is column, tested_values[1] is row
-
         super(TestValidationWidget, self).__init__(attrs)
         self.tested_values = tested_values
         if tested_values[1] is not None:
@@ -102,14 +101,18 @@ class TestValidationField(forms.Field):
         self.tested_values = tested_values
 
     def to_python(self, value):
+        output = []
         try:
             # For 2D tests
-            indices = [int(x) for x in value.strip("[]").split(",")]
-            return [self.tested_values[0][indices[0]], self.tested_values[1][indices[1]]]
+            for val in value:
+                indices = [int(x) for x in val.strip("[]").split(",")]
+                output.append([self.tested_values[0][indices[0]], self.tested_values[1][indices[1]]])
         except (ValueError, TypeError):
             # For 1D tests
-            indices = [int(x) for x in value.strip("[]").split(",")[0]]
-            return [self.tested_values[0][indices[0]], None]
+            for val in value:
+                indices = [int(x) for x in val.strip("[]").split(",")[0]]
+                output.append([self.tested_values[0][indices[0]], None])
+        return output
 
 
 class RangeSliderWidget(forms.widgets.Input):
@@ -276,8 +279,9 @@ class TestValidateForm(forms.ModelForm):
         self.helper.form_tag = False
 
     def save(self, commit=True):
-        self.instance.selected_parameter_value("selected_parameter_one_value", self.cleaned_data["validation"][0])
-        self.instance.selected_parameter_value("selected_parameter_two_value", self.cleaned_data["validation"][1])
+        biased_data = self.instance.apply_target_bias(self.cleaned_data["validation"])
+        self.instance.selected_parameter_value("selected_parameter_one_value", biased_data[0])
+        self.instance.selected_parameter_value("selected_parameter_two_value", biased_data[1])
         if "min_max_parameter_three" in self.cleaned_data:
             self.instance.selected_parameter_value("selected_parameter_three_value", self.cleaned_data["min_max_parameter_three"])
         if "comments" in self.cleaned_data:
