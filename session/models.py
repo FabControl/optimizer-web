@@ -389,6 +389,29 @@ class Session(models.Model, DependenciesCopyMixin):
             elif parameter["parameter"].endswith("three"):
                 self.min_max_parameter_three = output
 
+    def apply_target_bias(self, values):
+        """
+        Takes in a list of selected results and returns the best fitting result for the current target.
+        Returns the average result if a target has no bias towards the given parameter.
+        :param values: a list of lists that contains the selected values
+        :return: Returns a list of selected param1 and param2  like so: [param1, param2]
+        """
+        # TODO Make this more flexible and comprehensive
+        tested_parameters = [param['programmatic_name'] for param in self.min_max_parameters]
+
+        if 'temperature_extruder' in tested_parameters:
+            if self.target == 'aesthetics':
+                return min(values)
+            else:
+                return max(values)
+        elif 'track_height' in tested_parameters:
+            if self.target == 'aesthetics':
+                return min(values)
+            elif self.target == 'fast_printing':
+                return max(values)
+        else:
+            return values[round(len(values)/2)]
+
     def delete(self, using=None, keep_parents=False):
         return recursive_delete(self, using, keep_parents)
 

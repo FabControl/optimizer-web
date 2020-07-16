@@ -13,9 +13,9 @@
     {% for row in bundled_values.1 %}
     <tr>
       <th scope="row" class="validation-header">{{row.1}} {{units.1}}</th>
-      {% for paramter1 in bundled_values.0 %}
+      {% for parameter1 in bundled_values.0 %}
       <td>
-        <input type="radio" name="{{ widget.name }}" value="[{{paramter1.0}},{{row.0}}]" required>
+        <input type="checkbox" name="{{ widget.name }}" value="[{{parameter1.0}},{{row.0}}]">
       </td>
       {% endfor %}
     </tr>
@@ -23,9 +23,9 @@
     {% else %}
     <tr>
       <th scope="row"></th>
-      {% for paramter1 in bundled_values.0 %}
+      {% for parameter1 in bundled_values.0 %}
       <td>
-        <input type="radio" name="{{ widget.name }}" value="[{{paramter1.0}},{{row.0}}]" required>
+        <input type="checkbox" name="{{ widget.name }}" value="[{{parameter1.0}},{{row.0}}]">
       </td>
       {% endfor %}
     </tr>
