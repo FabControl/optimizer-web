@@ -2,20 +2,20 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.contrib.staticfiles import finders
 from .utilities import load_json, optimizer_info, common_cura_qulity_types
-from django.http import FileResponse, HttpResponseRedirect, Http404, HttpResponse, JsonResponse
+from django.http import FileResponse, HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render_to_response, reverse
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.forms.models import model_to_dict
 from django.db.models import Q, Count, Max
-from django.utils import timezone
 
 from .models import *
 from django.views import generic
 from .forms import *
 from payments.models import Checkout, Corporation
+
+from payments.forms import VoucherRedeemForm
 
 from config import config
 from optimizer_api import api_client
@@ -63,7 +63,8 @@ def dashboard(request):
 
     context = {'latest_sessions': latest_sessions,
                'invitations': Corporation.objects.filter(_invited_users__contains=' '+ user.email + ' '),
-               'cards': cards}
+               'cards': cards,
+               'voucher_form': VoucherRedeemForm()}
     return render(request, 'session/dashboard.html', context)
 
 

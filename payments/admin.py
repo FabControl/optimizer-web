@@ -11,11 +11,14 @@ from django.utils import safestring
 admin.site.register(payment_models.TaxationCountry)
 admin.site.register(payment_models.Corporation)
 
+
 def mark_checkout_paid(modeladmin, request, queryset):
     for c in queryset:
         c.confirm_payment()
 
+
 mark_checkout_paid.short_description = 'Mark checkouts paid'
+
 
 @admin.register(payment_models.Checkout)
 class CheckoutModelAdmin(admin.ModelAdmin):
@@ -37,6 +40,7 @@ class CheckoutModelAdmin(admin.ModelAdmin):
         elif c.is_expired:
             return 'expired'
         return 'in progress'
+
 
 @admin.register(payment_models.Plan)
 class PlanModelAdmin(admin.ModelAdmin):
@@ -67,7 +71,6 @@ class CurrencyModelAdmin(admin.ModelAdmin):
         return False
 
 
-
 @admin.register(payment_models.Partner)
 class PartnerModelAdmin(admin.ModelAdmin):
     form = PartnerAdminForm
@@ -95,7 +98,6 @@ class PartnerModelAdmin(admin.ModelAdmin):
                 ]
 
         return extra_urls + urls
-
 
     def create_voucher(self, request):
         if request.method == 'POST':

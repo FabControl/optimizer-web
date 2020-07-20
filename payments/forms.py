@@ -51,6 +51,7 @@ class PaymentPlanForm(forms.Form):
 
         return bill['id']
 
+
 class VoucherRedeemForm(forms.Form):
     voucher = forms.CharField(max_length=60,
                             label='Redeem a voucher ')
@@ -64,7 +65,6 @@ class VoucherRedeemForm(forms.Form):
     def __init__(self, *a, **k):
         super().__init__(*a, **k)
         self.fields['voucher'].widget.attrs['placeholder'] = 'voucher code'
-
 
     def clean(self):
         cleaned_data = super().clean()

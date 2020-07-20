@@ -79,10 +79,10 @@ class User(AbstractUser):
                                                on_delete=models.SET_NULL,
                                                related_name='managers')
     member_of_corporation = models.ForeignKey('payments.Corporation',
-                                               null=True,
-                                               blank=True,
-                                               on_delete=models.SET_NULL,
-                                               related_name='team')
+                                              null=True,
+                                              blank=True,
+                                              on_delete=models.SET_NULL,
+                                              related_name='team')
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
