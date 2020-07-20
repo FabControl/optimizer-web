@@ -5,13 +5,13 @@
 <link rel="stylesheet" href="{% static 'session/css/sortable-theme-bootstrap.css' %}" />
 <div class="container pt-3">
   <div class="row pt-2">
-    <div class="col-sm">
+    <div class="col-sm text-center">
       <p class='lead'>
         <font size='6'>Welcome to 3DOptimizer!</font>
       </p>
     </div>
   </div>
-  <div class="row pt-2">
+  <div class="row">
     <div class="col-sm">
       {% if invitations %}
       {% for corporation in invitations %}
@@ -56,18 +56,26 @@
   </div>
   {% endif %}
   {% if latest_sessions|length < 1 %}
-  <div class="row pt-5 pb-5">
+  <div class="row pt-4 pb-5">
     <div class="col-sm text-center">
       <button type="button" onclick="location.href='{% url 'new_session' %}'" class="btn-lg btn-primary">Start a new testing session</button>
     </div>
   </div>
   <div class="row">
-    <div class="col-sm">
+    <div class="col-sm text-center">
       <p>Video overview and user manual are available in <a href="https://3doptimizer.helpscoutdocs.com/">Help Center</a></p>
       <p>When you return, this page will show your recent testing sessions.</p>
       {% if request.user.manager_of_corporation and request.user.manager_of_corporation.owner == request.user %}
       <a href="{% url 'plans' %}">Upgrade to add multiple users</a>
       {% endif %}
+    </div>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-sm-3">
+      <hr>
+        <a name="redeem_a_voucher"></a>
+        {% load crispy_forms_tags %}
+        {% crispy voucher_form %}
     </div>
   </div>
   {% else %}
@@ -77,57 +85,57 @@
     </div>
     <div class="col-sm text-right">
       {% if request.user.plan == 'basic' %}
-        <div><button type="button" class="btn btn-outline-primary btn" disabled>+ New Testing Session</button></div>
-        {% if request.user.member_of_corporation is None or request.user.member_of_corporation.owner == request.user %}
-        <div><a href="{% url 'plans' %}">Upgrade to create a new Testing Session</a></div>
-        {% else %}
-          {% with request.user.member_of_corporation.owner as corporation_owner %}
-          <p>To create new Testing Sessions, ask {{ corporation_owner.last_name }} {{ corporation_owner.first_name }} to upgrade account</p>
-          {% endwith %}
-        {% endif %}
+      <div><button type="button" class="btn btn-outline-primary btn" disabled>+ New Testing Session</button></div>
+      {% if request.user.member_of_corporation is None or request.user.member_of_corporation.owner == request.user %}
+      <div><a href="{% url 'plans' %}">Upgrade to create a new Testing Session</a></div>
+      {% else %}
+      {% with request.user.member_of_corporation.owner as corporation_owner %}
+      <p>To create new Testing Sessions, ask {{ corporation_owner.last_name }} {{ corporation_owner.first_name }} to upgrade account</p>
+      {% endwith %}
+      {% endif %}
       {% else %}
       <button type="button" onclick="location.href='{% url 'new_session' %}'" class="btn btn-primary btn">+ New Testing Session</button>
       {% endif %}
     </div>
   </div>
-    <div class="row pt-3">
-      <div class="col-sm">
-        <table class="sortable sortable-theme-bootstrap table" data-sortable>
-          <thead>
-            <tr>
-              <th class='caps'>ID</th>
-              <th class='caps'>Name</th>
-              <th class='caps'>Mode</th>
-              <th class='caps'>Target</th>
-              <th class='caps'>3D Printer</th>
-              <th class='caps'>Material</th>
-              <th class='caps'>Tests</th>
-              <th class='caps'>Created</th>
-            </tr>
-          </thead>
-          <tbody>
-            {# ROW CONTENTS #}
-            {% for session in latest_sessions %}
-            <tr>
-              <td>{{ session.number }}</td>
-              {% if  session.completed %}
-              <td><a class="" href="{% url 'session_overview' session.pk %}">{{ session.name }}</a></td>
-              {% else %}
-              <td><a class="" href="{% url 'session_detail' session.pk %}">{{ session.name }}</a></td>
-              {% endif %}
-              <td>{{ session.mode.name }}</td>
-              <td>{{session.get_target_display}}</td>
-              <td>{{ session.machine.model }}</td>
-              <td>{{ session.material.name }}</td>
-              <td>{{session.completed_tests}}</td>
-              <td>{{session.pub_date}}</td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
+  <div class="row pt-3">
+    <div class="col-sm">
+      <table class="sortable sortable-theme-bootstrap table" data-sortable>
+        <thead>
+          <tr>
+            <th class='caps'>ID</th>
+            <th class='caps'>Name</th>
+            <th class='caps'>Mode</th>
+            <th class='caps'>Target</th>
+            <th class='caps'>3D Printer</th>
+            <th class='caps'>Material</th>
+            <th class='caps'>Tests</th>
+            <th class='caps'>Created</th>
+          </tr>
+        </thead>
+        <tbody>
+          {# ROW CONTENTS #}
+          {% for session in latest_sessions %}
+          <tr>
+            <td>{{ session.number }}</td>
+            {% if  session.completed %}
+            <td><a class="" href="{% url 'session_overview' session.pk %}">{{ session.name }}</a></td>
+            {% else %}
+            <td><a class="" href="{% url 'session_detail' session.pk %}">{{ session.name }}</a></td>
+            {% endif %}
+            <td>{{ session.mode.name }}</td>
+            <td>{{session.get_target_display}}</td>
+            <td>{{ session.machine.model }}</td>
+            <td>{{ session.material.name }}</td>
+            <td>{{session.completed_tests}}</td>
+            <td>{{session.pub_date}}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
   </div>
+</div>
 </div>
 {%  endif %}
 </div>
