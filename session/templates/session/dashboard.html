@@ -70,6 +70,7 @@
       {% endif %}
     </div>
   </div>
+  {% if user.plan == 'basic' %}
   <div class="row justify-content-center">
     <div class="col-sm-3">
       <hr>
@@ -78,6 +79,7 @@
         {% crispy voucher_form %}
     </div>
   </div>
+  {% endif %}
   {% else %}
   <div class="row pt-3">
     <div class="col-sm">
