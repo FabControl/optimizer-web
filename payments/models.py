@@ -362,6 +362,7 @@ class Partner(models.Model):
     homepage = models.URLField(max_length=350)
     logo = models.TextField(editable=False)
     voucher_prefix = models.CharField(max_length=20, primary_key=True)
+    affiliation_text = models.CharField(max_length=64, default='PROVIDED BY')
 
     def __str__(self):
         return f'{self.name} ({self.voucher_prefix})'

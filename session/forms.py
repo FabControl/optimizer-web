@@ -11,10 +11,12 @@ from decimal import Decimal
 
 def wrap_decimal_to_python(field):
     to_python = field.to_python
+    
     def decimal_to_python(value, *a, **k):
         return to_python(value.replace(',', '.'), *a, **k)
 
     return decimal_to_python
+
 
 # Allows to submit form with comma or dot as decimal seperator
 class MultiDecimalSeperatorModelForm(forms.ModelForm):
@@ -60,10 +62,10 @@ class MinMaxField(forms.MultiValueField):
             return []
 
 
-class TestValidationWidget(forms.widgets.SelectMultiple):
+class MultipleResultValidationWidget(forms.widgets.SelectMultiple):
     def __init__(self, tested_values, units, attrs=None):
         # tested_values[0] is column, tested_values[1] is row
-        super(TestValidationWidget, self).__init__(attrs)
+        super(MultipleResultValidationWidget, self).__init__(attrs)
         self.tested_values = tested_values
         if tested_values[1] is not None:
             self.bundled_values = [[(x, _) for x, _ in enumerate(tested_values[0])],
@@ -73,7 +75,7 @@ class TestValidationWidget(forms.widgets.SelectMultiple):
 
         self.units = tuple(map(self._to_printable_units, units))
 
-        self.template_name = "session/widgets/test_validation_widget.html"
+        self.template_name = "session/widgets/test_validation_widget_checkbox.html"
 
     def _to_printable_units(self, unit):
         if unit == '-': return ''
@@ -94,10 +96,16 @@ class TestValidationWidget(forms.widgets.SelectMultiple):
             return ['', '']
 
 
-class TestValidationField(forms.Field):
+class SingleResultValidationWidget(MultipleResultValidationWidget):
+    def __init__(self, *args, **kwargs):
+        super(SingleResultValidationWidget, self).__init__(*args, **kwargs)
+        self.template_name = "session/widgets/test_validation_widget_radio.html"
+
+
+class MultipleResultValidationField(forms.Field):
     def __init__(self, tested_values, units, *args, **kwargs):
-        super(TestValidationField, self).__init__(*args, **kwargs)
-        self.widget = TestValidationWidget(tested_values, units)
+        super(MultipleResultValidationField, self).__init__(*args, **kwargs)
+        self.widget = MultipleResultValidationWidget(tested_values, units)
         self.tested_values = tested_values
 
     def to_python(self, value):
@@ -113,6 +121,12 @@ class TestValidationField(forms.Field):
                 indices = [int(x) for x in val.strip("[]").split(",")[0]]
                 output.append([self.tested_values[0][indices[0]], None])
         return output
+
+
+class SingleResultValidationField(MultipleResultValidationField):
+    def __init__(self, tested_values, units, *args, **kwargs):
+        super(SingleResultValidationField, self).__init__(tested_values, units, *args, **kwargs)
+        self.widget = SingleResultValidationWidget(tested_values, units)
 
 
 class RangeSliderWidget(forms.widgets.Input):
@@ -254,8 +268,10 @@ class TestValidateForm(forms.ModelForm):
         super(TestValidateForm, self).__init__(*args, **kwargs)
 
         session = self.instance
-
-        self.fields["validation"] = TestValidationField(session.tested_values, session.tested_value_units, required=True)
+        if session.mode.type == 'normal':
+            self.fields["validation"] = SingleResultValidationField(session.tested_values, session.tested_value_units, required=True)
+        elif session.mode.type == 'guided':
+            self.fields["validation"] = MultipleResultValidationField(session.tested_values, session.tested_value_units, required=True)
         self.fields["validation"].label = ""
 
         if len(session.min_max_parameters) == 3:

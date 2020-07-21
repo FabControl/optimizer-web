@@ -5,7 +5,7 @@
 <script src="{% static 'session/js/sortable.min.js' %}"></script>
 <link rel="stylesheet" href="{% static 'session/css/sortable-theme-bootstrap.css' %}" />
 <div class="container pt-3">
-  <div class="row">
+  <div class="row pt-3">
     <div class="col-sm">
       <p class="lead">
         <font size="6">3D Printers</font>
@@ -15,7 +15,7 @@
       <button type="button" onclick="location.href='{% url 'machine_form' %}'" class="btn btn-primary btn">+ New 3D Printer</button>
     </div>
   </div>
-  <div class="row pt-3">
+  <div class="row pt-2">
     <div class="col-sm-12">
       <div class="card p-2">
         <table class="sortable sortable-theme-bootstrap table" data-sortable>
