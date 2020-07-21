@@ -135,13 +135,10 @@ class PartnerAdminForm(forms.ModelForm):
 
         if instance is not None:
             self.fields['logo_image'].help_text = mark_safe('<img src="data:image/png;base64,{}"/>'.format(instance.logo))
-            self.fields['voucher_prefix'].widget.attrs['disabled'] = ''
-
-
+            # self.fields['voucher_prefix'].widget.attrs['disabled'] = ''  # Had to be removed in order to be able modify partners from AdminView
     def _validate_prefix(self, prefix):
         if '-' in prefix:
             raise forms.ValidationError('Prefix must not contain a "-"')
-
 
     def save(self, commit=True):
         instance = super().save(commit=False)
