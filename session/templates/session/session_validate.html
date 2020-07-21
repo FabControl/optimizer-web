@@ -18,7 +18,7 @@
   </div>
 </div>
 <br>
-<p><b>Select the best parameter combinations</b></p>
+<p><b>Select the best parameter combination</b></p>
 <form class="" action="" method="POST">
   <div class="pt-3">
     <div>
@@ -34,13 +34,3 @@
     </div>
   </div>
 </form>
-<script type="text/javascript">
-  // Client-side check that at least one checkbox has been selected
-  $('button[type="submit"]').on('click', function() {
-    $cbx_group = $("input:checkbox[name='validation']");
-    $cbx_group.prop('required', true);
-    if ($cbx_group.is(":checked")) {
-      $cbx_group.prop('required', false);
-    }
-  });
-</script>
