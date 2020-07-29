@@ -21,6 +21,8 @@
       <select class="select form-control" id="id_preset_selector" name="preset" placeholder="Printer preset">
         <option value="" disabled selected>Select from list</option>
         <option value="" disabled>--------------------</option>
+        <option value="" >OTHER PRINTER (enter values below)</option>
+        <option value="" disabled>--------------------</option>
         {% for machine in sample_machines %}
         <option value="{{machine.pk}}">{{machine.model}}</option>
         {{machine}}
