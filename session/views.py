@@ -321,7 +321,7 @@ class GuidedValidateView(GuidedSessionView):
         # filter any items in request.POST with key that starts with 'question' and has any value other than 'null'
         questions = [PrintDescriptor.objects.get(pk=int(y)) for y in [self.request.POST[x] for x in self.request.POST if x.startswith('question')] if y != 'null']
         # sort the selected questions by target tests as numbers.
-        questions.sort(key=lambda x: int(x.target_test.lstrip('0')))
+        questions.sort(key=lambda x: int(x.target_test))
         if len(questions) > 0:
             # Select the highest priority test. Lower test number = higher priority
             # first element will have the lowest test number
