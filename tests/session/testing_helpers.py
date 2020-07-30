@@ -784,7 +784,7 @@ def get_routine(mode='full'):
          "12": {
           "name": "coasting distance vs retraction restart distance",
           "priority": "secondary"
-         }
+         },
          "13": {
           "name": "bridging extrusion multiplier vs bridging printing speed",
           "priority": "primary"
