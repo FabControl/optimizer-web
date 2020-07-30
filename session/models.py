@@ -411,8 +411,7 @@ class Session(models.Model, DependenciesCopyMixin):
                 return min(values)
             elif self.target == 'fast_printing':
                 return max(values)
-        else:
-            return values[round(len(values)/2)]
+        return values[round(len(values)/2)]
 
     def delete(self, using=None, keep_parents=False):
         return recursive_delete(self, using, keep_parents)
