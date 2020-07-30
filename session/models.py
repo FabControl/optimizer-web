@@ -793,7 +793,7 @@ class Session(models.Model, DependenciesCopyMixin):
         elif self.mode.type == 'guided':
             current_test = self.test_number
             next_tests = list(
-                filter(lambda x: int(x.lstrip('0')) > int(current_test.lstrip('0')), self.mode.included_tests))
+                filter(lambda x: int(x) > int(current_test), self.mode.included_tests))
             for test in next_tests:
                 if test in routine:
                     if routine[test]['priority'] == 'primary':
@@ -881,6 +881,7 @@ class Session(models.Model, DependenciesCopyMixin):
         :return:
         """
         links = {
+            '00': None,
             '01': 'G_bCqU9JQqE',
             '02': 'AnIhj_xiWfM',
             '03': '9ilzihuCtg0',
