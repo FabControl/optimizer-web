@@ -781,6 +781,10 @@ def get_routine(mode='full'):
           "name": "retraction distance vs retraction speed",
           "priority": "secondary"
          },
+         "12": {
+          "name": "coasting distance vs retraction restart distance",
+          "priority": "secondary"
+         }
          "13": {
           "name": "bridging extrusion multiplier vs bridging printing speed",
           "priority": "primary"
