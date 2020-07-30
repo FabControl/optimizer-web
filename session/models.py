@@ -213,6 +213,7 @@ class Settings(models.Model):
     temperature_printbed_setpoint = models.IntegerField(default=0)
     temperature_chamber_setpoint = models.IntegerField(default=0)
     part_cooling_setpoint = models.IntegerField(default=0)
+    offset_z = models.DecimalField(max_digits=3, decimal_places=2, default=0)
 
     def __str__(self):
         return self.name
@@ -261,7 +262,8 @@ class Settings(models.Model):
             "critical_overhang_angle": self.critical_overhang_angle,
             "temperature_printbed_setpoint": self.temperature_printbed_setpoint,
             "temperature_chamber_setpoint": self.temperature_chamber_setpoint,
-            "part_cooling_setpoint": self.part_cooling_setpoint
+            "part_cooling_setpoint": self.part_cooling_setpoint,
+            "offset_z": self.offset_z,
         }
         return output
 
