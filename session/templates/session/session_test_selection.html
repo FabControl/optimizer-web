@@ -1,9 +1,7 @@
 {% with plan=request.user.plan %}
 {% with number=object.persistence.session.test_number %}
 <div id="test_selector" class="list-group">
-  <ol type="1">
     {% for test in routine.items %}
-    <li>
       <a href="{%url 'test_switch' object.pk test.0 %}"
         class="list-group-item list-group-item-action list-group-item{% if test.0 in object.get_validated_tests %}-success{% elif test.0 == number %}-secondary{% endif %} {% if plan == 'basic' and test.1.free == False %}disabled{% endif %}{% if test.0 == number %}{% endif %}">
         {% autoescape off %}
@@ -11,9 +9,7 @@
         {% else %}{{ test.1.name|capfirst }}{% endif %}
         {% endautoescape %}
       </a>
-    </li>
     {% endfor %}
-  </ol>
 </div>
 {% endwith %}
 {% endwith %}

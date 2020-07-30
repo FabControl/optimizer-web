@@ -256,6 +256,8 @@ class SessionTestsSelectionMixin:
             v['free'] = True if k in settings.FREE_TESTS else False
             v['name'] = v['name'].title().replace('Vs', 'vs')
             v['name'] = v['name'].replace(' vs ', ' vs<br>')
+            v['name'] = f'{int(k)}. {v["name"]}'
+        routine = {r: routine[r] for r in self.object.mode.included_tests}
         context['routine'] = routine
         return context
 
