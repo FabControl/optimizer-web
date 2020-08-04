@@ -189,7 +189,7 @@ class MaterialForm(MultiDecimalSeperatorModelForm):
 
 
 class SessionForm(forms.ModelForm):
-    buildplate_choices = forms.ChoiceField(label='Build plate',
+    buildplate_choices = forms.ChoiceField(label='Build Plate',
                                         choices=[('Other', 'Other'),
                                             ('----', [('Glass','Glass'),
                                                 ('Aluminuim','Aluminuim'),
@@ -223,7 +223,7 @@ class SessionForm(forms.ModelForm):
         self.fields["machine"] = forms.ModelChoiceField(queryset=Machine.objects.filter(ownership))
 
         buildplate = self.fields["buildplate"]
-        buildplate.label = 'Other build plate'
+        buildplate.label = 'Other Build Plate'
         # make buildplate field last one
         del self.fields["buildplate"]
         self.fields["buildplate"] = buildplate
