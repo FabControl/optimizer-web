@@ -369,7 +369,7 @@ class Partner(models.Model):
 
 
 class Voucher(models.Model):
-    number = models.CharField(max_length=9)
+    number = models.CharField(max_length=30)
     max_uses = models.PositiveIntegerField()
     valid_till = models.DateField()
     partner = models.ForeignKey('Partner', on_delete=models.CASCADE)
