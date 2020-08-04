@@ -55,7 +55,7 @@
               {% endif %}
               <td>{{ session.mode.name }}</td>
               <td>{{ session.get_target_display }}</td>
-              <td>{{ session.machine.model }}</td>
+              <td>{{ session.machine.model }}{% if session.buildplate %} / {{ session.buildplate }}{% endif %}</td>
               <td>{{ session.material.name }}</td>
               <td>{{ session.completed_tests }}</td>
               <td>{{ session.pub_date }}</td>

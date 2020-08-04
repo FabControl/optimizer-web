@@ -316,6 +316,7 @@ class Session(models.Model, DependenciesCopyMixin):
     machine = models.ForeignKey(Machine, on_delete=models.CASCADE, null=False)
     material = models.ForeignKey(Material, on_delete=models.CASCADE, null=False)
     settings = models.ForeignKey(Settings, on_delete=models.CASCADE, null=False)
+    buildplate = models.CharField(default='', max_length=50)
 
     # Fields that cannot be stored in a DB in any other format
     _min_max_parameter_one = models.CharField(max_length=20, default="[]")
