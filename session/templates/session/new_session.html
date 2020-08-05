@@ -40,4 +40,27 @@
     });
     //-->
   </script>
+  <script type = "text/javascript">
+    <!--
+    if ($('#id_buildplate_choices').val() == "Other")
+    {
+      $('#div_id_buildplate').slideDown(0);
+      $('#id_buildplate').val('');
+    } else {
+      $('#div_id_buildplate').slideUp(0);
+      $('#id_buildplate').val($('#id_buildplate_choices').val());
+    }
+
+    $('#id_buildplate_choices').bind('change', function(){
+      if (event.target.value == "Other")
+      {
+        $('#div_id_buildplate').slideDown();
+        $('#id_buildplate').val('');
+      } else {
+        $('#div_id_buildplate').slideUp();
+        $('#id_buildplate').val(event.target.value);
+      }
+    });
+    //-->
+  </script>
   {% endblock %}

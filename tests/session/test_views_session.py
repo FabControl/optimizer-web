@@ -335,6 +335,8 @@ class SessionSessionTest(TestCase):
                                          name=name[0],
                                          material=material[0],
                                          machine=machine[0],
+                                         buildplate='Plate',
+                                         buildplate_choices='Other',
                                          target='aesthetics'))
         self.assertEqual(resp.status_code, 302)
 

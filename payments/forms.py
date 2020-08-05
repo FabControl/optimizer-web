@@ -190,7 +190,9 @@ class VoucherAdminForm(forms.ModelForm):
             partner = data['partner'] if self.instance is None else self.instance.partner
         except Partner.DoesNotExist:
             partner = data['partner']
-        if partner.voucher_set.filter(number=data['number']).count() > 0:
-            raise forms.ValidationError('Voucher number "{}"already in use'.format(data['number']))
+        similar_vouchers = partner.voucher_set.filter(number=data['number'])
+        if similar_vouchers.count() > 0:
+            if similar_vouchers.count() > 1 or similar_vouchers[0] != self.instance:
+                raise forms.ValidationError('Voucher number "{}"already in use'.format(data['number']))
 
         return data

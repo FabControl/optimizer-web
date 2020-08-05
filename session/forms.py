@@ -189,9 +189,33 @@ class MaterialForm(MultiDecimalSeperatorModelForm):
 
 
 class SessionForm(forms.ModelForm):
+    buildplate_choices = forms.ChoiceField(label='Build Plate',
+                                        choices=[('Other', 'Other'),
+                                            ('----', [
+                                                ('ABS','ABS'),
+                                                ('Aluminium','Aluminium'),
+                                                ('Carbon fibre plate','Carbon fibre plate'),
+                                                ('Glass','Glass'),
+                                                ('Kapton tape','Kapton tape'),
+                                                ('PC','PC'),
+                                                ('PEI','PEI'),
+                                                ('Painter’s tape / Blue tape','Painter’s tape / Blue tape'),
+                                                ('Steel','Steel'),
+                                                ]),
+                                            ('----', [
+                                                ('BuildTak 3D Print Surface','BuildTak 3D Print Surface'),
+                                                ('BuildTak FlexPlate','BuildTak FlexPlate'),
+                                                ('BuildTak Nylon+','BuildTak Nylon+'),
+                                                ('BuildTak PEI 3D Printing Surface','BuildTak PEI 3D Printing Surface'),
+                                                ('MAY-B Printplate G','MAY-B Printplate G'),
+                                                ('MAY-B Printplate S','MAY-B Printplate S'),
+                                                ('tefka3D','tefka3D'),
+                                                ])])
+
+
     class Meta:
         model = Session
-        fields = ('name', 'target', 'mode', 'machine', 'material')
+        fields = ('name', 'target', 'mode', 'machine', 'material', 'buildplate')
 
     def __init__(self, *args, **kwargs):
         ownership = kwargs.pop("ownership", None)
@@ -199,6 +223,12 @@ class SessionForm(forms.ModelForm):
         super(SessionForm, self).__init__(*args, **kwargs)
         self.fields["material"] = forms.ModelChoiceField(queryset=Material.objects.filter(ownership))
         self.fields["machine"] = forms.ModelChoiceField(queryset=Machine.objects.filter(ownership))
+
+        buildplate = self.fields["buildplate"]
+        buildplate.label = 'Other Build Plate'
+        # make buildplate field last one
+        del self.fields["buildplate"]
+        self.fields["buildplate"] = buildplate
 
         modes = []
         initial = None
