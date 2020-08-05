@@ -191,23 +191,25 @@ class MaterialForm(MultiDecimalSeperatorModelForm):
 class SessionForm(forms.ModelForm):
     buildplate_choices = forms.ChoiceField(label='Build Plate',
                                         choices=[('Other', 'Other'),
-                                            ('----', [('Glass','Glass'),
-                                                ('Aluminuim','Aluminuim'),
-                                                ('Steel','Steel'),
-                                                ('PEI','PEI'),
+                                            ('----', [
                                                 ('ABS','ABS'),
-                                                ('PC','PC'),
+                                                ('Aluminium','Aluminium'),
                                                 ('Carbon fibre plate','Carbon fibre plate'),
+                                                ('Glass','Glass'),
                                                 ('Kapton tape','Kapton tape'),
-                                                ('Painter’s tape / Blue tape','Painter’s tape / Blue tape')
+                                                ('PC','PC'),
+                                                ('PEI','PEI'),
+                                                ('Painter’s tape / Blue tape','Painter’s tape / Blue tape'),
+                                                ('Steel','Steel'),
                                                 ]),
-                                            ('----', [('BuildTak Nylon+','BuildTak Nylon+'),
+                                            ('----', [
                                                 ('BuildTak 3D Print Surface','BuildTak 3D Print Surface'),
                                                 ('BuildTak FlexPlate','BuildTak FlexPlate'),
+                                                ('BuildTak Nylon+','BuildTak Nylon+'),
                                                 ('BuildTak PEI 3D Printing Surface','BuildTak PEI 3D Printing Surface'),
-                                                ('MAY-B Printplate S','MAY-B Printplate S'),
                                                 ('MAY-B Printplate G','MAY-B Printplate G'),
-                                                ('tefka3D','tefka3D')
+                                                ('MAY-B Printplate S','MAY-B Printplate S'),
+                                                ('tefka3D','tefka3D'),
                                                 ])])
 
 
