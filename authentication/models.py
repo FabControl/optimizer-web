@@ -229,6 +229,9 @@ class User(AbstractUser):
             redeemed = RedeemedVoucher.objects.get(user=self, visible_to_user=True)
         except RedeemedVoucher.DoesNotExist:
             return None
+        if redeemed.voucher is None:
+            redeemed.visible_to_user = False
+            redeemed.save()
         return redeemed.voucher.partner
 
 class Affiliate(models.Model):
