@@ -12,6 +12,7 @@ from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from payments.countries import codes_iso3166
 from payments.models import Corporation
+from django.utils.translation import gettext_lazy as _
 
 
 # class UserForm(forms.ModelForm):
@@ -24,8 +25,9 @@ from payments.models import Corporation
 
 class LoginForm(forms.Form):
 
-    email = forms.EmailField()
-    password = forms.CharField(max_length=32, widget=forms.PasswordInput)
+    email = forms.EmailField(label=_('Email'))
+    password = forms.CharField(max_length=32, widget=forms.PasswordInput,
+                               label=_('Password'))
 
     def __init__(self, *args, **kwargs):
         super(LoginForm, self).__init__(*args, **kwargs)

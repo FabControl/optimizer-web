@@ -27,6 +27,7 @@ from django.contrib.auth.tokens import default_token_generator
 from .models import Affiliate
 from django.contrib.auth.mixins import LoginRequiredMixin
 from payments.models import Subscription, Corporation
+from django.utils.translation import gettext as _
 
 
 # Create your views here.
@@ -47,14 +48,14 @@ def user_login(request):
                     else:
                         return redirect('dashboard')
                 else:
-                    messages.error(request, "Your account has been deactivated.")
+                    messages.error(request, _("Your account has been deactivated."))
                     return render(request, 'authentication/login.html', {'form': LoginForm()})
             else:
-                messages.error(request, "Failed to log in!")
+                messages.error(request, _("Failed to log in!"))
                 return redirect("login")
         else:
             print(form.errors)
-            messages.error(request, "Failed to log in!")
+            messages.error(request, _("Failed to log in!"))
             return render(request, 'authentication/login.html', {'form': LoginForm(), 'form_errors': form.errors})
     else:
         return render(request, 'authentication/login.html', {'form': LoginForm()})
