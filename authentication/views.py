@@ -193,7 +193,7 @@ class PasswordChangeView(auth_views.PasswordContextMixin, FormView):
         # Updating the password logs out all other sessions for the user
         # except the current one.
         update_session_auth_hash(self.request, form.user)
-        messages.success(self.request, 'Password changed')
+        messages.success(self.request, _('Password changed'))
         return super().form_valid(form)
 
 
