@@ -119,7 +119,7 @@ class ResetPasswordForm(PasswordResetForm):
         super(ResetPasswordForm, self).__init__(*a, **k)
         self.helper = FormHelper()
         self.helper.form_tag = False
-        self.fields["email"].help_text = "Password recovery instructions will be sent to this email."
+        self.fields["email"].help_text = _("Password recovery instructions will be sent to this email.")
 
     def get_users(self, email):
         # Reimplemented to allow activate account with expired activation token
