@@ -1,9 +1,10 @@
 {% extends "session/base.html" %}
+{% load i18n %}
 {% block content %}
 <div class="container pt-3">
   <div class="row pt-2">
     <div class="col-sm">
-      <p class='lead'><font size='6'>Sign up</font></p>
+      <p class='lead'><font size='6'>{% trans 'Sign up' %}</font></p>
     </div>
   </div>
   {% if corporation_form %}
@@ -11,7 +12,7 @@
     <div class="card">
       <div class="card-header" id="headingOne" data-toggle="collapse" data-target="#IndividualSignupForm">
           <h2 class="mb-0">
-            <button type="button" class="btn btn-link">Individual account (single user)</button>
+            <button type="button" class="btn btn-link">{% trans 'Individual account (single user)' %}</button>
           </h2>
       </div>
       <div id="IndividualSignupForm" class="collapse{% if open_form == form %} show {% endif %}" aria-labelledby="headingOne" data-parent="#myAccordion">
@@ -25,7 +26,7 @@
                 {% crispy form %}
                 <div class="row">
                   <div class="col">
-                    <button type="submit" class="btn btn-primary">Sign up</button>
+                    <button type="submit" class="btn btn-primary">{% trans 'Sign up' %}</button>
                   </div>
                 </div>
               </div>
@@ -38,7 +39,7 @@
     <div class="card">
       <div class="card-header" id="headingOne" data-toggle="collapse" data-target="#CorporateSignupForm">
           <h2 class="mb-0">
-            <button type="button" class="btn btn-link">Business account (multi-user)</button>
+            <button type="button" class="btn btn-link">{% trans 'Business account (multi-user)' %}</button>
           </h2>
       </div>
       <div id="CorporateSignupForm" class="collapse{% if open_form == corporation_form %} show {% endif %}" aria-labelledby="headingOne" data-parent="#myAccordion">
@@ -51,7 +52,7 @@
                 {% crispy corporation_form %}
                 <div class="row">
                   <div class="col">
-                    <button type="submit" class="btn btn-primary">Sign up</button>
+                    <button type="submit" class="btn btn-primary">{% trans 'Sign up' %}</button>
                   </div>
                 </div>
               </div>

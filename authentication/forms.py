@@ -60,11 +60,16 @@ class AccountActivationForm(forms.Form):
 
 class SignUpForm(UserCreationForm):
     username = None
-    email = forms.EmailField(max_length=254, help_text='We will not share your email address with 3rd parties.')
-    first_name = forms.CharField(max_length=30, required=True)
-    last_name = forms.CharField(max_length=30, required=True)
+    email = forms.EmailField(max_length=254, 
+                            label=_('Email'),
+                            help_text=_('We will not share your email address with 3rd parties.'))
+    first_name = forms.CharField(max_length=30,
+                                required=True,
+                                label=_('First name'))
+    last_name = forms.CharField(max_length=30,
+                                required=True,
+                                label=_('Last name'))
     termsofuse = forms.BooleanField()
-    termsofuse.label = safestring.mark_safe('<label class="small">I agree to <a href="/help/terms_of_use" target="blank">terms of use</a></label>')
 
     helper = FormHelper()
     helper.form_tag = False
@@ -75,7 +80,11 @@ class SignUpForm(UserCreationForm):
         self.fields['password2'].widget.attrs["maxlength"] = 32
         self.fields['password1'].widget.attrs["minlength"] = 8
         self.fields['password2'].widget.attrs["minlength"] = 8
-        self.fields['company_country'].label = 'Country'
+        self.fields['company_country'].label = _('Country')
+
+        terms_label = _('I agree to %(starttag)sterms of use%(endtag)s') % {'starttag': '<a href="/help/terms_of_use" target="blank">',
+                                                                            'endtag': '</a>'}
+        self.fields['termsofuse'].label = safestring.mark_safe(f'<label class="small">{terms_label}</label>')
 
     class Meta:
         model = User
