@@ -217,7 +217,7 @@ def activate_account(request, uidb64, token):
                 if len(affiliates) > 0:
                     affiliates[0].confirm(request)
                 login(request, user)
-                messages.success(request, 'Your email address was confirmed and account activated.')
+                messages.success(request, _('Your email address was confirmed and account activated.'))
                 return redirect('dashboard')
 
         else:

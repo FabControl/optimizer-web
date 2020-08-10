@@ -38,7 +38,8 @@ class LoginForm(forms.Form):
         fields = ['email', 'password']
 
 class AccountActivationForm(forms.Form):
-    password = forms.CharField(max_length=32, widget=forms.PasswordInput)
+    password = forms.CharField(max_length=32, widget=forms.PasswordInput,
+                               label=_('Password'))
 
     def __init__(self, *args, **kwargs):
         self.user_instance = kwargs.pop('user', None)
@@ -52,7 +53,7 @@ class AccountActivationForm(forms.Form):
             if self.user_instance.check_password(data.get('password')):
                 return data
 
-        raise forms.ValidationError('Password did not match our records')
+        raise forms.ValidationError(_('Password did not match our records'))
 
     class Meta:
         fields = ['password']
@@ -60,7 +61,7 @@ class AccountActivationForm(forms.Form):
 
 class SignUpForm(UserCreationForm):
     username = None
-    email = forms.EmailField(max_length=254, 
+    email = forms.EmailField(max_length=254,
                             label=_('Email'),
                             help_text=_('We will not share your email address with 3rd parties.'))
     first_name = forms.CharField(max_length=30,
