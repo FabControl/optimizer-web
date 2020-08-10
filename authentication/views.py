@@ -338,7 +338,12 @@ def use_affiliate(request, uidb64, token):
                    "corporation_form": corporation_form}
         return render(request, 'authentication/signup.html', context)
 
-    return render(request, 'authentication/invalid_affiliate_url.html')
+    directions = _('You can use default <a href="{signup}">sign up form</a> or <a href="{login}">log in </a> to your account.'
+                ).format(signup=reverse('signup'), login=reverse('login'))
+
+    return render(request,
+                  'authentication/invalid_affiliate_url.html',
+                  {'directions':mark_safe(directions)})
 
 
 @login_required
