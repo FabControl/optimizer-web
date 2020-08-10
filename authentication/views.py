@@ -245,16 +245,17 @@ class MyAffiliatesView(LoginRequiredMixin, ModelFormMixin, generic.ListView, Pro
             form_clean()
             mail = form.cleaned_data['email']
             if len(get_user_model().objects.filter(email=mail)) > 0 or len(Affiliate.objects.filter(email=mail)) > 0:
-                form.add_error('email', 'User already invited or registered')
+                form.add_error('email', _('User already invited or registered'))
 
         form.clean = clean
 
         form.fields['message'].widget.attrs['rows'] = 5
-        form.fields['email'].label = "Friend's email"
-        form.fields['name'].label = "Friend's name"
+        form.fields['email'].label = _("Friend's email")
+        form.fields['name'].label = _("Friend's name")
+        form.fields['message'].label = _("Message")
 
         form.helper = FormHelper()
-        form.helper.add_input(Submit('submit', 'Send', css_class='btn btn-primary'))
+        form.helper.add_input(Submit('submit', _('Send'), css_class='btn btn-primary'))
         form.helper.method = 'POST'
         form.helper.layout = Layout(Div(Div(Div('email', 'name', css_class='col'),
                                             Div('message', css_class='col'),
@@ -272,7 +273,7 @@ class MyAffiliatesView(LoginRequiredMixin, ModelFormMixin, generic.ListView, Pro
                             uid=urlsafe_base64_encode(force_bytes(affiliate.pk)),
                             token=affiliate_token_generator.make_token(affiliate))
 
-        messages.success(self.request, 'Invitation sent to {0.name} ({0.email})'.format(affiliate))
+        messages.success(self.request, _('Invitation sent to {0.name} ({0.email})').format(affiliate))
         # send invitation message
         return redirect('my_affiliates')
 

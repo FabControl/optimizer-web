@@ -12,6 +12,7 @@ from payments.models import TaxationCountry, Subscription, RedeemedVoucher
 from payments.countries import codes_iso3166
 from django.conf import settings
 from optimizer_api import api_client
+from django.utils.translation import gettext as _
 
 from .choices import PLAN_CHOICES
 
@@ -273,7 +274,18 @@ class Affiliate(models.Model):
         email.send_to_single(self.sender.email, 'affiliate_confirmed', request,
                             affiliate=self)
 
+    @property
+    def status_string(self):
+        if self.is_confirmed:
+            return _('Registered on %(date)s') % { 'date': self.date_registered.strftime("%Y-%m-%d") }
+        else:
+            return _('Invitation sent')
 
-        # notify requester about subscription extension
+    @property
+    def bonus_string(self):
+        if self.is_confirmed:
+            return _('Received %(days)d days full access') % { 'days': self.days_assigned }
+        else:
+            return '-'
 
 
