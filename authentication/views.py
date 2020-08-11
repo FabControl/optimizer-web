@@ -483,7 +483,7 @@ def invite_into_corporation(request):
 
         if not invitation_sent:
             messages.error(request,
-                            '{} already invited or joined another corporation'.format(form.cleaned_data['email']))
+                            _('{email} already invited or joined another corporation').format(email=form.cleaned_data['email']))
 
         return redirect(reverse('account_legal_info', kwargs=dict(category='corporation')) + '#corporation')
 
@@ -503,7 +503,7 @@ def accept_corporation_invitation(request, corp_id):
         for corp in Corporation.objects.filter(_invited_users__contains= ' ' + user.email + ' '):
             corp.remove_invitation(user)
         user.save()
-        messages.success(request, f'You are now member of {corporation.name} team')
+        messages.success(request, _('You are now member of {team} team').format(team=corporation.name))
         return redirect(reverse('dashboard'))
 
     raise Http404()
