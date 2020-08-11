@@ -186,15 +186,15 @@ class LegalInformationForm(forms.ModelForm):
 
     def __init__(self, *a, **k):
         super().__init__(*a, **k)
-        self.fields['company_name'].label = 'Company name*'
+        self.fields['company_name'].label = _('Company name*')
         self.fields['first_name'].required = True
         self.fields['last_name'].required = True
-        self.fields['company_country'].label = 'Country'
-        self.fields['company_legal_address'].label = 'Company legal address*'
-        self.fields['company_registration_number'].label = 'Company registration number*'
-        self.fields['company_vat_number'].label = 'Company VAT number'
+        self.fields['company_country'].label = _('Country')
+        self.fields['company_legal_address'].label = _('Company legal address*')
+        self.fields['company_registration_number'].label = _('Company registration number*')
+        self.fields['company_vat_number'].label = _('Company VAT number')
         self.fields['company_account'].initial = self.instance.is_company_account
-        self.fields['company_account'].label = 'Show legal info (for EU companies)'
+        self.fields['company_account'].label = _('Show legal info (for EU companies)')
 
     def clean(self):
         cleaned_data = super().clean()
@@ -202,33 +202,26 @@ class LegalInformationForm(forms.ModelForm):
         if not company_account:
             cleaned_data['company_vat_number'] = ''
 
-        missing = []
         for f in ['company_name', 'company_country', 'company_legal_address', 'company_registration_number']:
             if company_account:
                 v = cleaned_data.get(f)
                 if v == '' or v is None:
-                    missing.append(self.fields[f].label)
+                    raise forms.ValidationError(
+                            _('Company account requires {field_label}').format(self.fields[f].label)
+                            )
 
             elif f != 'company_country':
                 cleaned_data[f] = ''
-
-        if len(missing) > 0:
-            if len(missing) > 1:
-                last = missing.pop()
-                msg = ', '.join(missing) + ' and ' + last
-            else:
-                msg = missing[0]
-
-            raise forms.ValidationError(
-                    'Company account requires: ' + msg + '.'
-                    )
 
         return cleaned_data
 
 
 class CorporationInviteForm(forms.Form):
-    email = forms.EmailField(widget=forms.TextInput(attrs={'placeholder': 'email'}))
-    name = forms.CharField(max_length=20, widget=forms.TextInput(attrs={'placeholder': 'name'}))
+    email = forms.EmailField(label=_('Email'),
+                             widget=forms.TextInput(attrs={'placeholder': _('email')}))
+    name = forms.CharField(max_length=20, 
+                           label=_('Name'),
+                           widget=forms.TextInput(attrs={'placeholder': 'name'}))
 
     class Meta:
         fields = ['email', 'name']

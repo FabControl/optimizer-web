@@ -353,7 +353,7 @@ def legal_information_view(request, category=None):
         form = LegalInformationForm(request.POST, instance=request.user)
         if form.is_valid():
             form.save(commit=True)
-            messages.success(request, 'Account changed successfully')
+            messages.success(request, _('Account changed successfully'))
         else:
             form_errors = (str(m.as_text()).lstrip('* ') for m in dict(form.errors).values())
             message = "<br>".join(form_errors)
