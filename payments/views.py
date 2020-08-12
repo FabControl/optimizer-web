@@ -113,7 +113,7 @@ def checkout_completed(request, checkout):
         if checkout.payment_plan.is_one_time:
             days = checkout.payment_plan.subscription_period.days
             msg = ngettext('Your full access was extended for %(day)d day',
-                            'Your full access was extended for %(day)d days', days) % {'days':days}
+                            'Your full access was extended for %(day)d days', days) % {'day':days}
             messages.success(request, msg)
         else:
             messages.success(request, _('Subscription successful'))
@@ -357,8 +357,10 @@ def redeem_voucher(request):
 
 
         if success:
-            messages.success(request,
-                        'Your full access was extended for {0} days'.format(voucher.bonus_days))
+            days = voucher.bonus_days
+            msg = ngettext('Your full access was extended for %(day)d day',
+                            'Your full access was extended for %(day)d days', days) % {'day':days}
+            messages.success(request, msg)
         else:
-            messages.error(request, 'Provided voucher code is not valid')
+            messages.error(request, _('Provided voucher code is not valid'))
     return redirect(reverse('plans'))

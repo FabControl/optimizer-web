@@ -60,7 +60,7 @@ class VoucherRedeemForm(forms.Form):
     helper = FormHelper()
     helper.form_action = reverse_lazy('redeem_voucher')
     helper.layout = Layout(FieldWithButtons('voucher',
-                        Submit('submit', 'Redeem', css_class='btn-primary'),
+                        Submit('submit', _('Redeem'), css_class='btn-primary'),
                         style='text-align: center !important;'))
 
     def __init__(self, *a, **k):
