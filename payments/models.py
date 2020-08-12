@@ -10,6 +10,7 @@ import zlib
 from base64 import b64encode, b64decode
 from django.forms.models import model_to_dict
 import stripe
+from django.utils.translation import gettext as _
 
 
 class ModelDiffMixin(object):
@@ -78,8 +79,13 @@ class Plan(ModelDiffMixin, models.Model):
     @property
     def payment_frequency_string(self):
         if self.is_one_time:
-            return 'One-time payment'
-        return f'Recurring {self.interval}ly payment'
+            return _('One-time payment')
+        if self.interval == 'day':
+            return _('Recurring dayly payment')
+        elif self.interval == 'month':
+            return _('Recurring monthly payment')
+        elif self.interval == 'year':
+            return _('Recurring yearly payment')
 
 
     @property

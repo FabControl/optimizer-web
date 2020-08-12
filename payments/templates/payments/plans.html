@@ -48,13 +48,14 @@
 </style>
 {% endblock %}
 
+{% load i18n %}
 {% block content %}
 <div class="container">
   {% if request.user.member_of_corporation is None %}
     {% if request.user.plan == 'premium' and not active_subscriptions %}
     <div class="row pt-5 text-center justify-content-center">
       <div class="col-sm">
-        <h1 class="display-4"><b>{{expiration}} days</b> of full access remaining.</h1>
+        <h1 class="display-4">{% blocktrans count counter=expiration%}{{expiration}} day of full access remaining.{% plural %}{{expiration}} days of full access remaining.{% endblocktrans %}</h1>
       </div>
     </div>
     <!--<div class="row justify-content-center">
@@ -65,13 +66,13 @@
     {% endif %}
   <ul class="nav nav-tabs justify-content-center pt-5" id="myTab" role="tablist">
     <li class="nav-item">
-      <a class="nav-link{% if section is None or section == 'individual' %} active{% endif %}" id="individual-tab" data-toggle="tab" href="#individual" role="tab" aria-controls="individual" aria-selected="{% if section is None or section == 'individual' %}true{% else %}false{% endif %}">Individual</a>
+      <a class="nav-link{% if section is None or section == 'individual' %} active{% endif %}" id="individual-tab" data-toggle="tab" href="#individual" role="tab" aria-controls="individual" aria-selected="{% if section is None or section == 'individual' %}true{% else %}false{% endif %}">{% trans 'Individual' %}</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link{% if section == 'business' %} active{% endif %}" id="business-tab" data-toggle="tab" href="#business" role="tab" aria-controls="business" aria-selected="{% if section == 'business' %}true{% else %}false{% endif %}">Business</a>
+      <a class="nav-link{% if section == 'business' %} active{% endif %}" id="business-tab" data-toggle="tab" href="#business" role="tab" aria-controls="business" aria-selected="{% if section == 'business' %}true{% else %}false{% endif %}">{% trans 'Business' %}</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link{% if section == 'education' %} active{% endif %}" id="education-tab" data-toggle="tab" href="#education" role="tab" aria-controls="education" aria-selected="{% if section == 'education' %}true{% else %}false{% endif %}">Education</a>
+      <a class="nav-link{% if section == 'education' %} active{% endif %}" id="education-tab" data-toggle="tab" href="#education" role="tab" aria-controls="education" aria-selected="{% if section == 'education' %}true{% else %}false{% endif %}">{% trans 'Education' %}</a>
     </li>
   </ul>
   <div class="tab-content" id="myTabContent">
@@ -95,21 +96,21 @@
                     </p>
                   </div>
                   <hr>
-                  <p>All tests<br>
-                  Full guided testing mode<br>
-                  Advanced testing mode<br>
-                  Email support
+                  <p>{% trans 'All tests' %}<br>
+                  {% trans 'Full guided testing mode' %}<br>
+                  {% trans 'Advanced testing mode' %}<br>
+                  {% trans 'Email support' %}
                   {% for line in plan.extra_info_text_lines %}
-                    <br>{{ line }}
+                    <br>{% trans line %}
                   {% endfor %}
                   </p>
                   {% if request.user.is_authenticated %}
                     {% if active_subscriptions %}
                       {% if active_subscriptions.0.payment_plan == plan %}
-                        Currently active
+                        {% trans 'Currently active' %}
                         {% else %}<br>
                       {% endif %}
-                    {% else %}<button type="submit" class="btn btn-primary" name="{{plan.name}}button">Purchase</button>
+                    {% else %}<button type="submit" class="btn btn-primary" name="{{plan.name}}button">{% trans 'Purchase' %}</button>
                     {% endif %}
                   {% endif %}
                 </div>
@@ -120,7 +121,7 @@
         {% endfor %}
       </div>
       <div class="row pt-3 justify-content-center">
-        <p>If you’re not happy with our software for any reason, we’ll refund your money within a week from payment date no-questions-asked.</p>
+      <p>{% trans "If you’re not happy with our software for any reason, we’ll refund your money within a week from payment date no-questions-asked." %}</p>
       </div>
       <div class="row pt-5 justify-content-center">
         {% if not active_subscriptions %}
@@ -134,7 +135,7 @@
   {% else %}
   <div class="row pt-5 text-center justify-content-center">
     <div class="col-sm">
-      <h1 class="display-4">Payment plans</h1>
+      <h1 class="display-4">{% trans 'Payment plans' %}</h1>
     </div>
   </div>
   {% endif %}
@@ -154,22 +155,22 @@
                     <small>{{ plan.payment_frequency_string }}</small>
                   </p>
                   <hr>
-                  <p>All tests<br>
-                  Full guided testing mode<br>
-                  Advanced testing mode<br>
-                  {{ plan.max_users_allowed }} users included<br>
-                  Email support
+                  <p>{% trans 'All tests' %}<br>
+                  {% trans 'Full guided testing mode' %}<br>
+                  {% trans 'Advanced testing mode' %}<br>
+                  {% blocktrans count counter=plan.max_users_allowed with users=plan.max_users_allowed %}{{ users }} user included{% plural %}{{ users }} users included{% endblocktrans %}<br>
+                  {% trans 'Email support' %}
                   {% for line in plan.extra_info_text_lines %}
-                    <br>{{ line }}
+                    <br>{% trans line %}
                   {% endfor %}
                   </p>
                   {% if request.user.is_authenticated %}
                     {% if active_subscriptions %}
                       {% if active_subscriptions.0.payment_plan == plan %}
-                        Currently active
+                        {% trans 'Currently active' %}
                         {% else %}<br>
                       {% endif %}
-                    {% else %}<button type="submit" class="btn btn-primary" name="{{plan.name}}button">Purchase</button>
+                    {% else %}<button type="submit" class="btn btn-primary" name="{{plan.name}}button">{% trans 'Purchase' %}</button>
                     {% endif %}
                   {% endif %}
                 </div>
@@ -180,22 +181,22 @@
         {% endfor %}
       </div>
       <div class="row pt-3 justify-content-center">
-        <p>If you need different setup or more users, contact <a href="mailto:sales@fabcontrol.com">sales@fabcontrol.com</a></p>
+      <p>{% blocktrans with support='<a href="mailto:sales@fabcontrol.com">sales@fabcontrol.com</a>' %}If you need different setup or more users, contact {{ support }}{% endblocktrans %}</p>
       </div>
   {% if request.user.member_of_corporation is None %}
     </div>
     <div class="tab-pane fade{% if section == 'education' %} show active{% endif %}" id="education" role="tabpanel" aria-labelledby="education-tab">
       <div class="row pt-5 justify-content-center">
-        <h2>Individual account</h2>
+        <h2>{% trans 'Individual account' %}</h2>
       </div>
       <div class="row pt-3 justify-content-center">
-        <p>Free full access for individual students and teachers - </br><a href="mailto:support@fabcontrol.com?subject=Individual education account">contact support</a> after creating a free account to activate.</p>
+      <p>{% blocktrans with support='href="mailto:support@fabcontrol.com?subject=Individual education account"' %}Free full access for individual students and teachers - </br><a {{ support }}>contact support</a> after creating a free account to activate.{% endblocktrans %}</p>
       </div>
       <div class="row pt-5 justify-content-center">
-        <h2>Educational institution account</h2>
+        <h2>{% trans 'Educational institution account' %}</h2>
       </div>
       <div class="row pt-3 justify-content-center">
-        <p>We offer discounts for multi-user accounts — contact <a href="mailto:sales@fabcontrol.com?subject=Educational institution account">sales@fabcontrol.com</a>.</p>
+      <p>{% blocktrans with sales='<a href="mailto:sales@fabcontrol.com?subject=Educational institution account">sales@fabcontrol.com</a>' %}We offer discounts for multi-user accounts — contact {{ sales }}.{% endblocktrans %}</p>
       </div>
     </div>
   </div>
