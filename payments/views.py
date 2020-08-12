@@ -168,13 +168,13 @@ def update_payment_method(request, subscription_id):
 @_decorate_checkout
 def card_details_updated(request, checkout):
     if checkout.is_paid:
-        messages.success(request, 'Subscription payment method changed!')
+        messages.success(request, _('Subscription payment method changed!'))
         # checkout is no longer required
         checkout.delete()
 
     # this should never happen in real life with webhooks, but better safe than sorry
     else:
-        messages.error(request, 'Something went wrong. Please try again later.')
+        messages.error(request, _('Something went wrong. Please try again later.'))
 
     return 'account_legal_info', dict(category='subscription'), '#subscription'
 
@@ -193,7 +193,7 @@ def cancel_subscription(request, subscription_id):
     data = stripe.Subscription.delete(subscription.stripe_id)
     Subscription.update_from_stripe(data)
 
-    messages.success(request, 'Subscription cancelled')
+    messages.success(request, _('Subscription cancelled'))
     return redirect(reverse('account_legal_info', kwargs=dict(category='subscription')) + '#subscription')
 
 
