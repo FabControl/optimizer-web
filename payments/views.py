@@ -20,6 +20,8 @@ from django.template.loader import get_template
 from Optimizer3D.middleware.GeoRestrictAccessMiddleware import geoRestrictExempt
 from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.db import models
+from django.utils.translation import gettext as _
+from django.utils.translation import ngettext
 
 # Create your views here.
 
@@ -96,7 +98,7 @@ def _decorate_checkout(method):
         landing_url,kwargs,section = method(request, checkout)
 
         if checkout.is_cancelled:
-            messages.error(request, 'Your checkout was cancelled')
+            messages.error(request, _('Your checkout was cancelled'))
 
         return redirect(reverse(landing_url, kwargs=kwargs) + section)
 
@@ -106,20 +108,22 @@ def _decorate_checkout(method):
 @_decorate_checkout
 def checkout_completed(request, checkout):
     if checkout.is_expired:
-        messages.error(request, 'Your session has expired')
+        messages.error(request, _('Your session has expired'))
     elif checkout.is_paid:
         if checkout.payment_plan.is_one_time:
-            messages.success(request,
-                        'Your full access was extended for {0.days} days'.format(checkout.payment_plan.subscription_period))
+            days = checkout.payment_plan.subscription_period.days
+            msg = ngettext('Your full access was extended for %(day)d day',
+                            'Your full access was extended for %(day)d days', days) % {'days':days}
+            messages.success(request, msg)
         else:
-            messages.success(request, 'Subscription successful')
+            messages.success(request, _('Subscription successful'))
             if checkout.payment_plan.type == 'corporate':
                 return 'account_legal_info', dict(category='corporation'), '#corporation'
 
     # this should never happen in real life with webhooks, but better safe than sorry
     else:
         messages.warning(request,
-                        'We haven\'t received your payment yet. Please check after few minutes')
+                        _('We haven\'t received your payment yet. Please check after few minutes'))
 
     return 'plans',None,''
 
@@ -127,7 +131,7 @@ def checkout_completed(request, checkout):
 @_decorate_checkout
 def checkout_cancelled(request, checkout):
     if checkout.is_expired:
-        messages.error(request, 'Your session has expired')
+        messages.error(request, _('Your session has expired'))
     elif not checkout.is_paid:
         checkout.cancel()
     return 'plans',None,''
