@@ -1,3 +1,4 @@
+{% load i18n %}
 {% load staticfiles %}
 <nav class="navbar navbar-expand-lg navbar-light" style="min-height: max-content;">
   <div class="container">
@@ -35,19 +36,19 @@
           </a>
           <div class="dropdown-menu" aria-labelledby="helpDropdown">
             {% if request.user.can_collect_invoices %}
-            <a class="dropdown-item" href="{% url 'invoices' %}">Invoices</a>
+            <a class="dropdown-item" href="{% url 'invoices' %}">{% trans 'Invoices' %}</a>
             {% endif %}
-            <a class="dropdown-item" href="{% url 'account_legal_info' %}">Account Settings</a>
+            <a class="dropdown-item" href="{% url 'account_legal_info' %}">{% trans 'Account Settings' %}</a>
             {% if request.user.member_of_corporation is None  and not request.user.active_subscriptions %}
             {% if request.user.plan == 'limited' %}
             <hr>
-            <a class="dropdown-item" href="{% url 'plans' %}">Upgrade to Full Access</a>
-            <a class="dropdown-item" href="{% url 'plans' %}#redeem_a_voucher">Redeem a voucher</a>
+            <a class="dropdown-item" href="{% url 'plans' %}">{% trans 'Upgrade to Full Access' %}</a>
+            <a class="dropdown-item" href="{% url 'plans' %}#redeem_a_voucher">{% trans 'Redeem a voucher' %}</a>
             {% endif %}
             <!--<a class="dropdown-item" href="{% url 'my_affiliates' %}">Invite a Friend</a>--!>
             {% endif %}
             <hr>
-            <a class="dropdown-item" href="{% url 'signout' %}">Sign Out</a>
+            <a class="dropdown-item" href="{% url 'signout' %}">{% trans 'Sign Out' %}</a>
           </div>
         </li>
       </ul>
@@ -58,24 +59,24 @@
   <div class="card navbar-optimizer">
     <ul class="nav nav-optimizer mr-auto">
       <li class="nav-item px-0 {% if "/dashboard/" in request.path %}active{% endif %}">
-        <a id="dash" class="nav-link {% if "/dashboard/" in request.path %}active{% endif %}" href="{% url 'dashboard' %}">Dashboard</a>
+        <a id="dash" class="nav-link {% if "/dashboard/" in request.path %}active{% endif %}" href="{% url 'dashboard' %}">{% trans 'Dashboard' %}</a>
       </li>
       <li class="nav-item px-0 {% if "/sessions/" in request.path %}active{% endif %}">
-        <a id="testing_sessions" class="nav-link {% if "/sessions/" in request.path %}active{% endif %}" href="{% url 'session_manager' %}">Testing Sessions</a>
+        <a id="testing_sessions" class="nav-link {% if "/sessions/" in request.path %}active{% endif %}" href="{% url 'session_manager' %}">{% trans 'Testing Sessions' %}</a>
       </li>
       <li class="nav-item px-0 {% if "/resources/machines" in request.path %}active{% endif %} dropdown">
-        <a class="nav-link {% if "/resources/machines" in request.path %}active{% endif %}" href="{% url 'machine_manager' %}">3D Printers</a>
+        <a class="nav-link {% if "/resources/machines" in request.path %}active{% endif %}" href="{% url 'machine_manager' %}">{% trans '3D Printers' %}</a>
       </li>
       <li class="nav-item px-0 {% if "/resources/materials" in request.path %}active{% endif %} dropdown">
-        <a class="nav-link {% if "/resources/materials" in request.path %}active{% endif %}" href="{% url 'material_manager' %}">Materials</a>
+        <a class="nav-link {% if "/resources/materials" in request.path %}active{% endif %}" href="{% url 'material_manager' %}">{% trans 'Materials' %}</a>
       </li>
       {% if request.user.member_of_corporation %}
       <li class="nav-item px-0 {% if "/team_stats" in request.path %}active{% endif %} dropdown">
-        <a class="nav-link {% if "/team_stats" in request.path %}active{% endif %}" href="{% url 'team_stats' %}">Users</a>
+        <a class="nav-link {% if "/team_stats" in request.path %}active{% endif %}" href="{% url 'team_stats' %}">{% trans 'Users' %}</a>
       </li>
       {% endif %}
       <li class="nav-item px-0 {% if "/help/" in request.path %}active{% endif %} dropdown">
-        <a class="nav-link {% if "/help/" in request.path %}active{% endif %}" href="https://3doptimizer.helpscoutdocs.com" target="_blank">Help Center</a>
+        <a class="nav-link {% if "/help/" in request.path %}active{% endif %}" href="https://3doptimizer.helpscoutdocs.com" target="_blank">{% trans 'Help Center' %}</a>
       </li>
     </ul>
   </div>

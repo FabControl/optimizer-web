@@ -13,6 +13,7 @@ from payments.countries import codes_iso3166
 from django.conf import settings
 from optimizer_api import api_client
 from django.utils.translation import gettext as _
+from django.utils.translation import ngettext
 
 from .choices import PLAN_CHOICES
 
@@ -125,22 +126,30 @@ class User(AbstractUser):
 
     @property
     def plan_navbar_text(self):
-        expiration_delta = self.subscription_expiration - timezone.now()
+        expiration_delta = (self.subscription_expiration - timezone.now()).days + 1
         if self.plan == 'basic':
-            return "Upgrade to Full Access"
+            return _("Upgrade to Full Access")
         elif self.plan == 'permanent':
-            return "Permanent License"
+            return _("Permanent License")
         elif self.plan == "education":
-            return "Student's License ({} Days)".format(expiration_delta.days + 1)
+            return ngettext("Student's License ({expiration} Day)",
+                            "Student's License ({expiration} Days)",
+                            expiration_delta).format(expiration=expiration_delta)
         elif self.plan == "premium":
             if len(Subscription.objects.filter(user=self, state__in=(Subscription.ACTIVE, Subscription.FAILURE_NOTIFIED))) == 0:
-                return "Full Access ({} Days)".format(expiration_delta.days + 1)
+                return ngettext("Full Access ({expiration} Day)",
+                                "Full Access ({expiration} Days)",
+                                expiration_delta).format(expiration=expiration_delta)
             else:
-                return "Full Access"
+                return _("Full Access")
         elif self.plan == "test":
-            return "Test Access ({} Days)".format(expiration_delta.days + 1)
+            return ngettext("Test Access ({expiration} Day)",
+                            "Test Access ({expiration} Days)",
+                            expiration_delta).format(expiration=expiration_delta)
         elif self.plan == "limited":
-            return "Limited Access ({} Days)".format(expiration_delta.days + 1)
+            return ngettext("Limited Access ({expiration} Day)",
+                            "Limited Access ({expiration} Days)",
+                            expiration_delta).format(expiration=expiration_delta)
 
     def extend_subscription(self, delta: timedelta):
         """
