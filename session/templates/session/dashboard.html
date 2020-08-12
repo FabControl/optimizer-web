@@ -1,4 +1,5 @@
 {% extends "session/base.html" %}
+{% load i18n %}
 {% block content %}
 {% load static %}
 <script src="{% static 'session/js/sortable.min.js' %}"></script>
@@ -7,7 +8,7 @@
   <div class="row pt-2">
     <div class="col-sm text-center">
       <p class='lead'>
-        <font size='6'>Welcome to 3DOptimizer!</font>
+        <font size='6'>{% trans 'Welcome to 3DOptimizer!' %}</font>
       </p>
     </div>
   </div>
@@ -15,8 +16,9 @@
     <div class="col-sm">
       {% if invitations %}
       {% for corporation in invitations %}
-      <p>{{ corporation.owner.first_name }} {{ corporation.owner.last_name }} invited you to collaborate in {{ corporation.name }}. <a href="{% url 'accept_corporation_invitation' corporation.pk %}">Join</a> | <a
-          href="{% url 'decline_corporation_invitation' corporation.pk %}">Decline</a></p>
+      <p>{% blocktrans with first_name=corporation.owner.first_name surname=corporation.owner.last_name company=corporation.name %}{{ first_name }} {{ last_name }} invited you to collaborate in {{ company }}.{% endblocktrans %} 
+        <a href="{% url 'accept_corporation_invitation' corporation.pk %}">{% trans 'Join' %}</a> | 
+        <a href="{% url 'decline_corporation_invitation' corporation.pk %}">{% trans 'Decline' %}</a></p>
       {% endfor %}
       {% endif %}
     </div>
@@ -25,31 +27,31 @@
   <div class="row pt-2 pb-5">
     <div class="col-sm">
       <div class="card p-2 text-center shadow-sm bg-light">
-        <p class='lead'>Testing Sessions</p>
+        <p class='lead'>{% trans 'Testing Sessions' %}</p>
         <p class='display-2'>{{cards.sessions.len}}</p>
-        <a href="{% url 'session_manager' %}">View all Sessions</a>
+        <a href="{% url 'session_manager' %}">{% trans 'View all Sessions' %}</a>
       </div>
     </div>
     <div class="col-sm">
       <div class="card p-2 text-center shadow-sm bg-light">
-        <p class='lead'>3D Printers</p>
+        <p class='lead'>{% trans '3D Printers' %}</p>
         <p class='display-2'>{{cards.printers.len}}</p>
-        <a href="{% url 'machine_manager' %}">View all 3D Printers</a>
+        <a href="{% url 'machine_manager' %}">{% trans 'View all 3D Printers' %}</a>
       </div>
     </div>
     <div class="col-sm">
       <div class="card p-2 text-center shadow-sm bg-light">
-        <p class='lead'>Materials</p>
+        <p class='lead'>{% trans 'Materials' %}</p>
         <p class='display-2'>{{cards.materials.len}}</p>
-        <a href="{% url 'material_manager' %}">View all Materials</a>
+        <a href="{% url 'material_manager' %}">{% trans 'View all Materials' %}</a>
       </div>
     </div>
     {% if request.user.member_of_corporation %}
     <div class="col-sm">
       <div class="card p-2 text-center shadow-sm bg-light">
-        <p class='lead'>Users</p>
+        <p class='lead'>{% trans 'Users' %}</p>
         <p class='display-2'>{{cards.corporation.len}}</p>
-        <a href="{% url 'team_stats' %}">View all Users</a>
+        <a href="{% url 'team_stats' %}">{% trans 'View all Users' %}</a>
       </div>
     </div>
     {% endif %}
@@ -58,15 +60,15 @@
   {% if latest_sessions|length < 1 %}
   <div class="row pt-4 pb-5">
     <div class="col-sm text-center">
-      <button type="button" onclick="location.href='{% url 'new_session' %}'" class="btn-lg btn-primary">Start a new testing session</button>
+      <button type="button" onclick="location.href='{% url 'new_session' %}'" class="btn-lg btn-primary">{% trans 'Start a new testing session' %}</button>
     </div>
   </div>
   <div class="row">
     <div class="col-sm text-center">
-      <p>Video overview and user manual are available in <a href="https://3doptimizer.helpscoutdocs.com/">Help Center</a></p>
-      <p>When you return, this page will show your recent testing sessions.</p>
+      <p>{% blocktrans with help='https://3doptimizer.helpscoutdocs.com/' %}Video overview and user manual are available in <a href="{{ help }}">Help Center</a>{% endblocktrans %}</p>
+      <p>{% trans 'When you return, this page will show your recent testing sessions.' %}</p>
       {% if request.user.manager_of_corporation and request.user.manager_of_corporation.owner == request.user %}
-      <a href="{% url 'plans' %}">Upgrade to add multiple users</a>
+      <a href="{% url 'plans' %}">{% trans 'Upgrade to add multiple users' %}</a>
       {% endif %}
     </div>
   </div>
@@ -83,20 +85,20 @@
   {% else %}
   <div class="row pt-3">
     <div class="col-sm">
-      <h4>Recent Testing Sessions</h4>
+      <h4>{% trans 'Recent Testing Sessions' %}</h4>
     </div>
     <div class="col-sm text-right">
       {% if request.user.plan == 'basic' %}
-      <div><button type="button" class="btn btn-outline-primary btn" disabled>+ New Testing Session</button></div>
-      {% if request.user.member_of_corporation is None or request.user.member_of_corporation.owner == request.user %}
-      <div><a href="{% url 'plans' %}">Upgrade to create a new Testing Session</a></div>
+        <div><button type="button" class="btn btn-outline-primary btn" disabled>+ {% trans 'New Testing Session' %}</button></div>
+        {% if request.user.member_of_corporation is None or request.user.member_of_corporation.owner == request.user %}
+          <div><a href="{% url 'plans' %}">{% trans 'Upgrade to create a new Testing Session' %}</a></div>
+        {% else %}
+          {% with request.user.member_of_corporation.owner as corporation_owner %}
+          <p>{% blocktrans with first_name=corporation_owner.first_name last_name=corporation_owner.last_name %}To create new Testing Sessions, ask {{ first_name }} {{ last_name }} to upgrade account{% endblocktrans %}</p>
+          {% endwith %}
+        {% endif %}
       {% else %}
-      {% with request.user.member_of_corporation.owner as corporation_owner %}
-      <p>To create new Testing Sessions, ask {{ corporation_owner.last_name }} {{ corporation_owner.first_name }} to upgrade account</p>
-      {% endwith %}
-      {% endif %}
-      {% else %}
-      <button type="button" onclick="location.href='{% url 'new_session' %}'" class="btn btn-primary btn">+ New Testing Session</button>
+        <button type="button" onclick="location.href='{% url 'new_session' %}'" class="btn btn-primary btn">+ {% trans 'New Testing Session' %}</button>
       {% endif %}
     </div>
   </div>
@@ -105,14 +107,14 @@
       <table class="sortable sortable-theme-bootstrap table" data-sortable>
         <thead>
           <tr>
-            <th class='caps'>ID</th>
-            <th class='caps'>Name</th>
-            <th class='caps'>Mode</th>
-            <th class='caps'>Target</th>
-            <th class='caps'>3D Printer</th>
-            <th class='caps'>Material</th>
-            <th class='caps'>Tests</th>
-            <th class='caps'>Created</th>
+            <th class='caps'>{% trans 'ID' %}</th>
+            <th class='caps'>{% trans 'Name' %}</th>
+            <th class='caps'>{% trans 'Mode' %}</th>
+            <th class='caps'>{% trans 'Target' %}</th>
+            <th class='caps'>{% trans '3D Printer' %}</th>
+            <th class='caps'>{% trans 'Material' %}</th>
+            <th class='caps'>{% trans 'Tests' %}</th>
+            <th class='caps'>{% trans 'Created' %}</th>
           </tr>
         </thead>
         <tbody>
