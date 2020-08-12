@@ -7,6 +7,7 @@ from crispy_forms.helper import FormHelper
 from .models import *
 from .choices import TEST_NUMBER_CHOICES, MODE_CHOICES
 from decimal import Decimal
+from django.utils.translation import gettext as _
 
 
 def wrap_decimal_to_python(field):
@@ -173,18 +174,19 @@ class MaterialForm(MultiDecimalSeperatorModelForm):
     def __init__(self, *args, **kwargs):
         super(MaterialForm, self).__init__(*args, **kwargs)
 
-        self.fields['min_temperature'].label = "Min temperature (°C)"
-        self.fields['min_temperature'].help_text = mark_safe("Manufacturer's suggested temperature. After the testing process you might end up with a different temperature. If you do not have this data, here is a method to determine it <a href='https://3doptimizer.helpscoutdocs.com/article/42-determining-initial-printing-temperature'>here</a>.")
+        self.fields['min_temperature'].label = _("Min temperature (°C)")
+        hlp_txt = _("Manufacturer's suggested temperature. After the testing process you might end up with a different temperature. If you do not have this data, a method to determine it can be faund <a href='{help_link}'>here</a>.")
+        self.fields['min_temperature'].help_text = mark_safe(hlp_txt.format(help_link='https://3doptimizer.helpscoutdocs.com/article/42-determining-initial-printing-temperature'))
 
-        self.fields['max_temperature'].label = "Max temperature (°C)"
-        self.fields['max_temperature'].help_text = "Same as above."
+        self.fields['max_temperature'].label = _("Max temperature (°C)")
+        self.fields['max_temperature'].help_text = _("Same as above.")
 
-        self.fields['name'].label = "Name"
-        self.fields['size_od'].label = "Filament diameter (mm)"
+        self.fields['name'].label = _("Name")
+        self.fields['size_od'].label = _("Filament diameter (mm)")
         self.fields['notes'].widget = forms.Textarea()
         self.fields['notes'].widget.attrs.update({'rows': '1'})
-        self.fields['notes'].label = "Notes"
-        self.fields['notes'].help_text = "(Batch number, color, SKU etc.)"
+        self.fields['notes'].label = _("Notes")
+        self.fields['notes'].help_text = _("(Batch number, color, SKU etc.)")
         self.fields['notes'].required = False
 
 
