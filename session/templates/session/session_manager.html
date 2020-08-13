@@ -1,4 +1,5 @@
 {% extends "session/base.html" %}
+{% load i18n %}
 
 {% block content %}
 {% load static %}
@@ -8,21 +9,21 @@
   <div class="row pt-3">
     <div class="col-sm">
       <p class="lead">
-        <font size="6">Testing Sessions</font>
+        <font size="6">{% trans 'Testing Sessions' %}</font>
       </p>
     </div>
     <div class="col-sm text-right">
       {% if request.user.plan == 'basic' %}
-        <div><button type="button" class="btn btn-outline-primary btn" disabled>+ New Testing Session</button></div>
+        <div><button type="button" class="btn btn-outline-primary btn" disabled>+ {% trans 'New Testing Session' %}</button></div>
         {% if request.user.member_of_corporation is None or request.user.member_of_corporation.owner == request.user %}
-        <div><a href="{% url 'plans' %}">Upgrade to create a new Testing Session</a></div>
+        <div><a href="{% url 'plans' %}">{% trans 'Upgrade to create a new Testing Session' %}</a></div>
         {% else %}
           {% with request.user.member_of_corporation.owner as corporation_owner %}
-          <p>To create new Testing Sessions, ask {{ corporation_owner.last_name }} {{ corporation_owner.first_name }} to upgrade account</p>
+          <p>{% blocktrans with first_name=corporation_owner.first_name last_name=corporation_owner.last_name %}To create new Testing Sessions, ask {{ first_name }} {{ last_name }} to upgrade account{% endblocktrans %}</p>
           {% endwith %}
         {% endif %}
       {% else %}
-      <button type="button" onclick="location.href='{% url 'new_session' %}'" class="btn btn-primary btn">+ New Testing Session</button>
+      <button type="button" onclick="location.href='{% url 'new_session' %}'" class="btn btn-primary btn">+ {% trans 'New Testing Session' %}</button>
       {% endif %}
     </div>
   </div>
@@ -32,15 +33,15 @@
         <table class="table sortable sortable-theme-bootstrap" data-sortable>
           <thead>
             <tr>
-              <th class='caps'>ID</th>
-              <th class='caps'>Name</th>
-              <th class='caps'>Mode</th>
-              <th class='caps'>Target</th>
-              <th class='caps'>3D Printer</th>
-              <th class='caps'>Material</th>
-              <th class='caps'>Tests</th>
-              <th class='caps' data-defaultsort="desc">Created</th>
-              {% if request.user.member_of_corporation %}<th class='caps'>Performer</th>{% endif %}
+              <th class='caps'>{% trans 'ID' %}</th>
+              <th class='caps'>{% trans 'Name' %}</th>
+              <th class='caps'>{% trans 'Mode' %}</th>
+              <th class='caps'>{% trans 'Target' %}</th>
+              <th class='caps'>{% trans '3D Printer' %}</th>
+              <th class='caps'>{% trans 'Material' %}</th>
+              <th class='caps'>{% trans 'Tests' %}</th>
+              <th class='caps' data-defaultsort="desc">{% trans 'Created' %}</th>
+              {% if request.user.member_of_corporation %}<th class='caps'>{% trans 'Performer' %}</th>{% endif %}
             </tr>
           </thead>
           <tbody>
@@ -62,15 +63,13 @@
               {% if request.user.member_of_corporation %}<td>{{ session.owner.first_name }} {{ session.owner.last_name }}</td>{% endif %}
               <td>
                 <div class="dropdown">
-                  <button class="btn-sm btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Action
-                  </button>
+                  <button class="btn-sm btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{% trans 'Action' %}</button>
                   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item" href="{% url 'session_detail' session.pk %}">Open</a>
+                    <a class="dropdown-item" href="{% url 'session_detail' session.pk %}">{% trans 'Open' %}</a>
                     <div class="dropdown-divider"></div>
                     <form class="" action="{% url 'session_delete' session.pk %}" method="post">
                       {% csrf_token %}
-                      <button class="dropdown-item" type="submit" href="{% url 'session_delete' session.pk %}">Delete</button>
+                      <button class="dropdown-item" type="submit" href="{% url 'session_delete' session.pk %}">{% trans 'Delete' %}</button>
                     </form>
                   </div>
                 </div>
