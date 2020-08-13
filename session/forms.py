@@ -516,23 +516,24 @@ class NewMachineForm(MultiDecimalSeperatorModelForm):
         self.helper = FormHelper()
         self.helper.form_tag = False
 
-        self.fields["model"].label = "3D Printer model"
-        self.fields["buildarea_maxdim1"].label = "Max dimension on X axis (mm)"
-        self.fields["buildarea_maxdim2"].label = "Max dimension on Y axis (mm)"
+        self.fields["model"].label = _("3D Printer model")
+        self.fields["buildarea_maxdim1"].label = _("Max dimension on X axis (mm)")
+        self.fields["buildarea_maxdim2"].label = _("Max dimension on Y axis (mm)")
 
-        self.fields["offset_1"].label = "Offset on X axis (mm)"
-        self.fields["offset_2"].label = "Offset on Y axis (mm)"
+        self.fields["offset_1"].label = _("Offset on X axis (mm)")
+        self.fields["offset_2"].label = _("Offset on Y axis (mm)")
 
-        self.fields["form"].label = "Type"
+        self.fields["form"].label = _("Type")
+        self.fields["extruder_type"].label = _("Extruder type")
 
-        self.fields["gcode_header"].label = "Header"
+        self.fields["gcode_header"].label = _("Header")
         self.fields["gcode_header"].required = False
         self.fields["gcode_header"].widget.attrs.update({'rows': '4'})
-        self.fields["gcode_footer"].label = "Footer"
+        self.fields["gcode_footer"].label = _("Footer")
         self.fields["gcode_footer"].required = False
         self.fields["gcode_footer"].widget.attrs.update({'rows': '4'})
         self.fields["homing_sequence"].required = True
-        self.fields["homing_sequence"].label = "Homing script"
+        self.fields["homing_sequence"].label = _("Homing script")
         self.fields["homing_sequence"].widget.attrs.update({'rows': '4'})
         self.helper.layout = Layout(
             Row(
@@ -572,8 +573,9 @@ class NewExtruderForm(MultiDecimalSeperatorModelForm):
         self.helper = FormHelper()
         self.helper.form_tag = False
 
-        self.fields["tool"].label = "Gcode tool index"
-        self.fields["temperature_max"].label = "Max temperature (°C)"
+        self.fields["tool"].label = _("Gcode tool index")
+        self.fields["temperature_max"].label = _("Max temperature (°C)")
+        self.fields["part_cooling"].label = _("Part cooling")
 
     class Meta:
         model = Extruder
@@ -586,7 +588,7 @@ class NewNozzleForm(MultiDecimalSeperatorModelForm):
         self.helper = FormHelper()
         self.helper.form_tag = False
 
-        self.fields["size_id"].label = "Nozzle's inner diameter (mm)"
+        self.fields["size_id"].label = _("Nozzle's inner diameter (mm)")
 
     class Meta:
         model = Nozzle
@@ -599,9 +601,10 @@ class NewChamberForm(MultiDecimalSeperatorModelForm):
         self.helper = FormHelper()
         self.helper.form_tag = False
 
-        self.fields["tool"].label = "Gcode tool index"
-        self.fields["gcode_command"].label = "Gcode syntax"
-        self.fields["temperature_max"].label = "Max temperature (°C)"
+        self.fields["tool"].label = _("Gcode tool index")
+        self.fields["gcode_command"].label = _("Gcode syntax")
+        self.fields["temperature_max"].label = _("Max temperature (°C)")
+        self.fields["chamber_heatable"].label = _("Chamber heatable")
 
     class Meta:
         model = Chamber
@@ -614,9 +617,9 @@ class NewPrintbedForm(MultiDecimalSeperatorModelForm):
         self.helper = FormHelper()
         self.helper.form_tag = False
 
-        self.fields["temperature_max"].label = "Max temperature (°C)"
+        self.fields["temperature_max"].label = _("Max temperature (°C)")
         self.fields["temperature_max"].widget.attrs['min'] = 30
-        self.fields["printbed_heatable"].label = "Print bed heatable"
+        self.fields["printbed_heatable"].label = _("Print bed heatable")
 
     class Meta:
         model = Printbed

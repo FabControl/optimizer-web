@@ -134,7 +134,7 @@ def machine_edit_view(request, pk):
                 machine.chamber = chamber_form.save()
             if printbed_form.is_valid():
                 machine.printbed = printbed_form.save()
-            messages.success(request, '{} has been updated!'.format(machine.model))
+            messages.success(request, _('{printer} has been updated!').format(printer=machine.model))
             machine.extruder = extruder
             machine.save()
             if "next" in request.POST:
