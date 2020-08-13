@@ -9,6 +9,7 @@ from django.shortcuts import render_to_response, reverse
 from django.contrib.auth import get_user_model
 from django.forms.models import model_to_dict
 from django.db.models import Q, Count, Max
+from django.utils.translation import gettext as _
 
 from .models import *
 from django.views import generic
@@ -96,7 +97,7 @@ def material_form(request):
             material = form.save(commit=False)
             material.owner = request.user
             material.corporation = request.user.member_of_corporation
-            messages.success(request, 'Material "{}" has been created!'.format(material.name))
+            messages.success(request, _('Material "{material}" has been created!').format(material=material.name))
             material.save()
             if "next" in request.POST:
                 request.session["material"] = material.pk
