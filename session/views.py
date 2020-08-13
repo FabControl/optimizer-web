@@ -195,7 +195,7 @@ def machine_form(request):
                 machine.chamber = chamber_form.save()
             if printbed_form.is_valid():
                 machine.printbed = printbed_form.save()
-            messages.success(request, 'Machine "{}" has been created!'.format(machine.model))
+            messages.success(request, _('3D Printer "{printer}" has been created!').format(printer=machine.model))
             machine.extruder = extruder
             machine.corporation = request.user.member_of_corporation
             machine.save()
