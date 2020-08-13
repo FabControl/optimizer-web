@@ -1,4 +1,5 @@
 {% extends "session/base.html" %}
+{% load i18n %}
 
 {% block content %}
 {% load static %}
@@ -8,11 +9,11 @@
   <div class="row pt-3">
     <div class="col-sm">
       <p class="lead">
-        <font size="6">3D Printers</font>
+        <font size="6">{% trans '3D Printers' %}</font>
       </p>
     </div>
     <div class="col-sm text-right">
-      <button type="button" onclick="location.href='{% url 'machine_form' %}'" class="btn btn-primary btn">+ New 3D Printer</button>
+      <button type="button" onclick="location.href='{% url 'machine_form' %}'" class="btn btn-primary btn">+ {% trans 'New 3D Printer' %}</button>
     </div>
   </div>
   <div class="row pt-2">
@@ -21,11 +22,11 @@
         <table class="sortable sortable-theme-bootstrap table" data-sortable>
           <thead>
             <tr>
-              <th class='caps'>Name</th>
-              <th class='caps'>Type</th>
-              <th class='caps'>Nozzle diameter (mm)</th>
-              <th class='caps' data-defaultsort="asc">Created</th>
-              {% if request.user.member_of_corporation %}<th class='caps'>Owner</th>{% endif %}
+              <th class='caps'>{% trans 'Model' %}</th>
+              <th class='caps'>{% trans 'Type' %}</th>
+              <th class='caps'>{% trans 'Nozzle diameter (mm)' %}</th>
+              <th class='caps' data-defaultsort="asc">{% trans 'Created' %}</th>
+              {% if request.user.member_of_corporation %}<th class='caps'>{% trans 'Owner' %}</th>{% endif %}
               <th class='caps' data-defaultsort='disabled'></th>
             </tr>
           </thead>
@@ -41,14 +42,14 @@
               <td>
                 <div class="dropdown">
                   <button class="btn-sm btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Action
+                    {% trans 'Action' %}
                   </button>
                   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item" href="{% url 'machine_detail' machine.pk %}">Edit</a>
+                    <a class="dropdown-item" href="{% url 'machine_detail' machine.pk %}">{% trans 'Edit' %}</a>
                     <div class="dropdown-divider"></div>
                     <form class="" action="{% url 'machine_delete' machine.pk %}" method="post">
                       {% csrf_token %}
-                      <button class="dropdown-item" type="submit" href="{% url 'machine_delete' machine.pk %}">Delete</button>
+                      <button class="dropdown-item" type="submit" href="{% url 'machine_delete' machine.pk %}">{% trans 'Delete' %}</button>
                     </form>
                   </div>
                 </div>
