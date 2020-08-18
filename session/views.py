@@ -159,12 +159,6 @@ def machine_edit_view(request, pk):
     return render(request, 'session/machine_detail.html', context)
 
 
-class MachineView(LoginRequiredMixin, ModelOwnershipCheckMixin, generic.UpdateView):
-    form_class = NewMachineForm
-    model = Machine
-    template_name = 'session/machine_detail.html'
-
-
 class MachinesView(LoginRequiredMixin, ModelOwnershipCheckMixin, generic.ListView):
     template_name = "session/machine_manager.html"
     context_object_name = 'machines'
