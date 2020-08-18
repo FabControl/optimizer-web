@@ -1,13 +1,15 @@
 {% load crispy_forms_tags %}
+{% load i18n %}
 {% if request.path in request.META.HTTP_REFERER %}<iframe width="1" height="1" frameborder="0" src="{% url 'gcode' object.pk %}"></iframe>{% endif %}
 <div class="row pt-2">
   <div class="col">
-    <p><b>Print the downloaded test file</b><br>If the test gcode didn't download, you can get it <a href="{% url 'gcode' object.pk %}">here</a>.</p>
+    {% url 'gcode' object.pk as gcode_link %}
+    <p>{% blocktrans %}<b>Print the downloaded test file</b><br>If the test gcode didn't download, you can get it <a href="{{ gcode_link }}">here</a>.{% endblocktrans %}</p>
   </div>
 </div>
 <div class="row">
   <div class="col-sm">
-    <p><b>Inspect the printed test structure</b></p>
+    <p><b>{% trans 'Inspect the printed test structure' %}</b></p>
   </div>
 </div>
 <div class="row">
@@ -18,7 +20,7 @@
   </div>
 </div>
 <br>
-<p><b>Select the best parameter combination</b></p>
+<p><b>{% trans 'Select the best parameter combination' %}</b></p>
 <form class="" action="" method="POST">
   <div class="pt-3">
     <div>
@@ -27,10 +29,10 @@
   </div>
   <div class="row pt-2">
     <div class="col">
-      <button class="btn btn-secondary" onclick="location.href='{% url 'session_validate_back' object.pk %}'" type="button" name="button">Back</button>
+      <button class="btn btn-secondary" onclick="location.href='{% url 'session_validate_back' object.pk %}'" type="button" name="button">{% trans 'Back' %}</button>
     </div>
     <div class="col text-right">
-      <button type="submit" name="btnprimary" class="btn btn-primary">Next test</button>
+      <button type="submit" name="btnprimary" class="btn btn-primary">{% trans 'Next test' %}</button>
     </div>
   </div>
 </form>

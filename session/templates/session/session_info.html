@@ -1,18 +1,19 @@
+{% load i18n %}
 {% load crispy_forms_tags %}
 <table style="width:100%" class="">
   <tbody>
     <tr>
-      <th scope="row" class='session-info'>ID</th>
+      <th scope="row" class='session-info'>{% trans 'ID' %}</th>
       <td>{{ object.number }}</td>
     </tr>
     <tr>
-      <th scope="row" class='session-info'>Name</th>
+      <th scope="row" class='session-info'>{% trans 'Name' %}</th>
       <td><a data-toggle="modal" data-target="#sessionNameForm" href="#sessionNameForm">{{ object.name }}</a>
         <div class="modal fade" id="sessionNameForm" role="dialog">
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
-                <h4 class="modal-title">Change session name</h4>
+                <h4 class="modal-title">{% trans 'Change session name' %}</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
               </div>
               <form class="" action="{% url 'session_rename' session.pk %}" method="post">
@@ -22,7 +23,7 @@
                   {{ rename_form.name|as_crispy_field }}
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-danger" type="submit">Save</button>
+                    <button class="btn btn-danger" type="submit">{% trans 'Save' %}</button>
                 </div>
               </form>
             </div>
@@ -31,41 +32,37 @@
       </td>
     </tr>
     <tr>
-      <th scope="row" class='session-info'><span class="test-muted">Target</span></th>
+      <th scope="row" class='session-info'><span class="test-muted">{% trans 'Target' %}</span></th>
       <td>{{ object.get_target_display }}</td>
     </tr>
     <tr>
-      <th scope="row" class='session-info'>Mode</th>
+      <th scope="row" class='session-info'>{% trans 'Mode' %}</th>
       <td>{{ object.mode.name }}</td>
     </tr>
     <tr>
-      <th scope="row" class='session-info'>3D Printer</th>
+      <th scope="row" class='session-info'>{% trans '3D Printer' %}</th>
       <td>{{ object.machine }}</td>
     </tr>
     <tr>
-      <th scope="row" class='session-info'>Material</th>
+      <th scope="row" class='session-info'>{% trans 'Material' %}</th>
       <td>{{ object.material }}</td>
     </tr>
     <tr>
-      <th scope="row" class='session-info'>Build Plate</th>
+      <th scope="row" class='session-info'>{% trans 'Build Plate' %}</th>
       <td>{{ object.buildplate }}</td>
     </tr>
     <tr>
-      <th scope="row" class='session-info'>Created</th>
+      <th scope="row" class='session-info'>{% trans 'Created' %}</th>
       <td>{{ object.pub_date }}</td>
     </tr>
     {% if object.completed_tests > 0 %}
     <tr>
-      <th scope="row"; class='session-info'>Completed</th>
-      {% if object.completed_tests == 1 %}
-      <td>{{ object.completed_tests }} Test</td>
-      {% else %}
-      <td>{{ object.completed_tests }} Tests</td>
-      {% endif %}
+      <th scope="row"; class='session-info'>{% trans 'Completed' %}</th>
+      <td>{% blocktrans count test=object.completed_tests %}{{ test }} Test{% plural %}{{ test }} Tests{% endblocktrans %}</td>
     </tr>
     {% endif %}
     <tr>
-      <th scope="row" class='session-info'>Progress</th>
+      <th scope="row" class='session-info'>{% trans 'Progress' %}</th>
       <td>
         <div class="pt-1">
           <div class="progress" style="height: 10px;">
@@ -78,10 +75,10 @@
 </table>
 <div class="pt-3">
   {% if "overview" in request.path %}
-  <button type="button" onclick="location.href='{% url 'session_detail' object.pk %}'" class="btn btn-outline-primary" href="{% url 'session_overview' object.pk %}">Back to Session</button>
+  <button type="button" onclick="location.href='{% url 'session_detail' object.pk %}'" class="btn btn-outline-primary" href="{% url 'session_overview' object.pk %}">{% trans 'Back to Session' %}</button>
   {% else %}
   {% if object.previous_tests %}
-  <button type="button" onclick="location.href='{% url 'session_overview' object.pk %}'" class="btn btn-outline-primary" href="{% url 'session_overview' object.pk %}">Results</button>
+  <button type="button" onclick="location.href='{% url 'session_overview' object.pk %}'" class="btn btn-outline-primary" href="{% url 'session_overview' object.pk %}">{% trans 'Results' %}</button>
   {% endif %}
   {% endif %}
 </div>

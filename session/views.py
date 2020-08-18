@@ -255,13 +255,28 @@ class SessionTestsSelectionMixin:
         routine = api_client.get_routine()
         for (k, v) in routine.items():
             v['free'] = True if k in settings.FREE_TESTS else False
-            v['name'] = v['name'].title().replace('Vs', 'vs')
-            v['name'] = v['name'].replace(' vs ', ' vs<br>')
-            v['name'] = f'{int(k)}. {v["name"]}'
+            v['name'] = v['name'].title().replace(' Vs ', ' vs<br>')
+            v['name'] = f'{int(k)}. {_(v["name"])}'
         routine = {r: routine[r] for r in self.object.mode.included_tests}
         context['routine'] = routine
         return context
 
+# include these in auto-generated translation files, but always retrieve from backend
+if False:
+    _("Z-Offset")
+    _("First-Layer Track Height vs<br>First-Layer Printing Speed")
+    _("First-Layer Track Width")
+    _("Extrusion Temperature vs<br>Printing Speed")
+    _("Track Height vs<br>Printing Speed")
+    _("Track Width")
+    _("Extrusion Multiplier")
+    _("Printing Speed")
+    _("Extrusion Temperature vs<br>Retraction Distance")
+    _("Retraction Distance vs<br>Printing Speed")
+    _("Retraction Distance")
+    _("Retraction Distance vs<br>Retraction Speed")
+    _("Retraction Restart Distance vs<br>Printing Speed And Coasting Distance")
+    _("Bridging Extrusion Multiplier vs<br>Bridging Printing Speed")
 
 class SessionView(SessionTestsSelectionMixin, LoginRequiredMixin, generic.UpdateView):
     model = Session

@@ -1,4 +1,6 @@
 {% extends "session/base.html" %}
+{% load i18n %}
+{% load session_helpers %}
 
 {% block content %}
 <title>{{ object.material.name }} - 3DOptimizer</title>
@@ -8,13 +10,13 @@
     <div class="col-sm-4">
       {% include "session/session_info.html" %}
       <div class="pb-3">
-        <span class="tag-secondary">TEST {{object.test_number}}</span>
+        <span class="tag-secondary">{% blocktrans with number=object.test_number %}TEST {{ number }}{% endblocktrans %}</span>
         <span class="tag-secondary" style='text-transform: uppercase'>{{object.display_test_type}}</span>
       </div>
       <h4>{{object.display_test_name}}</h4>
       <span>{{ object.test_info.hint_init|safe }}</span>
       <div class="pt-3">
-        <span>Read more and see samples in <a href="https://3doptimizer.helpscoutdocs.com/test/{{object.test_number}}" class='font-weight-light' target="_blank"><b>Help Center</b></a></span>
+        <span>{% blocktrans with help_link=object.test_number|test_info_helpscout %}Read more and see samples in <a {{ help_link }}><b>Help Center</b></a>{% endblocktrans %}</span>
       </div>
       <div class="pt-3">
         {% if object.mode.type == 'normal' %}
