@@ -601,6 +601,18 @@ class Session(models.Model, DependenciesCopyMixin):
         """
         return self.persistence["session"]["previous_tests"]
 
+    @property
+    def readable_previous_tests(self):
+        tests = self.previous_tests
+        for t in tests:
+            t['test_name'] = _(t['test_name'].title().replace(' Vs ', ' vs '))
+            t['parameter_one_name'] = _(t['parameter_one_name'])
+            if 'parameter_two_name' in t and t['parameter_two_name'] is not None:
+                t['parameter_two_name'] = _(t['parameter_two_name'])
+            if 'parameter_three_name' in t and t['parameter_three_name'] is not None:
+                t['parameter_three_name'] = _(t['parameter_three_name'])
+        return tests
+
     def previous_tests_as_dict(self):
         """
         A shortcut method for retrieving a dict of dicts of previous test data.

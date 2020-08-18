@@ -1,4 +1,5 @@
 {% extends "session/base.html" %}
+{% load i18n %}
 
 {% block content %}
 <div class="container">
@@ -9,24 +10,24 @@
     <div class="col-sm-8">
       <div class="row">
         <div class="col">
-          <h5>Slicing profiles</h5>
+          <h5>{% trans 'Slicing profiles' %}</h5>
         </div>
       </div>
       <div class="row pt-3">
         <div class="col-sm">
-          <button type="button" class="btn btn-block btn-primary" onclick="location.href='{% url 'config' pk=object.pk slicer='slic3r_pe' %}'" name="button">PrusaSlicer<br><small>Version 2.2.0</small></button>
+          <button type="button" class="btn btn-block btn-primary" onclick="location.href='{% url 'config' pk=object.pk slicer='slic3r_pe' %}'" name="button">PrusaSlicer<br><small>{% blocktrans with version='2.2.0' %}Version {{ version }}{% endblocktrans %}</small></button>
         </div>
         <div class="col-sm">
-          <button type="button" class="btn btn-block btn-primary" onclick="location.href='{% url 'config' pk=object.pk slicer='simplify3d' %}'" name="button">Simplify3D<br><small>Version 4.1</small></button>
+          <button type="button" class="btn btn-block btn-primary" onclick="location.href='{% url 'config' pk=object.pk slicer='simplify3d' %}'" name="button">Simplify3D<br><small>{% blocktrans with version='4.1' %}Version {{ version }}{% endblocktrans %}</small></button>
         </div>
         <div class="col-sm">
-          <button type="button" id="curaBtn" class="btn btn-block btn-primary" data-toggle="modal" data-target="#curaQualtyTypePrompt" name="button">Ultimaker Cura<br><small>Version 4.6.1</small></button>
+          <button type="button" id="curaBtn" class="btn btn-block btn-primary" data-toggle="modal" data-target="#curaQualtyTypePrompt" name="button">Ultimaker Cura<br><small>{% blocktrans with version='4.6.1' %}Version {{ version }}{% endblocktrans %}</small></button>
         </div>
         <div class="modal fade" id="curaQualtyTypePrompt" tabindex="-1" role="dialog" aria-labelledby="curaModalLabel" aria-hidden="true">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Select profile quality type</h5>
+                <h5 class="modal-title" id="exampleModalLabel">{% trans 'Select profile quality type' %}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -35,16 +36,16 @@
                 <form action="{% url 'config' pk=object.pk slicer='cura' %}" method="post">
                   {% csrf_token %}
                   <div>
-                    <label for="id_name" class="col-form-label  requiredField">Existing Cura profile to use as template:</label>
+                    <label for="id_name" class="col-form-label  requiredField">{% trans 'Existing Cura profile to use as template:' %}</label>
                     <select class="select form-control" id="quality_type" name="quality_type" required>
                       {% for suggestion in other_quality_types %}
                       <option value="{{ suggestion }}" {% if suggestion == default_quality_type %}selected{% endif %}>{{ suggestion }}</option>
                       {% endfor %}
                     </select>
-                    <small>*You can find your printer profiles in Cura profile manager.</small>
+                    <small>{% trans '*You can find your printer profiles in Cura profile manager.' %}</small>
                   </div>
                   <br>
-                  <button type="submit" class="btn btn-primary">Download profile</button>
+                  <button type="submit" class="btn btn-primary">{% trans 'Download profile' %}</button>
                 </form>
               </div>
             </div>
@@ -53,38 +54,38 @@
       </div>
       <div class="row pt-3">
         <div class="col">
-          <h5>Test reports</h5>
+          <h5>{% trans 'Test reports' %}</h5>
         </div>
       </div>
       <div class="row pt-3">
         <div class="col-sm-4">
-          <button type="button" class="btn btn-block btn-primary" onclick="location.href='{% url 'report' object.pk %}'">Download Test Report<br>(PDF)</button>
+          <button type="button" class="btn btn-block btn-primary" onclick="location.href='{% url 'report' object.pk %}'">{% trans 'Download Test Report' %}<br>(PDF)</button>
         </div>
       </div>
       <div class="row justify-content-between pt-3">
         <div class="col-sm">
-          <h5>Selected parameters</h5>
+          <h5>{% trans 'Selected parameters' %}</h5>
         </div>
       </div>
       <div class="row pt-3">
         <div class="col-sm">
-          {% for test in object.previous_tests%}
+          {% for test in object.readable_previous_tests %}
           <div class="pt-1">
             <div class="alert alert-primary p-3">
-              <h4>{{ test.test_name | capfirst }}</h4>
+              <h4>{{ test.test_name }}</h4>
               <div>
-                <p>Selected <b>{{ test.parameter_one_name }}</b> value:</p>
+                <p>{% blocktrans with param=test.parameter_one_name %}Selected <b>{{ param }}</b> value:{% endblocktrans %}</p>
                 <p><b>{{test.selected_parameter_one_value}} {{test.parameter_one_units}}</b></p>
               </div>
               {% if test.parameter_two_name %}
               <div>
-                <p>Selected <b>{{ test.parameter_two_name }}</b> value:</p>
+                <p>{% blocktrans with param=test.parameter_two_name %}Selected <b>{{ param }}</b> value:{% endblocktrans %}</p>
                 <p><b>{{test.selected_parameter_two_value}} {{test.parameter_two_units}}</b></p>
               </div>
               {% endif %}
               {% if test.parameter_three_name %}
               <div>
-                <p>Selected <b>{{ test.parameter_three_name }}</b> value:</p>
+                <p>{% blocktrans with param=test.parameter_three_name %}Selected <b>{{ param }}</b> value:{% endblocktrans %}</p>
                 <p><b>{{test.selected_parameter_three_value}} {{test.parameter_three_units}}</b></p>
               </div>
               {% endif %}

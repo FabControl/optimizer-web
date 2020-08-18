@@ -269,6 +269,10 @@ class SessionRenameForm(forms.ModelForm):
         model = Session
         fields = ('name',)
 
+    def __init__(self, *a, **k):
+        super().__init__(*a, **k)
+        self.fields['name'].label = _('Name')
+
 
 class SettingForm(MultiDecimalSeperatorModelForm):
 
