@@ -617,14 +617,6 @@ def new_session(request):
 
 
 @login_required
-def testing_session(request):
-    target_descriptions = load_json("session/json/target_descriptions.json")
-    print(target_descriptions)
-    context = {"target_descriptions": target_descriptions}
-    return render(request, 'session/testing_session.html', context)
-
-
-@login_required
 def session_json(request, pk):
     if not request.user.is_staff:
         raise Http404()
