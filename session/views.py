@@ -543,25 +543,6 @@ def serve_report(request, pk):
     return response
 
 
-class SessionUpdateView(LoginRequiredMixin, generic.UpdateView):
-    template_name = 'session/session.html'
-    form_class = SettingForm
-    model = Session
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['percentage_complete'] = 100 / optimizer_info.length * int(self.object.test_number)
-        context['executed'] = False
-        return context
-
-    def form_valid(self, form):
-        settings = form.save(commit=False)
-        # Do any custom stuff here
-        settings.save()
-        self.get_context_data()['executed'] = True
-        return redirect('session_detail', pk=settings.pk)
-
-
 @login_required
 def faq(request):
     context = {}
