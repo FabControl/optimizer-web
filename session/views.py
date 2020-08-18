@@ -400,9 +400,17 @@ def session_dispatcher(request, pk, download=1):
             return overview_dispatcher(request, pk=pk)
         else:
             session.test_number = next_test
-            messages.error(request, mark_safe("Your next test is available in Full Access only. "
-                                                "You can skip it and go to the next available test or "
-                                                f"<a href={reverse_lazy('plans')}>purchase Full Access.</a>"))
+            corporation = request.user.member_of_corporation
+            if corporation is None or corporation.owner == request.user:
+                msg = _("Your next test is available in Full Access only. "
+                        "You can skip it and go to the next available test or "
+                        "<a href={link}>purchase Full Access.</a>").format(link=reverse('plans'))
+            else:
+                msg = _("Your next test is available in Full Access only. "
+                        "You can skip it and go to the next available test or "
+                        "ask {first_name} {last_name} to upgrade account."
+                        ).format(first_name=corporation.owner.first_name, last_name=corporation.owner.last_name)
+            messages.error(request, mark_safe(msg))
         session.save()
 
     if session.mode.type == 'normal':
