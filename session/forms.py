@@ -1,6 +1,6 @@
 import logging
 from django import forms
-from django.urls import reverse_lazy
+from django.urls import reverse
 from django.utils.safestring import mark_safe
 from crispy_forms.layout import Submit, Layout, Row, Column, Field, HTML
 from crispy_forms.helper import FormHelper
@@ -8,6 +8,7 @@ from .models import *
 from .choices import TEST_NUMBER_CHOICES, MODE_CHOICES
 from decimal import Decimal
 from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy
 
 
 def wrap_decimal_to_python(field):
@@ -191,8 +192,8 @@ class MaterialForm(MultiDecimalSeperatorModelForm):
 
 
 class SessionForm(forms.ModelForm):
-    buildplate_choices = forms.ChoiceField(label='Build Plate',
-                                        choices=[('Other', 'Other'),
+    buildplate_choices = forms.ChoiceField(label=gettext_lazy('Build Plate'),
+                                        choices=[('Other', gettext_lazy('Other')),
                                             ('----', [
                                                 ('ABS','ABS'),
                                                 ('Aluminium','Aluminium'),
@@ -227,7 +228,7 @@ class SessionForm(forms.ModelForm):
         self.fields["machine"] = forms.ModelChoiceField(queryset=Machine.objects.filter(ownership))
 
         buildplate = self.fields["buildplate"]
-        buildplate.label = 'Other Build Plate'
+        buildplate.label = _('Other Build Plate')
         # make buildplate field last one
         del self.fields["buildplate"]
         self.fields["buildplate"] = buildplate
@@ -243,19 +244,29 @@ class SessionForm(forms.ModelForm):
         queryset = SessionMode.objects.filter(pk__in=modes)
 
         self.fields["mode"] = forms.ModelChoiceField(initial=initial, queryset=queryset, widget=forms.RadioSelect, empty_label=None)
-        self.fields["name"].label = "Name"
-        self.fields["mode"].label = "Mode"
-        self.fields["material"].label = 'Material'
-        self.fields["material"].help_text = mark_safe('<a href="{}?next={}">+ New Material</a>'.format(reverse_lazy('material_form'), reverse_lazy('new_session')))
-        self.fields["machine"].label = "3D Printer"
-        self.fields["machine"].help_text = mark_safe('<a href="{}?next={}">+ New 3D Printer</a>'.format(reverse_lazy('machine_form'), reverse_lazy('new_session')))
-        self.fields["target"].label = "Target"
+        self.fields["name"].label = _("Name")
+        self.fields["mode"].label = _("Mode")
+        self.fields["material"].label = _('Material')
+        self.fields["material"].help_text = mark_safe('<a href="{}?next={}">+ {}</a>'.format(
+                                                                                            reverse('material_form'), 
+                                                                                            reverse('new_session'),
+                                                                                            _('New Material')))
+        self.fields["machine"].label = _("3D Printer")
+        self.fields["machine"].help_text = mark_safe('<a href="{}?next={}">+ {}</a>'.format(
+                                                                                            reverse('machine_form'), 
+                                                                                            reverse('new_session'),
+                                                                                            _('New 3D Printer')))
+        self.fields["target"].label = _("Target")
 
         if self.user.plan == "limited":
             self.fields["target"].choices = [x for x in TARGET_CHOICES if x[0] == "aesthetics"]
-            help_tail = ' require <a href="{}">Full Access</a>'.format(reverse_lazy('plans'))
-            self.fields["target"].help_text = "Mechanical Strength and Short Printing Time targets" + help_tail
-            self.fields["mode"].help_text = "Advanced mode" + help_tail
+            self.fields["target"].help_text = _(
+                        'Mechanical Strength and Short Printing Time targets require <a href="{link}">Full Access</a>'
+                        ).format(link=reverse('plans'))
+
+            self.fields["mode"].help_text = _(
+                        'Advanced mode require <a href="{link}">Full Access</a>'
+                        ).format(link=reverse('plans'))
 
         self.helper = FormHelper()
         self.helper.form_tag = False

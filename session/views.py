@@ -10,6 +10,7 @@ from django.contrib.auth import get_user_model
 from django.forms.models import model_to_dict
 from django.db.models import Q, Count, Max
 from django.utils.translation import gettext as _
+from django.urls import reverse_lazy
 
 from .models import *
 from django.views import generic
