@@ -14,7 +14,8 @@
         <span class="tag-secondary" style='text-transform: uppercase'>{{object.display_test_type}}</span>
       </div>
       <h4>{{object.display_test_name}}</h4>
-      <span>{{ object.test_info.hint_init|safe }}</span>
+      {% with object.readable_test_info as test_info %}
+      <span>{{ test_info.hint_init|safe }}</span>
       <div class="pt-3">
         <span>{% blocktrans with help_link=object.test_number|test_info_helpscout %}Read more and see samples in <a {{ help_link }}><b>Help Center</b></a>{% endblocktrans %}</span>
       </div>
@@ -31,10 +32,11 @@
         {% if not object.executed %}
         {% include "session/session_generate.html" %}
         {% elif object.test_number in object.get_validated_tests %}
-        {% include "session/session_validated.html" %}
+        {% include "session/session_validated.html" with test_info=test_info %}
         {% else %}
-        {% include "session/session_validate.html" %}
+        {% include "session/session_validate.html" with test_info=test_info %}
         {% endif %}
+        {% endwith %}
       </div>
     </div>
   </div>

@@ -545,6 +545,25 @@ class Session(models.Model, DependenciesCopyMixin):
         self.save()
         return temp_info
 
+
+    @property
+    def readable_test_info(self):
+        info = self.test_info
+        info['hint_init'] = _(info['hint_init'])
+        info['hint_valid'] = _(info['hint_valid'])
+        if 'other_parameters' in info:
+            for param in info['other_parameters']:
+                param['hint_active'] = _(param['hint_active'])
+                param['name'] = _(param['name'].capitalize())
+
+        for p in ['parameter_one', 'parameter_two', 'parameter_three']:
+            param = info.get(p)
+            if param is not None:
+                param['hint_active'] = _(param['hint_active'])
+                param['name'] = _(param['name'].capitalize())
+
+        return info
+
     @property
     def display_test_name(self):
         return _(self.test_info["name"].title().replace('Vs', 'vs'))
@@ -654,13 +673,18 @@ class Session(models.Model, DependenciesCopyMixin):
         temp_persistence["session"]["previous_tests"] = temp_tests
         self.persistence = temp_persistence
 
-    def get_test_with_current_number(self):
+    def get_readable_test_with_current_number(self):
         """
         Looks through previous tests and returns data of the first test whose number matches the current self.test_number.
         :return:
         """
         for test in self.previous_tests:
             if test["test_number"] == self.test_number:
+                for p in ['parameter_one_name', 'parameter_two_name', 'parameter_three_name']:
+                    param = test.get(p)
+                    if param is not None:
+                        test[p] = _(param.capitalize())
+
                 return test
 
     @property
