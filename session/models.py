@@ -694,7 +694,7 @@ class Session(models.Model, DependenciesCopyMixin):
         :return:
         """
         parameters = []
-        for item, content in self.test_info.items():
+        for item, content in self.readable_test_info.items():
             if item.startswith("parameter_"):
                 if type(content) == dict:
                     if content["name"] is None:

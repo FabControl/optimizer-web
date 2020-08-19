@@ -321,8 +321,9 @@ class TestValidateForm(forms.ModelForm):
             self.fields["validation"] = MultipleResultValidationField(session.tested_values, session.tested_value_units, required=True)
         self.fields["validation"].label = ""
 
-        if len(session.min_max_parameters) == 3:
-            parameter = session.min_max_parameters[-1]
+        parameters = session.min_max_parameters
+        if len(parameters) == 3:
+            parameter = parameters[-1]
             param = None
             if parameter["units"] != 'mm' and parameter["programmatic_name"] != "extrusion_multiplier":
                 param = forms.IntegerField(min_value=parameter["values"][0], max_value=parameter["values"][1], widget=RangeSliderWidget([parameter["values"][0], parameter["values"][1]], parameter["units"], 1))
@@ -392,9 +393,8 @@ class TestGenerateForm(forms.ModelForm):
         if session.mode.type == 'guided':
             show_inactives = False
 
-        test_info = session.update_test_info()
+        test_info = session.readable_test_info
         self.parameters = []
-        secondary_parameters = []
         self.secondary_parameters_programmatic_names = []
 
         # Get all non-None parameters
@@ -439,24 +439,22 @@ class TestGenerateForm(forms.ModelForm):
                         widget=MinMaxWidget(
                             widgets=widgets))
 
-                    self.fields[field_id].label = "{} ({})".format(parameter["name"].capitalize(), (
+                    self.fields[field_id].label = "{} ({})".format(parameter["name"], (
                         "°C" if parameter["units"] == "degC" else parameter["units"]))
 
                     if parameter['hint_active']:
-                        self.fields[field_id].help_text = "{}".format(parameter['hint_active'])
+                        self.fields[field_id].help_text = parameter['hint_active']
 
         list(self.fields.values())[-1].use_hr = True
 
-        for secondary_parameter in test_info["other_parameters"]:
-            secondary_parameters.append(secondary_parameter)
-
+        previous_params = session.get_previously_tested_parameters()
         # Create fields for secondary_parameters
-        for parameter in secondary_parameters:
+        for parameter in test_info["other_parameters"]:
             if parameter["units"] != 'mm' and parameter["programmatic_name"] != "extrusion_multiplier":
                 param = forms.IntegerField(min_value=parameter["min_max"][0], max_value=parameter["min_max"][1])
             else:
                 param = forms.DecimalField(min_value=Decimal('{0:0.3f}'.format(parameter["min_max"][0])), max_value=Decimal('{0:0.3f}'.format(parameter["min_max"][1])))
-            param.label = "{} ({})".format(parameter["name"].capitalize(), (
+            param.label = "{} ({})".format(parameter["name"], (
                     "°C" if parameter["units"] == "degC" else parameter["units"]))
             param.widget.attrs["class"] = "col-sm-2 optimizer-input"
             param.initial = parameter["values"]
@@ -466,7 +464,7 @@ class TestGenerateForm(forms.ModelForm):
                     continue
                 # param.widget.attrs['readonly'] = True
                 # inactives[parameter["programmatic_name"]] = param
-            elif parameter["programmatic_name"] in session.get_previously_tested_parameters():
+            elif parameter["programmatic_name"] in previous_params:
                 if not show_inactives:
                     continue
                 # param.widget.attrs['readonly'] = True
@@ -474,7 +472,7 @@ class TestGenerateForm(forms.ModelForm):
             else:
                 actives[parameter["programmatic_name"]] = param
                 if parameter["hint_active"]:
-                    param.help_text = "{}".format(parameter["hint_active"])
+                    param.help_text = parameter["hint_active"]
             self.secondary_parameters_programmatic_names.append(parameter["programmatic_name"])
 
         #  Instantiate active fields first, so that they would appear on top
