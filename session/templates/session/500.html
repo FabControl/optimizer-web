@@ -1,11 +1,12 @@
 {% extends "session/base.html" %}
+{% load i18n %}
 {% block content %}
 <div class="pt-5">
   <div class="container">
     <div class="div p-5 justify-content-center text-center">
-      <h1>Something went wrong!</h1>
+      <h1>{% trans 'Something went wrong!' %}</h1>
       <br>
-      <p>Feel free to contact our <a href="mailto:support@fabcontrol.com">support</a>!</p>
+      <p>{% trans 'Feel free to contact our <a href="mailto:support@fabcontrol.com">support</a>!' %}</p>
     </div>
   </div>
 </div>
