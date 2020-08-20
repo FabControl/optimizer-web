@@ -9,6 +9,8 @@ from django.shortcuts import render_to_response, reverse
 from django.contrib.auth import get_user_model
 from django.forms.models import model_to_dict
 from django.db.models import Q, Count, Max
+from django.utils.translation import gettext as _
+from django.urls import reverse_lazy
 
 from .models import *
 from django.views import generic
@@ -96,7 +98,7 @@ def material_form(request):
             material = form.save(commit=False)
             material.owner = request.user
             material.corporation = request.user.member_of_corporation
-            messages.success(request, 'Material "{}" has been created!'.format(material.name))
+            messages.success(request, _('Material "{material}" has been created!').format(material=material.name))
             material.save()
             if "next" in request.POST:
                 request.session["material"] = material.pk
@@ -133,7 +135,7 @@ def machine_edit_view(request, pk):
                 machine.chamber = chamber_form.save()
             if printbed_form.is_valid():
                 machine.printbed = printbed_form.save()
-            messages.success(request, '{} has been updated!'.format(machine.model))
+            messages.success(request, _('{printer} has been updated!').format(printer=machine.model))
             machine.extruder = extruder
             machine.save()
             if "next" in request.POST:
@@ -156,12 +158,6 @@ def machine_edit_view(request, pk):
                     "printbed_form": printbed_form}
     context = {**context, **form_context}
     return render(request, 'session/machine_detail.html', context)
-
-
-class MachineView(LoginRequiredMixin, ModelOwnershipCheckMixin, generic.UpdateView):
-    form_class = NewMachineForm
-    model = Machine
-    template_name = 'session/machine_detail.html'
 
 
 class MachinesView(LoginRequiredMixin, ModelOwnershipCheckMixin, generic.ListView):
@@ -194,7 +190,7 @@ def machine_form(request):
                 machine.chamber = chamber_form.save()
             if printbed_form.is_valid():
                 machine.printbed = printbed_form.save()
-            messages.success(request, 'Machine "{}" has been created!'.format(machine.model))
+            messages.success(request, _('3D Printer "{printer}" has been created!').format(printer=machine.model))
             machine.extruder = extruder
             machine.corporation = request.user.member_of_corporation
             machine.save()
@@ -254,13 +250,28 @@ class SessionTestsSelectionMixin:
         routine = api_client.get_routine()
         for (k, v) in routine.items():
             v['free'] = True if k in settings.FREE_TESTS else False
-            v['name'] = v['name'].title().replace('Vs', 'vs')
-            v['name'] = v['name'].replace(' vs ', ' vs<br>')
-            v['name'] = f'{int(k)}. {v["name"]}'
+            v['name'] = v['name'].title().replace(' Vs ', ' vs<br>')
+            v['name'] = f'{int(k)}. {_(v["name"])}'
         routine = {r: routine[r] for r in self.object.mode.included_tests}
         context['routine'] = routine
         return context
 
+# include these in auto-generated translation files, but always retrieve from backend
+if False:
+    _("Z-Offset")
+    _("First-Layer Track Height vs<br>First-Layer Printing Speed")
+    _("First-Layer Track Width")
+    _("Extrusion Temperature vs<br>Printing Speed")
+    _("Track Height vs<br>Printing Speed")
+    _("Track Width")
+    _("Extrusion Multiplier")
+    _("Printing Speed")
+    _("Extrusion Temperature vs<br>Retraction Distance")
+    _("Retraction Distance vs<br>Printing Speed")
+    _("Retraction Distance")
+    _("Retraction Distance vs<br>Retraction Speed")
+    _("Retraction Restart Distance vs<br>Printing Speed And Coasting Distance")
+    _("Bridging Extrusion Multiplier vs<br>Bridging Printing Speed")
 
 class SessionView(SessionTestsSelectionMixin, LoginRequiredMixin, generic.UpdateView):
     model = Session
@@ -384,9 +395,17 @@ def session_dispatcher(request, pk, download=1):
             return overview_dispatcher(request, pk=pk)
         else:
             session.test_number = next_test
-            messages.error(request, mark_safe("Your next test is available in Full Access only. "
-                                                "You can skip it and go to the next available test or "
-                                                f"<a href={reverse_lazy('plans')}>purchase Full Access.</a>"))
+            corporation = request.user.member_of_corporation
+            if corporation is None or corporation.owner == request.user:
+                msg = _("Your next test is available in Full Access only. "
+                        "You can skip it and go to the next available test or "
+                        "<a href={link}>purchase Full Access.</a>").format(link=reverse('plans'))
+            else:
+                msg = _("Your next test is available in Full Access only. "
+                        "You can skip it and go to the next available test or "
+                        "ask {first_name} {last_name} to upgrade account."
+                        ).format(first_name=corporation.owner.first_name, last_name=corporation.owner.last_name)
+            messages.error(request, mark_safe(msg))
         session.save()
 
     if session.mode.type == 'normal':
@@ -525,25 +544,6 @@ def serve_report(request, pk):
     return response
 
 
-class SessionUpdateView(LoginRequiredMixin, generic.UpdateView):
-    template_name = 'session/session.html'
-    form_class = SettingForm
-    model = Session
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['percentage_complete'] = 100 / optimizer_info.length * int(self.object.test_number)
-        context['executed'] = False
-        return context
-
-    def form_valid(self, form):
-        settings = form.save(commit=False)
-        # Do any custom stuff here
-        settings.save()
-        self.get_context_data()['executed'] = True
-        return redirect('session_detail', pk=settings.pk)
-
-
 @login_required
 def faq(request):
     context = {}
@@ -614,14 +614,6 @@ def new_session(request):
 
     context = {"form": form, "target_descriptions": load_json('session/json/target_descriptions.json')}
     return render(request, 'session/new_session.html', context)
-
-
-@login_required
-def testing_session(request):
-    target_descriptions = load_json("session/json/target_descriptions.json")
-    print(target_descriptions)
-    context = {"target_descriptions": target_descriptions}
-    return render(request, 'session/testing_session.html', context)
 
 
 @login_required

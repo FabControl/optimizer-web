@@ -1,12 +1,14 @@
 import logging
 from django import forms
-from django.urls import reverse_lazy
+from django.urls import reverse
 from django.utils.safestring import mark_safe
 from crispy_forms.layout import Submit, Layout, Row, Column, Field, HTML
 from crispy_forms.helper import FormHelper
 from .models import *
 from .choices import TEST_NUMBER_CHOICES, MODE_CHOICES
 from decimal import Decimal
+from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy
 
 
 def wrap_decimal_to_python(field):
@@ -173,24 +175,25 @@ class MaterialForm(MultiDecimalSeperatorModelForm):
     def __init__(self, *args, **kwargs):
         super(MaterialForm, self).__init__(*args, **kwargs)
 
-        self.fields['min_temperature'].label = "Min temperature (°C)"
-        self.fields['min_temperature'].help_text = mark_safe("Manufacturer's suggested temperature. After the testing process you might end up with a different temperature. If you do not have this data, here is a method to determine it <a href='https://3doptimizer.helpscoutdocs.com/article/42-determining-initial-printing-temperature'>here</a>.")
+        self.fields['min_temperature'].label = _("Min temperature (°C)")
+        hlp_txt = _("Manufacturer's suggested temperature. After the testing process you might end up with a different temperature. If you do not have this data, a method to determine it can be faund <a href='{help_link}'>here</a>.")
+        self.fields['min_temperature'].help_text = mark_safe(hlp_txt.format(help_link='https://3doptimizer.helpscoutdocs.com/article/42-determining-initial-printing-temperature'))
 
-        self.fields['max_temperature'].label = "Max temperature (°C)"
-        self.fields['max_temperature'].help_text = "Same as above."
+        self.fields['max_temperature'].label = _("Max temperature (°C)")
+        self.fields['max_temperature'].help_text = _("Same as above.")
 
-        self.fields['name'].label = "Name"
-        self.fields['size_od'].label = "Filament diameter (mm)"
+        self.fields['name'].label = _("Name")
+        self.fields['size_od'].label = _("Filament diameter (mm)")
         self.fields['notes'].widget = forms.Textarea()
         self.fields['notes'].widget.attrs.update({'rows': '1'})
-        self.fields['notes'].label = "Notes"
-        self.fields['notes'].help_text = "(Batch number, color, SKU etc.)"
+        self.fields['notes'].label = _("Notes")
+        self.fields['notes'].help_text = _("(Batch number, color, SKU etc.)")
         self.fields['notes'].required = False
 
 
 class SessionForm(forms.ModelForm):
-    buildplate_choices = forms.ChoiceField(label='Build Plate',
-                                        choices=[('Other', 'Other'),
+    buildplate_choices = forms.ChoiceField(label=gettext_lazy('Build Plate'),
+                                        choices=[('Other', gettext_lazy('Other')),
                                             ('----', [
                                                 ('ABS','ABS'),
                                                 ('Aluminium','Aluminium'),
@@ -225,7 +228,7 @@ class SessionForm(forms.ModelForm):
         self.fields["machine"] = forms.ModelChoiceField(queryset=Machine.objects.filter(ownership))
 
         buildplate = self.fields["buildplate"]
-        buildplate.label = 'Other Build Plate'
+        buildplate.label = _('Other Build Plate')
         # make buildplate field last one
         del self.fields["buildplate"]
         self.fields["buildplate"] = buildplate
@@ -241,19 +244,29 @@ class SessionForm(forms.ModelForm):
         queryset = SessionMode.objects.filter(pk__in=modes)
 
         self.fields["mode"] = forms.ModelChoiceField(initial=initial, queryset=queryset, widget=forms.RadioSelect, empty_label=None)
-        self.fields["name"].label = "Name"
-        self.fields["mode"].label = "Mode"
-        self.fields["material"].label = 'Material'
-        self.fields["material"].help_text = mark_safe('<a href="{}?next={}">+ New Material</a>'.format(reverse_lazy('material_form'), reverse_lazy('new_session')))
-        self.fields["machine"].label = "3D Printer"
-        self.fields["machine"].help_text = mark_safe('<a href="{}?next={}">+ New 3D Printer</a>'.format(reverse_lazy('machine_form'), reverse_lazy('new_session')))
-        self.fields["target"].label = "Target"
+        self.fields["name"].label = _("Name")
+        self.fields["mode"].label = _("Mode")
+        self.fields["material"].label = _('Material')
+        self.fields["material"].help_text = mark_safe('<a href="{}?next={}">+ {}</a>'.format(
+                                                                                            reverse('material_form'), 
+                                                                                            reverse('new_session'),
+                                                                                            _('New Material')))
+        self.fields["machine"].label = _("3D Printer")
+        self.fields["machine"].help_text = mark_safe('<a href="{}?next={}">+ {}</a>'.format(
+                                                                                            reverse('machine_form'), 
+                                                                                            reverse('new_session'),
+                                                                                            _('New 3D Printer')))
+        self.fields["target"].label = _("Target")
 
         if self.user.plan == "limited":
             self.fields["target"].choices = [x for x in TARGET_CHOICES if x[0] == "aesthetics"]
-            help_tail = ' require <a href="{}">Full Access</a>'.format(reverse_lazy('plans'))
-            self.fields["target"].help_text = "Mechanical Strength and Short Printing Time targets" + help_tail
-            self.fields["mode"].help_text = "Advanced mode" + help_tail
+            self.fields["target"].help_text = _(
+                        'Mechanical Strength and Short Printing Time targets require <a href="{link}">Full Access</a>'
+                        ).format(link=reverse('plans'))
+
+            self.fields["mode"].help_text = _(
+                        'Advanced mode require <a href="{link}">Full Access</a>'
+                        ).format(link=reverse('plans'))
 
         self.helper = FormHelper()
         self.helper.form_tag = False
@@ -266,6 +279,10 @@ class SessionRenameForm(forms.ModelForm):
     class Meta:
         model = Session
         fields = ('name',)
+
+    def __init__(self, *a, **k):
+        super().__init__(*a, **k)
+        self.fields['name'].label = _('Name')
 
 
 class SettingForm(MultiDecimalSeperatorModelForm):
@@ -304,8 +321,9 @@ class TestValidateForm(forms.ModelForm):
             self.fields["validation"] = MultipleResultValidationField(session.tested_values, session.tested_value_units, required=True)
         self.fields["validation"].label = ""
 
-        if len(session.min_max_parameters) == 3:
-            parameter = session.min_max_parameters[-1]
+        parameters = session.min_max_parameters
+        if len(parameters) == 3:
+            parameter = parameters[-1]
             param = None
             if parameter["units"] != 'mm' and parameter["programmatic_name"] != "extrusion_multiplier":
                 param = forms.IntegerField(min_value=parameter["values"][0], max_value=parameter["values"][1], widget=RangeSliderWidget([parameter["values"][0], parameter["values"][1]], parameter["units"], 1))
@@ -375,9 +393,8 @@ class TestGenerateForm(forms.ModelForm):
         if session.mode.type == 'guided':
             show_inactives = False
 
-        test_info = session.update_test_info()
+        test_info = session.readable_test_info
         self.parameters = []
-        secondary_parameters = []
         self.secondary_parameters_programmatic_names = []
 
         # Get all non-None parameters
@@ -422,24 +439,22 @@ class TestGenerateForm(forms.ModelForm):
                         widget=MinMaxWidget(
                             widgets=widgets))
 
-                    self.fields[field_id].label = "{} ({})".format(parameter["name"].capitalize(), (
+                    self.fields[field_id].label = "{} ({})".format(parameter["name"], (
                         "°C" if parameter["units"] == "degC" else parameter["units"]))
 
                     if parameter['hint_active']:
-                        self.fields[field_id].help_text = "{}".format(parameter['hint_active'])
+                        self.fields[field_id].help_text = parameter['hint_active']
 
         list(self.fields.values())[-1].use_hr = True
 
-        for secondary_parameter in test_info["other_parameters"]:
-            secondary_parameters.append(secondary_parameter)
-
+        previous_params = session.get_previously_tested_parameters()
         # Create fields for secondary_parameters
-        for parameter in secondary_parameters:
+        for parameter in test_info["other_parameters"]:
             if parameter["units"] != 'mm' and parameter["programmatic_name"] != "extrusion_multiplier":
                 param = forms.IntegerField(min_value=parameter["min_max"][0], max_value=parameter["min_max"][1])
             else:
                 param = forms.DecimalField(min_value=Decimal('{0:0.3f}'.format(parameter["min_max"][0])), max_value=Decimal('{0:0.3f}'.format(parameter["min_max"][1])))
-            param.label = "{} ({})".format(parameter["name"].capitalize(), (
+            param.label = "{} ({})".format(parameter["name"], (
                     "°C" if parameter["units"] == "degC" else parameter["units"]))
             param.widget.attrs["class"] = "col-sm-2 optimizer-input"
             param.initial = parameter["values"]
@@ -449,7 +464,7 @@ class TestGenerateForm(forms.ModelForm):
                     continue
                 # param.widget.attrs['readonly'] = True
                 # inactives[parameter["programmatic_name"]] = param
-            elif parameter["programmatic_name"] in session.get_previously_tested_parameters():
+            elif parameter["programmatic_name"] in previous_params:
                 if not show_inactives:
                     continue
                 # param.widget.attrs['readonly'] = True
@@ -457,7 +472,7 @@ class TestGenerateForm(forms.ModelForm):
             else:
                 actives[parameter["programmatic_name"]] = param
                 if parameter["hint_active"]:
-                    param.help_text = "{}".format(parameter["hint_active"])
+                    param.help_text = parameter["hint_active"]
             self.secondary_parameters_programmatic_names.append(parameter["programmatic_name"])
 
         #  Instantiate active fields first, so that they would appear on top
@@ -514,23 +529,24 @@ class NewMachineForm(MultiDecimalSeperatorModelForm):
         self.helper = FormHelper()
         self.helper.form_tag = False
 
-        self.fields["model"].label = "3D Printer model"
-        self.fields["buildarea_maxdim1"].label = "Max dimension on X axis (mm)"
-        self.fields["buildarea_maxdim2"].label = "Max dimension on Y axis (mm)"
+        self.fields["model"].label = _("3D Printer model")
+        self.fields["buildarea_maxdim1"].label = _("Max dimension on X axis (mm)")
+        self.fields["buildarea_maxdim2"].label = _("Max dimension on Y axis (mm)")
 
-        self.fields["offset_1"].label = "Offset on X axis (mm)"
-        self.fields["offset_2"].label = "Offset on Y axis (mm)"
+        self.fields["offset_1"].label = _("Offset on X axis (mm)")
+        self.fields["offset_2"].label = _("Offset on Y axis (mm)")
 
-        self.fields["form"].label = "Type"
+        self.fields["form"].label = _("Type")
+        self.fields["extruder_type"].label = _("Extruder type")
 
-        self.fields["gcode_header"].label = "Header"
+        self.fields["gcode_header"].label = _("Header")
         self.fields["gcode_header"].required = False
         self.fields["gcode_header"].widget.attrs.update({'rows': '4'})
-        self.fields["gcode_footer"].label = "Footer"
+        self.fields["gcode_footer"].label = _("Footer")
         self.fields["gcode_footer"].required = False
         self.fields["gcode_footer"].widget.attrs.update({'rows': '4'})
         self.fields["homing_sequence"].required = True
-        self.fields["homing_sequence"].label = "Homing script"
+        self.fields["homing_sequence"].label = _("Homing script")
         self.fields["homing_sequence"].widget.attrs.update({'rows': '4'})
         self.helper.layout = Layout(
             Row(
@@ -570,8 +586,9 @@ class NewExtruderForm(MultiDecimalSeperatorModelForm):
         self.helper = FormHelper()
         self.helper.form_tag = False
 
-        self.fields["tool"].label = "Gcode tool index"
-        self.fields["temperature_max"].label = "Max temperature (°C)"
+        self.fields["tool"].label = _("Gcode tool index")
+        self.fields["temperature_max"].label = _("Max temperature (°C)")
+        self.fields["part_cooling"].label = _("Part cooling")
 
     class Meta:
         model = Extruder
@@ -584,7 +601,7 @@ class NewNozzleForm(MultiDecimalSeperatorModelForm):
         self.helper = FormHelper()
         self.helper.form_tag = False
 
-        self.fields["size_id"].label = "Nozzle's inner diameter (mm)"
+        self.fields["size_id"].label = _("Nozzle's inner diameter (mm)")
 
     class Meta:
         model = Nozzle
@@ -597,9 +614,10 @@ class NewChamberForm(MultiDecimalSeperatorModelForm):
         self.helper = FormHelper()
         self.helper.form_tag = False
 
-        self.fields["tool"].label = "Gcode tool index"
-        self.fields["gcode_command"].label = "Gcode syntax"
-        self.fields["temperature_max"].label = "Max temperature (°C)"
+        self.fields["tool"].label = _("Gcode tool index")
+        self.fields["gcode_command"].label = _("Gcode syntax")
+        self.fields["temperature_max"].label = _("Max temperature (°C)")
+        self.fields["chamber_heatable"].label = _("Chamber heatable")
 
     class Meta:
         model = Chamber
@@ -612,10 +630,85 @@ class NewPrintbedForm(MultiDecimalSeperatorModelForm):
         self.helper = FormHelper()
         self.helper.form_tag = False
 
-        self.fields["temperature_max"].label = "Max temperature (°C)"
+        self.fields["temperature_max"].label = _("Max temperature (°C)")
         self.fields["temperature_max"].widget.attrs['min'] = 30
-        self.fields["printbed_heatable"].label = "Print bed heatable"
+        self.fields["printbed_heatable"].label = _("Print bed heatable")
 
     class Meta:
         model = Printbed
         fields = ["printbed_heatable", "temperature_max"]
+
+
+# this section is used for automatic translation generation only
+if False:
+    parameter_names = [
+            _("Bridging extrusion multiplier"),
+            _("Bridging part cooling"),
+            _("Bridging printing speed"),
+            _("Chamber temperature"),
+            _("Coasting distance"),
+            _("Exit ventilation power"),
+            _("Extrusion multiplier"),
+            _("Extrusion temperature"),
+            _("First-layer extrusion temperature"),
+            _("First-layer printing speed"),
+            _("First-layer track height"),
+            _("First-layer track width"),
+            _("Part cooling"),
+            _("Print bed coating"),
+            _("Print bed temperature"),
+            _("Printing speed"),
+            _("Retraction distance"),
+            _("Retraction speed"),
+            _("Retraction-restart distance"),
+            _("Track height"),
+            _("Track width"),
+            _("Z-offset"),
+            ]
+
+    paramater_help_texts = [
+            _("For this test this value is equal to unity, but, if needed, it can be tested in a separate test"),
+            _("Set a value from the range 20-50 mm/s for printing flexible materials, or 30-70 mm/s for printing harder materials"),
+            _("Set part cooling. Active part cooling is required when printing using high deposition rates or when printing fine details"),
+            _("Set the range of <b>Retraction distances</b> to be tested"),
+            _("Set the range to 10-25 mm/s for printing flexible materials, or 15-35 mm/s for harder materials"),
+            _("Set the range to 20-50 mm/s for printing flexible materials, or to 30-70 mm/s for printing harder materials"),
+            _("Set the range to 5-15 mm/s for printing flexible materials, or to 10-30 mm/s for printing harder materials"),
+            _("Set this value to proceed"),
+            _("Set this value to proceed. Perform the corresponding test to fine-tune this value"),
+            _("Set this value to proceed. This value will determine the resolution and surface quality of your print"),
+            _("The default value is equal to the nozzle inner diameter, but you can perform the corresponding test to fine-tune this value"),
+            _("These seven values will be tested at four <b>Printing speeds</b>. You can change the limiting values"),
+            _("These seven values will be tested at four different <b>Bridging printing speeds</b> (see below). You can change the limiting values"),
+            _("These seven values will be tested at four different <b>First-layer printing speeds</b> (see below). You can change the limiting values"),
+            _("These seven values will be tested at four different <b>Printing speeds</b> (see below). You can change the limiting values"),
+            _("These seven values will be tested at four different <b>Retraction distances</b> (see below). You can change the limiting values"),
+            _("These seven values will be tested at four different <b>Retraction speeds</b> (see below). You can change the limiting values"),
+            _("These seven values will be tested at one <b>First-layer printing speed</b>. You can change the limiting values"),
+            _("These seven values will be tested at one <b>Printing speed</b>. You can change the limiting values"),
+            _("These seven values will be tested while all other processing parameters are constant. You can change the limiting values"),
+            _("These seven values will be tested. You can change the limiting values"),
+            _("This value was determined in the previous test(s) and cannot be changed"),
+            ]
+
+    test_init_hints = [
+            _("This is a core test which helps finding a working retraction distance under general conditions."),
+            _("This is an additional test to avoid under-extrusion."),
+            _("This test helps you find a base temperature and printing speed. These will be optimized further in later tests. Since there can be different parameter combinations that work, but are not optimal for your intended target, this is an essential test."),
+            _("This test is needed to arrive at the most optimal flow-rate."),
+            _("This test is needed to avoid gaps between tracks and find the limits of horizontal resolution with a given nozzle."),
+            _("This test is needed to avoid stringing."),
+            _("This test is needed to establish good first layer printing settings. A good first layer is essential to achieving good prints."),
+            _("This test is needed to find Z-offset value in case of non-level print bed or printbed coating."),
+            _("This test is needed to find reliable settings for retraction. The best combination of 3 parameters are determined simulataneously."),
+            _("This test is needed to find the best bridging settings."),
+            _("This test is needed to find the best retraction restart distance and coasting settings."),
+            _("This test is needed to find the limits of printing resolution (layer thickness)."),
+            _("This test is needed to solve possible issues with adhesion between tracks if there are any. Good weld-together is essential to achieving good mechanical properties in any printed part."),
+            ]
+
+    test_validation_hints = [
+            _("<ul><li>If the print does not adhere to the build platform, increase the <b>First-layer extrusion temperature</b> and re-run the test.</li>"
+              "<li>If this does not help, increase the <b>Printbed temperature</b> or apply different coating/spray on the build platform.</li>"
+              "<li>If you cannot find acceptable combination of two parameters, re-run the test with different <b>First-layer-extrusion-temperature</b> value and/or using different <b>Printing-speed</b> range.</li></ul>"),
+            ]

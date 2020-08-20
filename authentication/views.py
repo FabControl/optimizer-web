@@ -27,6 +27,7 @@ from django.contrib.auth.tokens import default_token_generator
 from .models import Affiliate
 from django.contrib.auth.mixins import LoginRequiredMixin
 from payments.models import Subscription, Corporation
+from django.utils.translation import gettext as _
 
 
 # Create your views here.
@@ -47,14 +48,14 @@ def user_login(request):
                     else:
                         return redirect('dashboard')
                 else:
-                    messages.error(request, "Your account has been deactivated.")
+                    messages.error(request, _("Your account has been deactivated."))
                     return render(request, 'authentication/login.html', {'form': LoginForm()})
             else:
-                messages.error(request, "Failed to log in!")
+                messages.error(request, _("Failed to log in!"))
                 return redirect("login")
         else:
             print(form.errors)
-            messages.error(request, "Failed to log in!")
+            messages.error(request, _("Failed to log in!"))
             return render(request, 'authentication/login.html', {'form': LoginForm(), 'form_errors': form.errors})
     else:
         return render(request, 'authentication/login.html', {'form': LoginForm()})
@@ -192,7 +193,7 @@ class PasswordChangeView(auth_views.PasswordContextMixin, FormView):
         # Updating the password logs out all other sessions for the user
         # except the current one.
         update_session_auth_hash(self.request, form.user)
-        messages.success(self.request, 'Password changed')
+        messages.success(self.request, _('Password changed'))
         return super().form_valid(form)
 
 
@@ -216,7 +217,7 @@ def activate_account(request, uidb64, token):
                 if len(affiliates) > 0:
                     affiliates[0].confirm(request)
                 login(request, user)
-                messages.success(request, 'Your email address was confirmed and account activated.')
+                messages.success(request, _('Your email address was confirmed and account activated.'))
                 return redirect('dashboard')
 
         else:
@@ -244,16 +245,17 @@ class MyAffiliatesView(LoginRequiredMixin, ModelFormMixin, generic.ListView, Pro
             form_clean()
             mail = form.cleaned_data['email']
             if len(get_user_model().objects.filter(email=mail)) > 0 or len(Affiliate.objects.filter(email=mail)) > 0:
-                form.add_error('email', 'User already invited or registered')
+                form.add_error('email', _('User already invited or registered'))
 
         form.clean = clean
 
         form.fields['message'].widget.attrs['rows'] = 5
-        form.fields['email'].label = "Friend's email"
-        form.fields['name'].label = "Friend's name"
+        form.fields['email'].label = _("Friend's email")
+        form.fields['name'].label = _("Friend's name")
+        form.fields['message'].label = _("Message")
 
         form.helper = FormHelper()
-        form.helper.add_input(Submit('submit', 'Send', css_class='btn btn-primary'))
+        form.helper.add_input(Submit('submit', _('Send'), css_class='btn btn-primary'))
         form.helper.method = 'POST'
         form.helper.layout = Layout(Div(Div(Div('email', 'name', css_class='col'),
                                             Div('message', css_class='col'),
@@ -271,7 +273,7 @@ class MyAffiliatesView(LoginRequiredMixin, ModelFormMixin, generic.ListView, Pro
                             uid=urlsafe_base64_encode(force_bytes(affiliate.pk)),
                             token=affiliate_token_generator.make_token(affiliate))
 
-        messages.success(self.request, 'Invitation sent to {0.name} ({0.email})'.format(affiliate))
+        messages.success(self.request, _('Invitation sent to {0.name} ({0.email})').format(affiliate))
         # send invitation message
         return redirect('my_affiliates')
 
@@ -336,7 +338,12 @@ def use_affiliate(request, uidb64, token):
                    "corporation_form": corporation_form}
         return render(request, 'authentication/signup.html', context)
 
-    return render(request, 'authentication/invalid_affiliate_url.html')
+    directions = _('You can use default <a href="{signup}">sign up form</a> or <a href="{login}">log in </a> to your account.'
+                ).format(signup=reverse('signup'), login=reverse('login'))
+
+    return render(request,
+                  'authentication/invalid_affiliate_url.html',
+                  {'directions':mark_safe(directions)})
 
 
 @login_required
@@ -346,7 +353,7 @@ def legal_information_view(request, category=None):
         form = LegalInformationForm(request.POST, instance=request.user)
         if form.is_valid():
             form.save(commit=True)
-            messages.success(request, 'Account changed successfully')
+            messages.success(request, _('Account changed successfully'))
         else:
             form_errors = (str(m.as_text()).lstrip('* ') for m in dict(form.errors).values())
             message = "<br>".join(form_errors)
@@ -476,7 +483,7 @@ def invite_into_corporation(request):
 
         if not invitation_sent:
             messages.error(request,
-                            '{} already invited or joined another corporation'.format(form.cleaned_data['email']))
+                            _('{email} already invited or joined another corporation').format(email=form.cleaned_data['email']))
 
         return redirect(reverse('account_legal_info', kwargs=dict(category='corporation')) + '#corporation')
 
@@ -496,7 +503,7 @@ def accept_corporation_invitation(request, corp_id):
         for corp in Corporation.objects.filter(_invited_users__contains= ' ' + user.email + ' '):
             corp.remove_invitation(user)
         user.save()
-        messages.success(request, f'You are now member of {corporation.name} team')
+        messages.success(request, _('You are now member of {team} team').format(team=corporation.name))
         return redirect(reverse('dashboard'))
 
     raise Http404()

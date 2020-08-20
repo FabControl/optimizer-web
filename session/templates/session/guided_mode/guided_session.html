@@ -1,4 +1,6 @@
 {% extends "session/base.html" %}
+{% load i18n %}
+{% load session_helpers %}
 
 {% block content %}
 <title>{{ object.material.name }} - 3DOptimizer</title>
@@ -8,13 +10,14 @@
     <div class="col-sm-5">
       {% include "session/session_info.html" %}
       <div class="pb-3">
-        <span class="tag-secondary">TEST {{object.test_number}}</span>
+        <span class="tag-secondary">{% blocktrans with number=object.test_number %}TEST {{ number }}{% endblocktrans %}</span>
         <span class="tag-secondary" style='text-transform: uppercase'>{{object.display_test_type}}</span>
       </div>
       <h4>{{object.display_test_name}}</h4>
+      {% with object.readable_test_info as test_info %}
       <span>{{ object.test_info.hint_init|safe }}</span>
       <div class="pt-3">
-        <span>Read more and see samples in <a href="https://3doptimizer.helpscoutdocs.com/test/{{object.test_number}}" class='font-weight-light' target="_blank"><b>Help Center</b></a></span>
+        <span>{% blocktrans with help_link=object.test_number|test_info_helpscout %}Read more and see samples in <a {{ help_link }}><b>Help Center</b></a>{% endblocktrans %}</span>
       </div>
       {% if object.test_youtube_id %}
       <div class="pt-4">
@@ -34,10 +37,11 @@
         {% if not object.executed %}
         {% include "session/guided_mode/session_generate.html" %}
         {% elif object.test_number in object.get_validated_tests %}
-        {% include "session/session_validated.html" %}
+        {% include "session/session_validated.html" with test_info=test_info %}
         {% else %}
-        {% include "session/guided_mode/session_validate.html" %}
+        {% include "session/guided_mode/session_validate.html" with test_info=test_info %}
         {% endif %}
+      {% endwith %}
       </div>
     </div>
   </div>

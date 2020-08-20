@@ -1,21 +1,22 @@
 {% load crispy_forms_tags %}
+{% load i18n %}
 {% load static %}
 {% if request.path in request.META.HTTP_REFERER and offer_download %}<iframe width="1" height="1" frameborder="0" src="{% url 'gcode' object.pk %}"></iframe>{% endif %}
 <form id="validation-form" class="" action="" method="POST">
   <div class="row pt-3">
-    <div class="col-sm-12">
-      <p><b>Print the downloaded test file</b><br>If the test gcode didn't download, you can get it <a href="{% url 'gcode' object.pk %}">here</a>.</p>
+    <div class="col-sm-12">{% url 'gcode' object.pk as gcode_link %}
+      <p>{% blocktrans %}<b>Print the downloaded test file</b><br>If the test gcode didn't download, you can get it <a href="{{ gcode_link }}">here</a>.{% endblocktrans %}</p>
     </div>
   </div>
   <div class="row">
     <div class="col-sm">
-      <p><b>Inspect the printed test structure</b></p>
+      <p><b>{% trans 'Inspect the printed test structure' %}</b></p>
     </div>
   </div>
   <div class="row">
     <div class="col-sm">
-      {% if not object.test_info.hint_valid == " " %}
-      <span>{{ object.test_info.hint_valid|safe }}</span>
+      {% if not test_info.hint_valid == " " %}
+      <span>{{ test_info.hint_valid|safe }}</span>
       {% endif %}
     </div>
   </div>
@@ -24,7 +25,7 @@
       {% if questions %}
       {% crispy question_form %}
       <div class="pt-4 pb-2">
-        <p><b>Select all the best parameter combinations</b></p>
+        <p><b>{% trans 'Select all the best parameter combinations' %}</b></p>
       </div>
       {% endif %}
       <div class="valid-form">
@@ -34,10 +35,10 @@
   </div>
   <div class="row pt-2">
     <div class="col">
-      <button class="btn btn-secondary" onclick="location.href='{% url 'session_validate_back' object.pk %}'" type="button" name="button">Back to Setup</button>
+      <button class="btn btn-secondary" onclick="location.href='{% url 'session_validate_back' object.pk %}'" type="button" name="button">{% trans 'Back to Setup' %}</button>
     </div>
     <div class="col text-right">
-      <button type="submit" name="btnprimary" class="btn btn-primary">Next Test</button>
+      <button type="submit" name="btnprimary" class="btn btn-primary">{% trans 'Next Test' %}</button>
     </div>
   </div>
 </form>

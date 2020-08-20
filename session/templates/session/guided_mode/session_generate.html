@@ -1,17 +1,18 @@
 {% load crispy_forms_tags %}
+{% load i18n %}
 <div class="pt-2">
-  <p><b>Enter parameter values to be tested:</b></p>
+  <p><b>{% trans 'Enter parameter values to be tested:' %}</b></p>
 </div>
 <form id="opti-form" class="" action="" method="post">
   {% crispy form %}
   <div class="row pt-3 justify-content-end">
     {% if object.previous_tests %}
     <div class="col">
-      <button class="btn btn-secondary" onclick="location.href='{% url 'session_validate_back' object.pk %}'" type="button" name="button">Re-validate Previous Test</button>
+      <button class="btn btn-secondary" onclick="location.href='{% url 'session_validate_back' object.pk %}'" type="button" name="button">{% trans 'Re-validate Previous Test' %}</button>
     </div>
     {% endif %}
     <div class="col text-right">
-      <button id="gcode_button" type="submit" class="btn btn-primary">Download .GCODE</button>
+      <button id="gcode_button" type="submit" class="btn btn-primary">{% trans 'Download .GCODE' %}</button>
     </div>
   </div>
 </form>

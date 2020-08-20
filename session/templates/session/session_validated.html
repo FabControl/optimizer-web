@@ -1,40 +1,42 @@
+{% load i18n %}
 <div class="pt-3">
 
+  {% with object.get_readable_test_with_current_number as current_test %}
   <div class="alert alert-success" role="alert">
-    Validated values:
-    <br> {{object.get_test_with_current_number.parameter_one_name}}:
-    <b>{{object.get_test_with_current_number.selected_parameter_one_value}} {{object.test_info.parameter_one.units}}</b>
+    {% trans 'Validated values:' %}
+    <br> {{current_test.parameter_one_name}}:
+    <b>{{current_test.selected_parameter_one_value}} {{test_info.parameter_one.units}}</b>
 
-    {% if object.get_test_with_current_number.parameter_two_name %}
-    <br> {{object.get_test_with_current_number.parameter_two_name}}:
-    <b>{{object.get_test_with_current_number.selected_parameter_two_value}} {{object.test_info.parameter_two.units}}</b>
+    {% if current_test.parameter_two_name %}
+    <br> {{current_test.parameter_two_name}}:
+    <b>{{current_test.selected_parameter_two_value}} {{test_info.parameter_two.units}}</b>
     {% endif %}
 
-    {% if object.get_test_with_current_number.parameter_three_name %}
-    <br> {{object.get_test_with_current_number.parameter_three_name}}:
-    <b>{{object.get_test_with_current_number.selected_parameter_three_value}} {{object.test_info.parameter_three.units}}</b>
+    {% if current_test.parameter_three_name %}
+    <br> {{current_test.parameter_three_name}}:
+    <b>{{current_test.selected_parameter_three_value}} {{test_info.parameter_three.units}}</b>
     {% endif %}
+  {% endwith %}
 
   </div>
-  <button class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal">Revert to this test</button>
+  <button class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal">{% trans 'Revert to this test' %}</button>
 
 
   <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Are you sure you want to proceed?</h5>
+          <h5 class="modal-title" id="exampleModalLabel">{% trans 'Are you sure you want to proceed?' %}</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
-          Reverting to this test will discard all progress achieved after it.
-        </div>
+          {% trans 'Reverting to this test will discard all progress achieved after it.' %}</div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">{% trans 'Cancel' %}</button>
           <form class="" action="{% url 'revert_to_test' object.pk %}" method="get">
-            <button type="submit" class="btn btn-danger">Revert</button>
+            <button type="submit" class="btn btn-danger">{% trans 'Revert' %}</button>
           </form>
         </div>
       </div>

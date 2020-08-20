@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from django.contrib.auth import views as auth_views
 from .forms import PasswordSetForm
 from . import views
@@ -38,4 +38,5 @@ urlpatterns = [
     path('corporation/cancel_invitation/', views.cancel_corporation_invitation, name='cancel_corporation_invitation'),
     path('corporation/accept/<corp_id>', views.accept_corporation_invitation, name='accept_corporation_invitation'),
     path('corporation/decline/<corp_id>', views.decline_corporation_invitation, name='decline_corporation_invitation'),
+    path('i18n/', include('django.conf.urls.i18n'), name='set_language'),
     ]
