@@ -517,6 +517,8 @@ class Session(models.Model, DependenciesCopyMixin):
         :param new_value:
         :return:
         """
+        if self.test_number == '14':  # This test is only informative
+            return
         if new_value is not None:
             parameter_numbers = ["parameter_one", "parameter_two", "parameter_three"]
             for number in parameter_numbers:
