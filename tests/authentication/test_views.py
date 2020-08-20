@@ -89,7 +89,8 @@ class PasswordResetViewsTest(TestCase):
         # Both requests should have equal behavior
         self.assertEqual(known_response.status_code, unknown_response.status_code)
         self.assertEqual(known_response.redirect_chain, unknown_response.redirect_chain)
-        self.assertEqual(known_response.content, unknown_response.content)
+        # We don't check footer, since it contains language switcher with csrf token, that changes with every request
+        self.assertEqual(known_response.content.split(b'<footer')[0], unknown_response.content.split(b'<footer')[0])
 
 
     def test_password_reset_link(self):
@@ -379,6 +380,7 @@ class SignupViewTest(TestCase):
                                 })
 
         self.assertEqual(resp1.status_code, resp2.status_code)
-        self.assertEqual(resp1.content, resp2.content)
+        # We don't check footer, since it contains language switcher with csrf token, that changes with every request
+        self.assertEqual(resp1.content.split(b'<footer')[0], resp2.content.split(b'<footer')[0])
 
 
