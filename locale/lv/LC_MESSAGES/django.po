@@ -1,0 +1,1844 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-08-20 09:10+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : "
+"2);\n"
+
+#: Optimizer3D/settings.py:117
+msgid "English"
+msgstr ""
+
+#: Optimizer3D/settings.py:118
+msgid "Latvian"
+msgstr ""
+
+#: authentication/forms.py:28 authentication/forms.py:65
+#: authentication/forms.py:220
+#: authentication/templates/authentication/account_activation.html:15
+#: authentication/templates/authentication/legal_info.html:109
+#: authentication/templates/authentication/my_affiliates.html:37
+msgid "Email"
+msgstr "Epasts"
+
+#: authentication/forms.py:30 authentication/forms.py:42
+msgid "Password"
+msgstr "Parole"
+
+#: authentication/forms.py:56
+msgid "Password did not match our records"
+msgstr "Ievadītā parole nesakrīt ar mums zināmo paroli"
+
+#: authentication/forms.py:66
+msgid "We will not share your email address with 3rd parties."
+msgstr "Jūsu epasts netiks izpausts trešajām personām."
+
+#: authentication/forms.py:69
+msgid "First name"
+msgstr "Vārds"
+
+#: authentication/forms.py:72
+msgid "Last name"
+msgstr "Uzvārds"
+
+#: authentication/forms.py:84 authentication/forms.py:192
+msgid "Country"
+msgstr "Valsts"
+
+#: authentication/forms.py:86
+#, python-format
+msgid "I agree to %(starttag)sterms of use%(endtag)s"
+msgstr "Piekrītu %(starttag)slietošans noteikumiem%(endtag)s"
+
+#: authentication/forms.py:123
+msgid "Password recovery instructions will be sent to this email."
+msgstr "Tālākās norādes tiks nosūtītas uz šo epasta adresi."
+
+#: authentication/forms.py:189
+msgid "Company name*"
+msgstr "Uzņēmuma nosaukums*"
+
+#: authentication/forms.py:193
+msgid "Company legal address*"
+msgstr "Uzņēmuma adrese*"
+
+#: authentication/forms.py:194
+msgid "Company registration number*"
+msgstr "Uzņēmuma reģ. numurs*"
+
+#: authentication/forms.py:195
+msgid "Company VAT number"
+msgstr "PVN maksātāja numurs"
+
+#: authentication/forms.py:197
+msgid "Show legal info (for EU companies)"
+msgstr "Norādīt uzņēmuma datus(ES uzņēmumiem)"
+
+#: authentication/forms.py:210
+#, python-brace-format
+msgid "Company account requires {field_label}"
+msgstr "Uzņēmuma kontam jāaizpilda {field_label}"
+
+#: authentication/forms.py:221
+msgid "email"
+msgstr "epasts"
+
+#: authentication/forms.py:223
+#: authentication/templates/authentication/my_affiliates.html:36
+#: session/forms.py:185 session/forms.py:247 session/forms.py:285
+#: session/templates/session/dashboard.html:111
+#: session/templates/session/material_manager.html:25
+#: session/templates/session/session_info.html:10
+#: session/templates/session/session_manager.html:37
+msgid "Name"
+msgstr "Vārds"
+
+#: authentication/models.py:131 session/templates/session/navbar.html:45
+msgid "Upgrade to Full Access"
+msgstr "Iegādāties pilnu poekļuvi"
+
+#: authentication/models.py:133
+msgid "Permanent License"
+msgstr "Bezlimita licence"
+
+#: authentication/models.py:135
+#, python-brace-format
+msgid "Student's License ({expiration} Day)"
+msgid_plural "Student's License ({expiration} Days)"
+msgstr[0] "Studenta licence ({expiration} diena)"
+msgstr[1] "Studenta licence ({expiration} dienas)"
+msgstr[2] "Studenta licence ({expiration} dienas)"
+
+#: authentication/models.py:140
+#, python-brace-format
+msgid "Full Access ({expiration} Day)"
+msgid_plural "Full Access ({expiration} Days)"
+msgstr[0] "Pilna piekļuve ({expiration} diena)"
+msgstr[1] "Pilna piekļuve ({expiration} dienas)"
+msgstr[2] "Pilna piekļuve ({expiration} dienas)"
+
+#: authentication/models.py:144
+msgid "Full Access"
+msgstr "Pilna piekļuve"
+
+#: authentication/models.py:146
+#, python-brace-format
+msgid "Test Access ({expiration} Day)"
+msgid_plural "Test Access ({expiration} Days)"
+msgstr[0] "Testa piekļuve ({expiration} diena)"
+msgstr[1] "Testa piekļuve ({expiration} dienas)"
+msgstr[2] "Testa piekļuve ({expiration} dienas)"
+
+#: authentication/models.py:150
+#, python-brace-format
+msgid "Limited Access ({expiration} Day)"
+msgid_plural "Limited Access ({expiration} Days)"
+msgstr[0] "Ierobežota piekļuve ({expiration} diena)"
+msgstr[1] "Ierobežota piekļuve ({expiration} dienas)"
+msgstr[2] "Ierobežota piekļuve ({expiration} dienas)"
+
+#: authentication/models.py:289
+#, python-format
+msgid "Registered on %(date)s"
+msgstr "Reģistrējās %(date)s"
+
+#: authentication/models.py:291
+#: authentication/templates/authentication/legal_info.html:174
+#: authentication/templates/authentication/legal_info.html:214
+msgid "Invitation sent"
+msgstr "Uzaicinājums nosūtīts"
+
+#: authentication/models.py:296
+#, python-format
+msgid "Received %(days)d days full access"
+msgstr "Saņemtas %(days)d pilnas piekļuves dienas"
+
+#: authentication/templates/authentication/account_activation.html:9
+msgid "To activate account, enter your password"
+msgstr "Lai aktivizētu kontu, ievadiet paroli"
+
+#: authentication/templates/authentication/account_activation.html:27
+msgid "Activate account"
+msgstr "Aktivizēt"
+
+#: authentication/templates/authentication/account_activation.html:33
+msgid "Account activation link is not valid."
+msgstr "Konta aktivizēšanas saite nav derīga."
+
+#: authentication/templates/authentication/account_activation.html:34
+msgid "If link is expired, try resetting password."
+msgstr "Ja saites derīguma termiņš ir iztecējis, mēģiniet atjaunot paroli."
+
+#: authentication/templates/authentication/check_email.html:6
+msgid "Your account was successfully created."
+msgstr "Jūsu konts ir veiksmīgi izveidots."
+
+#: authentication/templates/authentication/check_email.html:7
+msgid "Please check your email for further instructions."
+msgstr "Tālākās instrukcijas saņemsiet savā epastā."
+
+#: authentication/templates/authentication/invalid_affiliate_url.html:6
+msgid "Affiliate link is not valid."
+msgstr "Uzaicinājuma saite nav derīga."
+
+#: authentication/templates/authentication/legal_info.html:22
+msgid "Account info"
+msgstr "Konta informācija"
+
+#: authentication/templates/authentication/legal_info.html:31
+msgid "Change password"
+msgstr "Nomainīt paroli"
+
+#: authentication/templates/authentication/legal_info.html:49
+#: authentication/templates/authentication/password_change.html:15
+#: authentication/templates/authentication/password_reset_confirm.html:20
+#: session/templates/session/machine_detail.html:82
+#: session/templates/session/material_detail.html:27
+#: session/templates/session/session_info.html:26
+msgid "Save"
+msgstr "Saglabāt"
+
+#: authentication/templates/authentication/legal_info.html:60
+msgid "Subscription and payments"
+msgstr "Abonementi un maksājumi"
+
+#: authentication/templates/authentication/legal_info.html:66
+msgid "Active subscription:"
+msgstr "Aktīvie abonementi:"
+
+#: authentication/templates/authentication/legal_info.html:71
+#: authentication/templates/authentication/legal_info.html:79
+msgid "Cancel subscription"
+msgstr "Atcelt abonementu"
+
+#: authentication/templates/authentication/legal_info.html:75
+msgid ""
+"By pressing \"Cancel subscription\", you confirm cancellation of full access "
+"subscription."
+msgstr ""
+"Nospiežot \"Atcelt abonemetu\", jūs atsakaties no pilnas piekļuves "
+"3DOptimizer."
+
+#: authentication/templates/authentication/legal_info.html:76
+#, python-format
+msgid "You will have full access till %(end_date)s."
+msgstr "Varēsiet izmantot pilnu piekļuvi līdz %(end_date)s."
+
+#: authentication/templates/authentication/legal_info.html:84
+msgid "Payment method:"
+msgstr "Norēķinu karte"
+
+#: authentication/templates/authentication/legal_info.html:84
+msgid "Change"
+msgstr "Mainīt"
+
+#: authentication/templates/authentication/legal_info.html:86
+msgid "You don't have active subscription."
+msgstr "Nav aktīvu abonementu"
+
+#: authentication/templates/authentication/legal_info.html:87
+#: payments/templates/payments/plans.html:113
+#: payments/templates/payments/plans.html:173
+msgid "Purchase"
+msgstr "Iegādāties"
+
+#: authentication/templates/authentication/legal_info.html:98
+#: session/templates/session/dashboard.html:52
+#: session/templates/session/navbar.html:75
+msgid "Users"
+msgstr "Lietotāji"
+
+#: authentication/templates/authentication/legal_info.html:108
+#: authentication/templates/authentication/legal_info.html:121
+#: session/templates/session/team_stats.html:27
+msgid "User"
+msgstr "Lietotājs"
+
+#: authentication/templates/authentication/legal_info.html:110
+msgid "Role"
+msgstr "Loma"
+
+#: authentication/templates/authentication/legal_info.html:111
+#: session/templates/session/team_stats.html:28
+msgid "Last active"
+msgstr "Pēdējā aktivitāte"
+
+#: authentication/templates/authentication/legal_info.html:121
+#: session/templates/session/machine_manager.html:29
+#: session/templates/session/material_manager.html:29
+msgid "Owner"
+msgstr "Īpašnieks"
+
+#: authentication/templates/authentication/legal_info.html:121
+msgid "Manager"
+msgstr "Menedžeris"
+
+#: authentication/templates/authentication/legal_info.html:128
+#: authentication/templates/authentication/legal_info.html:180
+#: authentication/templates/authentication/legal_info.html:220
+#: session/templates/session/machine_manager.html:45
+#: session/templates/session/material_manager.html:45
+#: session/templates/session/session_manager.html:66
+msgid "Action"
+msgstr "Mainīt"
+
+#: authentication/templates/authentication/legal_info.html:135
+msgid "Resign manager role"
+msgstr "Noņemt menedžera lomu"
+
+#: authentication/templates/authentication/legal_info.html:135
+msgid "Assign manager role"
+msgstr "Piešķirt menedžera lomu"
+
+#: authentication/templates/authentication/legal_info.html:138
+#: authentication/templates/authentication/legal_info.html:158
+msgid "Leave"
+msgstr "Pamest"
+
+#: authentication/templates/authentication/legal_info.html:138
+#: authentication/templates/authentication/legal_info.html:158
+#: authentication/templates/authentication/legal_info.html:183
+#: authentication/templates/authentication/legal_info.html:199
+#: authentication/templates/authentication/legal_info.html:223
+#: authentication/templates/authentication/legal_info.html:239
+msgid "Remove"
+msgstr "Izņemt"
+
+#: authentication/templates/authentication/legal_info.html:144
+msgid "Leave company"
+msgstr "Pamest uzņēmumu"
+
+#: authentication/templates/authentication/legal_info.html:144
+msgid "Remove from company"
+msgstr "Izņemt no uzņēmuma"
+
+#: authentication/templates/authentication/legal_info.html:149
+msgid ""
+"If you leave company, you won't have access to it's printers, materials and "
+"testing sessions."
+msgstr ""
+"Pametot uzņēmumu, jums tiks liegta piekļuve uzņēmuma printeriem, materiāliem "
+"un testēšanas sesijām."
+
+#: authentication/templates/authentication/legal_info.html:151
+#: authentication/templates/authentication/legal_info.html:193
+#, python-format
+msgid ""
+"By pressing \"Remove\", you confirm removal of <b>%(first)s %(last)s</b> "
+"from your company."
+msgstr ""
+"Nospiežot \"Izņemt\", jūs apstiprinat <b>%(first)s %(last)s</b> noņemšanu no "
+"uzņēmuma."
+
+#: authentication/templates/authentication/legal_info.html:189
+#: authentication/templates/authentication/legal_info.html:229
+msgid "Remove from corporation"
+msgstr "Noņemt no uzņēmuma"
+
+#: authentication/templates/authentication/legal_info.html:233
+#, python-format
+msgid ""
+"By pressing \"Remove\", you confirm removal of <b>%(name)s</b> from your "
+"company."
+msgstr ""
+"Nospiežot \"Izņemt\", jūs apstiprinat <b>%(name)s</b> noņemšanu no uzņēmuma."
+
+#: authentication/templates/authentication/legal_info.html:259
+msgid "Invite user"
+msgstr "Uzaicini lietotāju"
+
+#: authentication/templates/authentication/legal_info.html:269
+#, python-format
+msgid "%(count)s of %(allowed)s users registered"
+msgstr "%(count)s no %(allowed)s lietotājiem reģistrēti"
+
+#: authentication/templates/authentication/legal_info.html:275
+msgid "Upgrade to add more users"
+msgstr "Pievienot vēl lietotājus"
+
+#: authentication/templates/authentication/login.html:34
+msgid "Sign in"
+msgstr "Ieiet"
+
+#: authentication/templates/authentication/login.html:39
+#: authentication/templates/authentication/signup.html:7
+#: authentication/templates/authentication/signup.html:29
+#: authentication/templates/authentication/signup.html:55
+msgid "Sign up"
+msgstr "Reģistrēties"
+
+#: authentication/templates/authentication/login.html:39
+msgid "Recover password"
+msgstr "Atjaunot paroli"
+
+#: authentication/templates/authentication/my_affiliates.html:11
+msgid "Invite a friend"
+msgstr "Uzaicini draugu"
+
+#: authentication/templates/authentication/my_affiliates.html:16
+msgid ""
+"After your friend registers you will receive a free week of 3DOptimizer."
+msgstr ""
+"Kad tavs draugs reģistrēsies, saņemsi vienas nedēļas pilnu piekļuvi "
+"3DOptimizer."
+
+#: authentication/templates/authentication/my_affiliates.html:35
+#: payments/templates/payments/invoices.html:16
+msgid "Date"
+msgstr "Datums"
+
+#: authentication/templates/authentication/my_affiliates.html:38
+msgid "Status"
+msgstr "Statuss"
+
+#: authentication/templates/authentication/my_affiliates.html:39
+msgid "Bonus"
+msgstr "Bonuss"
+
+#: authentication/templates/authentication/password_reset.html:15
+msgid "Send recovery email"
+msgstr "Nosūtīt"
+
+#: authentication/templates/authentication/password_reset_complete.html:6
+msgid "Your password was successfully reset."
+msgstr "Jūsu parole ir veiksmīgi nomainīta."
+
+#: authentication/templates/authentication/password_reset_confirm.html:7
+msgid "Change Password"
+msgstr "Nomainīt paroli"
+
+#: authentication/templates/authentication/password_reset_confirm.html:23
+msgid ""
+"The password reset link was invalid, possibly because it has already been "
+"used."
+msgstr ""
+"Paroles atjaunošanas saite nebija derīga, iespējams tā jau tika izmantota."
+
+#: authentication/templates/authentication/password_reset_confirm.html:24
+msgid "Please request a new password reset."
+msgstr "Lūdzu veiciet jaunu paroles atjaunošanu."
+
+#: authentication/templates/authentication/password_reset_done.html:6
+msgid ""
+"Password reset instructions should arrive in your inbox within few minutes."
+msgstr "Tuvākajās minūtēs saņemsiet epastu ar paroles atjaunošanas norādēm."
+
+#: authentication/templates/authentication/password_reset_done.html:7
+msgid "If you don't receive email, please check your spam folder."
+msgstr "Ja nesaņemat epastu, lūdzu pārbaudiet mēstules mapi."
+
+#: authentication/templates/authentication/signup.html:15
+msgid "Individual account (single user)"
+msgstr "Individuālais konts (vienam lietotājam)"
+
+#: authentication/templates/authentication/signup.html:42
+msgid "Business account (multi-user)"
+msgstr "Biznesa konts (vairākiem lietotājiem)"
+
+#: authentication/templates/authentication/translation_selector.html:6
+#, python-format
+msgid "Page presented in <a %(attrs)s>%(lang)s</a>"
+msgstr "Lapa atvērta <a %(attrs)s>%(lang)s</a> valodā"
+
+#: authentication/templates/authentication/translation_selector.html:15
+msgid "Change page language"
+msgstr "Mainīt lapas valodu"
+
+#: authentication/templates/authentication/translation_selector.html:29
+#: session/templates/session/session_validated.html:37
+msgid "Cancel"
+msgstr "Atcelt"
+
+#: authentication/views.py:51
+msgid "Your account has been deactivated."
+msgstr "Jūsu konts ir deaktivizēts."
+
+#: authentication/views.py:54 authentication/views.py:58
+msgid "Failed to log in!"
+msgstr "Neizdevās ieiet!"
+
+#: authentication/views.py:196
+msgid "Password changed"
+msgstr "Parole nomainīta"
+
+#: authentication/views.py:220
+msgid "Your email address was confirmed and account activated."
+msgstr "Jūsu konts ir aktivizēts."
+
+#: authentication/views.py:248
+msgid "User already invited or registered"
+msgstr "Lietotājs jau uzaicināts, vai jau reģistrējies"
+
+#: authentication/views.py:253
+msgid "Friend's email"
+msgstr "Drauga epasts"
+
+#: authentication/views.py:254
+msgid "Friend's name"
+msgstr "Drauga vārds"
+
+#: authentication/views.py:255
+msgid "Message"
+msgstr "Uzaicinājuma teksts"
+
+#: authentication/views.py:258
+msgid "Send"
+msgstr "Nosūtīt"
+
+#: authentication/views.py:276
+#, python-brace-format
+msgid "Invitation sent to {0.name} ({0.email})"
+msgstr "Uzaicinājums nosūtīts {0.name} ({0.email})"
+
+#: authentication/views.py:341
+#, python-brace-format
+msgid ""
+"You can use default <a href=\"{signup}\">sign up form</a> or <a href="
+"\"{login}\">log in </a> to your account."
+msgstr ""
+"Izmanto standarta <a href=\"{signup}\">reģistrēšanās formu</a>, vai <a href="
+"\"{login}\">ienāc</a> ar esošo kontu."
+
+#: authentication/views.py:356
+msgid "Account changed successfully"
+msgstr "Izmaiņas saglabātas"
+
+#: authentication/views.py:486
+#, python-brace-format
+msgid "{email} already invited or joined another corporation"
+msgstr "{email} jau uzaicināts, vai pievienojies citam uzņēmumam"
+
+#: authentication/views.py:506
+#, python-brace-format
+msgid "You are now member of {team} team"
+msgstr "Jūs pievienojāties {team} komandai"
+
+#: payments/forms.py:58
+msgid "Redeem a voucher "
+msgstr "Izmantot kuponu"
+
+#: payments/forms.py:63
+msgid "Redeem"
+msgstr "Izmantot"
+
+#: payments/forms.py:68
+msgid "voucher code"
+msgstr "kupona kods"
+
+#: payments/models.py:82
+msgid "One-time payment"
+msgstr "Vienreizējs maksājums"
+
+#: payments/models.py:84
+msgid "Recurring dayly payment"
+msgstr "Ikdienas maksājums"
+
+#: payments/models.py:86
+msgid "Recurring monthly payment"
+msgstr "Ikmēneša maksājums"
+
+#: payments/models.py:88
+msgid "Recurring yearly payment"
+msgstr "Ikgadējs maksājums"
+
+#: payments/templates/payments/checkout.html:10
+msgid "Redirecting to checkout page, please wait..."
+msgstr "Notiek pārvirzīšana uz maksājumu lapu, lūdzu gaidiet..."
+
+#: payments/templates/payments/invoices.html:15
+msgid "Invoice"
+msgstr "Rēķins"
+
+#: payments/templates/payments/invoices.html:17
+msgid "Amount paid"
+msgstr "Summa"
+
+#: payments/templates/payments/invoices.html:29
+msgid "Download"
+msgstr "Lejupielādēt"
+
+#: payments/templates/payments/plans.html:58
+#, python-format
+msgid "%(expiration)s day of full access remaining."
+msgid_plural "%(expiration)s days of full access remaining."
+msgstr[0] "Atlikusi %(expiration)s pilnas piekļuves diena."
+msgstr[1] "Atlikušas %(expiration)s pilnas piekļuves dienas."
+msgstr[2] ""
+
+#: payments/templates/payments/plans.html:69
+msgid "Individual"
+msgstr "Privātais"
+
+#: payments/templates/payments/plans.html:72
+msgid "Business"
+msgstr "Uzņēmuma"
+
+#: payments/templates/payments/plans.html:75
+msgid "Education"
+msgstr "Studiju"
+
+#: payments/templates/payments/plans.html:99
+#: payments/templates/payments/plans.html:158
+msgid "All tests"
+msgstr "Visi testi"
+
+# TODO improve translation
+#: payments/templates/payments/plans.html:100
+#: payments/templates/payments/plans.html:159
+msgid "Full guided testing mode"
+msgstr "Pilnīgi vadīts testēšanas režīms"
+
+# TODO improve translation
+#: payments/templates/payments/plans.html:101
+#: payments/templates/payments/plans.html:160
+msgid "Advanced testing mode"
+msgstr "Advancētais testēšanas režīms"
+
+#: payments/templates/payments/plans.html:102
+#: payments/templates/payments/plans.html:162
+msgid "Email support"
+msgstr "Atbalsts epastā"
+
+#: payments/templates/payments/plans.html:110
+#: payments/templates/payments/plans.html:170
+msgid "Currently active"
+msgstr "Šobrīd aktīvs"
+
+#: payments/templates/payments/plans.html:124
+msgid ""
+"If you’re not happy with our software for any reason, we’ll refund your "
+"money within a week from payment date no-questions-asked."
+msgstr ""
+"Ja neesat apmierināts ar mūsu pakalpojumu, nedēļas laikā no pirkuma "
+"atgriezīsim naudu."
+
+#: payments/templates/payments/plans.html:138
+msgid "Payment plans"
+msgstr "Maksāšanas plāni"
+
+#: payments/templates/payments/plans.html:161
+#, python-format
+msgid "%(users)s user included"
+msgid_plural "%(users)s users included"
+msgstr[0] "%(users)s lietotājs iekļauts"
+msgstr[1] "%(users)s lietotāji iekļauti"
+msgstr[2] ""
+
+#: payments/templates/payments/plans.html:184
+#, python-format
+msgid "If you need different setup or more users, contact %(support)s"
+msgstr ""
+"Ja nepieciešams cita konfigurācija, vai vairāk lietotāju, sazinietes "
+"%(support)s"
+
+#: payments/templates/payments/plans.html:190
+msgid "Individual account"
+msgstr "Individuālais konts"
+
+#: payments/templates/payments/plans.html:193
+#, python-format
+msgid ""
+"Free full access for individual students and teachers - </br><a "
+"%(support)s>contact support</a> after creating a free account to activate."
+msgstr ""
+"Pilnas piekļuves bezmaksas konts studentiem un pasniedzējiem - pēc "
+"individuālā konta izveidošanas, </br><a %(support)s>sazinieties ar atbalstu</"
+"a>."
+
+#: payments/templates/payments/plans.html:196
+msgid "Educational institution account"
+msgstr "Izglītības iestādes konts"
+
+#: payments/templates/payments/plans.html:199
+#, python-format
+msgid "We offer discounts for multi-user accounts — contact %(sales)s."
+msgstr "Piedāvājam bezmaksas vairāku lietotāju kontus - sazinieties %(sales)s."
+
+#: payments/views.py:101
+msgid "Your checkout was cancelled"
+msgstr "Maksājums tika atcelts"
+
+#: payments/views.py:111 payments/views.py:134
+msgid "Your session has expired"
+msgstr "Jūsu sesija vairs nav derīga"
+
+#: payments/views.py:115 payments/views.py:361
+#, python-format
+msgid "Your full access was extended for %(day)d day"
+msgid_plural "Your full access was extended for %(day)d days"
+msgstr[0] "Pilnā piekļuve tika pagarināta par %(day)d dienu"
+msgstr[1] "Pilnā piekļuve tika pagarināta par %(day)d dienām"
+msgstr[2] ""
+
+#: payments/views.py:119
+msgid "Subscription successful"
+msgstr "Abonementi uzsākts"
+
+#: payments/views.py:126
+msgid "We haven't received your payment yet. Please check after few minutes"
+msgstr "Maksājums vēl nav apstiprināts. Lūdzu, pārbaudiet pēc dažām minūtēm"
+
+#: payments/views.py:171
+msgid "Subscription payment method changed!"
+msgstr "Maksājuma dati nomainīti!"
+
+#: payments/views.py:177
+msgid "Something went wrong. Please try again later."
+msgstr "Gadījās kļūda. Lūdzu mēģiniet vēlāk."
+
+#: payments/views.py:196
+msgid "Subscription cancelled"
+msgstr "Abonements atcelts"
+
+#: payments/views.py:365
+msgid "Provided voucher code is not valid"
+msgstr "Ievadītais kupona kods nav derīgs"
+
+#: session/choices.py:18
+msgid "Mechanical Strength"
+msgstr "Mehāniskā izturība"
+
+#: session/choices.py:18
+msgid "Visual Quality"
+msgstr "Vizuālā kvalitāte"
+
+#: session/choices.py:18
+msgid "Short Printing Time"
+msgstr "Īss printēšans laiks"
+
+#: session/forms.py:178
+msgid "Min temperature (°C)"
+msgstr "Min. temperatūra (°C)"
+
+#: session/forms.py:179
+#, python-brace-format
+msgid ""
+"Manufacturer's suggested temperature. After the testing process you might "
+"end up with a different temperature. If you do not have this data, a method "
+"to determine it can be faund <a href='{help_link}'>here</a>."
+msgstr ""
+"Ražotāja ieteiktā temperatūra. Pēc testēšanas sesijas varētu tikt iegūta "
+"cita vērtība. Ja nav ieteiktās temeperatūras, <a href='{help_link}'>šeit</a> "
+"atrodama metode tās noskaidrošanai."
+
+#: session/forms.py:182 session/forms.py:590 session/forms.py:619
+#: session/forms.py:633
+msgid "Max temperature (°C)"
+msgstr "Max. temperatūra (°C)"
+
+#: session/forms.py:183
+msgid "Same as above."
+msgstr "Tāpat kā ieprikšējam laukam."
+
+#: session/forms.py:186 session/templates/session/material_manager.html:26
+msgid "Filament diameter (mm)"
+msgstr "Filamenta diametrs (mm)"
+
+#: session/forms.py:189 session/templates/session/material_manager.html:27
+msgid "Notes"
+msgstr "Piezīmes"
+
+#: session/forms.py:190
+msgid "(Batch number, color, SKU etc.)"
+msgstr "(Sērijas numurs, krāsa, u.t.t.)"
+
+#: session/forms.py:195 session/templates/session/session_info.html:51
+msgid "Build Plate"
+msgstr "Printēšanas pamatne"
+
+#: session/forms.py:196
+msgid "Other"
+msgstr "Cita"
+
+#: session/forms.py:231
+msgid "Other Build Plate"
+msgstr "Cita printēšanas pamatne"
+
+#: session/forms.py:248 session/templates/session/dashboard.html:112
+#: session/templates/session/session_info.html:39
+#: session/templates/session/session_manager.html:38
+msgid "Mode"
+msgstr "Režīms"
+
+#: session/forms.py:249 session/templates/session/dashboard.html:115
+#: session/templates/session/session_info.html:47
+#: session/templates/session/session_manager.html:41
+msgid "Material"
+msgstr "Materiāls"
+
+#: session/forms.py:253 session/templates/session/material_form.html:11
+#: session/templates/session/material_manager.html:16
+msgid "New Material"
+msgstr "Jauns materiāls"
+
+#: session/forms.py:254 session/templates/session/dashboard.html:114
+#: session/templates/session/session_info.html:43
+#: session/templates/session/session_manager.html:40
+msgid "3D Printer"
+msgstr "3D printeris"
+
+#: session/forms.py:258 session/templates/session/machine_form.html:10
+#: session/templates/session/machine_manager.html:16
+msgid "New 3D Printer"
+msgstr "Jauns 3D printeris"
+
+#: session/forms.py:259 session/templates/session/dashboard.html:113
+#: session/templates/session/session_info.html:35
+#: session/templates/session/session_manager.html:39
+msgid "Target"
+msgstr "Mērķis"
+
+#: session/forms.py:264
+#, python-brace-format
+msgid ""
+"Mechanical Strength and Short Printing Time targets require <a href="
+"\"{link}\">Full Access</a>"
+msgstr ""
+"Lai izvēlētos mehānisko izturību, vai samazinātu printēšanas laiku, "
+"nepieciešama <a href=\"{link}\">Pilna piekļuve</a>"
+
+#: session/forms.py:268
+#, python-brace-format
+msgid "Advanced mode require <a href=\"{link}\">Full Access</a>"
+msgstr ""
+"Lai izvēlētos advancēto testēšanas režīmu nepieciešama <a href="
+"\"{link}\">Pilna piekļuve</a>"
+
+#: session/forms.py:532
+msgid "3D Printer model"
+msgstr "3D printera modelis"
+
+#: session/forms.py:533
+msgid "Max dimension on X axis (mm)"
+msgstr "Max. koordināte uz X ass (mm)"
+
+#: session/forms.py:534
+msgid "Max dimension on Y axis (mm)"
+msgstr "Max. koordināte uz Y ass (mm)"
+
+#: session/forms.py:536
+msgid "Offset on X axis (mm)"
+msgstr "Nobīde pa X asi (mm)"
+
+#: session/forms.py:537
+msgid "Offset on Y axis (mm)"
+msgstr "Nobīde pa Y asi (mm)"
+
+#: session/forms.py:539 session/templates/session/machine_manager.html:26
+msgid "Type"
+msgstr "Tips"
+
+#: session/forms.py:540
+msgid "Extruder type"
+msgstr "Ekstrūdera tips"
+
+#: session/forms.py:542
+msgid "Header"
+msgstr "Sākuma Gkods"
+
+#: session/forms.py:545
+msgid "Footer"
+msgstr "Beigu Gkods"
+
+#: session/forms.py:549
+msgid "Homing script"
+msgstr "Atgriezšanās Gkods"
+
+#: session/forms.py:589 session/forms.py:617
+msgid "Gcode tool index"
+msgstr "Ekstrūdera numurs Gkodā"
+
+#: session/forms.py:591 session/forms.py:657
+msgid "Part cooling"
+msgstr "Detaļas dzesēšana"
+
+#: session/forms.py:604
+msgid "Nozzle's inner diameter (mm)"
+msgstr "Sprauslas iekšējais diametrs (mm)"
+
+#: session/forms.py:618
+msgid "Gcode syntax"
+msgstr "Gkoda sintakse"
+
+#: session/forms.py:620
+msgid "Chamber heatable"
+msgstr "Apsildāma kamera"
+
+#: session/forms.py:635
+msgid "Print bed heatable"
+msgstr "Apsildāma printēšanas platforma"
+
+#: session/forms.py:645
+msgid "Bridging extrusion multiplier"
+msgstr "Tilta ekstrūzijas daudzums"
+
+#: session/forms.py:646
+msgid "Bridging part cooling"
+msgstr "Tilta detaļas dzesēšana"
+
+#: session/forms.py:647
+msgid "Bridging printing speed"
+msgstr "Titla printēšans ātrums"
+
+#: session/forms.py:648
+msgid "Chamber temperature"
+msgstr "Kameras temperatūra"
+
+#: session/forms.py:649
+msgid "Coasting distance"
+msgstr "Retrakcijas attālums"
+
+#: session/forms.py:650
+msgid "Exit ventilation power"
+msgstr "Atplūdes ventilācijas jauda"
+
+#: session/forms.py:651
+msgid "Extrusion multiplier"
+msgstr "Ekstrūzijas daudzums"
+
+#: session/forms.py:652
+msgid "Extrusion temperature"
+msgstr "Ekstrūzijas daudzums"
+
+#: session/forms.py:653
+msgid "First-layer extrusion temperature"
+msgstr "Pirmā slāņa ekstrūzijas temperatūra"
+
+#: session/forms.py:654
+msgid "First-layer printing speed"
+msgstr "Printēšans ātrums"
+
+#: session/forms.py:655
+msgid "First-layer track height"
+msgstr "Pirmā slāņa līnijas augstums"
+
+#: session/forms.py:656
+msgid "First-layer track width"
+msgstr "Pirmā slāņa līnijas platums"
+
+#: session/forms.py:658
+msgid "Print bed coating"
+msgstr "Printēšans virsmas pārklājums"
+
+#: session/forms.py:659
+msgid "Print bed temperature"
+msgstr "Printēšanas virsmas temperatūra"
+
+#: session/forms.py:660
+msgid "Printing speed"
+msgstr "Printēšans ātrums"
+
+#: session/forms.py:661
+msgid "Retraction distance"
+msgstr "Retrakcijas attālums"
+
+#: session/forms.py:662
+msgid "Retraction speed"
+msgstr "Retrakcijas ātrums"
+
+#: session/forms.py:663
+msgid "Retraction-restart distance"
+msgstr "Re-retrakcijas attālums"
+
+#: session/forms.py:664
+msgid "Track height"
+msgstr "Līnijas augstums"
+
+#: session/forms.py:665
+msgid "Track width"
+msgstr "Līnijas platums"
+
+#: session/forms.py:666
+msgid "Z-offset"
+msgstr "Z nobīde"
+
+#: session/forms.py:670
+msgid ""
+"For this test this value is equal to unity, but, if needed, it can be tested "
+"in a separate test"
+msgstr ""
+"Šim testam šī vērtība ir viens, bet, ja nepieciešams, to var noskaidrot "
+"atsevišķā testā"
+
+#: session/forms.py:671
+msgid ""
+"Set a value from the range 20-50 mm/s for printing flexible materials, or "
+"30-70 mm/s for printing harder materials"
+msgstr ""
+"Elastīgajiem materiāliem ieteicamais apgabals ir 20-50 mm/s, bet cietākiem "
+"materiāliem 30-70 mm/s."
+
+#: session/forms.py:672
+msgid ""
+"Set part cooling. Active part cooling is required when printing using high "
+"deposition rates or when printing fine details"
+msgstr ""
+"Aktīvā detaļas dzesēšana nepieciešama printējot lielā ātrumā, vai printējot "
+"smalkas detaļas"
+
+#: session/forms.py:673
+msgid "Set the range of <b>Retraction distances</b> to be tested"
+msgstr "Uzstādiet testējamo <b>Atvilkšanas attāluma</b> vērtību apgabalu"
+
+#: session/forms.py:674
+msgid ""
+"Set the range to 10-25 mm/s for printing flexible materials, or 15-35 mm/s "
+"for harder materials"
+msgstr ""
+"Elastīgajiem materiāliem ieteicamais apgabals ir 10-25 mm/s, bet cietākiem "
+"materiāliem 15-35 mm/s."
+
+#: session/forms.py:675
+msgid ""
+"Set the range to 20-50 mm/s for printing flexible materials, or to 30-70 mm/"
+"s for printing harder materials"
+msgstr ""
+"Elastīgajiem materiāliem ieteicamais apgabals ir 10-25 mm/s, bet cietākiem "
+"materiāliem 15-35 mm/s."
+
+#: session/forms.py:676
+msgid ""
+"Set the range to 5-15 mm/s for printing flexible materials, or to 10-30 mm/s "
+"for printing harder materials"
+msgstr ""
+"Elastīgajiem materiāliem ieteicamais apgabals ir 5-15 mm/s, bet cietākiem "
+"materiāliem 10-30 mm/s."
+
+#: session/forms.py:677
+msgid "Set this value to proceed"
+msgstr "Lai turpinātu, ievadiet šo vērtību"
+
+#: session/forms.py:678
+msgid ""
+"Set this value to proceed. Perform the corresponding test to fine-tune this "
+"value"
+msgstr ""
+"Lai turpinātu, ievadiet šo vērtību. Veiciet atbilstošo testu, lai precizētu"
+
+#: session/forms.py:679
+msgid ""
+"Set this value to proceed. This value will determine the resolution and "
+"surface quality of your print"
+msgstr ""
+"Lai turpinātu, ievadiet šo vērtību. Šī vērtība noteiks izšķirtspēju un "
+"detaļas virsmas kvalitāti"
+
+#: session/forms.py:680
+msgid ""
+"The default value is equal to the nozzle inner diameter, but you can perform "
+"the corresponding test to fine-tune this value"
+msgstr ""
+"Sākotnējā vērtība ir vienāda ar sprauslas iekšējo diametru, bet varat veikt "
+"atbilstošo testu un precizēt šo vērtību"
+
+#: session/forms.py:681
+msgid ""
+"These seven values will be tested at four <b>Printing speeds</b>. You can "
+"change the limiting values"
+msgstr ""
+"Šīs septiņas vērtības tiks testētas ar četriem <b>Printēšanas ātrumiem</b>. "
+"Jūs varat mainīt robežvērtības"
+
+#: session/forms.py:682
+msgid ""
+"These seven values will be tested at four different <b>Bridging printing "
+"speeds</b> (see below). You can change the limiting values"
+msgstr ""
+"Šīs septiņas vērtības tiks testētas ar četriem <b>Tilta printēšanas "
+"ātrumiem</b> (skatīt zemāk). Jūs varat mainīt robežvērtības"
+
+#: session/forms.py:683
+msgid ""
+"These seven values will be tested at four different <b>First-layer printing "
+"speeds</b> (see below). You can change the limiting values"
+msgstr ""
+"Šīs septiņas vērtības tiks testētas ar četriem <b>Pirmā slāņa printēšanas "
+"ātrumiem</b> (skatīt zemāk). Jūs varat mainīt robežvērtības"
+
+#: session/forms.py:684
+msgid ""
+"These seven values will be tested at four different <b>Printing speeds</b> "
+"(see below). You can change the limiting values"
+msgstr ""
+"Šīs septiņas vērtības tiks testētas ar četriem <b>Printēšanas ātrumiem</b> "
+"(skatīt zemāk). Jūs varat mainīt robežvērtības"
+
+#: session/forms.py:685
+msgid ""
+"These seven values will be tested at four different <b>Retraction distances</"
+"b> (see below). You can change the limiting values"
+msgstr ""
+"Šīs septiņas vērtības tiks testētas ar četrām <b>Atvilkšanas distancēm</b> "
+"(skatīt zemāk). Jūs varat mainīt robežvērtības"
+
+#: session/forms.py:686
+msgid ""
+"These seven values will be tested at four different <b>Retraction speeds</b> "
+"(see below). You can change the limiting values"
+msgstr ""
+"Šīs septiņas vērtības tiks testētas ar četriem <b>Atvilkšanas ātrumiem</b> "
+"(skatīt zemāk). Jūs varat mainīt robežvērtības"
+
+#: session/forms.py:687
+msgid ""
+"These seven values will be tested at one <b>First-layer printing speed</b>. "
+"You can change the limiting values"
+msgstr ""
+"Šīs septiņas vērtības tiks testētas ar vienu <b>Pirmā slāņa printēšanas "
+"ātrumu</b>. Jūs varat mainīt robežvērtības"
+
+#: session/forms.py:688
+msgid ""
+"These seven values will be tested at one <b>Printing speed</b>. You can "
+"change the limiting values"
+msgstr ""
+"Šīs septiņas vērtības tiks testētas ar vienu <b>Printēšanas ātrumu</b>. Jūs "
+"varat mainīt robežvērtības"
+
+#: session/forms.py:689
+msgid ""
+"These seven values will be tested while all other processing parameters are "
+"constant. You can change the limiting values"
+msgstr ""
+"Šīs septiņas vērtības tiks testētas, bet pārējās paliks nemainīgas. Jūs "
+"varat mainīt robežvērtības"
+
+#: session/forms.py:690
+msgid "These seven values will be tested. You can change the limiting values"
+msgstr "Šīs septiņas vērtības tiks testētas. Jūs varat mainīt robežvērtības"
+
+#: session/forms.py:691
+msgid "This value was determined in the previous test(s) and cannot be changed"
+msgstr "Šī vērtība tika noskaidrota iepriekšējos testos un nav maināma."
+
+#: session/forms.py:695
+msgid ""
+"This is a core test which helps finding a working retraction distance under "
+"general conditions."
+msgstr ""
+"Šis ir pamata tests, kas ļauj noskaidrot derīgu atvilkšanas distanci "
+"vispārīgā gadījumā."
+
+#: session/forms.py:696
+msgid "This is an additional test to avoid under-extrusion."
+msgstr "Šis ir papildu tests, lai novērstu nepietiekamu ekstrūziju."
+
+#: session/forms.py:697
+msgid ""
+"This test helps you find a base temperature and printing speed. These will "
+"be optimized further in later tests. Since there can be different parameter "
+"combinations that work, but are not optimal for your intended target, this "
+"is an essential test."
+msgstr ""
+"Šis tests ļauj noskaidrot sākotnējās temperatūras un printēšanas ātruma "
+"vērtības. tālākajos testos tās tika precizētas. Šis ir nozīmīgs tests, jo "
+"vairākas vērtību kombinācijas var strādāt, bet ne visas būs optimālas "
+"izvēlētajam mērķim."
+
+#: session/forms.py:698
+msgid "This test is needed to arrive at the most optimal flow-rate."
+msgstr ""
+"Šis tests ir nepieciešams, lai iegūtu optimālāko ekstrūzijas koeficientu."
+
+#: session/forms.py:699
+msgid ""
+"This test is needed to avoid gaps between tracks and find the limits of "
+"horizontal resolution with a given nozzle."
+msgstr ""
+"Šis tests ir nepieciešams, lai izvairītos no spraugām starp līnijām un "
+"noskaidrotu slāņa biezuma apgabalu konkrētajai sprauslai."
+
+#: session/forms.py:700
+msgid "This test is needed to avoid stringing."
+msgstr "Šis tests ir nepieciešams, lai izvairītos no matiņiem."
+
+#: session/forms.py:701
+msgid ""
+"This test is needed to establish good first layer printing settings. A good "
+"first layer is essential to achieving good prints."
+msgstr ""
+"Šis tests ir nepieciešams, lai iegūtu labus pirmā slāņa uzstādījumus. Labs "
+"pirmais slānis ir viens no labu printu priekšnoteikumiem."
+
+#: session/forms.py:702
+msgid ""
+"This test is needed to find Z-offset value in case of non-level print bed or "
+"printbed coating."
+msgstr "Šis tests ir nepieciešams, lai noteiktu pamatnes augstuma nobīdi."
+
+#: session/forms.py:703
+msgid ""
+"This test is needed to find reliable settings for retraction. The best "
+"combination of 3 parameters are determined simulataneously."
+msgstr ""
+"Šis tests ir nepieciešams, lai noskaidrotu uzticamus atvilkšanas "
+"uzstādījumus. Labākā 3 parametru kombinācija tiek noskaidrota, mainot visus "
+"3 parametrus vienlaicīgi."
+
+#: session/forms.py:704
+msgid "This test is needed to find the best bridging settings."
+msgstr "Šis tests ir nepieciešams, lai noskaidrotu labākos tilta uzstādījumus."
+
+#: session/forms.py:705
+msgid ""
+"This test is needed to find the best retraction restart distance and "
+"coasting settings."
+msgstr ""
+
+#: session/forms.py:706
+msgid ""
+"This test is needed to find the limits of printing resolution (layer "
+"thickness)."
+msgstr ""
+
+#: session/forms.py:707
+msgid ""
+"This test is needed to solve possible issues with adhesion between tracks if "
+"there are any. Good weld-together is essential to achieving good mechanical "
+"properties in any printed part."
+msgstr ""
+
+#: session/forms.py:711
+msgid ""
+"<ul><li>If the print does not adhere to the build platform, increase the "
+"<b>First-layer extrusion temperature</b> and re-run the test.</li><li>If "
+"this does not help, increase the <b>Printbed temperature</b> or apply "
+"different coating/spray on the build platform.</li><li>If you cannot find "
+"acceptable combination of two parameters, re-run the test with different "
+"<b>First-layer-extrusion-temperature</b> value and/or using different "
+"<b>Printing-speed</b> range.</li></ul>"
+msgstr ""
+
+#: session/models.py:571 session/views.py:261
+msgid "Z-Offset"
+msgstr "Z nobīde"
+
+#: session/models.py:572
+msgid "First-Layer Track Height vs First-Layer Printing Speed"
+msgstr "Pirmā slāņa augstums un Pirmā slāņa printēšanas ātrums"
+
+#: session/models.py:573 session/views.py:263
+msgid "First-Layer Track Width"
+msgstr "Pirmā slāņa līnijas platums"
+
+#: session/models.py:574
+msgid "Extrusion Temperature vs Printing Speed"
+msgstr "Ekstrūzijas temperatūra un Printēšanas ātrums"
+
+#: session/models.py:575
+msgid "Track Height vs Printing Speed"
+msgstr "Līnijas augstums un Printēšanas ātrums"
+
+#: session/models.py:576 session/views.py:266
+msgid "Track Width"
+msgstr "Līnijas platums"
+
+#: session/models.py:577 session/views.py:267
+msgid "Extrusion Multiplier"
+msgstr "Ekstrūzijas daudzums"
+
+#: session/models.py:578 session/views.py:268
+msgid "Printing Speed"
+msgstr "Printēšans ātrums"
+
+#: session/models.py:579
+msgid "Extrusion Temperature vs Retraction Distance"
+msgstr "Ekstrūzijas temperatūra un Retrakcijas attālums"
+
+#: session/models.py:580
+msgid "Retraction Distance vs Printing Speed"
+msgstr "Retrakcijas attālums un Printēšanas ātrums"
+
+#: session/models.py:581 session/views.py:271
+msgid "Retraction Distance"
+msgstr "Retrakcijas attālums"
+
+#: session/models.py:582
+msgid "Retraction Distance vs Retraction Speed"
+msgstr "Retrakcijas attālums un Retrakcijas ātrums"
+
+#: session/models.py:583
+msgid "Retraction Restart Distance vs Printing Speed And Coasting Distance"
+msgstr ""
+"Re-retrakcijas attālums un Printēšanas ātrums un neekstrūdēšanas attālums"
+
+#: session/models.py:584
+msgid "Bridging Extrusion Multiplier vs Bridging Printing Speed"
+msgstr "Tilta ekstrūzijas daudzums un Tilta printēšanas ātrums"
+
+#: session/models.py:589
+msgid "Core"
+msgstr "Pamata"
+
+#: session/models.py:591
+msgid "Optional"
+msgstr "Papildus"
+
+#: session/templates/session/404.html:7
+msgid "Sorry! This page does not exist!"
+msgstr "Jūsu meklētā lapa neeksistē!"
+
+#: session/templates/session/500.html:7
+msgid "Something went wrong!"
+msgstr "Gadījās kļūda!"
+
+#: session/templates/session/500.html:9
+msgid ""
+"Feel free to contact our <a href=\"mailto:support@fabcontrol.com\">support</"
+"a>!"
+msgstr ""
+"Varat sazināties ar <a href=\"mailto:support@fabcontrol.com\">lietotāju "
+"atbalstu</a>"
+
+#: session/templates/session/dashboard.html:11
+msgid "Welcome to 3DOptimizer!"
+msgstr "Laipni lūgti 3DOptimizerī"
+
+#: session/templates/session/dashboard.html:19
+#, python-format
+msgid "%(first_name)s %(last_name)s invited you to collaborate in %(company)s."
+msgstr ""
+"%(first_name)s %(last_name)s aicina pievienoties uzņēmuma %(company)s "
+"komandai."
+
+#: session/templates/session/dashboard.html:20
+msgid "Join"
+msgstr "Pievienoties"
+
+#: session/templates/session/dashboard.html:21
+msgid "Decline"
+msgstr "Noraidīt"
+
+#: session/templates/session/dashboard.html:30
+#: session/templates/session/navbar.html:65
+#: session/templates/session/session_manager.html:12
+msgid "Testing Sessions"
+msgstr "Testēšans sesijas"
+
+#: session/templates/session/dashboard.html:32
+msgid "View all Sessions"
+msgstr "Visas testēšans sesijas"
+
+#: session/templates/session/dashboard.html:37
+#: session/templates/session/machine_manager.html:12
+#: session/templates/session/navbar.html:68
+msgid "3D Printers"
+msgstr "3D printeri"
+
+#: session/templates/session/dashboard.html:39
+msgid "View all 3D Printers"
+msgstr "Visi 3D printeri"
+
+#: session/templates/session/dashboard.html:44
+#: session/templates/session/material_manager.html:12
+#: session/templates/session/navbar.html:71
+msgid "Materials"
+msgstr "Materiāli"
+
+#: session/templates/session/dashboard.html:46
+msgid "View all Materials"
+msgstr "Visi materiāli"
+
+#: session/templates/session/dashboard.html:54
+msgid "View all Users"
+msgstr "Visi lietotāji"
+
+#: session/templates/session/dashboard.html:63
+msgid "Start a new testing session"
+msgstr "Jauna testēšans sesija"
+
+#: session/templates/session/dashboard.html:68
+#, python-format
+msgid ""
+"Video overview and user manual are available in <a href=\"%(help)s\">Help "
+"Center</a>"
+msgstr ""
+"Video pamācība un lietošanas instrukcija atrodamas <a href=\"%(help)s"
+"\">Palīdzības centrā</a>"
+
+#: session/templates/session/dashboard.html:69
+msgid "When you return, this page will show your recent testing sessions."
+msgstr ""
+"Kad atgirezīsieties, šeit būs atrodamas jūsu nesenās testēšanas sesijas."
+
+#: session/templates/session/dashboard.html:71
+msgid "Upgrade to add multiple users"
+msgstr "Pievienot lietotājus"
+
+#: session/templates/session/dashboard.html:88
+msgid "Recent Testing Sessions"
+msgstr "Nesenās testēšans sesijas"
+
+#: session/templates/session/dashboard.html:92
+#: session/templates/session/dashboard.html:101
+#: session/templates/session/new_session.html:11
+#: session/templates/session/session_manager.html:17
+#: session/templates/session/session_manager.html:26
+msgid "New Testing Session"
+msgstr "Jauna testēšans sesija"
+
+#: session/templates/session/dashboard.html:94
+#: session/templates/session/session_manager.html:19
+msgid "Upgrade to create a new Testing Session"
+msgstr "Apmaksāt jaunu sesiju izveidošanu"
+
+#: session/templates/session/dashboard.html:97
+#: session/templates/session/session_manager.html:22
+#, python-format
+msgid ""
+"To create new Testing Sessions, ask %(first_name)s %(last_name)s to upgrade "
+"account"
+msgstr ""
+"Lūdziet %(first_name)s %(last_name)s apmaksāt kontu, lai izveidotu jaunu "
+"sesiju."
+
+#: session/templates/session/dashboard.html:110
+#: session/templates/session/session_info.html:6
+#: session/templates/session/session_manager.html:36
+msgid "ID"
+msgstr "Nr."
+
+#: session/templates/session/dashboard.html:116
+#: session/templates/session/session_manager.html:42
+msgid "Tests"
+msgstr "Testi"
+
+#: session/templates/session/dashboard.html:117
+#: session/templates/session/machine_manager.html:28
+#: session/templates/session/material_manager.html:28
+#: session/templates/session/session_info.html:55
+#: session/templates/session/session_manager.html:43
+msgid "Created"
+msgstr "Izveidots"
+
+#: session/templates/session/guided_mode/guided_session.html:13
+#: session/templates/session/session.html:13
+#, python-format
+msgid "TEST %(number)s"
+msgstr "%(number)s. TESTS"
+
+#: session/templates/session/guided_mode/guided_session.html:20
+#: session/templates/session/session.html:20
+#, python-format
+msgid "Read more and see samples in <a %(help_link)s><b>Help Center</b></a>"
+msgstr ""
+"Vairāk informācijas un piemēri atrodami <a %(help_link)s><b>Palīdzības "
+"centrā</b></a>"
+
+#: session/templates/session/guided_mode/session_generate.html:4
+msgid "Enter parameter values to be tested:"
+msgstr "Ievadiet parametru vērtības:"
+
+#: session/templates/session/guided_mode/session_generate.html:11
+msgid "Re-validate Previous Test"
+msgstr "Iepriekšējais tests"
+
+#: session/templates/session/guided_mode/session_generate.html:15
+#: session/templates/session/session_generate.html:7
+msgid "Download .GCODE"
+msgstr "Lejupielādēt Gkoda failu"
+
+#: session/templates/session/guided_mode/session_validate.html:8
+#: session/templates/session/session_validate.html:7
+#, python-format
+msgid ""
+"<b>Print the downloaded test file</b><br>If the test gcode didn't download, "
+"you can get it <a href=\"%(gcode_link)s\">here</a>."
+msgstr ""
+"<b>Izprintējiet lejupielādēto Gkodu</b><br>Ja Gkoda lejupielādēšana "
+"neizdevās, varat to vēlreiz lejupielādēt <a href=\"%(gcode_link)s\">šeit</a>."
+
+#: session/templates/session/guided_mode/session_validate.html:13
+#: session/templates/session/session_validate.html:12
+msgid "Inspect the printed test structure"
+msgstr "Novērtējiet izprintēto detaļu"
+
+#: session/templates/session/guided_mode/session_validate.html:28
+msgid "Select all the best parameter combinations"
+msgstr "Izvēlies labākās parametru kombinācijas"
+
+#: session/templates/session/guided_mode/session_validate.html:38
+msgid "Back to Setup"
+msgstr "Atgriezties pie parametriem"
+
+#: session/templates/session/guided_mode/session_validate.html:41
+#: session/templates/session/session_validate.html:35
+msgid "Next Test"
+msgstr "Nākošais tests"
+
+#: session/templates/session/machine_detail.html:10
+msgid "3D Printer Editor"
+msgstr "3D printera rediģēšana"
+
+#: session/templates/session/machine_detail.html:17
+#: session/templates/session/machine_detail.html:77
+msgid ""
+"The changes will not be reflected in sessions already using this printer."
+msgstr "Izmaiņas neietekmēs jau iesāktās testēšanas sesijas."
+
+#: session/templates/session/machine_detail.html:19
+#: session/templates/session/machine_form.html:16
+msgid "Load from preset"
+msgstr "Aizpildīt no parauga"
+
+#: session/templates/session/machine_detail.html:21
+#: session/templates/session/machine_form.html:18
+msgid "Select from list"
+msgstr "Izvēlēties"
+
+#: session/templates/session/machine_detail.html:23
+#: session/templates/session/machine_form.html:20
+msgid "OTHER PRINTER (enter values below)"
+msgstr "CITS PRINTERIS (aizpildīt laukus zemāk)"
+
+#: session/templates/session/machine_detail.html:39
+#: session/templates/session/machine_form.html:36
+msgid "Extruder"
+msgstr "Ekstrūderis"
+
+#: session/templates/session/machine_detail.html:46
+#: session/templates/session/machine_form.html:43
+msgid "Heating chamber"
+msgstr "Apsildāma printēšanas kamera"
+
+#: session/templates/session/machine_detail.html:52
+#: session/templates/session/machine_form.html:49
+msgid "Print bed"
+msgstr "Printēšans virsma"
+
+#: session/templates/session/machine_detail.html:58
+#: session/templates/session/machine_form.html:55
+msgid "Custom GCODE scripts"
+msgstr "Specifiski Gkodi"
+
+#: session/templates/session/machine_detail.html:61
+#: session/templates/session/machine_form.html:58
+msgid ""
+"Header is prepended to test routine GCODEs. This can be altered to better "
+"accomodate certain printer features, such as autocalibration."
+msgstr ""
+"Sākuma Gkods tiek pievienots testa Gkoda sākumā. Šo sadaļu var izmantot, "
+"piemēram autokalibrācijas komandām."
+
+#: session/templates/session/machine_detail.html:63
+#: session/templates/session/machine_form.html:60
+msgid ""
+"Homing script is executed after printer has heated up, but before actual "
+"printing starts."
+msgstr ""
+"Atgriezšanās komandas tiek izpildītas pēc tam, kad printeris ir uzsilis, bet "
+"pirms printēšanas."
+
+#: session/templates/session/machine_detail.html:65
+#: session/templates/session/machine_form.html:62
+msgid ""
+"Footer is appended to test routine GCODEs. Homing command is recommended "
+"here, to move the nozzle away from the printed structure."
+msgstr ""
+"Beigu Gkods tiek pievienots testa Gkoda beigās. Šeit ieteicams pievienot "
+"Atgriezšanās komandu, lai atvirzītu sprauslu nost no printētās detaļas."
+
+#: session/templates/session/machine_detail.html:68
+#: session/templates/session/machine_form.html:65
+msgid "Offset from center of printbed"
+msgstr "Nobīde no platformas centra"
+
+#: session/templates/session/machine_detail.html:72
+#: session/templates/session/machine_form.html:69
+msgid ""
+"Test structure is centered on the printbed by default. Offset may be used to "
+"shift the test structure on build-plate."
+msgstr ""
+"Testa struktūra parasti tiek printēta platformas centrā. Nobīdi var "
+"izmantot, lai testa struktūru novietotu platformas malā."
+
+#: session/templates/session/machine_form.html:76
+#: session/templates/session/material_form.html:27
+msgid "Create"
+msgstr "Izveidot"
+
+#: session/templates/session/machine_manager.html:25
+msgid "Model"
+msgstr "Modelis"
+
+#: session/templates/session/machine_manager.html:27
+msgid "Nozzle diameter (mm)"
+msgstr "Sprauslas diametrs (mm)"
+
+#: session/templates/session/machine_manager.html:48
+#: session/templates/session/material_manager.html:48
+msgid "Edit"
+msgstr "Rediģēt"
+
+#: session/templates/session/machine_manager.html:52
+#: session/templates/session/material_manager.html:52
+#: session/templates/session/session_manager.html:72
+msgid "Delete"
+msgstr "Dzēst"
+
+#: session/templates/session/material_detail.html:11
+msgid "Material Editor"
+msgstr "Materiāla rediģēšana"
+
+#: session/templates/session/navbar.html:39
+msgid "Invoices"
+msgstr "Rēķini"
+
+#: session/templates/session/navbar.html:41
+msgid "Account Settings"
+msgstr "Konta ustādījumi"
+
+#: session/templates/session/navbar.html:46
+msgid "Redeem a voucher"
+msgstr "Izmantot kuponu"
+
+#: session/templates/session/navbar.html:51
+msgid "Sign Out"
+msgstr "Iziet"
+
+#: session/templates/session/navbar.html:62
+msgid "Dashboard"
+msgstr "Kopsavilkums"
+
+#: session/templates/session/navbar.html:79
+msgid "Help Center"
+msgstr "Palīdzība"
+
+#: session/templates/session/new_session.html:24
+msgid "Start Testing Session"
+msgstr "Sākt Testēšans sesiju"
+
+#: session/templates/session/session_info.html:16
+msgid "Change session name"
+msgstr "Pārdēvēt sesiju"
+
+#: session/templates/session/session_info.html:60
+msgid "Completed"
+msgstr "Pabeigts"
+
+#: session/templates/session/session_info.html:61
+#, python-format
+msgid "%(test)s Test"
+msgid_plural "%(test)s Tests"
+msgstr[0] "%(test)s tests"
+msgstr[1] "%(test)s testi"
+msgstr[2] ""
+
+#: session/templates/session/session_info.html:65
+msgid "Progress"
+msgstr "Progress"
+
+#: session/templates/session/session_info.html:78
+msgid "Back to Session"
+msgstr "Atgriezties pie testēšanas"
+
+#: session/templates/session/session_info.html:81
+msgid "Results"
+msgstr "Rezultāti"
+
+#: session/templates/session/session_manager.html:44
+msgid "Performer"
+msgstr "Izpildītājs"
+
+#: session/templates/session/session_manager.html:68
+msgid "Open"
+msgstr "Atvērt"
+
+#: session/templates/session/session_nav.html:4
+msgid "Setup"
+msgstr "Konfigurācija"
+
+#: session/templates/session/session_nav.html:7
+msgid "Print and validate"
+msgstr "Printēšana un izvērtēšana"
+
+#: session/templates/session/session_overview.html:13
+msgid "Slicing profiles"
+msgstr "Slaisošanas konfigurācijas"
+
+#: session/templates/session/session_overview.html:18
+#: session/templates/session/session_overview.html:21
+#: session/templates/session/session_overview.html:24
+#, python-format
+msgid "Version %(version)s"
+msgstr "Versija %(version)s"
+
+#: session/templates/session/session_overview.html:30
+msgid "Select profile quality type"
+msgstr "Izvēlēties profila kvalitātes tipu"
+
+#: session/templates/session/session_overview.html:39
+msgid "Existing Cura profile to use as template:"
+msgstr "Esošā Cura konfigurācija, kuru izmatot kā paraugu:"
+
+#: session/templates/session/session_overview.html:45
+msgid "*You can find your printer profiles in Cura profile manager."
+msgstr "*Konfigurācijas var atrsast Cura profilu menedžerī."
+
+#: session/templates/session/session_overview.html:48
+msgid "Download profile"
+msgstr "Lejupielādēt konfigurāciju"
+
+#: session/templates/session/session_overview.html:57
+msgid "Test reports"
+msgstr "Testēšanas atskaite"
+
+#: session/templates/session/session_overview.html:62
+msgid "Download Test Report"
+msgstr "Lejupielādēt testēšanas atskaiti"
+
+#: session/templates/session/session_overview.html:67
+msgid "Selected parameters"
+msgstr "Izvēlie parametri"
+
+#: session/templates/session/session_overview.html:77
+#: session/templates/session/session_overview.html:82
+#: session/templates/session/session_overview.html:88
+#, python-format
+msgid "Selected <b>%(param)s</b> value:"
+msgstr "Izvēlētais <b>%(param)s</b>:"
+
+#: session/templates/session/session_validate.html:23
+msgid "Select the best parameter combination"
+msgstr "Izvēlies labākās parametru kombinācijas"
+
+#: session/templates/session/session_validate.html:32
+msgid "Back"
+msgstr "Atpakaļ"
+
+#: session/templates/session/session_validated.html:6
+msgid "Validated values:"
+msgstr "Izvēlētās vērtības:"
+
+#: session/templates/session/session_validated.html:22
+msgid "Revert to this test"
+msgstr "Argriezties pie šī testa"
+
+#: session/templates/session/session_validated.html:29
+msgid "Are you sure you want to proceed?"
+msgstr "Vai esat pārliecināti, ka vēlaties turpināt?"
+
+#: session/templates/session/session_validated.html:35
+msgid "Reverting to this test will discard all progress achieved after it."
+msgstr "Atgrišoties pie šī testa, zaudēsiet visus tālāko testu rezultātus."
+
+#: session/templates/session/session_validated.html:39
+msgid "Revert"
+msgstr "Atgriezties"
+
+#: session/templates/session/team_stats.html:12
+#, python-format
+msgid "%(company)s Users"
+msgstr "%(company)s lietotāji"
+
+#: session/templates/session/team_stats.html:18
+msgid "Manage users"
+msgstr "Rediģēt lietotājus"
+
+#: session/templates/session/team_stats.html:29
+msgid "Latest session"
+msgstr "Jaunākā sesija"
+
+#: session/templates/session/team_stats.html:30
+msgid "Last 7 days"
+msgstr "Pēdējās 7 dienās"
+
+#: session/templates/session/team_stats.html:31
+msgid "Last 30 days"
+msgstr "Pēdējās 30 dienās"
+
+#: session/templates/session/team_stats.html:32
+msgid "Last 90 days"
+msgstr "Pēdējās 90 dienās"
+
+#: session/templates/session/team_stats.html:33
+msgid "Total"
+msgstr "Kopā"
+
+#: session/views.py:101
+#, python-brace-format
+msgid "Material \"{material}\" has been created!"
+msgstr "Izveidots materiāls \"{material}\"!"
+
+#: session/views.py:138
+#, python-brace-format
+msgid "{printer} has been updated!"
+msgstr "Printera \"{printer}\" izmaiņas saglabātas!"
+
+#: session/views.py:193
+#, python-brace-format
+msgid "3D Printer \"{printer}\" has been created!"
+msgstr "Izveidots 3D printeris \"{printer}\"!"
+
+#: session/views.py:262
+msgid "First-Layer Track Height vs<br>First-Layer Printing Speed"
+msgstr "Pirmā slāņa augstums un<br>Pirmā slāņa printēšanas ātrums"
+
+#: session/views.py:264
+msgid "Extrusion Temperature vs<br>Printing Speed"
+msgstr "Ekstrūzijas temperatūra un<br>Printēšanas ātrums"
+
+#: session/views.py:265
+msgid "Track Height vs<br>Printing Speed"
+msgstr "Līnijas augstums un<br>Printēšanas ātrums"
+
+#: session/views.py:269
+msgid "Extrusion Temperature vs<br>Retraction Distance"
+msgstr "Ekstrūzijas temperatūra un<br>Retrakcijas attālums"
+
+#: session/views.py:270
+msgid "Retraction Distance vs<br>Printing Speed"
+msgstr "Retrakcijas attālums un<br>Printēšanas ātrums"
+
+#: session/views.py:272
+msgid "Retraction Distance vs<br>Retraction Speed"
+msgstr "Retrakcijas attālums un<br>Retrakcijas ātrums"
+
+#: session/views.py:273
+msgid "Retraction Restart Distance vs<br>Printing Speed And Coasting Distance"
+msgstr ""
+"Re-retrakcijas attālums un<br>Printēšanas ātrums un neekstrūdēšanas attālums"
+
+#: session/views.py:274
+msgid "Bridging Extrusion Multiplier vs<br>Bridging Printing Speed"
+msgstr "Tilta ekstrūzijas daudzums un<br>Tilta printēšanas ātrums"
+
+#: session/views.py:400
+#, python-brace-format
+msgid ""
+"Your next test is available in Full Access only. You can skip it and go to "
+"the next available test or <a href={link}>purchase Full Access.</a>"
+msgstr ""
+"Jums nepieciešamais tests pieejams tikai ar Pilnu piekļuvi. Varat doties uz "
+"nākamo pieejamo testu, vai <a href={link}>iegādāties Pilnu piekļuvi.</a>"
+
+#: session/views.py:404
+#, python-brace-format
+msgid ""
+"Your next test is available in Full Access only. You can skip it and go to "
+"the next available test or ask {first_name} {last_name} to upgrade account."
+msgstr ""
+"Jums nepieciešamais tests pieejams tikai ar Pilnu piekļuvi. Varat doties uz "
+"nākamo pieejamo testu, vai lūdziet {first_name} {last_name} apmaksāt kontu."
+
+#~ msgid "Next test"
+#~ msgstr "Nākošais tests"
+
+#~ msgid "Advanced"
+#~ msgstr "Advancēts"
+
+#~ msgid "Guided"
+#~ msgstr "Vadīts režīms"

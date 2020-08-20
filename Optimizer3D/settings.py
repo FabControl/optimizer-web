@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 from os import environ
+from django.utils.translation import gettext_lazy as _
 
 _selected_settings = environ.get('SELECTED_SETTINGS', 'PRODUCTION')
 if _selected_settings == 'PRODUCTION':
@@ -46,6 +47,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'Optimizer3D.middleware.GeoRestrictAccessMiddleware.GeoRestrictAccessMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -110,6 +112,14 @@ TIME_ZONE = 'Europe/Riga'
 DATETIME_FORMAT = 'N j Y H:i'
 
 USE_I18N = True
+
+LANGUAGES = (
+        ('en', _('English')),
+        ('lv', _('Latvian')),
+        )
+LOCALE_PATHS = [
+        os.path.join(BASE_DIR, 'locale')
+        ]
 
 # USE_L10N = True
 
