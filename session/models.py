@@ -539,12 +539,10 @@ class Session(models.Model, DependenciesCopyMixin):
         temp_info = None
         if self._test_info != "":
             temp_info = json.loads(self._test_info)
-            if temp_info["test_number"] != self.test_number:
-                self.update_test_info()
-            self._test_info = json.dumps(temp_info)
-        else:
-            self.update_test_info()
-        self.save()
+
+        if temp_info is None or temp_info["test_number"] != self.test_number:
+            temp_info = self.update_test_info()
+            self.save()
         return temp_info
 
 
