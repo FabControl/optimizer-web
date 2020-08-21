@@ -110,6 +110,7 @@
   element = $('#id_preset_selector')
   element.change(function() {
     var selected_pk = element.children("option:selected").val();
+    if (selected_pk == "") return;
     var url = getBaseUrl() + "/resources/machines/sample/" + selected_pk
     var api_response = $.getJSON(url, function(data) {
       $.each(data, function(key, val) {
