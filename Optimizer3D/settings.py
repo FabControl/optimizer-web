@@ -47,7 +47,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
+    'authentication.middleware.translation.SiteLocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'Optimizer3D.middleware.GeoRestrictAccessMiddleware.GeoRestrictAccessMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',

@@ -5,26 +5,27 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-08-20 09:10+0300\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2020-08-21 14:00+0300\n"
+"Language: lv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : "
 "2);\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"X-Generator: Poedit 2.4.1\n"
 
 #: Optimizer3D/settings.py:117
 msgid "English"
-msgstr ""
+msgstr "Angļu"
 
 #: Optimizer3D/settings.py:118
 msgid "Latvian"
-msgstr ""
+msgstr "Latviešu"
 
 #: authentication/forms.py:28 authentication/forms.py:65
 #: authentication/forms.py:220
@@ -61,11 +62,11 @@ msgstr "Valsts"
 #: authentication/forms.py:86
 #, python-format
 msgid "I agree to %(starttag)sterms of use%(endtag)s"
-msgstr "Piekrītu %(starttag)slietošans noteikumiem%(endtag)s"
+msgstr "Piekrītu %(starttag)slietošanas noteikumiem%(endtag)s"
 
 #: authentication/forms.py:123
 msgid "Password recovery instructions will be sent to this email."
-msgstr "Tālākās norādes tiks nosūtītas uz šo epasta adresi."
+msgstr "Tālākās norādes tiks nosūtītas uz norādīto epasta adresi."
 
 #: authentication/forms.py:189
 msgid "Company name*"
@@ -77,7 +78,7 @@ msgstr "Uzņēmuma adrese*"
 
 #: authentication/forms.py:194
 msgid "Company registration number*"
-msgstr "Uzņēmuma reģ. numurs*"
+msgstr "Uzņēmuma reģistrācijas numurs*"
 
 #: authentication/forms.py:195
 msgid "Company VAT number"
@@ -85,7 +86,7 @@ msgstr "PVN maksātāja numurs"
 
 #: authentication/forms.py:197
 msgid "Show legal info (for EU companies)"
-msgstr "Norādīt uzņēmuma datus(ES uzņēmumiem)"
+msgstr "Norādīt uzņēmuma datus (ES uzņēmumiem)"
 
 #: authentication/forms.py:210
 #, python-brace-format
@@ -108,7 +109,7 @@ msgstr "Vārds"
 
 #: authentication/models.py:131 session/templates/session/navbar.html:45
 msgid "Upgrade to Full Access"
-msgstr "Iegādāties pilnu poekļuvi"
+msgstr "Iegādāties pilnu piekļuvi"
 
 #: authentication/models.py:133
 msgid "Permanent License"
@@ -172,7 +173,7 @@ msgstr "Lai aktivizētu kontu, ievadiet paroli"
 
 #: authentication/templates/authentication/account_activation.html:27
 msgid "Activate account"
-msgstr "Aktivizēt"
+msgstr "Aktivizēt kontu"
 
 #: authentication/templates/authentication/account_activation.html:33
 msgid "Account activation link is not valid."
@@ -229,7 +230,7 @@ msgid ""
 "By pressing \"Cancel subscription\", you confirm cancellation of full access "
 "subscription."
 msgstr ""
-"Nospiežot \"Atcelt abonemetu\", jūs atsakaties no pilnas piekļuves "
+"Nospiežot \"Atcelt abonementu\", jūs atsakaties no pilnas piekļuves "
 "3DOptimizer."
 
 #: authentication/templates/authentication/legal_info.html:76
@@ -239,7 +240,7 @@ msgstr "Varēsiet izmantot pilnu piekļuvi līdz %(end_date)s."
 
 #: authentication/templates/authentication/legal_info.html:84
 msgid "Payment method:"
-msgstr "Norēķinu karte"
+msgstr "Maksājuma veids:"
 
 #: authentication/templates/authentication/legal_info.html:84
 msgid "Change"
@@ -247,7 +248,7 @@ msgstr "Mainīt"
 
 #: authentication/templates/authentication/legal_info.html:86
 msgid "You don't have active subscription."
-msgstr "Nav aktīvu abonementu"
+msgstr "Nav aktīvu abonementu."
 
 #: authentication/templates/authentication/legal_info.html:87
 #: payments/templates/payments/plans.html:113
@@ -330,7 +331,7 @@ msgid ""
 "If you leave company, you won't have access to it's printers, materials and "
 "testing sessions."
 msgstr ""
-"Pametot uzņēmumu, jums tiks liegta piekļuve uzņēmuma printeriem, materiāliem "
+"Pametot uzņēmumu jums tiks liegta piekļuve uzņēmuma printeriem, materiāliem "
 "un testēšanas sesijām."
 
 #: authentication/templates/authentication/legal_info.html:151
@@ -340,13 +341,13 @@ msgid ""
 "By pressing \"Remove\", you confirm removal of <b>%(first)s %(last)s</b> "
 "from your company."
 msgstr ""
-"Nospiežot \"Izņemt\", jūs apstiprinat <b>%(first)s %(last)s</b> noņemšanu no "
+"Nospiežot \"Izņemt\", jūs apstiprināt <b>%(first)s %(last)s</b> izņemšanu no "
 "uzņēmuma."
 
 #: authentication/templates/authentication/legal_info.html:189
 #: authentication/templates/authentication/legal_info.html:229
 msgid "Remove from corporation"
-msgstr "Noņemt no uzņēmuma"
+msgstr "Izņemt no uzņēmuma"
 
 #: authentication/templates/authentication/legal_info.html:233
 #, python-format
@@ -354,20 +355,20 @@ msgid ""
 "By pressing \"Remove\", you confirm removal of <b>%(name)s</b> from your "
 "company."
 msgstr ""
-"Nospiežot \"Izņemt\", jūs apstiprinat <b>%(name)s</b> noņemšanu no uzņēmuma."
+"Nospiežot \"Izņemt\", jūs apstiprināt <b>%(name)s</b> izņemšanu no uzņēmuma."
 
 #: authentication/templates/authentication/legal_info.html:259
 msgid "Invite user"
-msgstr "Uzaicini lietotāju"
+msgstr "Uzaicināt lietotāju"
 
 #: authentication/templates/authentication/legal_info.html:269
 #, python-format
 msgid "%(count)s of %(allowed)s users registered"
-msgstr "%(count)s no %(allowed)s lietotājiem reģistrēti"
+msgstr "Reģistrēti %(count)s no %(allowed)s lietotājiem"
 
 #: authentication/templates/authentication/legal_info.html:275
 msgid "Upgrade to add more users"
-msgstr "Pievienot vēl lietotājus"
+msgstr "Atjaunināt, lai pievienotu papildu lietotājus"
 
 #: authentication/templates/authentication/login.html:34
 msgid "Sign in"
@@ -438,7 +439,7 @@ msgstr "Tuvākajās minūtēs saņemsiet epastu ar paroles atjaunošanas norād�
 
 #: authentication/templates/authentication/password_reset_done.html:7
 msgid "If you don't receive email, please check your spam folder."
-msgstr "Ja nesaņemat epastu, lūdzu pārbaudiet mēstules mapi."
+msgstr "Ja nesaņēmāt epastu, lūdzu, pārbaudiet mēstuļu (spam) mapi."
 
 #: authentication/templates/authentication/signup.html:15
 msgid "Individual account (single user)"
@@ -476,11 +477,11 @@ msgstr "Parole nomainīta"
 
 #: authentication/views.py:220
 msgid "Your email address was confirmed and account activated."
-msgstr "Jūsu konts ir aktivizēts."
+msgstr "Jūsu epasta adrese ir pārbaudīta un konts ir aktivizēts."
 
 #: authentication/views.py:248
 msgid "User already invited or registered"
-msgstr "Lietotājs jau uzaicināts, vai jau reģistrējies"
+msgstr "Lietotājs ir jau uzaicināts vai reģistrējies"
 
 #: authentication/views.py:253
 msgid "Friend's email"
@@ -509,17 +510,17 @@ msgid ""
 "You can use default <a href=\"{signup}\">sign up form</a> or <a href="
 "\"{login}\">log in </a> to your account."
 msgstr ""
-"Izmanto standarta <a href=\"{signup}\">reģistrēšanās formu</a>, vai <a href="
+"Izmanto standarta <a href=\"{signup}\">reģistrēšanās formu</a> vai <a href="
 "\"{login}\">ienāc</a> ar esošo kontu."
 
 #: authentication/views.py:356
 msgid "Account changed successfully"
-msgstr "Izmaiņas saglabātas"
+msgstr "Izmaiņas veiksmīgi saglabātas"
 
 #: authentication/views.py:486
 #, python-brace-format
 msgid "{email} already invited or joined another corporation"
-msgstr "{email} jau uzaicināts, vai pievienojies citam uzņēmumam"
+msgstr "{email} ir jau uzaicināts vai ir pievienojies citam uzņēmumam"
 
 #: authentication/views.py:506
 #, python-brace-format
@@ -528,7 +529,7 @@ msgstr "Jūs pievienojāties {team} komandai"
 
 #: payments/forms.py:58
 msgid "Redeem a voucher "
-msgstr "Izmantot kuponu"
+msgstr "Izmantot kuponu "
 
 #: payments/forms.py:63
 msgid "Redeem"
@@ -584,11 +585,11 @@ msgstr "Privātais"
 
 #: payments/templates/payments/plans.html:72
 msgid "Business"
-msgstr "Uzņēmuma"
+msgstr "Biznesa"
 
 #: payments/templates/payments/plans.html:75
 msgid "Education"
-msgstr "Studiju"
+msgstr "Izglītības"
 
 #: payments/templates/payments/plans.html:99
 #: payments/templates/payments/plans.html:158
@@ -599,13 +600,13 @@ msgstr "Visi testi"
 #: payments/templates/payments/plans.html:100
 #: payments/templates/payments/plans.html:159
 msgid "Full guided testing mode"
-msgstr "Pilnīgi vadīts testēšanas režīms"
+msgstr "Pilns, vadīts (guided) testēšanas režīms"
 
 # TODO improve translation
 #: payments/templates/payments/plans.html:101
 #: payments/templates/payments/plans.html:160
 msgid "Advanced testing mode"
-msgstr "Advancētais testēšanas režīms"
+msgstr "Profesionāļu (Advanced) testēšanas režīms"
 
 #: payments/templates/payments/plans.html:102
 #: payments/templates/payments/plans.html:162
@@ -627,26 +628,26 @@ msgstr ""
 
 #: payments/templates/payments/plans.html:138
 msgid "Payment plans"
-msgstr "Maksāšanas plāni"
+msgstr "Maksājumu plāni"
 
 #: payments/templates/payments/plans.html:161
 #, python-format
 msgid "%(users)s user included"
 msgid_plural "%(users)s users included"
-msgstr[0] "%(users)s lietotājs iekļauts"
-msgstr[1] "%(users)s lietotāji iekļauti"
+msgstr[0] "Iekļauts %(users)s lietotājs"
+msgstr[1] "Iekļauti %(users)s lietotāji"
 msgstr[2] ""
 
 #: payments/templates/payments/plans.html:184
 #, python-format
 msgid "If you need different setup or more users, contact %(support)s"
 msgstr ""
-"Ja nepieciešams cita konfigurācija, vai vairāk lietotāju, sazinietes "
+"Ja nepieciešama cita konfigurācija vai vairāk lietotāju, sazinieties ar "
 "%(support)s"
 
 #: payments/templates/payments/plans.html:190
 msgid "Individual account"
-msgstr "Individuālais konts"
+msgstr "Personīgais konts"
 
 #: payments/templates/payments/plans.html:193
 #, python-format
@@ -655,8 +656,8 @@ msgid ""
 "%(support)s>contact support</a> after creating a free account to activate."
 msgstr ""
 "Pilnas piekļuves bezmaksas konts studentiem un pasniedzējiem - pēc "
-"individuālā konta izveidošanas, </br><a %(support)s>sazinieties ar atbalstu</"
-"a>."
+"individuālā konta izveidošanas </br><a %(support)s>sazinieties ar klientu "
+"atbalstu</a>."
 
 #: payments/templates/payments/plans.html:196
 msgid "Educational institution account"
@@ -673,7 +674,7 @@ msgstr "Maksājums tika atcelts"
 
 #: payments/views.py:111 payments/views.py:134
 msgid "Your session has expired"
-msgstr "Jūsu sesija vairs nav derīga"
+msgstr "Jūsu sesija ir beigusies"
 
 #: payments/views.py:115 payments/views.py:361
 #, python-format
@@ -685,7 +686,7 @@ msgstr[2] ""
 
 #: payments/views.py:119
 msgid "Subscription successful"
-msgstr "Abonementi uzsākts"
+msgstr "Abonements veiksmīgi uzsākts"
 
 #: payments/views.py:126
 msgid "We haven't received your payment yet. Please check after few minutes"
@@ -717,7 +718,7 @@ msgstr "Vizuālā kvalitāte"
 
 #: session/choices.py:18
 msgid "Short Printing Time"
-msgstr "Īss printēšans laiks"
+msgstr "Īss drukāšanas laiks"
 
 #: session/forms.py:178
 msgid "Min temperature (°C)"
@@ -741,7 +742,7 @@ msgstr "Max. temperatūra (°C)"
 
 #: session/forms.py:183
 msgid "Same as above."
-msgstr "Tāpat kā ieprikšējam laukam."
+msgstr "Tāpat kā iepriekšējam laukam."
 
 #: session/forms.py:186 session/templates/session/material_manager.html:26
 msgid "Filament diameter (mm)"
@@ -807,14 +808,14 @@ msgid ""
 "Mechanical Strength and Short Printing Time targets require <a href="
 "\"{link}\">Full Access</a>"
 msgstr ""
-"Lai izvēlētos mehānisko izturību, vai samazinātu printēšanas laiku, "
+"Lai izvēlētos mehānisko izturību vai samazinātu printēšanas laiku, "
 "nepieciešama <a href=\"{link}\">Pilna piekļuve</a>"
 
 #: session/forms.py:268
 #, python-brace-format
 msgid "Advanced mode require <a href=\"{link}\">Full Access</a>"
 msgstr ""
-"Lai izvēlētos advancēto testēšanas režīmu nepieciešama <a href="
+"Lai izvēlētos profesionāļu (Advanced) testēšanas režīmu nepieciešama <a href="
 "\"{link}\">Pilna piekļuve</a>"
 
 #: session/forms.py:532
@@ -855,7 +856,7 @@ msgstr "Beigu Gkods"
 
 #: session/forms.py:549
 msgid "Homing script"
-msgstr "Atgriezšanās Gkods"
+msgstr "Atgriešanās (Homing) Gkods"
 
 #: session/forms.py:589 session/forms.py:617
 msgid "Gcode tool index"
@@ -891,7 +892,7 @@ msgstr "Tilta detaļas dzesēšana"
 
 #: session/forms.py:647
 msgid "Bridging printing speed"
-msgstr "Titla printēšans ātrums"
+msgstr "Tilta drukāšanas ātrums"
 
 #: session/forms.py:648
 msgid "Chamber temperature"
@@ -911,7 +912,7 @@ msgstr "Ekstrūzijas daudzums"
 
 #: session/forms.py:652
 msgid "Extrusion temperature"
-msgstr "Ekstrūzijas daudzums"
+msgstr "Ekstrūzijas temperatūra"
 
 #: session/forms.py:653
 msgid "First-layer extrusion temperature"
@@ -919,7 +920,7 @@ msgstr "Pirmā slāņa ekstrūzijas temperatūra"
 
 #: session/forms.py:654
 msgid "First-layer printing speed"
-msgstr "Printēšans ātrums"
+msgstr "Pirmā slāņa drukāšanas ātrums"
 
 #: session/forms.py:655
 msgid "First-layer track height"
@@ -931,15 +932,15 @@ msgstr "Pirmā slāņa līnijas platums"
 
 #: session/forms.py:658
 msgid "Print bed coating"
-msgstr "Printēšans virsmas pārklājums"
+msgstr "Drukāšanas virsmas pārklājums"
 
 #: session/forms.py:659
 msgid "Print bed temperature"
-msgstr "Printēšanas virsmas temperatūra"
+msgstr "Drukāšanas virsmas temperatūra"
 
 #: session/forms.py:660
 msgid "Printing speed"
-msgstr "Printēšans ātrums"
+msgstr "Drukāšanas ātrums"
 
 #: session/forms.py:661
 msgid "Retraction distance"
@@ -978,7 +979,7 @@ msgid ""
 "Set a value from the range 20-50 mm/s for printing flexible materials, or "
 "30-70 mm/s for printing harder materials"
 msgstr ""
-"Elastīgajiem materiāliem ieteicamais apgabals ir 20-50 mm/s, bet cietākiem "
+"Elastīgajiem materiāliem ieteicamais apgabals ir 20-50 mm/s, cietākiem "
 "materiāliem 30-70 mm/s."
 
 #: session/forms.py:672
@@ -986,8 +987,8 @@ msgid ""
 "Set part cooling. Active part cooling is required when printing using high "
 "deposition rates or when printing fine details"
 msgstr ""
-"Aktīvā detaļas dzesēšana nepieciešama printējot lielā ātrumā, vai printējot "
-"smalkas detaļas"
+"Detaļas dzesēšanas uzstādīšana. Aktīvā detaļas dzesēšana nepieciešama "
+"printējot lielā ātrumā vai printējot smalkas detaļas"
 
 #: session/forms.py:673
 msgid "Set the range of <b>Retraction distances</b> to be tested"
@@ -998,7 +999,7 @@ msgid ""
 "Set the range to 10-25 mm/s for printing flexible materials, or 15-35 mm/s "
 "for harder materials"
 msgstr ""
-"Elastīgajiem materiāliem ieteicamais apgabals ir 10-25 mm/s, bet cietākiem "
+"Elastīgajiem materiāliem ieteicamais apgabals ir 10-25 mm/s, cietākiem "
 "materiāliem 15-35 mm/s."
 
 #: session/forms.py:675
@@ -1006,7 +1007,7 @@ msgid ""
 "Set the range to 20-50 mm/s for printing flexible materials, or to 30-70 mm/"
 "s for printing harder materials"
 msgstr ""
-"Elastīgajiem materiāliem ieteicamais apgabals ir 10-25 mm/s, bet cietākiem "
+"Elastīgajiem materiāliem ieteicamais apgabals ir 10-25 mm/s, cietākiem "
 "materiāliem 15-35 mm/s."
 
 #: session/forms.py:676
@@ -1014,7 +1015,7 @@ msgid ""
 "Set the range to 5-15 mm/s for printing flexible materials, or to 10-30 mm/s "
 "for printing harder materials"
 msgstr ""
-"Elastīgajiem materiāliem ieteicamais apgabals ir 5-15 mm/s, bet cietākiem "
+"Elastīgajiem materiāliem ieteicamais apgabals ir 5-15 mm/s, cietākiem "
 "materiāliem 10-30 mm/s."
 
 #: session/forms.py:677
@@ -1026,7 +1027,8 @@ msgid ""
 "Set this value to proceed. Perform the corresponding test to fine-tune this "
 "value"
 msgstr ""
-"Lai turpinātu, ievadiet šo vērtību. Veiciet atbilstošo testu, lai precizētu"
+"Lai turpinātu, ievadiet šo vērtību. Veiciet atbilstošo testu, lai vērtību "
+"precizētu"
 
 #: session/forms.py:679
 msgid ""
@@ -1049,7 +1051,7 @@ msgid ""
 "These seven values will be tested at four <b>Printing speeds</b>. You can "
 "change the limiting values"
 msgstr ""
-"Šīs septiņas vērtības tiks testētas ar četriem <b>Printēšanas ātrumiem</b>. "
+"Šīs septiņas vērtības tiks testētas ar četriem <b>Drukāšanas ātrumiem</b>. "
 "Jūs varat mainīt robežvērtības"
 
 #: session/forms.py:682
@@ -1057,15 +1059,15 @@ msgid ""
 "These seven values will be tested at four different <b>Bridging printing "
 "speeds</b> (see below). You can change the limiting values"
 msgstr ""
-"Šīs septiņas vērtības tiks testētas ar četriem <b>Tilta printēšanas "
-"ātrumiem</b> (skatīt zemāk). Jūs varat mainīt robežvērtības"
+"Šīs septiņas vērtības tiks testētas ar četriem <b>Tilta drukāšanas ātrumiem</"
+"b> (skatīt zemāk). Jūs varat mainīt robežvērtības"
 
 #: session/forms.py:683
 msgid ""
 "These seven values will be tested at four different <b>First-layer printing "
 "speeds</b> (see below). You can change the limiting values"
 msgstr ""
-"Šīs septiņas vērtības tiks testētas ar četriem <b>Pirmā slāņa printēšanas "
+"Šīs septiņas vērtības tiks testētas ar četriem <b>Pirmā slāņa drukāšanas "
 "ātrumiem</b> (skatīt zemāk). Jūs varat mainīt robežvērtības"
 
 #: session/forms.py:684
@@ -1073,7 +1075,7 @@ msgid ""
 "These seven values will be tested at four different <b>Printing speeds</b> "
 "(see below). You can change the limiting values"
 msgstr ""
-"Šīs septiņas vērtības tiks testētas ar četriem <b>Printēšanas ātrumiem</b> "
+"Šīs septiņas vērtības tiks testētas ar četriem <b>Drukāšanas ātrumiem</b> "
 "(skatīt zemāk). Jūs varat mainīt robežvērtības"
 
 #: session/forms.py:685
@@ -1097,7 +1099,7 @@ msgid ""
 "These seven values will be tested at one <b>First-layer printing speed</b>. "
 "You can change the limiting values"
 msgstr ""
-"Šīs septiņas vērtības tiks testētas ar vienu <b>Pirmā slāņa printēšanas "
+"Šīs septiņas vērtības tiks testētas ar vienu <b>Pirmā slāņa drukāšanas "
 "ātrumu</b>. Jūs varat mainīt robežvērtības"
 
 #: session/forms.py:688
@@ -1105,7 +1107,7 @@ msgid ""
 "These seven values will be tested at one <b>Printing speed</b>. You can "
 "change the limiting values"
 msgstr ""
-"Šīs septiņas vērtības tiks testētas ar vienu <b>Printēšanas ātrumu</b>. Jūs "
+"Šīs septiņas vērtības tiks testētas ar vienu <b>Drukāšanas ātrumu</b>. Jūs "
 "varat mainīt robežvērtības"
 
 #: session/forms.py:689
@@ -1144,7 +1146,7 @@ msgid ""
 "is an essential test."
 msgstr ""
 "Šis tests ļauj noskaidrot sākotnējās temperatūras un printēšanas ātruma "
-"vērtības. tālākajos testos tās tika precizētas. Šis ir nozīmīgs tests, jo "
+"vērtības. Tālākajos testos tās tika precizētas. Šis ir nozīmīgs tests, jo "
 "vairākas vērtību kombinācijas var strādāt, bet ne visas būs optimālas "
 "izvēlētajam mērķim."
 
@@ -1171,7 +1173,7 @@ msgid ""
 "first layer is essential to achieving good prints."
 msgstr ""
 "Šis tests ir nepieciešams, lai iegūtu labus pirmā slāņa uzstādījumus. Labs "
-"pirmais slānis ir viens no labu printu priekšnoteikumiem."
+"pirmais slānis ir viens no labu rezultātu priekšnoteikumiem."
 
 #: session/forms.py:702
 msgid ""
@@ -1197,12 +1199,16 @@ msgid ""
 "This test is needed to find the best retraction restart distance and "
 "coasting settings."
 msgstr ""
+"Šis tests ir nepieciešams, lai atrastu labāko re-retrakcijas attālumu un "
+"neekstrūdēšanas uzstādījumus."
 
 #: session/forms.py:706
 msgid ""
 "This test is needed to find the limits of printing resolution (layer "
 "thickness)."
 msgstr ""
+"Šis tests ir nepieciešams, lai noteiktu drukāšanas izšķirtspējas robežas "
+"(slāņa biezums)."
 
 #: session/forms.py:707
 msgid ""
@@ -1210,6 +1216,9 @@ msgid ""
 "there are any. Good weld-together is essential to achieving good mechanical "
 "properties in any printed part."
 msgstr ""
+"Šis tests ir nepieciešams, lai atrisinātu potenciālas problēmas ar filamenta "
+"salipšanu starp celiņiem. Labi savienoti celiņi ir ļoti svarīgi augstas "
+"mehāniskas izturības nodrošināšanai."
 
 #: session/forms.py:711
 msgid ""
@@ -1221,6 +1230,13 @@ msgid ""
 "<b>First-layer-extrusion-temperature</b> value and/or using different "
 "<b>Printing-speed</b> range.</li></ul>"
 msgstr ""
+"<ul><li>Ja detaļa netura pie platformas, palieliniet <b>Pirmā slāņa "
+"ekstrūzijas temperatūru</b> un atkārtojiet testu.</li><li>Ja tas nelīdz, "
+"palieliniet <b>Platformas (printbed) temperatūru</b> vai izmantojiet citu "
+"platformas virsmas pārklājumu/aerosolu.</li><li>Ja neizdodas atrast piemērtu "
+"abu parametru kombināciju, atkārtojiet testu ar citām <b>Pirmā līmeņa "
+"ekstrūzijas temperatūras</b> vērtībām un/vai citu <b>Drukāšanas ātruma</b> "
+"intervālu.</li></ul>"
 
 #: session/models.py:571 session/views.py:261
 msgid "Z-Offset"
@@ -1228,7 +1244,7 @@ msgstr "Z nobīde"
 
 #: session/models.py:572
 msgid "First-Layer Track Height vs First-Layer Printing Speed"
-msgstr "Pirmā slāņa augstums un Pirmā slāņa printēšanas ātrums"
+msgstr "Pirmā slāņa augstums un Pirmā slāņa drukāšanas ātrums"
 
 #: session/models.py:573 session/views.py:263
 msgid "First-Layer Track Width"
@@ -1236,11 +1252,11 @@ msgstr "Pirmā slāņa līnijas platums"
 
 #: session/models.py:574
 msgid "Extrusion Temperature vs Printing Speed"
-msgstr "Ekstrūzijas temperatūra un Printēšanas ātrums"
+msgstr "Ekstrūzijas temperatūra un Drukāšanas ātrums"
 
 #: session/models.py:575
 msgid "Track Height vs Printing Speed"
-msgstr "Līnijas augstums un Printēšanas ātrums"
+msgstr "Līnijas augstums un Drukāšanas ātrums"
 
 #: session/models.py:576 session/views.py:266
 msgid "Track Width"
@@ -1252,7 +1268,7 @@ msgstr "Ekstrūzijas daudzums"
 
 #: session/models.py:578 session/views.py:268
 msgid "Printing Speed"
-msgstr "Printēšans ātrums"
+msgstr "Drukāšanas ātrums"
 
 #: session/models.py:579
 msgid "Extrusion Temperature vs Retraction Distance"
@@ -1260,7 +1276,7 @@ msgstr "Ekstrūzijas temperatūra un Retrakcijas attālums"
 
 #: session/models.py:580
 msgid "Retraction Distance vs Printing Speed"
-msgstr "Retrakcijas attālums un Printēšanas ātrums"
+msgstr "Retrakcijas attālums un Drukāšanas ātrums"
 
 #: session/models.py:581 session/views.py:271
 msgid "Retraction Distance"
@@ -1273,11 +1289,11 @@ msgstr "Retrakcijas attālums un Retrakcijas ātrums"
 #: session/models.py:583
 msgid "Retraction Restart Distance vs Printing Speed And Coasting Distance"
 msgstr ""
-"Re-retrakcijas attālums un Printēšanas ātrums un neekstrūdēšanas attālums"
+"Re-retrakcijas attālums pret Drukāšanas ātrumu un neekstrūdēšanas attālumu"
 
 #: session/models.py:584
 msgid "Bridging Extrusion Multiplier vs Bridging Printing Speed"
-msgstr "Tilta ekstrūzijas daudzums un Tilta printēšanas ātrums"
+msgstr "Tilta ekstrūzijas daudzums un Tilta drukāšanas ātrums"
 
 #: session/models.py:589
 msgid "Core"
@@ -1285,7 +1301,7 @@ msgstr "Pamata"
 
 #: session/models.py:591
 msgid "Optional"
-msgstr "Papildus"
+msgstr "Papildu"
 
 #: session/templates/session/404.html:7
 msgid "Sorry! This page does not exist!"
@@ -1300,12 +1316,12 @@ msgid ""
 "Feel free to contact our <a href=\"mailto:support@fabcontrol.com\">support</"
 "a>!"
 msgstr ""
-"Varat sazināties ar <a href=\"mailto:support@fabcontrol.com\">lietotāju "
+"Droši sazinieties ar <a href=\"mailto:support@fabcontrol.com\">lietotāju "
 "atbalstu</a>"
 
 #: session/templates/session/dashboard.html:11
 msgid "Welcome to 3DOptimizer!"
-msgstr "Laipni lūgti 3DOptimizerī"
+msgstr "Laipni lūgti 3DOptimizer!"
 
 #: session/templates/session/dashboard.html:19
 #, python-format
@@ -1326,11 +1342,11 @@ msgstr "Noraidīt"
 #: session/templates/session/navbar.html:65
 #: session/templates/session/session_manager.html:12
 msgid "Testing Sessions"
-msgstr "Testēšans sesijas"
+msgstr "Testēšanas sesijas"
 
 #: session/templates/session/dashboard.html:32
 msgid "View all Sessions"
-msgstr "Visas testēšans sesijas"
+msgstr "Visas testēšanas sesijas"
 
 #: session/templates/session/dashboard.html:37
 #: session/templates/session/machine_manager.html:12
@@ -1358,7 +1374,7 @@ msgstr "Visi lietotāji"
 
 #: session/templates/session/dashboard.html:63
 msgid "Start a new testing session"
-msgstr "Jauna testēšans sesija"
+msgstr "Jauna testēšanas sesija"
 
 #: session/templates/session/dashboard.html:68
 #, python-format
@@ -1372,15 +1388,15 @@ msgstr ""
 #: session/templates/session/dashboard.html:69
 msgid "When you return, this page will show your recent testing sessions."
 msgstr ""
-"Kad atgirezīsieties, šeit būs atrodamas jūsu nesenās testēšanas sesijas."
+"Kad atgriezīsieties, šeit būs atrodamas jūsu nesenās testēšanas sesijas."
 
 #: session/templates/session/dashboard.html:71
 msgid "Upgrade to add multiple users"
-msgstr "Pievienot lietotājus"
+msgstr "Apmaksā jaunu lietotāju pievienošanai"
 
 #: session/templates/session/dashboard.html:88
 msgid "Recent Testing Sessions"
-msgstr "Nesenās testēšans sesijas"
+msgstr "Nesenākās testēšanas sesijas"
 
 #: session/templates/session/dashboard.html:92
 #: session/templates/session/dashboard.html:101
@@ -1388,12 +1404,12 @@ msgstr "Nesenās testēšans sesijas"
 #: session/templates/session/session_manager.html:17
 #: session/templates/session/session_manager.html:26
 msgid "New Testing Session"
-msgstr "Jauna testēšans sesija"
+msgstr "Jauna testēšanas sesija"
 
 #: session/templates/session/dashboard.html:94
 #: session/templates/session/session_manager.html:19
 msgid "Upgrade to create a new Testing Session"
-msgstr "Apmaksāt jaunu sesiju izveidošanu"
+msgstr "Apmaksāt jaunu sesiju izveidošanai"
 
 #: session/templates/session/dashboard.html:97
 #: session/templates/session/session_manager.html:22
@@ -1402,14 +1418,14 @@ msgid ""
 "To create new Testing Sessions, ask %(first_name)s %(last_name)s to upgrade "
 "account"
 msgstr ""
-"Lūdziet %(first_name)s %(last_name)s apmaksāt kontu, lai izveidotu jaunu "
-"sesiju."
+"Jaunas testēšanas sesijas izveidošanai, lūdzu, sazinieties ar %(first_name)s "
+"%(last_name)s un atjaunojiet sistēmas abonementu."
 
 #: session/templates/session/dashboard.html:110
 #: session/templates/session/session_info.html:6
 #: session/templates/session/session_manager.html:36
 msgid "ID"
-msgstr "Nr."
+msgstr "ID"
 
 #: session/templates/session/dashboard.html:116
 #: session/templates/session/session_manager.html:42
@@ -1444,7 +1460,7 @@ msgstr "Ievadiet parametru vērtības:"
 
 #: session/templates/session/guided_mode/session_generate.html:11
 msgid "Re-validate Previous Test"
-msgstr "Iepriekšējais tests"
+msgstr "Atkārtoti novērtēt iepriekšējo testu"
 
 #: session/templates/session/guided_mode/session_generate.html:15
 #: session/templates/session/session_generate.html:7
@@ -1458,13 +1474,13 @@ msgid ""
 "<b>Print the downloaded test file</b><br>If the test gcode didn't download, "
 "you can get it <a href=\"%(gcode_link)s\">here</a>."
 msgstr ""
-"<b>Izprintējiet lejupielādēto Gkodu</b><br>Ja Gkoda lejupielādēšana "
+"<b>Izdrukājiet lejupielādēto Gkoda failu</b><br>Ja Gkoda lejupielādēšana "
 "neizdevās, varat to vēlreiz lejupielādēt <a href=\"%(gcode_link)s\">šeit</a>."
 
 #: session/templates/session/guided_mode/session_validate.html:13
 #: session/templates/session/session_validate.html:12
 msgid "Inspect the printed test structure"
-msgstr "Novērtējiet izprintēto detaļu"
+msgstr "Novērtējiet izdrukāto detaļu"
 
 #: session/templates/session/guided_mode/session_validate.html:28
 msgid "Select all the best parameter combinations"
@@ -1477,7 +1493,7 @@ msgstr "Atgriezties pie parametriem"
 #: session/templates/session/guided_mode/session_validate.html:41
 #: session/templates/session/session_validate.html:35
 msgid "Next Test"
-msgstr "Nākošais tests"
+msgstr "Nākamais tests"
 
 #: session/templates/session/machine_detail.html:10
 msgid "3D Printer Editor"
@@ -1512,12 +1528,12 @@ msgstr "Ekstrūderis"
 #: session/templates/session/machine_detail.html:46
 #: session/templates/session/machine_form.html:43
 msgid "Heating chamber"
-msgstr "Apsildāma printēšanas kamera"
+msgstr "Apsildāma drukāšanas kamera"
 
 #: session/templates/session/machine_detail.html:52
 #: session/templates/session/machine_form.html:49
 msgid "Print bed"
-msgstr "Printēšans virsma"
+msgstr "Drukāšanas virsma"
 
 #: session/templates/session/machine_detail.html:58
 #: session/templates/session/machine_form.html:55
@@ -1531,7 +1547,7 @@ msgid ""
 "accomodate certain printer features, such as autocalibration."
 msgstr ""
 "Sākuma Gkods tiek pievienots testa Gkoda sākumā. Šo sadaļu var izmantot, "
-"piemēram autokalibrācijas komandām."
+"piemēram, autokalibrācijas komandām."
 
 #: session/templates/session/machine_detail.html:63
 #: session/templates/session/machine_form.html:60
@@ -1539,8 +1555,8 @@ msgid ""
 "Homing script is executed after printer has heated up, but before actual "
 "printing starts."
 msgstr ""
-"Atgriezšanās komandas tiek izpildītas pēc tam, kad printeris ir uzsilis, bet "
-"pirms printēšanas."
+"Atgriešanās komandas tiek izpildītas pēc tam, kad printeris ir uzsilis, bet "
+"pirms drukāšanas sākšanas."
 
 #: session/templates/session/machine_detail.html:65
 #: session/templates/session/machine_form.html:62
@@ -1549,7 +1565,7 @@ msgid ""
 "here, to move the nozzle away from the printed structure."
 msgstr ""
 "Beigu Gkods tiek pievienots testa Gkoda beigās. Šeit ieteicams pievienot "
-"Atgriezšanās komandu, lai atvirzītu sprauslu nost no printētās detaļas."
+"Atgriešanās komandu, lai atvirzītu sprauslu nost no izdrukātās detaļas."
 
 #: session/templates/session/machine_detail.html:68
 #: session/templates/session/machine_form.html:65
@@ -1562,8 +1578,8 @@ msgid ""
 "Test structure is centered on the printbed by default. Offset may be used to "
 "shift the test structure on build-plate."
 msgstr ""
-"Testa struktūra parasti tiek printēta platformas centrā. Nobīdi var "
-"izmantot, lai testa struktūru novietotu platformas malā."
+"Testa struktūra parasti tiek drukāta platformas centrā. Nobīdi var izmantot, "
+"lai testa struktūru novietotu platformas malā."
 
 #: session/templates/session/machine_form.html:76
 #: session/templates/session/material_form.html:27
@@ -1599,7 +1615,7 @@ msgstr "Rēķini"
 
 #: session/templates/session/navbar.html:41
 msgid "Account Settings"
-msgstr "Konta ustādījumi"
+msgstr "Konta uzstādījumi"
 
 #: session/templates/session/navbar.html:46
 msgid "Redeem a voucher"
@@ -1619,7 +1635,7 @@ msgstr "Palīdzība"
 
 #: session/templates/session/new_session.html:24
 msgid "Start Testing Session"
-msgstr "Sākt Testēšans sesiju"
+msgstr "Sākt Testēšanas sesiju"
 
 #: session/templates/session/session_info.html:16
 msgid "Change session name"
@@ -1643,7 +1659,7 @@ msgstr "Progress"
 
 #: session/templates/session/session_info.html:78
 msgid "Back to Session"
-msgstr "Atgriezties pie testēšanas"
+msgstr "Atgriezties pie testēšanas sesijas"
 
 #: session/templates/session/session_info.html:81
 msgid "Results"
@@ -1663,11 +1679,11 @@ msgstr "Konfigurācija"
 
 #: session/templates/session/session_nav.html:7
 msgid "Print and validate"
-msgstr "Printēšana un izvērtēšana"
+msgstr "Drukāšana un izvērtēšana"
 
 #: session/templates/session/session_overview.html:13
 msgid "Slicing profiles"
-msgstr "Slaisošanas konfigurācijas"
+msgstr "Sagriešanas (slicing) konfigurācijas"
 
 #: session/templates/session/session_overview.html:18
 #: session/templates/session/session_overview.html:21
@@ -1682,11 +1698,12 @@ msgstr "Izvēlēties profila kvalitātes tipu"
 
 #: session/templates/session/session_overview.html:39
 msgid "Existing Cura profile to use as template:"
-msgstr "Esošā Cura konfigurācija, kuru izmatot kā paraugu:"
+msgstr "Esošā Cura konfigurācija, kuru izmantot kā paraugu:"
 
 #: session/templates/session/session_overview.html:45
 msgid "*You can find your printer profiles in Cura profile manager."
-msgstr "*Konfigurācijas var atrsast Cura profilu menedžerī."
+msgstr ""
+"*Konfigurācijas var atrast Cura profilu pārvaldniekā (Cura Profile Manager)."
 
 #: session/templates/session/session_overview.html:48
 msgid "Download profile"
@@ -1702,7 +1719,7 @@ msgstr "Lejupielādēt testēšanas atskaiti"
 
 #: session/templates/session/session_overview.html:67
 msgid "Selected parameters"
-msgstr "Izvēlie parametri"
+msgstr "Izvēlētie parametri"
 
 #: session/templates/session/session_overview.html:77
 #: session/templates/session/session_overview.html:82
@@ -1733,7 +1750,7 @@ msgstr "Vai esat pārliecināti, ka vēlaties turpināt?"
 
 #: session/templates/session/session_validated.html:35
 msgid "Reverting to this test will discard all progress achieved after it."
-msgstr "Atgrišoties pie šī testa, zaudēsiet visus tālāko testu rezultātus."
+msgstr "Atgriežoties pie šī testa zaudēsiet visus tālāko testu rezultātus."
 
 #: session/templates/session/session_validated.html:39
 msgid "Revert"
@@ -1742,7 +1759,7 @@ msgstr "Atgriezties"
 #: session/templates/session/team_stats.html:12
 #, python-format
 msgid "%(company)s Users"
-msgstr "%(company)s lietotāji"
+msgstr "%(company)s Lietotāji"
 
 #: session/templates/session/team_stats.html:18
 msgid "Manage users"
@@ -1785,15 +1802,15 @@ msgstr "Izveidots 3D printeris \"{printer}\"!"
 
 #: session/views.py:262
 msgid "First-Layer Track Height vs<br>First-Layer Printing Speed"
-msgstr "Pirmā slāņa augstums un<br>Pirmā slāņa printēšanas ātrums"
+msgstr "Pirmā slāņa augstums un<br>Pirmā slāņa drukāšanas ātrums"
 
 #: session/views.py:264
 msgid "Extrusion Temperature vs<br>Printing Speed"
-msgstr "Ekstrūzijas temperatūra un<br>Printēšanas ātrums"
+msgstr "Ekstrūzijas temperatūra un<br>Drukāšanas ātrums"
 
 #: session/views.py:265
 msgid "Track Height vs<br>Printing Speed"
-msgstr "Līnijas augstums un<br>Printēšanas ātrums"
+msgstr "Līnijas augstums un<br>Drukāšanas ātrums"
 
 #: session/views.py:269
 msgid "Extrusion Temperature vs<br>Retraction Distance"
@@ -1801,7 +1818,7 @@ msgstr "Ekstrūzijas temperatūra un<br>Retrakcijas attālums"
 
 #: session/views.py:270
 msgid "Retraction Distance vs<br>Printing Speed"
-msgstr "Retrakcijas attālums un<br>Printēšanas ātrums"
+msgstr "Retrakcijas attālums un<br>Drukāšanas ātrums"
 
 #: session/views.py:272
 msgid "Retraction Distance vs<br>Retraction Speed"
@@ -1810,11 +1827,11 @@ msgstr "Retrakcijas attālums un<br>Retrakcijas ātrums"
 #: session/views.py:273
 msgid "Retraction Restart Distance vs<br>Printing Speed And Coasting Distance"
 msgstr ""
-"Re-retrakcijas attālums un<br>Printēšanas ātrums un neekstrūdēšanas attālums"
+"Re-retrakcijas attālums pret<br>Drukāšanas ātrumu un neekstrūdēšanas attālumu"
 
 #: session/views.py:274
 msgid "Bridging Extrusion Multiplier vs<br>Bridging Printing Speed"
-msgstr "Tilta ekstrūzijas daudzums un<br>Tilta printēšanas ātrums"
+msgstr "Tilta ekstrūzijas daudzums un<br>Tilta drukāšanas ātrums"
 
 #: session/views.py:400
 #, python-brace-format
@@ -1823,7 +1840,7 @@ msgid ""
 "the next available test or <a href={link}>purchase Full Access.</a>"
 msgstr ""
 "Jums nepieciešamais tests pieejams tikai ar Pilnu piekļuvi. Varat doties uz "
-"nākamo pieejamo testu, vai <a href={link}>iegādāties Pilnu piekļuvi.</a>"
+"nākamo pieejamo testu vai <a href={link}>iegādāties Pilnu piekļuvi.</a>"
 
 #: session/views.py:404
 #, python-brace-format
@@ -1832,7 +1849,7 @@ msgid ""
 "the next available test or ask {first_name} {last_name} to upgrade account."
 msgstr ""
 "Jums nepieciešamais tests pieejams tikai ar Pilnu piekļuvi. Varat doties uz "
-"nākamo pieejamo testu, vai lūdziet {first_name} {last_name} apmaksāt kontu."
+"nākamo pieejamo testu vai lūdziet {first_name} {last_name} apmaksāt kontu."
 
 #~ msgid "Next test"
 #~ msgstr "Nākošais tests"
