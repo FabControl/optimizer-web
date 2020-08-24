@@ -11,6 +11,7 @@ from optimizer_api import api_client
 from .choices import TEST_NUMBER_CHOICES, TARGET_CHOICES, SLICER_CHOICES, TOOL_CHOICES, FORM_CHOICES, UNITS, MODE_CHOICES, WIZARD_MODES
 from authentication.choices import PLAN_CHOICES
 from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy
 
 # Create your models here.
 
@@ -306,7 +307,7 @@ class Session(models.Model, DependenciesCopyMixin):
     """
     mode = models.ForeignKey(SessionMode, null=True, on_delete=models.CASCADE)
     number = models.IntegerField(default=0)
-    name = models.CharField(default="Untitled", max_length=20)
+    name = models.CharField(default=gettext_lazy("Untitled"), max_length=20)
     corporation = models.ForeignKey('payments.Corporation', on_delete=models.CASCADE, null=True, blank=True)
     pub_date = models.DateTimeField(default=timezone.now, blank=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
