@@ -549,18 +549,32 @@ class Session(models.Model, DependenciesCopyMixin):
     @property
     def readable_test_info(self):
         info = self.test_info
-        info['hint_init'] = _(info['hint_init'])
-        info['hint_valid'] = _(info['hint_valid'])
+
+        hint = info.get('hint_init')
+        if hint is not None:
+            info['hint_init'] = _(hint)
+        hint = info.get('hint_valid')
+        if hint is not None:
+            info['hint_valid'] = _(hint)
+
         if 'other_parameters' in info:
             for param in info['other_parameters']:
-                param['hint_active'] = _(param['hint_active'])
-                param['name'] = _(param['name'].capitalize())
+                hint = param.get('hint_active')
+                if hint is not None:
+                    param['hint_active'] = _(hint)
+                name = param.get('name')
+                if name is not None:
+                    param['name'] = _(name.capitalize())
 
         for p in ['parameter_one', 'parameter_two', 'parameter_three']:
             param = info.get(p)
             if param is not None:
-                param['hint_active'] = _(param['hint_active'])
-                param['name'] = _(param['name'].capitalize())
+                hint = param.get('hint_active')
+                if hint is not None:
+                    param['hint_active'] = _(hint)
+                name = param.get('name')
+                if name is not None:
+                    param['name'] = _(name.capitalize())
 
         return info
 
