@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-08-20 09:10+0300\n"
+"POT-Creation-Date: 2020-08-25 18:16+0300\n"
 "PO-Revision-Date: 2020-08-21 14:00+0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
 "Language: lv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : "
 "2);\n"
-"Last-Translator: \n"
-"Language-Team: \n"
 "X-Generator: Poedit 2.4.1\n"
 
 #: Optimizer3D/settings.py:117
@@ -735,8 +735,8 @@ msgstr ""
 "cita vērtība. Ja nav ieteiktās temeperatūras, <a href='{help_link}'>šeit</a> "
 "atrodama metode tās noskaidrošanai."
 
-#: session/forms.py:182 session/forms.py:590 session/forms.py:619
-#: session/forms.py:633
+#: session/forms.py:182 session/forms.py:591 session/forms.py:620
+#: session/forms.py:634
 msgid "Max temperature (°C)"
 msgstr "Max. temperatūra (°C)"
 
@@ -818,482 +818,137 @@ msgstr ""
 "Lai izvēlētos profesionāļu (Advanced) testēšanas režīmu nepieciešama <a href="
 "\"{link}\">Pilna piekļuve</a>"
 
-#: session/forms.py:532
+#: session/forms.py:371
+msgid "Yes"
+msgstr ""
+
+#: session/forms.py:371
+msgid "No"
+msgstr ""
+
+#: session/forms.py:533
 msgid "3D Printer model"
 msgstr "3D printera modelis"
 
-#: session/forms.py:533
+#: session/forms.py:534
 msgid "Max dimension on X axis (mm)"
 msgstr "Max. koordināte uz X ass (mm)"
 
-#: session/forms.py:534
+#: session/forms.py:535
 msgid "Max dimension on Y axis (mm)"
 msgstr "Max. koordināte uz Y ass (mm)"
 
-#: session/forms.py:536
+#: session/forms.py:537
 msgid "Offset on X axis (mm)"
 msgstr "Nobīde pa X asi (mm)"
 
-#: session/forms.py:537
+#: session/forms.py:538
 msgid "Offset on Y axis (mm)"
 msgstr "Nobīde pa Y asi (mm)"
 
-#: session/forms.py:539 session/templates/session/machine_manager.html:26
+#: session/forms.py:540 session/templates/session/machine_manager.html:26
 msgid "Type"
 msgstr "Tips"
 
-#: session/forms.py:540
+#: session/forms.py:541
 msgid "Extruder type"
 msgstr "Ekstrūdera tips"
 
-#: session/forms.py:542
+#: session/forms.py:543
 msgid "Header"
 msgstr "Sākuma Gkods"
 
-#: session/forms.py:545
+#: session/forms.py:546
 msgid "Footer"
 msgstr "Beigu Gkods"
 
-#: session/forms.py:549
+#: session/forms.py:550
 msgid "Homing script"
 msgstr "Atgriešanās (Homing) Gkods"
 
-#: session/forms.py:589 session/forms.py:617
+#: session/forms.py:590 session/forms.py:618
 msgid "Gcode tool index"
 msgstr "Ekstrūdera numurs Gkodā"
 
-#: session/forms.py:591 session/forms.py:657
+#: session/forms.py:592 session/translatable_backend_strings.py:18
 msgid "Part cooling"
 msgstr "Detaļas dzesēšana"
 
-#: session/forms.py:604
+#: session/forms.py:605
 msgid "Nozzle's inner diameter (mm)"
 msgstr "Sprauslas iekšējais diametrs (mm)"
 
-#: session/forms.py:618
+#: session/forms.py:619
 msgid "Gcode syntax"
 msgstr "Gkoda sintakse"
 
-#: session/forms.py:620
+#: session/forms.py:621
 msgid "Chamber heatable"
 msgstr "Apsildāma kamera"
 
-#: session/forms.py:635
+#: session/forms.py:636
 msgid "Print bed heatable"
 msgstr "Apsildāma printēšanas platforma"
 
-#: session/forms.py:645
-msgid "Bridging extrusion multiplier"
-msgstr "Tilta ekstrūzijas daudzums"
+#: session/migrations/0055_add_and_assign_descriptors.py:13
+msgid "Is the nozzle too close to the print bed?"
+msgstr "Vai sprausla ir pārāk tuvu pamatnei?"
 
-#: session/forms.py:646
-msgid "Bridging part cooling"
-msgstr "Tilta detaļas dzesēšana"
+#: session/migrations/0055_add_and_assign_descriptors.py:14
+#: session/migrations/0055_add_and_assign_descriptors.py:15
+msgid "All combinations are bad."
+msgstr "Visas kombinācijas ir sliktas."
 
-#: session/forms.py:647
-msgid "Bridging printing speed"
-msgstr "Tilta drukāšanas ātrums"
+#: session/migrations/0055_add_and_assign_descriptors.py:14
+msgid "Extruder's nozzle may be too large to retract filament successfully"
+msgstr ""
+"Ekstrūdera sprausla varētu būt pārāk liela, lai veiksmīgi atvilktu filamentu."
 
-#: session/forms.py:648
-msgid "Chamber temperature"
-msgstr "Kameras temperatūra"
+#: session/migrations/0055_add_and_assign_descriptors.py:16
+msgid "Are all values between 0 and 6 mm bad?"
+msgstr "Vai visas vērtības starp 0 un 6 mm sliktas?"
 
-#: session/forms.py:649
-msgid "Coasting distance"
-msgstr "Retrakcijas attālums"
+#: session/migrations/0055_add_and_assign_descriptors.py:17
+#: session/migrations/0055_add_and_assign_descriptors.py:21
+#: session/migrations/0055_add_and_assign_descriptors.py:22
+msgid "Are there voids between tracks?"
+msgstr "Vai starp līnijām ir atsrapes?"
 
-#: session/forms.py:650
-msgid "Exit ventilation power"
-msgstr "Atplūdes ventilācijas jauda"
+#: session/migrations/0055_add_and_assign_descriptors.py:17
+msgid "Try lowering printing speed values in the interval."
+msgstr "Mēģiniet samazināt ātruma vērtības intervālā."
 
-#: session/forms.py:651
-msgid "Extrusion multiplier"
-msgstr "Ekstrūzijas daudzums"
+#: session/migrations/0055_add_and_assign_descriptors.py:18
+msgid "I wish to fine-tune printing speed."
+msgstr "Vēlos precizēt drukāšanas ātrumu"
 
-#: session/forms.py:652
-msgid "Extrusion temperature"
-msgstr "Ekstrūzijas temperatūra"
+#: session/migrations/0055_add_and_assign_descriptors.py:19
+msgid "Are there still voids between tracks?"
+msgstr "Vai starp līnijām joprojām ir atstarpes?"
 
-#: session/forms.py:653
-msgid "First-layer extrusion temperature"
-msgstr "Pirmā slāņa ekstrūzijas temperatūra"
+#: session/migrations/0055_add_and_assign_descriptors.py:20
+msgid "I wish to fine-tune track height (print resolution)."
+msgstr "Vēlos precizēt līnijas augstumu (drukāšanas izšķirtspēju)."
 
-#: session/forms.py:654
-msgid "First-layer printing speed"
-msgstr "Pirmā slāņa drukāšanas ātrums"
+#: session/migrations/0055_add_and_assign_descriptors.py:23
+msgid "Does the print peel off from print bed, although the height is correct?"
+msgstr "Vai struktūra atlīmējas no pamatnes, lai gan augstums ir pareizs?"
 
-#: session/forms.py:655
-msgid "First-layer track height"
-msgstr "Pirmā slāņa līnijas augstums"
-
-#: session/forms.py:656
-msgid "First-layer track width"
-msgstr "Pirmā slāņa līnijas platums"
-
-#: session/forms.py:658
-msgid "Print bed coating"
-msgstr "Drukāšanas virsmas pārklājums"
-
-#: session/forms.py:659
-msgid "Print bed temperature"
-msgstr "Drukāšanas virsmas temperatūra"
-
-#: session/forms.py:660
-msgid "Printing speed"
-msgstr "Drukāšanas ātrums"
-
-#: session/forms.py:661
-msgid "Retraction distance"
-msgstr "Retrakcijas attālums"
-
-#: session/forms.py:662
-msgid "Retraction speed"
-msgstr "Retrakcijas ātrums"
-
-#: session/forms.py:663
-msgid "Retraction-restart distance"
-msgstr "Re-retrakcijas attālums"
-
-#: session/forms.py:664
-msgid "Track height"
-msgstr "Līnijas augstums"
-
-#: session/forms.py:665
-msgid "Track width"
-msgstr "Līnijas platums"
-
-#: session/forms.py:666
-msgid "Z-offset"
-msgstr "Z nobīde"
-
-#: session/forms.py:670
+#: session/migrations/0055_add_and_assign_descriptors.py:23
 msgid ""
-"For this test this value is equal to unity, but, if needed, it can be tested "
-"in a separate test"
+"Try increasing extrusion temperature, reduce printing speed, increase print "
+"bed temperature or apply an adhesive to the print bed."
 msgstr ""
-"Šim testam šī vērtība ir viens, bet, ja nepieciešams, to var noskaidrot "
-"atsevišķā testā"
+"Mēģiniet palielināt ekstrūzijas temperatūru, samazināt drukāšanas ātrumu, "
+"palielināt pamatnes temperatūru, vai uz pamatnes uzklāt līmi."
 
-#: session/forms.py:671
-msgid ""
-"Set a value from the range 20-50 mm/s for printing flexible materials, or "
-"30-70 mm/s for printing harder materials"
-msgstr ""
-"Elastīgajiem materiāliem ieteicamais apgabals ir 20-50 mm/s, cietākiem "
-"materiāliem 30-70 mm/s."
+#: session/migrations/0055_add_and_assign_descriptors.py:24
+msgid "Does the print float above the print bed?"
+msgstr "Vai detaļa nepieķeras pie pamatnes."
 
-#: session/forms.py:672
-msgid ""
-"Set part cooling. Active part cooling is required when printing using high "
-"deposition rates or when printing fine details"
-msgstr ""
-"Detaļas dzesēšanas uzstādīšana. Aktīvā detaļas dzesēšana nepieciešama "
-"printējot lielā ātrumā vai printējot smalkas detaļas"
-
-#: session/forms.py:673
-msgid "Set the range of <b>Retraction distances</b> to be tested"
-msgstr "Uzstādiet testējamo <b>Atvilkšanas attāluma</b> vērtību apgabalu"
-
-#: session/forms.py:674
-msgid ""
-"Set the range to 10-25 mm/s for printing flexible materials, or 15-35 mm/s "
-"for harder materials"
-msgstr ""
-"Elastīgajiem materiāliem ieteicamais apgabals ir 10-25 mm/s, cietākiem "
-"materiāliem 15-35 mm/s."
-
-#: session/forms.py:675
-msgid ""
-"Set the range to 20-50 mm/s for printing flexible materials, or to 30-70 mm/"
-"s for printing harder materials"
-msgstr ""
-"Elastīgajiem materiāliem ieteicamais apgabals ir 10-25 mm/s, cietākiem "
-"materiāliem 15-35 mm/s."
-
-#: session/forms.py:676
-msgid ""
-"Set the range to 5-15 mm/s for printing flexible materials, or to 10-30 mm/s "
-"for printing harder materials"
-msgstr ""
-"Elastīgajiem materiāliem ieteicamais apgabals ir 5-15 mm/s, cietākiem "
-"materiāliem 10-30 mm/s."
-
-#: session/forms.py:677
-msgid "Set this value to proceed"
-msgstr "Lai turpinātu, ievadiet šo vērtību"
-
-#: session/forms.py:678
-msgid ""
-"Set this value to proceed. Perform the corresponding test to fine-tune this "
-"value"
-msgstr ""
-"Lai turpinātu, ievadiet šo vērtību. Veiciet atbilstošo testu, lai vērtību "
-"precizētu"
-
-#: session/forms.py:679
-msgid ""
-"Set this value to proceed. This value will determine the resolution and "
-"surface quality of your print"
-msgstr ""
-"Lai turpinātu, ievadiet šo vērtību. Šī vērtība noteiks izšķirtspēju un "
-"detaļas virsmas kvalitāti"
-
-#: session/forms.py:680
-msgid ""
-"The default value is equal to the nozzle inner diameter, but you can perform "
-"the corresponding test to fine-tune this value"
-msgstr ""
-"Sākotnējā vērtība ir vienāda ar sprauslas iekšējo diametru, bet varat veikt "
-"atbilstošo testu un precizēt šo vērtību"
-
-#: session/forms.py:681
-msgid ""
-"These seven values will be tested at four <b>Printing speeds</b>. You can "
-"change the limiting values"
-msgstr ""
-"Šīs septiņas vērtības tiks testētas ar četriem <b>Drukāšanas ātrumiem</b>. "
-"Jūs varat mainīt robežvērtības"
-
-#: session/forms.py:682
-msgid ""
-"These seven values will be tested at four different <b>Bridging printing "
-"speeds</b> (see below). You can change the limiting values"
-msgstr ""
-"Šīs septiņas vērtības tiks testētas ar četriem <b>Tilta drukāšanas ātrumiem</"
-"b> (skatīt zemāk). Jūs varat mainīt robežvērtības"
-
-#: session/forms.py:683
-msgid ""
-"These seven values will be tested at four different <b>First-layer printing "
-"speeds</b> (see below). You can change the limiting values"
-msgstr ""
-"Šīs septiņas vērtības tiks testētas ar četriem <b>Pirmā slāņa drukāšanas "
-"ātrumiem</b> (skatīt zemāk). Jūs varat mainīt robežvērtības"
-
-#: session/forms.py:684
-msgid ""
-"These seven values will be tested at four different <b>Printing speeds</b> "
-"(see below). You can change the limiting values"
-msgstr ""
-"Šīs septiņas vērtības tiks testētas ar četriem <b>Drukāšanas ātrumiem</b> "
-"(skatīt zemāk). Jūs varat mainīt robežvērtības"
-
-#: session/forms.py:685
-msgid ""
-"These seven values will be tested at four different <b>Retraction distances</"
-"b> (see below). You can change the limiting values"
-msgstr ""
-"Šīs septiņas vērtības tiks testētas ar četrām <b>Atvilkšanas distancēm</b> "
-"(skatīt zemāk). Jūs varat mainīt robežvērtības"
-
-#: session/forms.py:686
-msgid ""
-"These seven values will be tested at four different <b>Retraction speeds</b> "
-"(see below). You can change the limiting values"
-msgstr ""
-"Šīs septiņas vērtības tiks testētas ar četriem <b>Atvilkšanas ātrumiem</b> "
-"(skatīt zemāk). Jūs varat mainīt robežvērtības"
-
-#: session/forms.py:687
-msgid ""
-"These seven values will be tested at one <b>First-layer printing speed</b>. "
-"You can change the limiting values"
-msgstr ""
-"Šīs septiņas vērtības tiks testētas ar vienu <b>Pirmā slāņa drukāšanas "
-"ātrumu</b>. Jūs varat mainīt robežvērtības"
-
-#: session/forms.py:688
-msgid ""
-"These seven values will be tested at one <b>Printing speed</b>. You can "
-"change the limiting values"
-msgstr ""
-"Šīs septiņas vērtības tiks testētas ar vienu <b>Drukāšanas ātrumu</b>. Jūs "
-"varat mainīt robežvērtības"
-
-#: session/forms.py:689
-msgid ""
-"These seven values will be tested while all other processing parameters are "
-"constant. You can change the limiting values"
-msgstr ""
-"Šīs septiņas vērtības tiks testētas, bet pārējās paliks nemainīgas. Jūs "
-"varat mainīt robežvērtības"
-
-#: session/forms.py:690
-msgid "These seven values will be tested. You can change the limiting values"
-msgstr "Šīs septiņas vērtības tiks testētas. Jūs varat mainīt robežvērtības"
-
-#: session/forms.py:691
-msgid "This value was determined in the previous test(s) and cannot be changed"
-msgstr "Šī vērtība tika noskaidrota iepriekšējos testos un nav maināma."
-
-#: session/forms.py:695
-msgid ""
-"This is a core test which helps finding a working retraction distance under "
-"general conditions."
-msgstr ""
-"Šis ir pamata tests, kas ļauj noskaidrot derīgu atvilkšanas distanci "
-"vispārīgā gadījumā."
-
-#: session/forms.py:696
-msgid "This is an additional test to avoid under-extrusion."
-msgstr "Šis ir papildu tests, lai novērstu nepietiekamu ekstrūziju."
-
-#: session/forms.py:697
-msgid ""
-"This test helps you find a base temperature and printing speed. These will "
-"be optimized further in later tests. Since there can be different parameter "
-"combinations that work, but are not optimal for your intended target, this "
-"is an essential test."
-msgstr ""
-"Šis tests ļauj noskaidrot sākotnējās temperatūras un printēšanas ātruma "
-"vērtības. Tālākajos testos tās tika precizētas. Šis ir nozīmīgs tests, jo "
-"vairākas vērtību kombinācijas var strādāt, bet ne visas būs optimālas "
-"izvēlētajam mērķim."
-
-#: session/forms.py:698
-msgid "This test is needed to arrive at the most optimal flow-rate."
-msgstr ""
-"Šis tests ir nepieciešams, lai iegūtu optimālāko ekstrūzijas koeficientu."
-
-#: session/forms.py:699
-msgid ""
-"This test is needed to avoid gaps between tracks and find the limits of "
-"horizontal resolution with a given nozzle."
-msgstr ""
-"Šis tests ir nepieciešams, lai izvairītos no spraugām starp līnijām un "
-"noskaidrotu slāņa biezuma apgabalu konkrētajai sprauslai."
-
-#: session/forms.py:700
-msgid "This test is needed to avoid stringing."
-msgstr "Šis tests ir nepieciešams, lai izvairītos no matiņiem."
-
-#: session/forms.py:701
-msgid ""
-"This test is needed to establish good first layer printing settings. A good "
-"first layer is essential to achieving good prints."
-msgstr ""
-"Šis tests ir nepieciešams, lai iegūtu labus pirmā slāņa uzstādījumus. Labs "
-"pirmais slānis ir viens no labu rezultātu priekšnoteikumiem."
-
-#: session/forms.py:702
-msgid ""
-"This test is needed to find Z-offset value in case of non-level print bed or "
-"printbed coating."
-msgstr "Šis tests ir nepieciešams, lai noteiktu pamatnes augstuma nobīdi."
-
-#: session/forms.py:703
-msgid ""
-"This test is needed to find reliable settings for retraction. The best "
-"combination of 3 parameters are determined simulataneously."
-msgstr ""
-"Šis tests ir nepieciešams, lai noskaidrotu uzticamus atvilkšanas "
-"uzstādījumus. Labākā 3 parametru kombinācija tiek noskaidrota, mainot visus "
-"3 parametrus vienlaicīgi."
-
-#: session/forms.py:704
-msgid "This test is needed to find the best bridging settings."
-msgstr "Šis tests ir nepieciešams, lai noskaidrotu labākos tilta uzstādījumus."
-
-#: session/forms.py:705
-msgid ""
-"This test is needed to find the best retraction restart distance and "
-"coasting settings."
-msgstr ""
-"Šis tests ir nepieciešams, lai atrastu labāko re-retrakcijas attālumu un "
-"neekstrūdēšanas uzstādījumus."
-
-#: session/forms.py:706
-msgid ""
-"This test is needed to find the limits of printing resolution (layer "
-"thickness)."
-msgstr ""
-"Šis tests ir nepieciešams, lai noteiktu drukāšanas izšķirtspējas robežas "
-"(slāņa biezums)."
-
-#: session/forms.py:707
-msgid ""
-"This test is needed to solve possible issues with adhesion between tracks if "
-"there are any. Good weld-together is essential to achieving good mechanical "
-"properties in any printed part."
-msgstr ""
-"Šis tests ir nepieciešams, lai atrisinātu potenciālas problēmas ar filamenta "
-"salipšanu starp celiņiem. Labi savienoti celiņi ir ļoti svarīgi augstas "
-"mehāniskas izturības nodrošināšanai."
-
-#: session/forms.py:711
-msgid ""
-"<ul><li>If the print does not adhere to the build platform, increase the "
-"<b>First-layer extrusion temperature</b> and re-run the test.</li><li>If "
-"this does not help, increase the <b>Printbed temperature</b> or apply "
-"different coating/spray on the build platform.</li><li>If you cannot find "
-"acceptable combination of two parameters, re-run the test with different "
-"<b>First-layer-extrusion-temperature</b> value and/or using different "
-"<b>Printing-speed</b> range.</li></ul>"
-msgstr ""
-"<ul><li>Ja detaļa netura pie platformas, palieliniet <b>Pirmā slāņa "
-"ekstrūzijas temperatūru</b> un atkārtojiet testu.</li><li>Ja tas nelīdz, "
-"palieliniet <b>Platformas (printbed) temperatūru</b> vai izmantojiet citu "
-"platformas virsmas pārklājumu/aerosolu.</li><li>Ja neizdodas atrast piemērtu "
-"abu parametru kombināciju, atkārtojiet testu ar citām <b>Pirmā līmeņa "
-"ekstrūzijas temperatūras</b> vērtībām un/vai citu <b>Drukāšanas ātruma</b> "
-"intervālu.</li></ul>"
-
-#: session/models.py:571 session/views.py:261
-msgid "Z-Offset"
-msgstr "Z nobīde"
-
-#: session/models.py:572
-msgid "First-Layer Track Height vs First-Layer Printing Speed"
-msgstr "Pirmā slāņa augstums un Pirmā slāņa drukāšanas ātrums"
-
-#: session/models.py:573 session/views.py:263
-msgid "First-Layer Track Width"
-msgstr "Pirmā slāņa līnijas platums"
-
-#: session/models.py:574
-msgid "Extrusion Temperature vs Printing Speed"
-msgstr "Ekstrūzijas temperatūra un Drukāšanas ātrums"
-
-#: session/models.py:575
-msgid "Track Height vs Printing Speed"
-msgstr "Līnijas augstums un Drukāšanas ātrums"
-
-#: session/models.py:576 session/views.py:266
-msgid "Track Width"
-msgstr "Līnijas platums"
-
-#: session/models.py:577 session/views.py:267
-msgid "Extrusion Multiplier"
-msgstr "Ekstrūzijas daudzums"
-
-#: session/models.py:578 session/views.py:268
-msgid "Printing Speed"
-msgstr "Drukāšanas ātrums"
-
-#: session/models.py:579
-msgid "Extrusion Temperature vs Retraction Distance"
-msgstr "Ekstrūzijas temperatūra un Retrakcijas attālums"
-
-#: session/models.py:580
-msgid "Retraction Distance vs Printing Speed"
-msgstr "Retrakcijas attālums un Drukāšanas ātrums"
-
-#: session/models.py:581 session/views.py:271
-msgid "Retraction Distance"
-msgstr "Retrakcijas attālums"
-
-#: session/models.py:582
-msgid "Retraction Distance vs Retraction Speed"
-msgstr "Retrakcijas attālums un Retrakcijas ātrums"
-
-#: session/models.py:583
-msgid "Retraction Restart Distance vs Printing Speed And Coasting Distance"
-msgstr ""
-"Re-retrakcijas attālums pret Drukāšanas ātrumu un neekstrūdēšanas attālumu"
-
-#: session/models.py:584
-msgid "Bridging Extrusion Multiplier vs Bridging Printing Speed"
-msgstr "Tilta ekstrūzijas daudzums un Tilta drukāšanas ātrums"
+#: session/models.py:310
+msgid "Untitled"
+msgstr "Bez nosaukuma"
 
 #: session/models.py:589
 msgid "Core"
@@ -1785,6 +1440,468 @@ msgstr "Pēdējās 90 dienās"
 msgid "Total"
 msgstr "Kopā"
 
+#: session/translatable_backend_strings.py:6
+msgid "Bridging extrusion multiplier"
+msgstr "Tilta ekstrūzijas daudzums"
+
+#: session/translatable_backend_strings.py:7
+msgid "Bridging part cooling"
+msgstr "Tilta detaļas dzesēšana"
+
+#: session/translatable_backend_strings.py:8
+msgid "Bridging printing speed"
+msgstr "Tilta drukāšanas ātrums"
+
+#: session/translatable_backend_strings.py:9
+msgid "Chamber temperature"
+msgstr "Kameras temperatūra"
+
+#: session/translatable_backend_strings.py:10
+msgid "Coasting distance"
+msgstr "Retrakcijas attālums"
+
+#: session/translatable_backend_strings.py:11
+msgid "Exit ventilation power"
+msgstr "Atplūdes ventilācijas jauda"
+
+#: session/translatable_backend_strings.py:12
+msgid "Extrusion multiplier"
+msgstr "Ekstrūzijas daudzums"
+
+#: session/translatable_backend_strings.py:13
+msgid "Extrusion temperature"
+msgstr "Ekstrūzijas temperatūra"
+
+#: session/translatable_backend_strings.py:14
+msgid "First-layer extrusion temperature"
+msgstr "Pirmā slāņa ekstrūzijas temperatūra"
+
+#: session/translatable_backend_strings.py:15
+msgid "First-layer printing speed"
+msgstr "Pirmā slāņa drukāšanas ātrums"
+
+#: session/translatable_backend_strings.py:16
+msgid "First-layer track height"
+msgstr "Pirmā slāņa līnijas augstums"
+
+#: session/translatable_backend_strings.py:17
+msgid "First-layer track width"
+msgstr "Pirmā slāņa līnijas platums"
+
+#: session/translatable_backend_strings.py:19
+msgid "Print bed coating"
+msgstr "Drukāšanas virsmas pārklājums"
+
+#: session/translatable_backend_strings.py:20
+msgid "Print bed temperature"
+msgstr "Drukāšanas virsmas temperatūra"
+
+#: session/translatable_backend_strings.py:21
+msgid "Printing speed"
+msgstr "Drukāšanas ātrums"
+
+#: session/translatable_backend_strings.py:22
+msgid "Retraction distance"
+msgstr "Retrakcijas attālums"
+
+#: session/translatable_backend_strings.py:23
+msgid "Retraction speed"
+msgstr "Retrakcijas ātrums"
+
+#: session/translatable_backend_strings.py:24
+msgid "Retraction-restart distance"
+msgstr "Re-retrakcijas attālums"
+
+#: session/translatable_backend_strings.py:25
+msgid "Track height"
+msgstr "Līnijas augstums"
+
+#: session/translatable_backend_strings.py:26
+msgid "Track width"
+msgstr "Līnijas platums"
+
+#: session/translatable_backend_strings.py:27
+msgid "Z-offset"
+msgstr "Z nobīde"
+
+#: session/translatable_backend_strings.py:31
+msgid ""
+"For this test this value is equal to unity, but, if needed, it can be tested "
+"in a separate test"
+msgstr ""
+"Šim testam šī vērtība ir viens, bet, ja nepieciešams, to var noskaidrot "
+"atsevišķā testā"
+
+#: session/translatable_backend_strings.py:32
+msgid ""
+"Set a value from the range 20-50 mm/s for printing flexible materials, or "
+"30-70 mm/s for printing harder materials"
+msgstr ""
+"Elastīgajiem materiāliem ieteicamais apgabals ir 20-50 mm/s, cietākiem "
+"materiāliem 30-70 mm/s."
+
+#: session/translatable_backend_strings.py:33
+msgid ""
+"Set part cooling. Active part cooling is required when printing using high "
+"deposition rates or when printing fine details"
+msgstr ""
+"Detaļas dzesēšanas uzstādīšana. Aktīvā detaļas dzesēšana nepieciešama "
+"printējot lielā ātrumā vai printējot smalkas detaļas"
+
+#: session/translatable_backend_strings.py:34
+msgid "Set the range of <b>Retraction distances</b> to be tested"
+msgstr "Uzstādiet testējamo <b>Atvilkšanas attāluma</b> vērtību apgabalu"
+
+#: session/translatable_backend_strings.py:35
+msgid ""
+"Set the range to 10-25 mm/s for printing flexible materials, or 15-35 mm/s "
+"for harder materials"
+msgstr ""
+"Elastīgajiem materiāliem ieteicamais apgabals ir 10-25 mm/s, cietākiem "
+"materiāliem 15-35 mm/s."
+
+#: session/translatable_backend_strings.py:36
+msgid ""
+"Set the range to 20-50 mm/s for printing flexible materials, or to 30-70 mm/"
+"s for printing harder materials"
+msgstr ""
+"Elastīgajiem materiāliem ieteicamais apgabals ir 10-25 mm/s, cietākiem "
+"materiāliem 15-35 mm/s."
+
+#: session/translatable_backend_strings.py:37
+msgid ""
+"Set the range to 5-15 mm/s for printing flexible materials, or to 10-30 mm/s "
+"for printing harder materials"
+msgstr ""
+"Elastīgajiem materiāliem ieteicamais apgabals ir 5-15 mm/s, cietākiem "
+"materiāliem 10-30 mm/s."
+
+#: session/translatable_backend_strings.py:38
+msgid "Set this value to proceed"
+msgstr "Lai turpinātu, ievadiet šo vērtību"
+
+#: session/translatable_backend_strings.py:39
+msgid ""
+"Set this value to proceed. Perform the corresponding test to fine-tune this "
+"value"
+msgstr ""
+"Lai turpinātu, ievadiet šo vērtību. Veiciet atbilstošo testu, lai vērtību "
+"precizētu"
+
+#: session/translatable_backend_strings.py:40
+msgid ""
+"Set this value to proceed. This value will determine the resolution and "
+"surface quality of your print"
+msgstr ""
+"Lai turpinātu, ievadiet šo vērtību. Šī vērtība noteiks izšķirtspēju un "
+"detaļas virsmas kvalitāti"
+
+#: session/translatable_backend_strings.py:41
+msgid ""
+"The default value is equal to the nozzle inner diameter, but you can perform "
+"the corresponding test to fine-tune this value"
+msgstr ""
+"Sākotnējā vērtība ir vienāda ar sprauslas iekšējo diametru, bet varat veikt "
+"atbilstošo testu un precizēt šo vērtību"
+
+#: session/translatable_backend_strings.py:42
+msgid ""
+"These seven values will be tested at four <b>Printing speeds</b>. You can "
+"change the limiting values"
+msgstr ""
+"Šīs septiņas vērtības tiks testētas ar četriem <b>Drukāšanas ātrumiem</b>. "
+"Jūs varat mainīt robežvērtības"
+
+#: session/translatable_backend_strings.py:43
+msgid ""
+"These seven values will be tested at four different <b>Bridging printing "
+"speeds</b> (see below). You can change the limiting values"
+msgstr ""
+"Šīs septiņas vērtības tiks testētas ar četriem <b>Tilta drukāšanas ātrumiem</"
+"b> (skatīt zemāk). Jūs varat mainīt robežvērtības"
+
+#: session/translatable_backend_strings.py:44
+msgid ""
+"These seven values will be tested at four different <b>First-layer printing "
+"speeds</b> (see below). You can change the limiting values"
+msgstr ""
+"Šīs septiņas vērtības tiks testētas ar četriem <b>Pirmā slāņa drukāšanas "
+"ātrumiem</b> (skatīt zemāk). Jūs varat mainīt robežvērtības"
+
+#: session/translatable_backend_strings.py:45
+msgid ""
+"These seven values will be tested at four different <b>Printing speeds</b> "
+"(see below). You can change the limiting values"
+msgstr ""
+"Šīs septiņas vērtības tiks testētas ar četriem <b>Drukāšanas ātrumiem</b> "
+"(skatīt zemāk). Jūs varat mainīt robežvērtības"
+
+#: session/translatable_backend_strings.py:46
+msgid ""
+"These seven values will be tested at four different <b>Retraction distances</"
+"b> (see below). You can change the limiting values"
+msgstr ""
+"Šīs septiņas vērtības tiks testētas ar četrām <b>Atvilkšanas distancēm</b> "
+"(skatīt zemāk). Jūs varat mainīt robežvērtības"
+
+#: session/translatable_backend_strings.py:47
+msgid ""
+"These seven values will be tested at four different <b>Retraction speeds</b> "
+"(see below). You can change the limiting values"
+msgstr ""
+"Šīs septiņas vērtības tiks testētas ar četriem <b>Atvilkšanas ātrumiem</b> "
+"(skatīt zemāk). Jūs varat mainīt robežvērtības"
+
+#: session/translatable_backend_strings.py:48
+msgid ""
+"These seven values will be tested at one <b>First-layer printing speed</b>. "
+"You can change the limiting values"
+msgstr ""
+"Šīs septiņas vērtības tiks testētas ar vienu <b>Pirmā slāņa drukāšanas "
+"ātrumu</b>. Jūs varat mainīt robežvērtības"
+
+#: session/translatable_backend_strings.py:49
+msgid ""
+"These seven values will be tested at one <b>Printing speed</b>. You can "
+"change the limiting values"
+msgstr ""
+"Šīs septiņas vērtības tiks testētas ar vienu <b>Drukāšanas ātrumu</b>. Jūs "
+"varat mainīt robežvērtības"
+
+#: session/translatable_backend_strings.py:50
+msgid ""
+"These seven values will be tested while all other processing parameters are "
+"constant. You can change the limiting values"
+msgstr ""
+"Šīs septiņas vērtības tiks testētas, bet pārējās paliks nemainīgas. Jūs "
+"varat mainīt robežvērtības"
+
+#: session/translatable_backend_strings.py:51
+msgid "These seven values will be tested. You can change the limiting values"
+msgstr "Šīs septiņas vērtības tiks testētas. Jūs varat mainīt robežvērtības"
+
+#: session/translatable_backend_strings.py:52
+msgid "This value was determined in the previous test(s) and cannot be changed"
+msgstr "Šī vērtība tika noskaidrota iepriekšējos testos un nav maināma."
+
+#: session/translatable_backend_strings.py:56
+msgid ""
+"This is a core test which helps finding a working retraction distance under "
+"general conditions."
+msgstr ""
+"Šis ir pamata tests, kas ļauj noskaidrot derīgu atvilkšanas distanci "
+"vispārīgā gadījumā."
+
+#: session/translatable_backend_strings.py:57
+msgid "This is an additional test to avoid under-extrusion."
+msgstr "Šis ir papildu tests, lai novērstu nepietiekamu ekstrūziju."
+
+#: session/translatable_backend_strings.py:58
+msgid ""
+"This test helps you find a base temperature and printing speed. These will "
+"be optimized further in later tests. Since there can be different parameter "
+"combinations that work, but are not optimal for your intended target, this "
+"is an essential test."
+msgstr ""
+"Šis tests ļauj noskaidrot sākotnējās temperatūras un printēšanas ātruma "
+"vērtības. Tālākajos testos tās tika precizētas. Šis ir nozīmīgs tests, jo "
+"vairākas vērtību kombinācijas var strādāt, bet ne visas būs optimālas "
+"izvēlētajam mērķim."
+
+#: session/translatable_backend_strings.py:59
+msgid "This test is needed to arrive at the most optimal flow-rate."
+msgstr ""
+"Šis tests ir nepieciešams, lai iegūtu optimālāko ekstrūzijas koeficientu."
+
+#: session/translatable_backend_strings.py:60
+msgid ""
+"This test is needed to avoid gaps between tracks and find the limits of "
+"horizontal resolution with a given nozzle."
+msgstr ""
+"Šis tests ir nepieciešams, lai izvairītos no spraugām starp līnijām un "
+"noskaidrotu slāņa biezuma apgabalu konkrētajai sprauslai."
+
+#: session/translatable_backend_strings.py:61
+msgid "This test is needed to avoid stringing."
+msgstr "Šis tests ir nepieciešams, lai izvairītos no matiņiem."
+
+#: session/translatable_backend_strings.py:62
+msgid ""
+"This test is needed to establish good first layer printing settings. A good "
+"first layer is essential to achieving good prints."
+msgstr ""
+"Šis tests ir nepieciešams, lai iegūtu labus pirmā slāņa uzstādījumus. Labs "
+"pirmais slānis ir viens no labu rezultātu priekšnoteikumiem."
+
+#: session/translatable_backend_strings.py:63
+msgid ""
+"This test is needed to find Z-offset value in case of non-level print bed or "
+"printbed coating."
+msgstr "Šis tests ir nepieciešams, lai noteiktu pamatnes augstuma nobīdi."
+
+#: session/translatable_backend_strings.py:64
+msgid ""
+"This test is needed to find reliable settings for retraction. The best "
+"combination of 3 parameters are determined simulataneously."
+msgstr ""
+"Šis tests ir nepieciešams, lai noskaidrotu uzticamus atvilkšanas "
+"uzstādījumus. Labākā 3 parametru kombinācija tiek noskaidrota, mainot visus "
+"3 parametrus vienlaicīgi."
+
+#: session/translatable_backend_strings.py:65
+msgid "This test is needed to find the best bridging settings."
+msgstr "Šis tests ir nepieciešams, lai noskaidrotu labākos tilta uzstādījumus."
+
+#: session/translatable_backend_strings.py:66
+msgid ""
+"This test is needed to find the best retraction restart distance and "
+"coasting settings."
+msgstr ""
+"Šis tests ir nepieciešams, lai atrastu labāko re-retrakcijas attālumu un "
+"neekstrūdēšanas uzstādījumus."
+
+#: session/translatable_backend_strings.py:67
+msgid ""
+"This test is needed to find the limits of printing resolution (layer "
+"thickness)."
+msgstr ""
+"Šis tests ir nepieciešams, lai noteiktu drukāšanas izšķirtspējas robežas "
+"(slāņa biezums)."
+
+#: session/translatable_backend_strings.py:68
+msgid ""
+"This test is needed to solve possible issues with adhesion between tracks if "
+"there are any. Good weld-together is essential to achieving good mechanical "
+"properties in any printed part.<br>Run it only if you see the voids in "
+"between the tracks in the previous test. By skipping this test, the <b>First-"
+"layer-track-width</b> value will be set to the <b>Nozzle inner diameter</b>"
+msgstr ""
+"Šis tests ir nepieciešams, lai atrisinātu potenciālas problēmas ar filamenta "
+"salipšanu starp celiņiem. Labi savienoti celiņi ir ļoti svarīgi augstas "
+"mehāniskas izturības nodrošināšanai.<br>Izpildiet šo testu gadījumā, ja "
+"pirmā testa struktūrai starp līnijām ir spraugas. IZlaižot šo testu, "
+"<b>Pirmā slāņa līnijas platums</b> būs vienāda ar <b>Sprauslas iekšējo "
+"diametru</b>"
+
+#: session/translatable_backend_strings.py:73
+msgid ""
+"<ul><li>If the print does not adhere to the build platform, increase the "
+"<b>First-layer extrusion temperature</b> and re-run the test.</li><li>If "
+"this does not help, increase the <b>Printbed temperature</b> or apply "
+"different coating/spray on the build platform.</li><li>If you cannot find "
+"acceptable combination of two parameters, re-run the test with different "
+"<b>First-layer-extrusion-temperature</b> value and/or using different "
+"<b>Printing-speed</b> range.</li></ul>"
+msgstr ""
+"<ul><li>Ja detaļa netura pie platformas, palieliniet <b>Pirmā slāņa "
+"ekstrūzijas temperatūru</b> un atkārtojiet testu.</li><li>Ja tas nelīdz, "
+"palieliniet <b>Platformas (printbed) temperatūru</b> vai izmantojiet citu "
+"platformas virsmas pārklājumu/aerosolu.</li><li>Ja neizdodas atrast piemērtu "
+"abu parametru kombināciju, atkārtojiet testu ar citām <b>Pirmā līmeņa "
+"ekstrūzijas temperatūras</b> vērtībām un/vai citu <b>Drukāšanas ātruma</b> "
+"intervālu.</li></ul>"
+
+#: session/translatable_backend_strings.py:79
+#: session/translatable_backend_strings.py:97
+msgid "Z-Offset"
+msgstr "Z nobīde"
+
+#: session/translatable_backend_strings.py:80
+msgid "First-Layer Track Height vs First-Layer Printing Speed"
+msgstr "Pirmā slāņa augstums un Pirmā slāņa drukāšanas ātrums"
+
+#: session/translatable_backend_strings.py:81
+#: session/translatable_backend_strings.py:99
+msgid "First-Layer Track Width"
+msgstr "Pirmā slāņa līnijas platums"
+
+#: session/translatable_backend_strings.py:82
+msgid "Extrusion Temperature vs Printing Speed"
+msgstr "Ekstrūzijas temperatūra un Drukāšanas ātrums"
+
+#: session/translatable_backend_strings.py:83
+msgid "Track Height vs Printing Speed"
+msgstr "Līnijas augstums un Drukāšanas ātrums"
+
+#: session/translatable_backend_strings.py:84
+#: session/translatable_backend_strings.py:102
+msgid "Track Width"
+msgstr "Līnijas platums"
+
+#: session/translatable_backend_strings.py:85
+#: session/translatable_backend_strings.py:103
+msgid "Extrusion Multiplier"
+msgstr "Ekstrūzijas daudzums"
+
+#: session/translatable_backend_strings.py:86
+#: session/translatable_backend_strings.py:104
+msgid "Printing Speed"
+msgstr "Drukāšanas ātrums"
+
+#: session/translatable_backend_strings.py:87
+msgid "Extrusion Temperature vs Retraction Distance"
+msgstr "Ekstrūzijas temperatūra un Retrakcijas attālums"
+
+#: session/translatable_backend_strings.py:88
+msgid "Retraction Distance vs Printing Speed"
+msgstr "Retrakcijas attālums un Drukāšanas ātrums"
+
+#: session/translatable_backend_strings.py:89
+#: session/translatable_backend_strings.py:107
+msgid "Retraction Distance"
+msgstr "Retrakcijas attālums"
+
+#: session/translatable_backend_strings.py:90
+msgid "Retraction Distance vs Retraction Speed"
+msgstr "Retrakcijas attālums un Retrakcijas ātrums"
+
+#: session/translatable_backend_strings.py:91
+msgid "Retraction Restart Distance vs Printing Speed And Coasting Distance"
+msgstr ""
+"Re-retrakcijas attālums pret Drukāšanas ātrumu un neekstrūdēšanas attālumu"
+
+#: session/translatable_backend_strings.py:92
+msgid "Bridging Extrusion Multiplier vs Bridging Printing Speed"
+msgstr "Tilta ekstrūzijas daudzums un Tilta drukāšanas ātrums"
+
+#: session/translatable_backend_strings.py:93
+#: session/translatable_backend_strings.py:111
+msgid "Soluble Support Adhesion"
+msgstr "Šķistošā materiāla pielipšana"
+
+#: session/translatable_backend_strings.py:98
+msgid "First-Layer Track Height vs<br>First-Layer Printing Speed"
+msgstr "Pirmā slāņa augstums un<br>Pirmā slāņa drukāšanas ātrums"
+
+#: session/translatable_backend_strings.py:100
+msgid "Extrusion Temperature vs<br>Printing Speed"
+msgstr "Ekstrūzijas temperatūra un<br>Drukāšanas ātrums"
+
+#: session/translatable_backend_strings.py:101
+msgid "Track Height vs<br>Printing Speed"
+msgstr "Līnijas augstums un<br>Drukāšanas ātrums"
+
+#: session/translatable_backend_strings.py:105
+msgid "Extrusion Temperature vs<br>Retraction Distance"
+msgstr "Ekstrūzijas temperatūra un<br>Retrakcijas attālums"
+
+#: session/translatable_backend_strings.py:106
+msgid "Retraction Distance vs<br>Printing Speed"
+msgstr "Retrakcijas attālums un<br>Drukāšanas ātrums"
+
+#: session/translatable_backend_strings.py:108
+msgid "Retraction Distance vs<br>Retraction Speed"
+msgstr "Retrakcijas attālums un<br>Retrakcijas ātrums"
+
+#: session/translatable_backend_strings.py:109
+msgid "Retraction Restart Distance vs<br>Printing Speed And Coasting Distance"
+msgstr ""
+"Re-retrakcijas attālums pret<br>Drukāšanas ātrumu un neekstrūdēšanas attālumu"
+
+#: session/translatable_backend_strings.py:110
+msgid "Bridging Extrusion Multiplier vs<br>Bridging Printing Speed"
+msgstr "Tilta ekstrūzijas daudzums un<br>Tilta drukāšanas ātrums"
+
 #: session/views.py:101
 #, python-brace-format
 msgid "Material \"{material}\" has been created!"
@@ -1800,40 +1917,7 @@ msgstr "Printera \"{printer}\" izmaiņas saglabātas!"
 msgid "3D Printer \"{printer}\" has been created!"
 msgstr "Izveidots 3D printeris \"{printer}\"!"
 
-#: session/views.py:262
-msgid "First-Layer Track Height vs<br>First-Layer Printing Speed"
-msgstr "Pirmā slāņa augstums un<br>Pirmā slāņa drukāšanas ātrums"
-
-#: session/views.py:264
-msgid "Extrusion Temperature vs<br>Printing Speed"
-msgstr "Ekstrūzijas temperatūra un<br>Drukāšanas ātrums"
-
-#: session/views.py:265
-msgid "Track Height vs<br>Printing Speed"
-msgstr "Līnijas augstums un<br>Drukāšanas ātrums"
-
-#: session/views.py:269
-msgid "Extrusion Temperature vs<br>Retraction Distance"
-msgstr "Ekstrūzijas temperatūra un<br>Retrakcijas attālums"
-
-#: session/views.py:270
-msgid "Retraction Distance vs<br>Printing Speed"
-msgstr "Retrakcijas attālums un<br>Drukāšanas ātrums"
-
-#: session/views.py:272
-msgid "Retraction Distance vs<br>Retraction Speed"
-msgstr "Retrakcijas attālums un<br>Retrakcijas ātrums"
-
-#: session/views.py:273
-msgid "Retraction Restart Distance vs<br>Printing Speed And Coasting Distance"
-msgstr ""
-"Re-retrakcijas attālums pret<br>Drukāšanas ātrumu un neekstrūdēšanas attālumu"
-
-#: session/views.py:274
-msgid "Bridging Extrusion Multiplier vs<br>Bridging Printing Speed"
-msgstr "Tilta ekstrūzijas daudzums un<br>Tilta drukāšanas ātrums"
-
-#: session/views.py:400
+#: session/views.py:384
 #, python-brace-format
 msgid ""
 "Your next test is available in Full Access only. You can skip it and go to "
@@ -1842,7 +1926,7 @@ msgstr ""
 "Jums nepieciešamais tests pieejams tikai ar Pilnu piekļuvi. Varat doties uz "
 "nākamo pieejamo testu vai <a href={link}>iegādāties Pilnu piekļuvi.</a>"
 
-#: session/views.py:404
+#: session/views.py:388
 #, python-brace-format
 msgid ""
 "Your next test is available in Full Access only. You can skip it and go to "
