@@ -19,7 +19,7 @@
           {% for lang in languages %}
           <div class="row justify-content-center">
               <form action="{% url 'set_language' %}" method="post">{% csrf_token %}<input name="language" type="hidden" value="{{ lang.code }}">
-                <button type="submit" class="btn btn-link">{{ lang.name_local }} ({{ lang.code }})</button>
+                <button type="submit" class="btn btn-link">{{ lang.name_local|capfirst }} ({{ lang.code }})</button>
               </form>
           </div>
           {% endfor %}
