@@ -322,7 +322,7 @@ class GuidedValidateView(GuidedSessionView):
             # first element will have the lowest test number
             q1 = questions[0]
             if q1.hint is not None:
-                messages.info(self.request, q1.hint)
+                messages.info(self.request, _(q1.hint))
             if q1.target_test == session.test_number:
                 session.delete_previous_test(q1.target_test)
                 session.save()

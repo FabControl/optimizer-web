@@ -368,12 +368,13 @@ class ValidateFormTestDescriptionForm(forms.ModelForm):
         questions = Junction.objects.get(base_test=session.test_number).descriptors.all()
         for i, question in enumerate(questions):
             question_name = f'question_{str(i)}'
-            choices = ((question.pk, "Yes"), ("null", "No"))
+            choices = ((question.pk, _("Yes")), ("null", _("No")))
             q = forms.TypedChoiceField(choices=choices, initial="null", widget=forms.RadioSelect, required=True)
+            statement = _(question.statement)
             if question.image:
-                q.label = mark_safe(f"""<a type="button" href="#" class="" data-toggle="popover" data-trigger="focus" title=" " data-img='{question.image.url}'>{question.statement}</a>""")
+                q.label = mark_safe(f"""<a type="button" href="#" class="" data-toggle="popover" data-trigger="focus" title=" " data-img='{question.image.url}'>{statement}</a>""")
             else:
-                q.label = question.statement
+                q.label = statement
             q.required = False
             q.widget.attrs.update({'value': question.pk})
             q.widget.attrs.update({'target': question.target_test})
