@@ -10,6 +10,8 @@ from payments.models import Plan
 from optimizer_api import api_client
 from .choices import TEST_NUMBER_CHOICES, TARGET_CHOICES, SLICER_CHOICES, TOOL_CHOICES, FORM_CHOICES, UNITS, MODE_CHOICES, WIZARD_MODES
 from authentication.choices import PLAN_CHOICES
+from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy
 
 # Create your models here.
 
@@ -305,7 +307,7 @@ class Session(models.Model, DependenciesCopyMixin):
     """
     mode = models.ForeignKey(SessionMode, null=True, on_delete=models.CASCADE)
     number = models.IntegerField(default=0)
-    name = models.CharField(default="Untitled", max_length=20)
+    name = models.CharField(default=gettext_lazy("Untitled"), max_length=20)
     corporation = models.ForeignKey('payments.Corporation', on_delete=models.CASCADE, null=True, blank=True)
     pub_date = models.DateTimeField(default=timezone.now, blank=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
@@ -538,24 +540,55 @@ class Session(models.Model, DependenciesCopyMixin):
         temp_info = None
         if self._test_info != "":
             temp_info = json.loads(self._test_info)
-            if temp_info["test_number"] != self.test_number:
-                self.update_test_info()
-            self._test_info = json.dumps(temp_info)
-        else:
-            self.update_test_info()
-        self.save()
+
+        if temp_info is None or temp_info["test_number"] != self.test_number:
+            temp_info = self.update_test_info()
+            self.save()
         return temp_info
+
+
+    @property
+    def readable_test_info(self):
+        info = self.test_info
+
+        hint = info.get('hint_init')
+        if hint is not None:
+            info['hint_init'] = _(hint)
+        hint = info.get('hint_valid')
+        if hint is not None:
+            info['hint_valid'] = _(hint)
+
+        if 'other_parameters' in info:
+            for param in info['other_parameters']:
+                hint = param.get('hint_active')
+                if hint is not None:
+                    param['hint_active'] = _(hint)
+                name = param.get('name')
+                if name is not None:
+                    param['name'] = _(name.capitalize())
+
+        for p in ['parameter_one', 'parameter_two', 'parameter_three']:
+            param = info.get(p)
+            if param is not None:
+                hint = param.get('hint_active')
+                if hint is not None:
+                    param['hint_active'] = _(hint)
+                name = param.get('name')
+                if name is not None:
+                    param['name'] = _(name.capitalize())
+
+        return info
 
     @property
     def display_test_name(self):
-        return self.test_info["name"].title().replace('Vs', 'vs')
+        return _(self.test_info["name"].title().replace('Vs', 'vs'))
 
     @property
     def display_test_type(self):
         if self.test_number in settings.FREE_TESTS:
-            return "Core"
+            return _("Core")
         else:
-            return "Optional"
+            return _("Optional")
 
     def update_test_info(self):
         """
@@ -585,6 +618,18 @@ class Session(models.Model, DependenciesCopyMixin):
         :return:
         """
         return self.persistence["session"]["previous_tests"]
+
+    @property
+    def readable_previous_tests(self):
+        tests = self.previous_tests
+        for t in tests:
+            t['test_name'] = _(t['test_name'].title().replace(' Vs ', ' vs '))
+            t['parameter_one_name'] = _(t['parameter_one_name'])
+            if 'parameter_two_name' in t and t['parameter_two_name'] is not None:
+                t['parameter_two_name'] = _(t['parameter_two_name'])
+            if 'parameter_three_name' in t and t['parameter_three_name'] is not None:
+                t['parameter_three_name'] = _(t['parameter_three_name'])
+        return tests
 
     def previous_tests_as_dict(self):
         """
@@ -627,13 +672,18 @@ class Session(models.Model, DependenciesCopyMixin):
         temp_persistence["session"]["previous_tests"] = temp_tests
         self.persistence = temp_persistence
 
-    def get_test_with_current_number(self):
+    def get_readable_test_with_current_number(self):
         """
         Looks through previous tests and returns data of the first test whose number matches the current self.test_number.
         :return:
         """
         for test in self.previous_tests:
             if test["test_number"] == self.test_number:
+                for p in ['parameter_one_name', 'parameter_two_name', 'parameter_three_name']:
+                    param = test.get(p)
+                    if param is not None:
+                        test[p] = _(param.capitalize())
+
                 return test
 
     @property
@@ -643,7 +693,7 @@ class Session(models.Model, DependenciesCopyMixin):
         :return:
         """
         parameters = []
-        for item, content in self.test_info.items():
+        for item, content in self.readable_test_info.items():
             if item.startswith("parameter_"):
                 if type(content) == dict:
                     if content["name"] is None:

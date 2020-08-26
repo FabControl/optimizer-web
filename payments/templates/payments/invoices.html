@@ -1,4 +1,5 @@
 {% extends "session/base.html" %}
+{% load i18n %}
 
 {% block content %}
 {% load static %}
@@ -11,9 +12,9 @@
         <table class="sortable sortable-theme-bootstrap table" data-sortable>
           <thead>
             <tr>
-              <th data-defaultsort="asc">Invoice</th>
-              <th>Date</th>
-              <th>Amount paid</th>
+              <th data-defaultsort="asc">{% trans 'Invoice' %}</th>
+              <th>{% trans 'Date' %}</th>
+              <th>{% trans 'Amount paid' %}</th>
               <th data-defaultsort='disabled'></th>
             </tr>
           </thead>
@@ -25,7 +26,7 @@
               <td>{{ invoice.date_paid }}</td>
               <td>{{ invoice.payment_plan.price }} {{ invoice.payment_plan.currency.name }}</td>
               <td>
-                <button class="btn-sm btn-primary" type="button" onclick="location.href='{% url 'download_invoice' invoice.pk %}'">Download</button>
+                <button class="btn-sm btn-primary" type="button" onclick="location.href='{% url 'download_invoice' invoice.pk %}'">{% trans 'Download' %}</button>
               </td>
             </tr>
             {% endfor %}

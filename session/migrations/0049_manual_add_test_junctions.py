@@ -6,7 +6,7 @@ from django.db import migrations
 def populate_junctions(app, schema_editor):
     db_alias = schema_editor.connection.alias
 
-    test_list = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13']
+    test_list = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13']
     Junction = app.get_model('session', 'Junction')
 
     for test in test_list:

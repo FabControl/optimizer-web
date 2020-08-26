@@ -1,0 +1,33 @@
+{% load i18n %}
+
+<div class="container text-center">
+  {% get_current_language as LANGUAGE_CODE %}
+  {% get_language_info for LANGUAGE_CODE as current_lang %}
+  <span>{% blocktrans with current_lang.name_local as lang and 'href="#" data-toggle="modal" data-target="#languageModal"' as attrs %}Page presented in <a {{ attrs }}>{{ lang }}</a>{% endblocktrans %}</span>
+</div>
+<div id="languageModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    {% get_available_languages as LANGUAGES %}
+    {% get_language_info_list for LANGUAGES as languages %}
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{% trans 'Change page language' %}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+          {% for lang in languages %}
+          <div class="row justify-content-center">
+              <form action="{% url 'set_language' %}" method="post">{% csrf_token %}<input name="language" type="hidden" value="{{ lang.code }}">
+                <button type="submit" class="btn btn-link">{{ lang.name_local|capfirst }} ({{ lang.code }})</button>
+              </form>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">{% trans 'Cancel' %}</button>
+      </div>
+    </div>
+  </div>
+</div>

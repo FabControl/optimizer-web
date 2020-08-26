@@ -12,6 +12,7 @@ from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from payments.countries import codes_iso3166
 from payments.models import Corporation
+from django.utils.translation import gettext_lazy as _
 
 
 # class UserForm(forms.ModelForm):
@@ -24,8 +25,9 @@ from payments.models import Corporation
 
 class LoginForm(forms.Form):
 
-    email = forms.EmailField()
-    password = forms.CharField(max_length=32, widget=forms.PasswordInput)
+    email = forms.EmailField(label=_('Email'))
+    password = forms.CharField(max_length=32, widget=forms.PasswordInput,
+                               label=_('Password'))
 
     def __init__(self, *args, **kwargs):
         super(LoginForm, self).__init__(*args, **kwargs)
@@ -36,7 +38,8 @@ class LoginForm(forms.Form):
         fields = ['email', 'password']
 
 class AccountActivationForm(forms.Form):
-    password = forms.CharField(max_length=32, widget=forms.PasswordInput)
+    password = forms.CharField(max_length=32, widget=forms.PasswordInput,
+                               label=_('Password'))
 
     def __init__(self, *args, **kwargs):
         self.user_instance = kwargs.pop('user', None)
@@ -50,7 +53,7 @@ class AccountActivationForm(forms.Form):
             if self.user_instance.check_password(data.get('password')):
                 return data
 
-        raise forms.ValidationError('Password did not match our records')
+        raise forms.ValidationError(_('Password did not match our records'))
 
     class Meta:
         fields = ['password']
@@ -58,11 +61,16 @@ class AccountActivationForm(forms.Form):
 
 class SignUpForm(UserCreationForm):
     username = None
-    email = forms.EmailField(max_length=254, help_text='We will not share your email address with 3rd parties.')
-    first_name = forms.CharField(max_length=30, required=True)
-    last_name = forms.CharField(max_length=30, required=True)
+    email = forms.EmailField(max_length=254,
+                            label=_('Email'),
+                            help_text=_('We will not share your email address with 3rd parties.'))
+    first_name = forms.CharField(max_length=30,
+                                required=True,
+                                label=_('First name'))
+    last_name = forms.CharField(max_length=30,
+                                required=True,
+                                label=_('Last name'))
     termsofuse = forms.BooleanField()
-    termsofuse.label = safestring.mark_safe('<label class="small">I agree to <a href="/help/terms_of_use" target="blank">terms of use</a></label>')
 
     helper = FormHelper()
     helper.form_tag = False
@@ -73,7 +81,11 @@ class SignUpForm(UserCreationForm):
         self.fields['password2'].widget.attrs["maxlength"] = 32
         self.fields['password1'].widget.attrs["minlength"] = 8
         self.fields['password2'].widget.attrs["minlength"] = 8
-        self.fields['company_country'].label = 'Country'
+        self.fields['company_country'].label = _('Country')
+
+        terms_label = _('I agree to %(starttag)sterms of use%(endtag)s') % {'starttag': '<a href="/help/terms_of_use" target="blank">',
+                                                                            'endtag': '</a>'}
+        self.fields['termsofuse'].label = safestring.mark_safe(f'<label class="small">{terms_label}</label>')
 
     class Meta:
         model = User
@@ -108,7 +120,7 @@ class ResetPasswordForm(PasswordResetForm):
         super(ResetPasswordForm, self).__init__(*a, **k)
         self.helper = FormHelper()
         self.helper.form_tag = False
-        self.fields["email"].help_text = "Password recovery instructions will be sent to this email."
+        self.fields["email"].help_text = _("Password recovery instructions will be sent to this email.")
 
     def get_users(self, email):
         # Reimplemented to allow activate account with expired activation token
@@ -174,15 +186,15 @@ class LegalInformationForm(forms.ModelForm):
 
     def __init__(self, *a, **k):
         super().__init__(*a, **k)
-        self.fields['company_name'].label = 'Company name*'
+        self.fields['company_name'].label = _('Company name*')
         self.fields['first_name'].required = True
         self.fields['last_name'].required = True
-        self.fields['company_country'].label = 'Country'
-        self.fields['company_legal_address'].label = 'Company legal address*'
-        self.fields['company_registration_number'].label = 'Company registration number*'
-        self.fields['company_vat_number'].label = 'Company VAT number'
+        self.fields['company_country'].label = _('Country')
+        self.fields['company_legal_address'].label = _('Company legal address*')
+        self.fields['company_registration_number'].label = _('Company registration number*')
+        self.fields['company_vat_number'].label = _('Company VAT number')
         self.fields['company_account'].initial = self.instance.is_company_account
-        self.fields['company_account'].label = 'Show legal info (for EU companies)'
+        self.fields['company_account'].label = _('Show legal info (for EU companies)')
 
     def clean(self):
         cleaned_data = super().clean()
@@ -190,33 +202,26 @@ class LegalInformationForm(forms.ModelForm):
         if not company_account:
             cleaned_data['company_vat_number'] = ''
 
-        missing = []
         for f in ['company_name', 'company_country', 'company_legal_address', 'company_registration_number']:
             if company_account:
                 v = cleaned_data.get(f)
                 if v == '' or v is None:
-                    missing.append(self.fields[f].label)
+                    raise forms.ValidationError(
+                            _('Company account requires {field_label}').format(self.fields[f].label)
+                            )
 
             elif f != 'company_country':
                 cleaned_data[f] = ''
-
-        if len(missing) > 0:
-            if len(missing) > 1:
-                last = missing.pop()
-                msg = ', '.join(missing) + ' and ' + last
-            else:
-                msg = missing[0]
-
-            raise forms.ValidationError(
-                    'Company account requires: ' + msg + '.'
-                    )
 
         return cleaned_data
 
 
 class CorporationInviteForm(forms.Form):
-    email = forms.EmailField(widget=forms.TextInput(attrs={'placeholder': 'email'}))
-    name = forms.CharField(max_length=20, widget=forms.TextInput(attrs={'placeholder': 'name'}))
+    email = forms.EmailField(label=_('Email'),
+                             widget=forms.TextInput(attrs={'placeholder': _('email')}))
+    name = forms.CharField(max_length=20, 
+                           label=_('Name'),
+                           widget=forms.TextInput(attrs={'placeholder': 'name'}))
 
     class Meta:
         fields = ['email', 'name']

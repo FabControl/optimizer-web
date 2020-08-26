@@ -1,12 +1,14 @@
 import logging
 from django import forms
-from django.urls import reverse_lazy
+from django.urls import reverse
 from django.utils.safestring import mark_safe
 from crispy_forms.layout import Submit, Layout, Row, Column, Field, HTML
 from crispy_forms.helper import FormHelper
 from .models import *
 from .choices import TEST_NUMBER_CHOICES, MODE_CHOICES
 from decimal import Decimal
+from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy
 
 
 def wrap_decimal_to_python(field):
@@ -173,24 +175,25 @@ class MaterialForm(MultiDecimalSeperatorModelForm):
     def __init__(self, *args, **kwargs):
         super(MaterialForm, self).__init__(*args, **kwargs)
 
-        self.fields['min_temperature'].label = "Min temperature (°C)"
-        self.fields['min_temperature'].help_text = mark_safe("Manufacturer's suggested temperature. After the testing process you might end up with a different temperature. If you do not have this data, here is a method to determine it <a href='https://3doptimizer.helpscoutdocs.com/article/42-determining-initial-printing-temperature'>here</a>.")
+        self.fields['min_temperature'].label = _("Min temperature (°C)")
+        hlp_txt = _("Manufacturer's suggested temperature. After the testing process you might end up with a different temperature. If you do not have this data, a method to determine it can be faund <a href='{help_link}'>here</a>.")
+        self.fields['min_temperature'].help_text = mark_safe(hlp_txt.format(help_link='https://3doptimizer.helpscoutdocs.com/article/42-determining-initial-printing-temperature'))
 
-        self.fields['max_temperature'].label = "Max temperature (°C)"
-        self.fields['max_temperature'].help_text = "Same as above."
+        self.fields['max_temperature'].label = _("Max temperature (°C)")
+        self.fields['max_temperature'].help_text = _("Same as above.")
 
-        self.fields['name'].label = "Name"
-        self.fields['size_od'].label = "Filament diameter (mm)"
+        self.fields['name'].label = _("Name")
+        self.fields['size_od'].label = _("Filament diameter (mm)")
         self.fields['notes'].widget = forms.Textarea()
         self.fields['notes'].widget.attrs.update({'rows': '1'})
-        self.fields['notes'].label = "Notes"
-        self.fields['notes'].help_text = "(Batch number, color, SKU etc.)"
+        self.fields['notes'].label = _("Notes")
+        self.fields['notes'].help_text = _("(Batch number, color, SKU etc.)")
         self.fields['notes'].required = False
 
 
 class SessionForm(forms.ModelForm):
-    buildplate_choices = forms.ChoiceField(label='Build Plate',
-                                        choices=[('Other', 'Other'),
+    buildplate_choices = forms.ChoiceField(label=gettext_lazy('Build Plate'),
+                                        choices=[('Other', gettext_lazy('Other')),
                                             ('----', [
                                                 ('ABS','ABS'),
                                                 ('Aluminium','Aluminium'),
@@ -225,7 +228,7 @@ class SessionForm(forms.ModelForm):
         self.fields["machine"] = forms.ModelChoiceField(queryset=Machine.objects.filter(ownership))
 
         buildplate = self.fields["buildplate"]
-        buildplate.label = 'Other Build Plate'
+        buildplate.label = _('Other Build Plate')
         # make buildplate field last one
         del self.fields["buildplate"]
         self.fields["buildplate"] = buildplate
@@ -241,19 +244,29 @@ class SessionForm(forms.ModelForm):
         queryset = SessionMode.objects.filter(pk__in=modes)
 
         self.fields["mode"] = forms.ModelChoiceField(initial=initial, queryset=queryset, widget=forms.RadioSelect, empty_label=None)
-        self.fields["name"].label = "Name"
-        self.fields["mode"].label = "Mode"
-        self.fields["material"].label = 'Material'
-        self.fields["material"].help_text = mark_safe('<a href="{}?next={}">+ New Material</a>'.format(reverse_lazy('material_form'), reverse_lazy('new_session')))
-        self.fields["machine"].label = "3D Printer"
-        self.fields["machine"].help_text = mark_safe('<a href="{}?next={}">+ New 3D Printer</a>'.format(reverse_lazy('machine_form'), reverse_lazy('new_session')))
-        self.fields["target"].label = "Target"
+        self.fields["name"].label = _("Name")
+        self.fields["mode"].label = _("Mode")
+        self.fields["material"].label = _('Material')
+        self.fields["material"].help_text = mark_safe('<a href="{}?next={}">+ {}</a>'.format(
+                                                                                            reverse('material_form'), 
+                                                                                            reverse('new_session'),
+                                                                                            _('New Material')))
+        self.fields["machine"].label = _("3D Printer")
+        self.fields["machine"].help_text = mark_safe('<a href="{}?next={}">+ {}</a>'.format(
+                                                                                            reverse('machine_form'), 
+                                                                                            reverse('new_session'),
+                                                                                            _('New 3D Printer')))
+        self.fields["target"].label = _("Target")
 
         if self.user.plan == "limited":
             self.fields["target"].choices = [x for x in TARGET_CHOICES if x[0] == "aesthetics"]
-            help_tail = ' require <a href="{}">Full Access</a>'.format(reverse_lazy('plans'))
-            self.fields["target"].help_text = "Mechanical Strength and Short Printing Time targets" + help_tail
-            self.fields["mode"].help_text = "Advanced mode" + help_tail
+            self.fields["target"].help_text = _(
+                        'Mechanical Strength and Short Printing Time targets require <a href="{link}">Full Access</a>'
+                        ).format(link=reverse('plans'))
+
+            self.fields["mode"].help_text = _(
+                        'Advanced mode require <a href="{link}">Full Access</a>'
+                        ).format(link=reverse('plans'))
 
         self.helper = FormHelper()
         self.helper.form_tag = False
@@ -266,6 +279,10 @@ class SessionRenameForm(forms.ModelForm):
     class Meta:
         model = Session
         fields = ('name',)
+
+    def __init__(self, *a, **k):
+        super().__init__(*a, **k)
+        self.fields['name'].label = _('Name')
 
 
 class SettingForm(MultiDecimalSeperatorModelForm):
@@ -304,8 +321,9 @@ class TestValidateForm(forms.ModelForm):
             self.fields["validation"] = MultipleResultValidationField(session.tested_values, session.tested_value_units, required=True)
         self.fields["validation"].label = ""
 
-        if len(session.min_max_parameters) == 3:
-            parameter = session.min_max_parameters[-1]
+        parameters = session.min_max_parameters
+        if len(parameters) == 3:
+            parameter = parameters[-1]
             param = None
             if parameter["units"] != 'mm' and parameter["programmatic_name"] != "extrusion_multiplier":
                 param = forms.IntegerField(min_value=parameter["values"][0], max_value=parameter["values"][1], widget=RangeSliderWidget([parameter["values"][0], parameter["values"][1]], parameter["units"], 1))
@@ -319,7 +337,7 @@ class TestValidateForm(forms.ModelForm):
             self.fields["min_max_parameter_three"] = param
 
         self.fields["comments"] = forms.CharField(max_length=256,
-                                                  required=False, label='My notes (optional)')
+                                                  required=False, label=_('My notes (optional)'))
 
         self.helper = FormHelper()
         self.helper.form_tag = False
@@ -350,12 +368,13 @@ class ValidateFormTestDescriptionForm(forms.ModelForm):
         questions = Junction.objects.get(base_test=session.test_number).descriptors.all()
         for i, question in enumerate(questions):
             question_name = f'question_{str(i)}'
-            choices = ((question.pk, "Yes"), ("null", "No"))
+            choices = ((question.pk, _("Yes")), ("null", _("No")))
             q = forms.TypedChoiceField(choices=choices, initial="null", widget=forms.RadioSelect, required=True)
+            statement = _(question.statement)
             if question.image:
-                q.label = mark_safe(f"""<a type="button" href="#" class="" data-toggle="popover" data-trigger="focus" title=" " data-img='{question.image.url}'>{question.statement}</a>""")
+                q.label = mark_safe(f"""<a type="button" href="#" class="" data-toggle="popover" data-trigger="focus" title=" " data-img='{question.image.url}'>{statement}</a>""")
             else:
-                q.label = question.statement
+                q.label = statement
             q.required = False
             q.widget.attrs.update({'value': question.pk})
             q.widget.attrs.update({'target': question.target_test})
@@ -375,9 +394,8 @@ class TestGenerateForm(forms.ModelForm):
         if session.mode.type == 'guided':
             show_inactives = False
 
-        test_info = session.update_test_info()
+        test_info = session.readable_test_info
         self.parameters = []
-        secondary_parameters = []
         self.secondary_parameters_programmatic_names = []
 
         # Get all non-None parameters
@@ -422,24 +440,22 @@ class TestGenerateForm(forms.ModelForm):
                         widget=MinMaxWidget(
                             widgets=widgets))
 
-                    self.fields[field_id].label = "{} ({})".format(parameter["name"].capitalize(), (
+                    self.fields[field_id].label = "{} ({})".format(parameter["name"], (
                         "°C" if parameter["units"] == "degC" else parameter["units"]))
 
                     if parameter['hint_active']:
-                        self.fields[field_id].help_text = "{}".format(parameter['hint_active'])
+                        self.fields[field_id].help_text = parameter['hint_active']
 
         list(self.fields.values())[-1].use_hr = True
 
-        for secondary_parameter in test_info["other_parameters"]:
-            secondary_parameters.append(secondary_parameter)
-
+        previous_params = session.get_previously_tested_parameters()
         # Create fields for secondary_parameters
-        for parameter in secondary_parameters:
+        for parameter in test_info["other_parameters"]:
             if parameter["units"] != 'mm' and parameter["programmatic_name"] != "extrusion_multiplier":
                 param = forms.IntegerField(min_value=parameter["min_max"][0], max_value=parameter["min_max"][1])
             else:
                 param = forms.DecimalField(min_value=Decimal('{0:0.3f}'.format(parameter["min_max"][0])), max_value=Decimal('{0:0.3f}'.format(parameter["min_max"][1])))
-            param.label = "{} ({})".format(parameter["name"].capitalize(), (
+            param.label = "{} ({})".format(parameter["name"], (
                     "°C" if parameter["units"] == "degC" else parameter["units"]))
             param.widget.attrs["class"] = "col-sm-2 optimizer-input"
             param.initial = parameter["values"]
@@ -449,7 +465,7 @@ class TestGenerateForm(forms.ModelForm):
                     continue
                 # param.widget.attrs['readonly'] = True
                 # inactives[parameter["programmatic_name"]] = param
-            elif parameter["programmatic_name"] in session.get_previously_tested_parameters():
+            elif parameter["programmatic_name"] in previous_params:
                 if not show_inactives:
                     continue
                 # param.widget.attrs['readonly'] = True
@@ -457,7 +473,7 @@ class TestGenerateForm(forms.ModelForm):
             else:
                 actives[parameter["programmatic_name"]] = param
                 if parameter["hint_active"]:
-                    param.help_text = "{}".format(parameter["hint_active"])
+                    param.help_text = parameter["hint_active"]
             self.secondary_parameters_programmatic_names.append(parameter["programmatic_name"])
 
         #  Instantiate active fields first, so that they would appear on top
@@ -514,23 +530,24 @@ class NewMachineForm(MultiDecimalSeperatorModelForm):
         self.helper = FormHelper()
         self.helper.form_tag = False
 
-        self.fields["model"].label = "3D Printer model"
-        self.fields["buildarea_maxdim1"].label = "Max dimension on X axis (mm)"
-        self.fields["buildarea_maxdim2"].label = "Max dimension on Y axis (mm)"
+        self.fields["model"].label = _("3D Printer model")
+        self.fields["buildarea_maxdim1"].label = _("Max dimension on X axis (mm)")
+        self.fields["buildarea_maxdim2"].label = _("Max dimension on Y axis (mm)")
 
-        self.fields["offset_1"].label = "Offset on X axis (mm)"
-        self.fields["offset_2"].label = "Offset on Y axis (mm)"
+        self.fields["offset_1"].label = _("Offset on X axis (mm)")
+        self.fields["offset_2"].label = _("Offset on Y axis (mm)")
 
-        self.fields["form"].label = "Type"
+        self.fields["form"].label = _("Type")
+        self.fields["extruder_type"].label = _("Extruder type")
 
-        self.fields["gcode_header"].label = "Header"
+        self.fields["gcode_header"].label = _("Header")
         self.fields["gcode_header"].required = False
         self.fields["gcode_header"].widget.attrs.update({'rows': '4'})
-        self.fields["gcode_footer"].label = "Footer"
+        self.fields["gcode_footer"].label = _("Footer")
         self.fields["gcode_footer"].required = False
         self.fields["gcode_footer"].widget.attrs.update({'rows': '4'})
         self.fields["homing_sequence"].required = True
-        self.fields["homing_sequence"].label = "Homing script"
+        self.fields["homing_sequence"].label = _("Homing script")
         self.fields["homing_sequence"].widget.attrs.update({'rows': '4'})
         self.helper.layout = Layout(
             Row(
@@ -570,8 +587,9 @@ class NewExtruderForm(MultiDecimalSeperatorModelForm):
         self.helper = FormHelper()
         self.helper.form_tag = False
 
-        self.fields["tool"].label = "Gcode tool index"
-        self.fields["temperature_max"].label = "Max temperature (°C)"
+        self.fields["tool"].label = _("Gcode tool index")
+        self.fields["temperature_max"].label = _("Max temperature (°C)")
+        self.fields["part_cooling"].label = _("Part cooling")
 
     class Meta:
         model = Extruder
@@ -584,7 +602,7 @@ class NewNozzleForm(MultiDecimalSeperatorModelForm):
         self.helper = FormHelper()
         self.helper.form_tag = False
 
-        self.fields["size_id"].label = "Nozzle's inner diameter (mm)"
+        self.fields["size_id"].label = _("Nozzle's inner diameter (mm)")
 
     class Meta:
         model = Nozzle
@@ -597,9 +615,10 @@ class NewChamberForm(MultiDecimalSeperatorModelForm):
         self.helper = FormHelper()
         self.helper.form_tag = False
 
-        self.fields["tool"].label = "Gcode tool index"
-        self.fields["gcode_command"].label = "Gcode syntax"
-        self.fields["temperature_max"].label = "Max temperature (°C)"
+        self.fields["tool"].label = _("Gcode tool index")
+        self.fields["gcode_command"].label = _("Gcode syntax")
+        self.fields["temperature_max"].label = _("Max temperature (°C)")
+        self.fields["chamber_heatable"].label = _("Chamber heatable")
 
     class Meta:
         model = Chamber
@@ -612,10 +631,11 @@ class NewPrintbedForm(MultiDecimalSeperatorModelForm):
         self.helper = FormHelper()
         self.helper.form_tag = False
 
-        self.fields["temperature_max"].label = "Max temperature (°C)"
+        self.fields["temperature_max"].label = _("Max temperature (°C)")
         self.fields["temperature_max"].widget.attrs['min'] = 30
-        self.fields["printbed_heatable"].label = "Print bed heatable"
+        self.fields["printbed_heatable"].label = _("Print bed heatable")
 
     class Meta:
         model = Printbed
         fields = ["printbed_heatable", "temperature_max"]
+

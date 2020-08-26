@@ -1,4 +1,5 @@
 {% extends "session/base.html" %}
+{% load i18n %}
 
 {% block content %}
 {% load crispy_forms_tags %}
@@ -6,19 +7,17 @@
   <div class="row">
     <div class="col-sm">
       <p class="lead">
-        <font size="6">New 3D Printer</font>
+        <font size="6">{% trans 'New 3D Printer' %}</font>
       </p>
     </div>
   </div>
   <div class="row pb-3">
     <div class="col-md-6">
-      <label for="id_preset_selector" class="col-form-label">
-        Load from preset
-      </label>
+      <label for="id_preset_selector" class="col-form-label">{% trans 'Load from preset' %}</label>
       <select class="select form-control" id="id_preset_selector" name="preset" placeholder="Printer preset">
-        <option value="" disabled selected>Select from list</option>
+        <option value="" disabled selected>{% trans 'Select from list' %}</option>
         <option value="" disabled>--------------------</option>
-        <option value="" >OTHER PRINTER (enter values below)</option>
+        <option value="" >{% trans 'OTHER PRINTER (enter values below)' %}</option>
         <option value="" disabled>--------------------</option>
         {% for machine in sample_machines %}
         <option value="{{machine.pk}}">{{machine.model}}</option>
@@ -34,47 +33,47 @@
         {% csrf_token %}
         {% crispy self_form %}
         <div class="">
-          <h4>Extruder</h4>
+          <h4>{% trans 'Extruder' %}</h4>
           <div class="card p-3">
             {% crispy extruder_form %}
             {% crispy nozzle_form %}
           </div>
         </div>
         <div class='pt-3'>
-          <h4>Heating chamber</h4>
+          <h4>{% trans 'Heating chamber' %}</h4>
           <div class="card p-3">
             {% crispy chamber_form %}
           </div>
         </div>
         <div class='pt-3'>
-          <h4>Print bed</h4>
+          <h4>{% trans 'Print bed' %}</h4>
           <div class="card p-3">
             {% crispy printbed_form %}
           </div>
         </div>
         <div class='pt-3 pb-3'>
-          <h4>Custom GCODE scripts</h4>
+          <h4>{% trans 'Custom GCODE scripts' %}</h4>
           <div class="card p-3">
             {{ self_form.gcode_header | as_crispy_field }}
-            <small class='text-muted'>Header is prepended to test routine GCODEs. This can be altered to better accomodate certain printer features, such as autocalibration.</small>
+            <small class='text-muted'>{% trans 'Header is prepended to test routine GCODEs. This can be altered to better accomodate certain printer features, such as autocalibration.' %}</small>
             {{ self_form.homing_sequence | as_crispy_field }}
-            <small class='text-muted'>Homing script is executed after printer has heated up, but before actual printing starts.</small>
+            <small class='text-muted'>{% trans 'Homing script is executed after printer has heated up, but before actual printing starts.' %}</small>
             {{ self_form.gcode_footer | as_crispy_field }}
-            <small class='text-muted'>Footer is appended to test routine GCODEs. Homing command is recommended here, to move the nozzle away from the printed structure.</small>
+            <small class='text-muted'>{% trans 'Footer is appended to test routine GCODEs. Homing command is recommended here, to move the nozzle away from the printed structure.' %}</small>
           </div>
           <div class='pt-3'>
-            <h4>Offset from center of printbed</h4>
+            <h4>{% trans 'Offset from center of printbed' %}</h4>
             <div class="card p-3">
               {{ self_form.offset_1 | as_crispy_field }}
               {{ self_form.offset_2 | as_crispy_field }}
-              <small class='text-muted'>Test structure is centered on the printbed by default. Offset may be used to shift the test structure on build-plate.</small>
+              <small class='text-muted'>{% trans 'Test structure is centered on the printbed by default. Offset may be used to shift the test structure on build-plate.' %}</small>
             </div>
           </div>
         </div>
         {% if next %}
         <input type="hidden" value="{{ next }}" name="next">
         {% endif %}
-        <button type="submit" class="btn btn-primary">Create</button>
+        <button type="submit" class="btn btn-primary">{% trans 'Create' %}</button>
       </form>
     </div>
   </div>
@@ -111,6 +110,7 @@
   element = $('#id_preset_selector')
   element.change(function() {
     var selected_pk = element.children("option:selected").val();
+    if (selected_pk == "") return;
     var url = getBaseUrl() + "/resources/machines/sample/" + selected_pk
     var api_response = $.getJSON(url, function(data) {
       $.each(data, function(key, val) {

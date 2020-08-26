@@ -12,6 +12,7 @@ from uuid import uuid4
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout
 from crispy_forms.bootstrap import FieldWithButtons
+from django.utils.translation import gettext_lazy as _
 
 
 class PaymentPlanForm(forms.Form):
@@ -54,17 +55,17 @@ class PaymentPlanForm(forms.Form):
 
 class VoucherRedeemForm(forms.Form):
     voucher = forms.CharField(max_length=60,
-                            label='Redeem a voucher ')
+                            label=_('Redeem a voucher '))
 
     helper = FormHelper()
     helper.form_action = reverse_lazy('redeem_voucher')
     helper.layout = Layout(FieldWithButtons('voucher',
-                        Submit('submit', 'Redeem', css_class='btn-primary'),
+                        Submit('submit', _('Redeem'), css_class='btn-primary'),
                         style='text-align: center !important;'))
 
     def __init__(self, *a, **k):
         super().__init__(*a, **k)
-        self.fields['voucher'].widget.attrs['placeholder'] = 'voucher code'
+        self.fields['voucher'].widget.attrs['placeholder'] = _('voucher code')
 
     def clean(self):
         cleaned_data = super().clean()

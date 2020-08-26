@@ -1,6 +1,5 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
-from django.utils.translation import ugettext_lazy as _
 from .models import User, Affiliate
 
 # Register your models here.
@@ -11,16 +10,16 @@ class UserAdmin(DjangoUserAdmin):
     fieldsets = (
         (None, {'fields': ('email', 'password',)}),
         ('Subscription', {'fields': ('_plan', 'subscription_expiration', 'manager_of_corporation', 'member_of_corporation')}),
-        (_('Personal info'), {'fields': ('first_name', 'last_name')}),
-        (_('Company info'), {'fields': ('company_name',
+        ('Personal info', {'fields': ('first_name', 'last_name')}),
+        ('Company info', {'fields': ('company_name',
                                         'company_registration_number',
                                         'company_vat_number',
                                         'company_country',
                                         'company_legal_address')}),
-        (_('Permissions'), {'fields': ('is_active', 'can_access_investor_dashboard', 'is_staff', 'is_superuser',
+        ('Permissions', {'fields': ('is_active', 'can_access_investor_dashboard', 'is_staff', 'is_superuser',
                                        'groups', 'user_permissions')}),
         ('Onboarding', {'fields': ('onboarding', '_onboarding_sections',)}),
-        (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
+        ('Important dates', {'fields': ('last_login', 'date_joined')}),
     )
     add_fieldsets = (
         (None, {

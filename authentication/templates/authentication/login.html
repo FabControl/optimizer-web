@@ -1,5 +1,6 @@
 <!-- Loads static files -->
 {% load staticfiles %}
+{% load i18n %}
 <!doctype html>
 <html lang="en" class="h-100">
 
@@ -30,12 +31,12 @@
             {% crispy form %}
             <div class="row">
               <div class="col-sm">
-                <button type="submit" class="btn btn-primary btn-block">Sign in</button>
+                <button type="submit" class="btn btn-primary btn-block">{% trans 'Sign in' %}</button>
               </div>
             </div>
             <div class="row pt-2">
               <div class="col-sm text-center">
-                <small><a href="{% url 'signup' %}">Sign up</a> | <a href="{% url 'password_reset' %}">Recover password</a>
+                <small><a href="{% url 'signup' %}">{% trans 'Sign up' %}</a> | <a href="{% url 'password_reset' %}">{% trans 'Recover password' %}</a>
               </div>
             </div>
           </form>
@@ -52,6 +53,7 @@
   <script src="{% static 'session/js/index.js' %}"></script>
 
   <footer class="footer mt-auto py-3">
+    {% include 'authentication/translation_selector.html' %}
     <div class="container text-center">
       <span class="text-muted"><small>© FabControl SIA</small></span>
     </div>

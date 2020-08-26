@@ -135,7 +135,6 @@ class SessionViewsTest(TestCase):
                 ("faq", {}),
                 ("quickstart", {}),
                 ("support", {}),
-                ('testing_session', {}),
                 ('privacy_statement', {}),
                 ]
 

@@ -43,7 +43,6 @@ urlpatterns = [
 
     path('stats/', views.stats_view, name="stats"),
 
-    path('testing_session', views.testing_session, name="testing_session"),
     path('health_check', views.session_health_check, name='health_check'),
     path('privacy', views.privacy_statement, name='privacy_statement')
 ]

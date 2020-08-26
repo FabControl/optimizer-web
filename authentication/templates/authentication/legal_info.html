@@ -1,4 +1,5 @@
 {% extends "session/base.html" %}
+{% load i18n %}
 
 {% block content %}
 {% load static %}
@@ -18,7 +19,7 @@
           <div class="card-header" id="headingOne" data-toggle="collapse" data-target="#legalInfoForm">
             <a name="ļegal_info"></a>
             <h2 class="mb-0">
-              <button type="button" class="btn btn-link">Account info</button>
+              <button type="button" class="btn btn-link">{% trans 'Account info' %}</button>
             </h2>
           </div>
           <div id="legalInfoForm" class="collapse{% if category == 'legal_info' %} show {% endif %}" aria-labelledby="headingOne" data-parent="#myAccordion">
@@ -27,7 +28,7 @@
                 {% csrf_token %}
                 {{ legal_info.first_name | as_crispy_field }}
                 {{ legal_info.last_name | as_crispy_field }}
-                <div class="form-group"><a href="{% url 'password_change' %}">Change password</a></div>
+                <div class="form-group"><a href="{% url 'password_change' %}">{% trans 'Change password' %}</a></div>
               {% if request.user.company_fields_accessible %}
                 {{ legal_info.company_country | as_crispy_field }}
                 {{ legal_info.company_account | as_crispy_field }}
@@ -45,7 +46,7 @@
                 {{ legal_info.company_vat_number.as_hidden }}
                 {{ legal_info.company_legal_address.as_hidden }}
               {% endif %}
-                <button type="submit" class="btn btn-primary">Save</button>
+                <button type="submit" class="btn btn-primary">{% trans 'Save' %}</button>
               </form>
             </div>
           </div>
@@ -56,34 +57,34 @@
           <div class="card-header" id="headingTwo" data-toggle="collapse" data-target="#subscriptionInfo">
             <a name="subscription"></a>
             <h2 class="mb-0">
-              <button type="button" class="btn btn-link collapsed">Subscription and payments</button>
+              <button type="button" class="btn btn-link collapsed">{% trans 'Subscription and payments' %}</button>
             </h2>
           </div>
           <div id="subscriptionInfo" class="collapse{% if category == 'subscription' %} show {% endif %}" aria-labelledby="headingTwo" data-parent="#myAccordion">
             <div class="card-body">
               {% if subscription %}
-              <p>Active subscription: <b><a href="{% url 'plans' %}">{{ subscription.payment_plan.name }}</a></b> | <a data-toggle="modal" data-target="#cancelationPrompt" href="">Cancel subscription</a></p>
+              <p>{% trans 'Active subscription:' %} <b><a href="{% url 'plans' %}">{{ subscription.payment_plan.name }}</a></b> | <a data-toggle="modal" data-target="#cancelationPrompt" href="">Cancel subscription</a></p>
               <div class="modal fade" id="cancelationPrompt" role="dialog">
                 <div class="modal-dialog">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h4 class="modal-title">Cancel subscription</h4>
+                      <h4 class="modal-title">{% trans 'Cancel subscription' %}</h4>
                       <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
                     <div class="modal-body">
-                      <p>By pressing "Cancel subscription", you confirm cancellation of full access subscription.</p>
-                      <small>You will have full access till {{ request.user.subscription_expiration|date:"Y-m-d" }}.</small>
+                      <p>{% trans 'By pressing "Cancel subscription", you confirm cancellation of full access subscription.' %}</p>
+                      <small>{% blocktrans with end_date=request.user.subscription_expiration|date:"Y-m-d" %}You will have full access till {{ end_date }}.{% endblocktrans %}</small>
                     </div>
                     <div class="modal-footer">
-                      <button type="button" class="btn btn-danger" onclick="location.href='{% url 'cancel_subscription' subscription.pk %}'">Cancel subscription</button>
+                      <button type="button" class="btn btn-danger" onclick="location.href='{% url 'cancel_subscription' subscription.pk %}'">{% trans 'Cancel subscription' %}</button>
                     </div>
                   </div>
                 </div>
               </div>
-              <p>Payment method: {{ subscription.card_info|title }} <a href="{% url 'update_payment_method' subscription.pk %}">Change</a></p>
+              <p>{% trans 'Payment method:' %} {{ subscription.card_info|title }} <a href="{% url 'update_payment_method' subscription.pk %}">{% trans 'Change' %}</a></p>
               {% else %}
-                <p>You don't have active subscription.</p>
-                <button type="button" onclick="location.href='{% url 'plans' %}'" class="btn btn-primary btn">Purchase</button>
+                <p>{% trans "You don't have active subscription." %}</p>
+                <button type="button" onclick="location.href='{% url 'plans' %}'" class="btn btn-primary btn">{% trans 'Purchase' %}</button>
               {% endif %}
             </div>
           </div>
@@ -94,7 +95,7 @@
           <div class="card-header" id="headingThree" data-toggle="collapse" data-target="#corporationInfo">
             <a name="corporation"></a>
             <h2 class="mb-0">
-              <button type="button" class="btn btn-link collapsed">Users</button>
+              <button type="button" class="btn btn-link collapsed">{% trans 'Users' %}</button>
             </h2>
           </div>
           <div id="corporationInfo" class="collapse{% if category == 'corporation' %} show {% endif %}" aria-labelledby="headingThree" data-parent="#myAccordion">
@@ -104,10 +105,10 @@
                     <table class="sortable sortable-theme-bootstrap table" data-sortable>
                       <thead>
                         <tr>
-                          <th>User</th>
-                          <th>Email</th>
-                          <th data-defaultsort="asc">Role</th>
-                          <th>Last active</th>
+                          <th>{% trans 'User' %}</th>
+                          <th>{% trans 'Email' %}</th>
+                          <th data-defaultsort="asc">{% trans 'Role' %}</th>
+                          <th>{% trans 'Last active' %}</th>
                           <th data-defaultsort='disabled'></th>
                         </tr>
                       </thead>
@@ -117,44 +118,44 @@
                         <tr{% if user == corporation.owner %} data-disablesort="true"{% endif %}>
                           <td>{{ user.first_name }} {{ user.last_name }}</td>
                           <td>{{ user.email }}</td>
-                          <td>{% if user == corporation.owner %}Owner{% elif user.manager_of_corporation == corporation %}Manager{% else %}User{% endif %}</td>
+                          <td>{% if user == corporation.owner %}{% trans 'Owner' %}{% elif user.manager_of_corporation == corporation %}{% trans 'Manager' %}{% else %}{% trans 'User' %}{% endif %}</td>
                           <td>{{ user.last_active|default_if_none:"-" }}</td>
                           <td>
                             {% if user != corporation.owner %}
                             {% if request.user.manager_of_corporation or user == request.user %}
                             <div class="dropdown">
                               <button class="btn-sm btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Action
+                                {% trans 'Action' %}
                               </button>
                               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                 {% if request.user.manager_of_corporation %}
                                 <form class="" action="{% if user.manager_of_corporation %}{% url 'resign_manager_role' %}{% else %}{% url 'assign_manager_role' %}{% endif %}" method="post">
                                   {% csrf_token %}
                                   <input type="hidden" name="uid" value="{{ user.pk }}">
-                                  <button class="dropdown-item" type="submit">{% if user.manager_of_corporation %}Resign manager role{% else %}Assign manager role{% endif %}</button>
+                                  <button class="dropdown-item" type="submit">{% if user.manager_of_corporation %}{% trans 'Resign manager role' %}{% else %}{% trans 'Assign manager role' %}{% endif %}</button>
                                 </form>
                                 {% endif %}
-                                <button class="dropdown-item" data-toggle="modal" data-target="#removeFromCorporationPrompt{{ user.pk }}">{% if request.user == user %}Leave{% else %}Remove{% endif %}</button>
+                                <button class="dropdown-item" data-toggle="modal" data-target="#removeFromCorporationPrompt{{ user.pk }}">{% if request.user == user %}{% trans 'Leave' %}{% else %}{% trans 'Remove' %}{% endif %}</button>
                               </div>
                               <div class="modal fade" id="removeFromCorporationPrompt{{ user.pk }}" role="dialog">
                                 <div class="modal-dialog">
                                   <div class="modal-content">
                                     <div class="modal-header">
-                                      <h4 class="modal-title">{% if request.user == user %}Leave{% else %}Remove from{% endif %} company</h4>
+                                      <h4 class="modal-title">{% if request.user == user %}{% trans 'Leave company' %}{% else %}{% trans 'Remove from company' %}{% endif %}</h4>
                                       <button type="button" class="close" data-dismiss="modal">&times;</button>
                                     </div>
                                     <div class="modal-body">
                                       {% if request.user == user %}
-                                      <p>If you leave company, you won't have access to it's printers, materials and testing sessions.</p>
+                                      <p>{% trans "If you leave company, you won't have access to it's printers, materials and testing sessions." %}</p>
                                       {% else %}
-                                      <p>By pressing "Remove", you confirm removal of <b>{{ user.first_name }} {{ user.last_name }}</b> from your company.</p>
+                                      <p>{% blocktrans with first=user.first_name last=user.last_name %}By pressing "Remove", you confirm removal of <b>{{ first }} {{ last }}</b> from your company.{% endblocktrans %}</p>
                                       {% endif %}
                                     </div>
                                     <div class="modal-footer">
                                       <form class="" action="{% url 'remove_from_corporation' %}" method="post">
                                         {% csrf_token %}
                                         <input type="hidden" name="uid" value="{{ user.pk }}">
-                                        <button class="btn btn-danger" type="submit">{% if request.user == user %}Leave{% else %}Remove{% endif %}</button>
+                                        <button class="btn btn-danger" type="submit">{% if request.user == user %}{% trans 'Leave' %}{% else %}{% trans 'Remove' %}{% endif %}</button>
                                       </form>
                                     </div>
                                   </div>
@@ -170,32 +171,32 @@
                         <tr>
                           <td>{{ user.first_name }} {{ user.last_name }}</td>
                           <td>{{ user.email }}</td>
-                          <td>Invitation sent</td>
+                          <td>{% trans 'Invitation sent' %}</td>
                           <td></td>
                           <td>
                           {% if request.user.manager_of_corporation %}
                           <div class="dropdown">
                             <button class="btn-sm btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                              Action
+                              {% trans 'Action' %}
                             </button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                              <button class="dropdown-item" data-toggle="modal" data-target="#removeFromCorporationPrompt{{ user.pk }}">Remove</button>
+                              <button class="dropdown-item" data-toggle="modal" data-target="#removeFromCorporationPrompt{{ user.pk }}">{% trans 'Remove' %}</button>
                             </div>
                             <div class="modal fade" id="removeFromCorporationPrompt{{ user.pk }}" role="dialog">
                               <div class="modal-dialog">
                                 <div class="modal-content">
                                   <div class="modal-header">
-                                    <h4 class="modal-title">Remove from corporation</h4>
+                                    <h4 class="modal-title">{% trans 'Remove from corporation' %}</h4>
                                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                                   </div>
                                   <div class="modal-body">
-                                    <p>By pressing "Remove", you confirm removal of <b>{{ user.first_name }} {{ user.last_name }}</b> from your corporation.</p>
+                                    <p>{% blocktrans with first=user.first_name last=user.last_name %}By pressing "Remove", you confirm removal of <b>{{ first }} {{ last }}</b> from your company.{% endblocktrans %}</p>
                                   </div>
                                   <div class="modal-footer">
                                     <form class="" action="{% url 'cancel_corporation_invitation' %}" method="post">
                                       {% csrf_token %}
                                       <input type="hidden" name="email" value="{{ user.email }}">
-                                      <button class="btn btn-danger" type="submit">Remove</button>
+                                      <button class="btn btn-danger" type="submit">{% trans 'Remove' %}</button>
                                     </form>
                                   </div>
                                 </div>
@@ -210,32 +211,32 @@
                         <tr>
                           <td>{{ affiliate.name }}</td>
                           <td>{{ affiliate.email }}</td>
-                          <td>Invitation sent</td>
+                          <td>{% trans 'Invitation sent' %}</td>
                           <td></td>
                           <td>
                           {% if request.user.manager_of_corporation %}
                           <div class="dropdown">
                             <button class="btn-sm btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                              Action
+                              {% trans 'Action' %}
                             </button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                              <button class="dropdown-item" data-toggle="modal" data-target="#removeCorporationInvitationPrompt{{ affiliate.pk }}">Remove</button>
+                              <button class="dropdown-item" data-toggle="modal" data-target="#removeCorporationInvitationPrompt{{ affiliate.pk }}">{% trans 'Remove' %}</button>
                             </div>
                             <div class="modal fade" id="removeCorporationInvitationPrompt{{ affiliate.pk }}" role="dialog">
                               <div class="modal-dialog">
                                 <div class="modal-content">
                                   <div class="modal-header">
-                                    <h4 class="modal-title">Remove from corporation</h4>
+                                    <h4 class="modal-title">{% trans 'Remove from corporation' %}</h4>
                                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                                   </div>
                                   <div class="modal-body">
-                                    <p>By pressing "Remove", you confirm removal of <b>{{ affiliate.name }}</b> from your corporation.</p>
+                                    <p>{% blocktrans with name=affiliate.name %}By pressing "Remove", you confirm removal of <b>{{ name }}</b> from your company.{% endblocktrans %}</p>
                                   </div>
                                   <div class="modal-footer">
                                     <form class="" action="{% url 'cancel_corporation_invitation' %}" method="post">
                                       {% csrf_token %}
                                       <input type="hidden" name="email" value="{{ affiliate.email }}">
-                                      <button class="btn btn-danger" type="submit">Remove</button>
+                                      <button class="btn btn-danger" type="submit">{% trans 'Remove' %}</button>
                                     </form>
                                   </div>
                                 </div>
@@ -255,7 +256,7 @@
                               <td></td>
                               <td>
                                 {% csrf_token %}
-                                <button class="btn btn-primary" type="submit">Invite user</button>
+                                <button class="btn btn-primary" type="submit">{% trans 'Invite user' %}</button>
                               </td>
                             </form>
                           </tr>
@@ -265,13 +266,13 @@
                   </div>
                   <div class="row pt-8">
                     <div class="col-md-8">
-                      <p>{{ corporation.user_count }} of {{ corporation.max_allowed }} users registered</p>
+                      <p>{% blocktrans with count=corporation.user_count allowed=corporation.max_allowed %}{{ count }} of {{ allowed }} users registered{% endblocktrans %}</p>
                     </div>
                   </div>
                   {% if not corporation.allow_invites and request.user == corporation.owner %}
                   <div class="row pt-8">
                     <div class="col-md-8">
-                      <p><a href="{% url 'plans' %}">Upgrade to add more users</a></p>
+                      <p><a href="{% url 'plans' %}">{% trans 'Upgrade to add more users' %}</a></p>
                     </div>
                   </div>
                   {% endif %}

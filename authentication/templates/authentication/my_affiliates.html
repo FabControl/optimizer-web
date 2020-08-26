@@ -2,17 +2,18 @@
 
 {% block content %}
 {% load static %}
+{% load i18n %}
 <script src="{% static 'session/js/sortable.min.js' %}"></script>
 <link rel="stylesheet" href="{% static 'session/css/sortable-theme-bootstrap.css' %}" />
 <div class="container pt-3">
   <div class="row">
     <div class="col-sm-12">
-      <h3>Invite a friend</h3>
+      <h3>{% trans 'Invite a friend' %}</h3>
     </div>
   </div>
   <div class="row">
     <div class="col-sm-12">
-      <p>After your friend registers you will receive a free week of 3D Optimizer.</p>
+      <p>{% trans 'After your friend registers you will receive a free week of 3DOptimizer.' %}</p>
     </div>
   </div>
   <div class="row">
@@ -31,11 +32,11 @@
         <table class="sortable sortable-theme-bootstrap table" data-sortable>
           <thead>
             <tr>
-              <th data-defaultsort="asc">Date</th>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Status</th>
-              <th>Bonus</th>
+              <th data-defaultsort="asc">{% trans 'Date' %}</th>
+              <th>{% trans 'Name' %}</th>
+              <th>{% trans 'Email' %}</th>
+              <th>{% trans 'Status' %}</th>
+              <th>{% trans 'Bonus' %}</th>
             </tr>
           </thead>
           <tbody>
@@ -45,8 +46,8 @@
               <td>{{ affiliate.date_created }}</td>
               <td>{{ affiliate.name }}</td>
               <td>{{ affiliate.email }}</td>
-              <td>{% if affiliate.is_confirmed %}Registered on {{ affiliate.date_registered|date:"Y-m-d" }}{% else %}Invitation sent{% endif %}</td>
-              <td>{% if affiliate.is_confirmed %}Received {{ affiliate.days_assigned }} days full access{% else %} - {% endif %}</td>
+              <td>{{ affiliate.status_string }}</td>
+              <td>{{ affiliate.bonus_string }}</td>
             </tr>
             {% empty %}
             <tr>
