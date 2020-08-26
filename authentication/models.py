@@ -132,8 +132,8 @@ class User(AbstractUser):
         elif self.plan == 'permanent':
             return _("Permanent License")
         elif self.plan == "education":
-            return ngettext("Student's License ({expiration} Day)",
-                            "Student's License ({expiration} Days)",
+            return ngettext("Educational License ({expiration} Day)",
+                            "Educational License ({expiration} Days)",
                             expiration_delta).format(expiration=expiration_delta)
         elif self.plan == "premium":
             if len(Subscription.objects.filter(user=self, state__in=(Subscription.ACTIVE, Subscription.FAILURE_NOTIFIED))) == 0:

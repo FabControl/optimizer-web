@@ -337,7 +337,7 @@ class TestValidateForm(forms.ModelForm):
             self.fields["min_max_parameter_three"] = param
 
         self.fields["comments"] = forms.CharField(max_length=256,
-                                                  required=False, label='My notes (optional)')
+                                                  required=False, label=_('My notes (optional)'))
 
         self.helper = FormHelper()
         self.helper.form_tag = False

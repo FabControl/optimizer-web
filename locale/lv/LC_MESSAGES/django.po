@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-08-25 18:16+0300\n"
+"POT-Creation-Date: 2020-08-25 18:49+0300\n"
 "PO-Revision-Date: 2020-08-21 14:00+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -117,11 +117,11 @@ msgstr "Bezlimita licence"
 
 #: authentication/models.py:135
 #, python-brace-format
-msgid "Student's License ({expiration} Day)"
-msgid_plural "Student's License ({expiration} Days)"
-msgstr[0] "Studenta licence ({expiration} diena)"
-msgstr[1] "Studenta licence ({expiration} dienas)"
-msgstr[2] "Studenta licence ({expiration} dienas)"
+msgid "Educational License ({expiration} Day)"
+msgid_plural "Educational License ({expiration} Days)"
+msgstr[0] "Izglītības licence ({expiration} diena)"
+msgstr[1] "Izglītības licence ({expiration} dienas)"
+msgstr[2] "Izglītības licence ({expiration} dienas)"
 
 #: authentication/models.py:140
 #, python-brace-format
@@ -818,13 +818,17 @@ msgstr ""
 "Lai izvēlētos profesionāļu (Advanced) testēšanas režīmu nepieciešama <a href="
 "\"{link}\">Pilna piekļuve</a>"
 
+#: session/forms.py:340
+msgid "My notes (optional)"
+msgstr "Piezīmes (var atstāt tukšu)"
+
 #: session/forms.py:371
 msgid "Yes"
-msgstr ""
+msgstr "Jā"
 
 #: session/forms.py:371
 msgid "No"
-msgstr ""
+msgstr "Nē"
 
 #: session/forms.py:533
 msgid "3D Printer model"
