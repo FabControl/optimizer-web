@@ -7,7 +7,7 @@
     {% if user.client_of %}
     {% with user.client_of as partner %}
       <a class="nav-item nav-link disabled"><small>{{ partner.affiliation_text }}</small></a>
-      <a class="navbar-brand" href="{{ partner.homepage }}"><img height="40px" class="d-inline-block" src="data:image/png;base64,{{ partner.logo }}" alt="{{ partner.name }}"></a>
+      <a class="navbar-brand" target="_blank" href="{{ partner.homepage }}"><img height="40px" class="d-inline-block" src="data:image/png;base64,{{ partner.logo }}" alt="{{ partner.name }}"></a>
     {% endwith %}
     {% endif %}
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
