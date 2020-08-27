@@ -173,7 +173,7 @@ class Machine(models.Model, CopyableModelMixin):
     @property
     def __json__(self):
         output = {
-            "model": self.model,
+            "model": str(self.model),
             "buildarea_maxdim1": self.buildarea_maxdim1,
             "buildarea_maxdim2": self.buildarea_maxdim2,
             "form": self.form,
