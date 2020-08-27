@@ -298,7 +298,7 @@ class SessionMode(models.Model):
         return [test for test in settings.FREE_TESTS if test in self.included_tests]
 
     def __str__(self):
-        return f'{self.name}'
+        return _(self.name)
 
 
 class Session(models.Model, DependenciesCopyMixin):
