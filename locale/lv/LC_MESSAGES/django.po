@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-08-25 18:49+0300\n"
+"POT-Creation-Date: 2020-08-27 08:15+0300\n"
 "PO-Revision-Date: 2020-08-21 14:00+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -99,11 +99,7 @@ msgstr "epasts"
 
 #: authentication/forms.py:223
 #: authentication/templates/authentication/my_affiliates.html:36
-#: session/forms.py:185 session/forms.py:247 session/forms.py:285
-#: session/templates/session/dashboard.html:111
-#: session/templates/session/material_manager.html:25
-#: session/templates/session/session_info.html:10
-#: session/templates/session/session_manager.html:37
+#: session/forms.py:285 session/templates/session/session_info.html:10
 msgid "Name"
 msgstr "Vārds"
 
@@ -720,6 +716,14 @@ msgstr "Vizuālā kvalitāte"
 msgid "Short Printing Time"
 msgstr "Īss drukāšanas laiks"
 
+#: session/choices.py:22
+msgid "Delta"
+msgstr ""
+
+#: session/choices.py:22
+msgid "Cartesian"
+msgstr ""
+
 #: session/forms.py:178
 msgid "Min temperature (°C)"
 msgstr "Min. temperatūra (°C)"
@@ -744,6 +748,10 @@ msgstr "Max. temperatūra (°C)"
 msgid "Same as above."
 msgstr "Tāpat kā iepriekšējam laukam."
 
+#: session/forms.py:185 session/templates/session/material_manager.html:25
+msgid "Material name"
+msgstr "Materiāla nosaukums"
+
 #: session/forms.py:186 session/templates/session/material_manager.html:26
 msgid "Filament diameter (mm)"
 msgstr "Filamenta diametrs (mm)"
@@ -767,6 +775,11 @@ msgstr "Cita"
 #: session/forms.py:231
 msgid "Other Build Plate"
 msgstr "Cita printēšanas pamatne"
+
+#: session/forms.py:247 session/templates/session/dashboard.html:111
+#: session/templates/session/session_manager.html:37
+msgid "Session name"
+msgstr "Sesijas nosaukums"
 
 #: session/forms.py:248 session/templates/session/dashboard.html:112
 #: session/templates/session/session_info.html:39
@@ -894,6 +907,18 @@ msgstr "Apsildāma kamera"
 msgid "Print bed heatable"
 msgstr "Apsildāma printēšanas platforma"
 
+#: session/migrations/0048_manual_add_session_modes.py:12
+msgid "Advanced"
+msgstr "Advancēts"
+
+#: session/migrations/0048_manual_add_session_modes.py:16
+msgid "Guided"
+msgstr "Vadīts"
+
+#: session/migrations/0048_manual_add_session_modes.py:20 session/models.py:589
+msgid "Core"
+msgstr "Pamata"
+
 #: session/migrations/0055_add_and_assign_descriptors.py:13
 msgid "Is the nozzle too close to the print bed?"
 msgstr "Vai sprausla ir pārāk tuvu pamatnei?"
@@ -950,13 +975,21 @@ msgstr ""
 msgid "Does the print float above the print bed?"
 msgstr "Vai detaļa nepieķeras pie pamatnes."
 
+#: session/models.py:152
+msgid "Unknown"
+msgstr "Nezināms"
+
+#: session/models.py:159
+msgid "Bowden"
+msgstr ""
+
+#: session/models.py:159
+msgid "Direct drive"
+msgstr ""
+
 #: session/models.py:310
 msgid "Untitled"
 msgstr "Bez nosaukuma"
-
-#: session/models.py:589
-msgid "Core"
-msgstr "Pamata"
 
 #: session/models.py:591
 msgid "Optional"
@@ -1941,9 +1974,3 @@ msgstr ""
 
 #~ msgid "Next test"
 #~ msgstr "Nākošais tests"
-
-#~ msgid "Advanced"
-#~ msgstr "Advancēts"
-
-#~ msgid "Guided"
-#~ msgstr "Vadīts režīms"

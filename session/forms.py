@@ -182,7 +182,7 @@ class MaterialForm(MultiDecimalSeperatorModelForm):
         self.fields['max_temperature'].label = _("Max temperature (°C)")
         self.fields['max_temperature'].help_text = _("Same as above.")
 
-        self.fields['name'].label = _("Name")
+        self.fields['name'].label = _("Material name")
         self.fields['size_od'].label = _("Filament diameter (mm)")
         self.fields['notes'].widget = forms.Textarea()
         self.fields['notes'].widget.attrs.update({'rows': '1'})
@@ -244,16 +244,16 @@ class SessionForm(forms.ModelForm):
         queryset = SessionMode.objects.filter(pk__in=modes)
 
         self.fields["mode"] = forms.ModelChoiceField(initial=initial, queryset=queryset, widget=forms.RadioSelect, empty_label=None)
-        self.fields["name"].label = _("Name")
+        self.fields['name'].label = _("Session name")
         self.fields["mode"].label = _("Mode")
         self.fields["material"].label = _('Material')
         self.fields["material"].help_text = mark_safe('<a href="{}?next={}">+ {}</a>'.format(
-                                                                                            reverse('material_form'), 
+                                                                                            reverse('material_form'),
                                                                                             reverse('new_session'),
                                                                                             _('New Material')))
         self.fields["machine"].label = _("3D Printer")
         self.fields["machine"].help_text = mark_safe('<a href="{}?next={}">+ {}</a>'.format(
-                                                                                            reverse('machine_form'), 
+                                                                                            reverse('machine_form'),
                                                                                             reverse('new_session'),
                                                                                             _('New 3D Printer')))
         self.fields["target"].label = _("Target")
