@@ -19,5 +19,5 @@ TARGET_CHOICES = [("mechanical_strength", _("Mechanical Strength")), ("aesthetic
 MODE_CHOICES = [("core", "Core"), ("advanced", "Advanced"), ("guided", "Guided")]
 WIZARD_MODES = [("guided", "Guided"), ("normal", "Normal")]
 TOOL_CHOICES = [("T0", "T0"), ("T1", "T1"), ("T2", "T2")]
-FORM_CHOICES = [("elliptic", "Delta"), ("cartesian", "Cartesian")]
+FORM_CHOICES = [("elliptic", _("Delta")), ("cartesian", _("Cartesian"))]
 UNITS = [("mm", "mm"), ("mm/s", "mm/s"), ("degC", "degC")]

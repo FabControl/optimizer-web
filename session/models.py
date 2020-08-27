@@ -149,14 +149,14 @@ class Machine(models.Model, CopyableModelMixin):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     corporation = models.ForeignKey('payments.Corporation', on_delete=models.CASCADE, null=True, blank=True)
     pub_date = models.DateTimeField(default=timezone.now, blank=True)
-    model = models.CharField(max_length=30, default="Unknown")
+    model = models.CharField(max_length=30, default=gettext_lazy("Unknown"))
     buildarea_maxdim1 = models.IntegerField(default=0)
     buildarea_maxdim2 = models.IntegerField(default=0)
     form = models.CharField(max_length=20, choices=FORM_CHOICES, default="cartesian")
     extruder = models.ForeignKey(Extruder, on_delete=models.CASCADE)
     chamber = models.ForeignKey(Chamber, on_delete=models.CASCADE, blank=True)
     printbed = models.ForeignKey(Printbed, on_delete=models.CASCADE, blank=True)
-    extruder_type = models.CharField(max_length=20, choices=(('bowden', 'Bowden'), ('directdrive', 'Direct drive')),
+    extruder_type = models.CharField(max_length=20, choices=(('bowden', gettext_lazy('Bowden')), ('directdrive', gettext_lazy('Direct drive'))),
                                      default='bowden')
     gcode_header = models.TextField(default='')
     gcode_footer = models.TextField(default='G28 ; Move to home position\nM84 ; Disable motors')
