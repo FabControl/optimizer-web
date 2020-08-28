@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'payments.apps.PaymentsConfig',
     'django_simple_cookie_consent.apps.DjangoSimpleCookieConsentConfig',
     'authentication.apps.AuthenticationConfig',
-    'crispy_forms'
+    'crispy_forms',
+    'rosetta'
 ]
 
 MIDDLEWARE = [

@@ -1,0 +1,11 @@
+{% extends "email/base.html" %}
+
+{% block content %}
+<p>{{ creator.first_name }} {{ creator.last_name }} ({{ creator.email }}) has just updated {{ language }} translation.</p>
+<p>Please check and apply attached patch with:</p>
+<code>git apply --check {{ patch_filename }} && git apply --index {{ patch_filename }}</code>
+<p>Then commit with:</p>
+<code>git commit -m '{{ language }} translation update from {{ creator.email }}'</code>
+<p>Remeber to notify other developers as soon as you commit this patch, to avoid merge collisions.</p>
+
+{% endblock content %}

@@ -13,7 +13,8 @@ _SUBJECTS = {
         'affiliate_invitation': 'Invitation to 3DOptimizer',
         'affiliate_confirmed': 'Thanks for your 3DOptimizer referral',
         'register_complete': 'Account activation',
-        'register_with_known_email': 'Account registration'
+        'register_with_known_email': 'Account registration',
+        'translation_updated': 'Translation updated'
         }
 
 
