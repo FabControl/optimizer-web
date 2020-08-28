@@ -156,6 +156,11 @@ PASSWORD_RESET_TIMEOUT_DAYS = 1
 
 SAMPLE_SESSIONS_OWNER = 'sample_settings_user@fabcontrol.com'
 
+DEVELOPERS = [
+        'aivars@fabcontrol.com',
+        'egils@fabcontrol.com',
+        ]
+
 TIME_LIMITED_PLANS = ['education', 'premium', 'test', 'limited']
 
 PAYMENTS_COMPANY_NAME = 'SIA "FabControl"'
