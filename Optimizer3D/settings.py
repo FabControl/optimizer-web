@@ -122,6 +122,11 @@ LOCALE_PATHS = [
         os.path.join(BASE_DIR, 'locale')
         ]
 
+# Allow translation of specific model fields
+LOCALIZABLE_MODELS = [
+        ('payments.models.Plan', ['extra_info_text'])
+        ]
+
 # USE_L10N = True
 
 USE_TZ = True
