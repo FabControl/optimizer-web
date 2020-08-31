@@ -48,7 +48,7 @@ class CustomTranslationFormView(TranslationFormView):
 
     def post(self, request, *a, **k):
         file_path = self.po_file_path
-        with open(file_path) as f:
+        with open(file_path, encoding='utf-8') as f:
             before_submit = f.readlines()
 
         result = super().post(request, *a, **k)
