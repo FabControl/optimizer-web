@@ -18,12 +18,28 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: Optimizer3D/settings.py:117
+#: Optimizer3D/settings.py:118 Optimizer3D/settings.py:136
 msgid "English"
 msgstr ""
 
-#: Optimizer3D/settings.py:118
+#: Optimizer3D/settings.py:119 Optimizer3D/settings.py:137
 msgid "Latvian"
+msgstr ""
+
+#: Optimizer3D/settings.py:138
+msgid "German"
+msgstr ""
+
+#: Optimizer3D/settings.py:139
+msgid "Spanish"
+msgstr ""
+
+#: Optimizer3D/settings.py:140
+msgid "French"
+msgstr ""
+
+#: Optimizer3D/settings.py:141
+msgid "Portuguese"
 msgstr ""
 
 #: authentication/forms.py:28 authentication/forms.py:65
@@ -102,58 +118,58 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: authentication/models.py:131 session/templates/session/navbar.html:45
+#: authentication/models.py:136 session/templates/session/navbar.html:49
 msgid "Upgrade to Full Access"
 msgstr ""
 
-#: authentication/models.py:133
+#: authentication/models.py:138
 msgid "Permanent License"
 msgstr ""
 
-#: authentication/models.py:135
+#: authentication/models.py:140
 #, python-brace-format
 msgid "Educational License ({expiration} Day)"
 msgid_plural "Educational License ({expiration} Days)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: authentication/models.py:140
+#: authentication/models.py:145
 #, python-brace-format
 msgid "Full Access ({expiration} Day)"
 msgid_plural "Full Access ({expiration} Days)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: authentication/models.py:144
+#: authentication/models.py:149
 msgid "Full Access"
 msgstr ""
 
-#: authentication/models.py:146
+#: authentication/models.py:151
 #, python-brace-format
 msgid "Test Access ({expiration} Day)"
 msgid_plural "Test Access ({expiration} Days)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: authentication/models.py:150
+#: authentication/models.py:155
 #, python-brace-format
 msgid "Limited Access ({expiration} Day)"
 msgid_plural "Limited Access ({expiration} Days)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: authentication/models.py:289
+#: authentication/models.py:294
 #, python-format
 msgid "Registered on %(date)s"
 msgstr ""
 
-#: authentication/models.py:291
+#: authentication/models.py:296
 #: authentication/templates/authentication/legal_info.html:174
 #: authentication/templates/authentication/legal_info.html:214
 msgid "Invitation sent"
 msgstr ""
 
-#: authentication/models.py:296
+#: authentication/models.py:301
 #, python-format
 msgid "Received %(days)d days full access"
 msgstr ""
@@ -247,7 +263,7 @@ msgstr ""
 
 #: authentication/templates/authentication/legal_info.html:98
 #: session/templates/session/dashboard.html:52
-#: session/templates/session/navbar.html:75
+#: session/templates/session/navbar.html:79
 msgid "Users"
 msgstr ""
 
@@ -988,7 +1004,7 @@ msgid "Decline"
 msgstr ""
 
 #: session/templates/session/dashboard.html:30
-#: session/templates/session/navbar.html:65
+#: session/templates/session/navbar.html:69
 #: session/templates/session/session_manager.html:12
 msgid "Testing Sessions"
 msgstr ""
@@ -999,7 +1015,7 @@ msgstr ""
 
 #: session/templates/session/dashboard.html:37
 #: session/templates/session/machine_manager.html:12
-#: session/templates/session/navbar.html:68
+#: session/templates/session/navbar.html:72
 msgid "3D Printers"
 msgstr ""
 
@@ -1009,7 +1025,7 @@ msgstr ""
 
 #: session/templates/session/dashboard.html:44
 #: session/templates/session/material_manager.html:12
-#: session/templates/session/navbar.html:71
+#: session/templates/session/navbar.html:75
 msgid "Materials"
 msgstr ""
 
@@ -1241,27 +1257,27 @@ msgstr ""
 msgid "Material Editor"
 msgstr ""
 
-#: session/templates/session/navbar.html:39
+#: session/templates/session/navbar.html:43
 msgid "Invoices"
 msgstr ""
 
-#: session/templates/session/navbar.html:41
+#: session/templates/session/navbar.html:45
 msgid "Account Settings"
 msgstr ""
 
-#: session/templates/session/navbar.html:46
+#: session/templates/session/navbar.html:50
 msgid "Redeem a voucher"
 msgstr ""
 
-#: session/templates/session/navbar.html:51
+#: session/templates/session/navbar.html:55
 msgid "Sign Out"
 msgstr ""
 
-#: session/templates/session/navbar.html:62
+#: session/templates/session/navbar.html:66
 msgid "Dashboard"
 msgstr ""
 
-#: session/templates/session/navbar.html:79
+#: session/templates/session/navbar.html:83
 msgid "Help Center"
 msgstr ""
 

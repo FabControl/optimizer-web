@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-08-27 08:15+0300\n"
+"POT-Creation-Date: 2020-08-31 14:12+0300\n"
 "PO-Revision-Date: 2020-08-21 14:00+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -19,13 +19,29 @@ msgstr ""
 "2);\n"
 "X-Generator: Poedit 2.4.1\n"
 
-#: Optimizer3D/settings.py:117
+#: Optimizer3D/settings.py:118 Optimizer3D/settings.py:136
 msgid "English"
 msgstr "Angļu"
 
-#: Optimizer3D/settings.py:118
+#: Optimizer3D/settings.py:119 Optimizer3D/settings.py:137
 msgid "Latvian"
 msgstr "Latviešu"
+
+#: Optimizer3D/settings.py:138
+msgid "German"
+msgstr ""
+
+#: Optimizer3D/settings.py:139
+msgid "Spanish"
+msgstr ""
+
+#: Optimizer3D/settings.py:140
+msgid "French"
+msgstr ""
+
+#: Optimizer3D/settings.py:141
+msgid "Portuguese"
+msgstr ""
 
 #: authentication/forms.py:28 authentication/forms.py:65
 #: authentication/forms.py:220
@@ -103,15 +119,15 @@ msgstr "epasts"
 msgid "Name"
 msgstr "Vārds"
 
-#: authentication/models.py:131 session/templates/session/navbar.html:45
+#: authentication/models.py:136 session/templates/session/navbar.html:49
 msgid "Upgrade to Full Access"
 msgstr "Iegādāties pilnu piekļuvi"
 
-#: authentication/models.py:133
+#: authentication/models.py:138
 msgid "Permanent License"
 msgstr "Bezlimita licence"
 
-#: authentication/models.py:135
+#: authentication/models.py:140
 #, python-brace-format
 msgid "Educational License ({expiration} Day)"
 msgid_plural "Educational License ({expiration} Days)"
@@ -119,7 +135,7 @@ msgstr[0] "Izglītības licence ({expiration} diena)"
 msgstr[1] "Izglītības licence ({expiration} dienas)"
 msgstr[2] "Izglītības licence ({expiration} dienas)"
 
-#: authentication/models.py:140
+#: authentication/models.py:145
 #, python-brace-format
 msgid "Full Access ({expiration} Day)"
 msgid_plural "Full Access ({expiration} Days)"
@@ -127,11 +143,11 @@ msgstr[0] "Pilna piekļuve ({expiration} diena)"
 msgstr[1] "Pilna piekļuve ({expiration} dienas)"
 msgstr[2] "Pilna piekļuve ({expiration} dienas)"
 
-#: authentication/models.py:144
+#: authentication/models.py:149
 msgid "Full Access"
 msgstr "Pilna piekļuve"
 
-#: authentication/models.py:146
+#: authentication/models.py:151
 #, python-brace-format
 msgid "Test Access ({expiration} Day)"
 msgid_plural "Test Access ({expiration} Days)"
@@ -139,7 +155,7 @@ msgstr[0] "Testa piekļuve ({expiration} diena)"
 msgstr[1] "Testa piekļuve ({expiration} dienas)"
 msgstr[2] "Testa piekļuve ({expiration} dienas)"
 
-#: authentication/models.py:150
+#: authentication/models.py:155
 #, python-brace-format
 msgid "Limited Access ({expiration} Day)"
 msgid_plural "Limited Access ({expiration} Days)"
@@ -147,18 +163,18 @@ msgstr[0] "Ierobežota piekļuve ({expiration} diena)"
 msgstr[1] "Ierobežota piekļuve ({expiration} dienas)"
 msgstr[2] "Ierobežota piekļuve ({expiration} dienas)"
 
-#: authentication/models.py:289
+#: authentication/models.py:294
 #, python-format
 msgid "Registered on %(date)s"
 msgstr "Reģistrējās %(date)s"
 
-#: authentication/models.py:291
+#: authentication/models.py:296
 #: authentication/templates/authentication/legal_info.html:174
 #: authentication/templates/authentication/legal_info.html:214
 msgid "Invitation sent"
 msgstr "Uzaicinājums nosūtīts"
 
-#: authentication/models.py:296
+#: authentication/models.py:301
 #, python-format
 msgid "Received %(days)d days full access"
 msgstr "Saņemtas %(days)d pilnas piekļuves dienas"
@@ -254,7 +270,7 @@ msgstr "Iegādāties"
 
 #: authentication/templates/authentication/legal_info.html:98
 #: session/templates/session/dashboard.html:52
-#: session/templates/session/navbar.html:75
+#: session/templates/session/navbar.html:79
 msgid "Users"
 msgstr "Lietotāji"
 
@@ -1031,7 +1047,7 @@ msgid "Decline"
 msgstr "Noraidīt"
 
 #: session/templates/session/dashboard.html:30
-#: session/templates/session/navbar.html:65
+#: session/templates/session/navbar.html:69
 #: session/templates/session/session_manager.html:12
 msgid "Testing Sessions"
 msgstr "Testēšanas sesijas"
@@ -1042,7 +1058,7 @@ msgstr "Visas testēšanas sesijas"
 
 #: session/templates/session/dashboard.html:37
 #: session/templates/session/machine_manager.html:12
-#: session/templates/session/navbar.html:68
+#: session/templates/session/navbar.html:72
 msgid "3D Printers"
 msgstr "3D printeri"
 
@@ -1052,7 +1068,7 @@ msgstr "Visi 3D printeri"
 
 #: session/templates/session/dashboard.html:44
 #: session/templates/session/material_manager.html:12
-#: session/templates/session/navbar.html:71
+#: session/templates/session/navbar.html:75
 msgid "Materials"
 msgstr "Materiāli"
 
@@ -1301,27 +1317,27 @@ msgstr "Dzēst"
 msgid "Material Editor"
 msgstr "Materiāla rediģēšana"
 
-#: session/templates/session/navbar.html:39
+#: session/templates/session/navbar.html:43
 msgid "Invoices"
 msgstr "Rēķini"
 
-#: session/templates/session/navbar.html:41
+#: session/templates/session/navbar.html:45
 msgid "Account Settings"
 msgstr "Konta uzstādījumi"
 
-#: session/templates/session/navbar.html:46
+#: session/templates/session/navbar.html:50
 msgid "Redeem a voucher"
 msgstr "Izmantot kuponu"
 
-#: session/templates/session/navbar.html:51
+#: session/templates/session/navbar.html:55
 msgid "Sign Out"
 msgstr "Iziet"
 
-#: session/templates/session/navbar.html:62
+#: session/templates/session/navbar.html:66
 msgid "Dashboard"
 msgstr "Kopsavilkums"
 
-#: session/templates/session/navbar.html:79
+#: session/templates/session/navbar.html:83
 msgid "Help Center"
 msgstr "Palīdzība"
 
