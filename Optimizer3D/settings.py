@@ -127,6 +127,11 @@ LOCALIZABLE_MODELS = [
         ('payments.models.Plan', ('extra_info_text',))
         ]
 
+# Allow translation of specific languages instead of all
+ROSETTA_LANGUAGE_GROUPS = True
+
+ROSETTA_SHOW_AT_ADMIN_PANEL = True
+
 # USE_L10N = True
 
 USE_TZ = True
