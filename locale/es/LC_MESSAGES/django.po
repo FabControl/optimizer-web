@@ -102,58 +102,58 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: authentication/models.py:131 session/templates/session/navbar.html:45
+#: authentication/models.py:136 session/templates/session/navbar.html:49
 msgid "Upgrade to Full Access"
 msgstr ""
 
-#: authentication/models.py:133
+#: authentication/models.py:138
 msgid "Permanent License"
 msgstr ""
 
-#: authentication/models.py:135
+#: authentication/models.py:140
 #, python-brace-format
 msgid "Educational License ({expiration} Day)"
 msgid_plural "Educational License ({expiration} Days)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: authentication/models.py:140
+#: authentication/models.py:145
 #, python-brace-format
 msgid "Full Access ({expiration} Day)"
 msgid_plural "Full Access ({expiration} Days)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: authentication/models.py:144
+#: authentication/models.py:149
 msgid "Full Access"
 msgstr ""
 
-#: authentication/models.py:146
+#: authentication/models.py:151
 #, python-brace-format
 msgid "Test Access ({expiration} Day)"
 msgid_plural "Test Access ({expiration} Days)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: authentication/models.py:150
+#: authentication/models.py:155
 #, python-brace-format
 msgid "Limited Access ({expiration} Day)"
 msgid_plural "Limited Access ({expiration} Days)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: authentication/models.py:289
+#: authentication/models.py:294
 #, python-format
 msgid "Registered on %(date)s"
 msgstr ""
 
-#: authentication/models.py:291
+#: authentication/models.py:296
 #: authentication/templates/authentication/legal_info.html:174
 #: authentication/templates/authentication/legal_info.html:214
 msgid "Invitation sent"
 msgstr ""
 
-#: authentication/models.py:296
+#: authentication/models.py:301
 #, python-format
 msgid "Received %(days)d days full access"
 msgstr ""
@@ -218,8 +218,8 @@ msgstr ""
 
 #: authentication/templates/authentication/legal_info.html:75
 msgid ""
-"By pressing \"Cancel subscription\", you confirm cancellation of full access "
-"subscription."
+"By pressing \"Cancel subscription\", you confirm cancellation of full access"
+" subscription."
 msgstr ""
 
 #: authentication/templates/authentication/legal_info.html:76
@@ -247,7 +247,7 @@ msgstr ""
 
 #: authentication/templates/authentication/legal_info.html:98
 #: session/templates/session/dashboard.html:52
-#: session/templates/session/navbar.html:75
+#: session/templates/session/navbar.html:79
 msgid "Users"
 msgstr ""
 
@@ -488,8 +488,8 @@ msgstr ""
 #: authentication/views.py:341
 #, python-brace-format
 msgid ""
-"You can use default <a href=\"{signup}\">sign up form</a> or <a href="
-"\"{login}\">log in </a> to your account."
+"You can use default <a href=\"{signup}\">sign up form</a> or <a "
+"href=\"{login}\">log in </a> to your account."
 msgstr ""
 
 #: authentication/views.py:356
@@ -786,8 +786,8 @@ msgstr ""
 #: session/forms.py:264
 #, python-brace-format
 msgid ""
-"Mechanical Strength and Short Printing Time targets require <a href="
-"\"{link}\">Full Access</a>"
+"Mechanical Strength and Short Printing Time targets require <a "
+"href=\"{link}\">Full Access</a>"
 msgstr ""
 
 #: session/forms.py:268
@@ -879,7 +879,8 @@ msgstr ""
 msgid "Guided"
 msgstr ""
 
-#: session/migrations/0048_manual_add_session_modes.py:20 session/models.py:589
+#: session/migrations/0048_manual_add_session_modes.py:20
+#: session/models.py:589
 msgid "Core"
 msgstr ""
 
@@ -923,7 +924,8 @@ msgid "I wish to fine-tune track height (print resolution)."
 msgstr ""
 
 #: session/migrations/0055_add_and_assign_descriptors.py:23
-msgid "Does the print peel off from print bed, although the height is correct?"
+msgid ""
+"Does the print peel off from print bed, although the height is correct?"
 msgstr ""
 
 #: session/migrations/0055_add_and_assign_descriptors.py:23
@@ -966,8 +968,8 @@ msgstr ""
 
 #: session/templates/session/500.html:9
 msgid ""
-"Feel free to contact our <a href=\"mailto:support@fabcontrol.com\">support</"
-"a>!"
+"Feel free to contact our <a "
+"href=\"mailto:support@fabcontrol.com\">support</a>!"
 msgstr ""
 
 #: session/templates/session/dashboard.html:11
@@ -976,7 +978,8 @@ msgstr ""
 
 #: session/templates/session/dashboard.html:19
 #, python-format
-msgid "%(first_name)s %(last_name)s invited you to collaborate in %(company)s."
+msgid ""
+"%(first_name)s %(last_name)s invited you to collaborate in %(company)s."
 msgstr ""
 
 #: session/templates/session/dashboard.html:20
@@ -988,7 +991,7 @@ msgid "Decline"
 msgstr ""
 
 #: session/templates/session/dashboard.html:30
-#: session/templates/session/navbar.html:65
+#: session/templates/session/navbar.html:69
 #: session/templates/session/session_manager.html:12
 msgid "Testing Sessions"
 msgstr ""
@@ -999,7 +1002,7 @@ msgstr ""
 
 #: session/templates/session/dashboard.html:37
 #: session/templates/session/machine_manager.html:12
-#: session/templates/session/navbar.html:68
+#: session/templates/session/navbar.html:72
 msgid "3D Printers"
 msgstr ""
 
@@ -1009,7 +1012,7 @@ msgstr ""
 
 #: session/templates/session/dashboard.html:44
 #: session/templates/session/material_manager.html:12
-#: session/templates/session/navbar.html:71
+#: session/templates/session/navbar.html:75
 msgid "Materials"
 msgstr ""
 
@@ -1209,8 +1212,8 @@ msgstr ""
 #: session/templates/session/machine_detail.html:72
 #: session/templates/session/machine_form.html:69
 msgid ""
-"Test structure is centered on the printbed by default. Offset may be used to "
-"shift the test structure on build-plate."
+"Test structure is centered on the printbed by default. Offset may be used to"
+" shift the test structure on build-plate."
 msgstr ""
 
 #: session/templates/session/machine_form.html:76
@@ -1241,27 +1244,27 @@ msgstr ""
 msgid "Material Editor"
 msgstr ""
 
-#: session/templates/session/navbar.html:39
+#: session/templates/session/navbar.html:43
 msgid "Invoices"
 msgstr ""
 
-#: session/templates/session/navbar.html:41
+#: session/templates/session/navbar.html:45
 msgid "Account Settings"
 msgstr ""
 
-#: session/templates/session/navbar.html:46
+#: session/templates/session/navbar.html:50
 msgid "Redeem a voucher"
 msgstr ""
 
-#: session/templates/session/navbar.html:51
+#: session/templates/session/navbar.html:55
 msgid "Sign Out"
 msgstr ""
 
-#: session/templates/session/navbar.html:62
+#: session/templates/session/navbar.html:66
 msgid "Dashboard"
 msgstr ""
 
-#: session/templates/session/navbar.html:79
+#: session/templates/session/navbar.html:83
 msgid "Help Center"
 msgstr ""
 
@@ -1501,8 +1504,8 @@ msgstr ""
 
 #: session/translatable_backend_strings.py:31
 msgid ""
-"For this test this value is equal to unity, but, if needed, it can be tested "
-"in a separate test"
+"For this test this value is equal to unity, but, if needed, it can be tested"
+" in a separate test"
 msgstr ""
 
 #: session/translatable_backend_strings.py:32
@@ -1529,14 +1532,14 @@ msgstr ""
 
 #: session/translatable_backend_strings.py:36
 msgid ""
-"Set the range to 20-50 mm/s for printing flexible materials, or to 30-70 mm/"
-"s for printing harder materials"
+"Set the range to 20-50 mm/s for printing flexible materials, or to 30-70 "
+"mm/s for printing harder materials"
 msgstr ""
 
 #: session/translatable_backend_strings.py:37
 msgid ""
-"Set the range to 5-15 mm/s for printing flexible materials, or to 10-30 mm/s "
-"for printing harder materials"
+"Set the range to 5-15 mm/s for printing flexible materials, or to 10-30 mm/s"
+" for printing harder materials"
 msgstr ""
 
 #: session/translatable_backend_strings.py:38
@@ -1557,8 +1560,8 @@ msgstr ""
 
 #: session/translatable_backend_strings.py:41
 msgid ""
-"The default value is equal to the nozzle inner diameter, but you can perform "
-"the corresponding test to fine-tune this value"
+"The default value is equal to the nozzle inner diameter, but you can perform"
+" the corresponding test to fine-tune this value"
 msgstr ""
 
 #: session/translatable_backend_strings.py:42
@@ -1587,14 +1590,14 @@ msgstr ""
 
 #: session/translatable_backend_strings.py:46
 msgid ""
-"These seven values will be tested at four different <b>Retraction distances</"
-"b> (see below). You can change the limiting values"
+"These seven values will be tested at four different <b>Retraction "
+"distances</b> (see below). You can change the limiting values"
 msgstr ""
 
 #: session/translatable_backend_strings.py:47
 msgid ""
-"These seven values will be tested at four different <b>Retraction speeds</b> "
-"(see below). You can change the limiting values"
+"These seven values will be tested at four different <b>Retraction speeds</b>"
+" (see below). You can change the limiting values"
 msgstr ""
 
 #: session/translatable_backend_strings.py:48
@@ -1620,7 +1623,8 @@ msgid "These seven values will be tested. You can change the limiting values"
 msgstr ""
 
 #: session/translatable_backend_strings.py:52
-msgid "This value was determined in the previous test(s) and cannot be changed"
+msgid ""
+"This value was determined in the previous test(s) and cannot be changed"
 msgstr ""
 
 #: session/translatable_backend_strings.py:56
@@ -1663,8 +1667,8 @@ msgstr ""
 
 #: session/translatable_backend_strings.py:63
 msgid ""
-"This test is needed to find Z-offset value in case of non-level print bed or "
-"printbed coating."
+"This test is needed to find Z-offset value in case of non-level print bed or"
+" printbed coating."
 msgstr ""
 
 #: session/translatable_backend_strings.py:64
@@ -1691,11 +1695,12 @@ msgstr ""
 
 #: session/translatable_backend_strings.py:68
 msgid ""
-"This test is needed to solve possible issues with adhesion between tracks if "
-"there are any. Good weld-together is essential to achieving good mechanical "
-"properties in any printed part.<br>Run it only if you see the voids in "
-"between the tracks in the previous test. By skipping this test, the <b>First-"
-"layer-track-width</b> value will be set to the <b>Nozzle inner diameter</b>"
+"This test is needed to solve possible issues with adhesion between tracks if"
+" there are any. Good weld-together is essential to achieving good mechanical"
+" properties in any printed part.<br>Run it only if you see the voids in "
+"between the tracks in the previous test. By skipping this test, the "
+"<b>First-layer-track-width</b> value will be set to the <b>Nozzle inner "
+"diameter</b>"
 msgstr ""
 
 #: session/translatable_backend_strings.py:73

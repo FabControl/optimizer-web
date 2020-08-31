@@ -53,7 +53,7 @@ class CustomTranslationFormView(TranslationFormView):
 
         result = super().post(request, *a, **k)
 
-        with open(file_path) as f:
+        with open(file_path, encoding='utf-8') as f:
             after_submit = f.readlines()
 
         if before_submit != after_submit:
