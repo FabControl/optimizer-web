@@ -132,6 +132,15 @@ ROSETTA_LANGUAGE_GROUPS = True
 
 ROSETTA_SHOW_AT_ADMIN_PANEL = True
 
+ROSETTA_LANGUAGES = (
+        ('en', _('English')),
+        ('lv', _('Latvian')),
+        ('de', _('German')),
+        ('es', _('Spanish')),
+        ('fr', _('French')),
+        ('pt', _('Portuguese')),
+        )
+
 # USE_L10N = True
 
 USE_TZ = True

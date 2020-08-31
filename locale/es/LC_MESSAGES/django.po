@@ -1,0 +1,1838 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-08-27 08:15+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: Optimizer3D/settings.py:117
+msgid "English"
+msgstr ""
+
+#: Optimizer3D/settings.py:118
+msgid "Latvian"
+msgstr ""
+
+#: authentication/forms.py:28 authentication/forms.py:65
+#: authentication/forms.py:220
+#: authentication/templates/authentication/account_activation.html:15
+#: authentication/templates/authentication/legal_info.html:109
+#: authentication/templates/authentication/my_affiliates.html:37
+msgid "Email"
+msgstr ""
+
+#: authentication/forms.py:30 authentication/forms.py:42
+msgid "Password"
+msgstr ""
+
+#: authentication/forms.py:56
+msgid "Password did not match our records"
+msgstr ""
+
+#: authentication/forms.py:66
+msgid "We will not share your email address with 3rd parties."
+msgstr ""
+
+#: authentication/forms.py:69
+msgid "First name"
+msgstr ""
+
+#: authentication/forms.py:72
+msgid "Last name"
+msgstr ""
+
+#: authentication/forms.py:84 authentication/forms.py:192
+msgid "Country"
+msgstr ""
+
+#: authentication/forms.py:86
+#, python-format
+msgid "I agree to %(starttag)sterms of use%(endtag)s"
+msgstr ""
+
+#: authentication/forms.py:123
+msgid "Password recovery instructions will be sent to this email."
+msgstr ""
+
+#: authentication/forms.py:189
+msgid "Company name*"
+msgstr ""
+
+#: authentication/forms.py:193
+msgid "Company legal address*"
+msgstr ""
+
+#: authentication/forms.py:194
+msgid "Company registration number*"
+msgstr ""
+
+#: authentication/forms.py:195
+msgid "Company VAT number"
+msgstr ""
+
+#: authentication/forms.py:197
+msgid "Show legal info (for EU companies)"
+msgstr ""
+
+#: authentication/forms.py:210
+#, python-brace-format
+msgid "Company account requires {field_label}"
+msgstr ""
+
+#: authentication/forms.py:221
+msgid "email"
+msgstr ""
+
+#: authentication/forms.py:223
+#: authentication/templates/authentication/my_affiliates.html:36
+#: session/forms.py:285 session/templates/session/session_info.html:10
+msgid "Name"
+msgstr ""
+
+#: authentication/models.py:131 session/templates/session/navbar.html:45
+msgid "Upgrade to Full Access"
+msgstr ""
+
+#: authentication/models.py:133
+msgid "Permanent License"
+msgstr ""
+
+#: authentication/models.py:135
+#, python-brace-format
+msgid "Educational License ({expiration} Day)"
+msgid_plural "Educational License ({expiration} Days)"
+msgstr[0] ""
+msgstr[1] ""
+
+#: authentication/models.py:140
+#, python-brace-format
+msgid "Full Access ({expiration} Day)"
+msgid_plural "Full Access ({expiration} Days)"
+msgstr[0] ""
+msgstr[1] ""
+
+#: authentication/models.py:144
+msgid "Full Access"
+msgstr ""
+
+#: authentication/models.py:146
+#, python-brace-format
+msgid "Test Access ({expiration} Day)"
+msgid_plural "Test Access ({expiration} Days)"
+msgstr[0] ""
+msgstr[1] ""
+
+#: authentication/models.py:150
+#, python-brace-format
+msgid "Limited Access ({expiration} Day)"
+msgid_plural "Limited Access ({expiration} Days)"
+msgstr[0] ""
+msgstr[1] ""
+
+#: authentication/models.py:289
+#, python-format
+msgid "Registered on %(date)s"
+msgstr ""
+
+#: authentication/models.py:291
+#: authentication/templates/authentication/legal_info.html:174
+#: authentication/templates/authentication/legal_info.html:214
+msgid "Invitation sent"
+msgstr ""
+
+#: authentication/models.py:296
+#, python-format
+msgid "Received %(days)d days full access"
+msgstr ""
+
+#: authentication/templates/authentication/account_activation.html:9
+msgid "To activate account, enter your password"
+msgstr ""
+
+#: authentication/templates/authentication/account_activation.html:27
+msgid "Activate account"
+msgstr ""
+
+#: authentication/templates/authentication/account_activation.html:33
+msgid "Account activation link is not valid."
+msgstr ""
+
+#: authentication/templates/authentication/account_activation.html:34
+msgid "If link is expired, try resetting password."
+msgstr ""
+
+#: authentication/templates/authentication/check_email.html:6
+msgid "Your account was successfully created."
+msgstr ""
+
+#: authentication/templates/authentication/check_email.html:7
+msgid "Please check your email for further instructions."
+msgstr ""
+
+#: authentication/templates/authentication/invalid_affiliate_url.html:6
+msgid "Affiliate link is not valid."
+msgstr ""
+
+#: authentication/templates/authentication/legal_info.html:22
+msgid "Account info"
+msgstr ""
+
+#: authentication/templates/authentication/legal_info.html:31
+msgid "Change password"
+msgstr ""
+
+#: authentication/templates/authentication/legal_info.html:49
+#: authentication/templates/authentication/password_change.html:15
+#: authentication/templates/authentication/password_reset_confirm.html:20
+#: session/templates/session/machine_detail.html:82
+#: session/templates/session/material_detail.html:27
+#: session/templates/session/session_info.html:26
+msgid "Save"
+msgstr ""
+
+#: authentication/templates/authentication/legal_info.html:60
+msgid "Subscription and payments"
+msgstr ""
+
+#: authentication/templates/authentication/legal_info.html:66
+msgid "Active subscription:"
+msgstr ""
+
+#: authentication/templates/authentication/legal_info.html:71
+#: authentication/templates/authentication/legal_info.html:79
+msgid "Cancel subscription"
+msgstr ""
+
+#: authentication/templates/authentication/legal_info.html:75
+msgid ""
+"By pressing \"Cancel subscription\", you confirm cancellation of full access "
+"subscription."
+msgstr ""
+
+#: authentication/templates/authentication/legal_info.html:76
+#, python-format
+msgid "You will have full access till %(end_date)s."
+msgstr ""
+
+#: authentication/templates/authentication/legal_info.html:84
+msgid "Payment method:"
+msgstr ""
+
+#: authentication/templates/authentication/legal_info.html:84
+msgid "Change"
+msgstr ""
+
+#: authentication/templates/authentication/legal_info.html:86
+msgid "You don't have active subscription."
+msgstr ""
+
+#: authentication/templates/authentication/legal_info.html:87
+#: payments/templates/payments/plans.html:113
+#: payments/templates/payments/plans.html:173
+msgid "Purchase"
+msgstr ""
+
+#: authentication/templates/authentication/legal_info.html:98
+#: session/templates/session/dashboard.html:52
+#: session/templates/session/navbar.html:75
+msgid "Users"
+msgstr ""
+
+#: authentication/templates/authentication/legal_info.html:108
+#: authentication/templates/authentication/legal_info.html:121
+#: session/templates/session/team_stats.html:27
+msgid "User"
+msgstr ""
+
+#: authentication/templates/authentication/legal_info.html:110
+msgid "Role"
+msgstr ""
+
+#: authentication/templates/authentication/legal_info.html:111
+#: session/templates/session/team_stats.html:28
+msgid "Last active"
+msgstr ""
+
+#: authentication/templates/authentication/legal_info.html:121
+#: session/templates/session/machine_manager.html:29
+#: session/templates/session/material_manager.html:29
+msgid "Owner"
+msgstr ""
+
+#: authentication/templates/authentication/legal_info.html:121
+msgid "Manager"
+msgstr ""
+
+#: authentication/templates/authentication/legal_info.html:128
+#: authentication/templates/authentication/legal_info.html:180
+#: authentication/templates/authentication/legal_info.html:220
+#: session/templates/session/machine_manager.html:45
+#: session/templates/session/material_manager.html:45
+#: session/templates/session/session_manager.html:66
+msgid "Action"
+msgstr ""
+
+#: authentication/templates/authentication/legal_info.html:135
+msgid "Resign manager role"
+msgstr ""
+
+#: authentication/templates/authentication/legal_info.html:135
+msgid "Assign manager role"
+msgstr ""
+
+#: authentication/templates/authentication/legal_info.html:138
+#: authentication/templates/authentication/legal_info.html:158
+msgid "Leave"
+msgstr ""
+
+#: authentication/templates/authentication/legal_info.html:138
+#: authentication/templates/authentication/legal_info.html:158
+#: authentication/templates/authentication/legal_info.html:183
+#: authentication/templates/authentication/legal_info.html:199
+#: authentication/templates/authentication/legal_info.html:223
+#: authentication/templates/authentication/legal_info.html:239
+msgid "Remove"
+msgstr ""
+
+#: authentication/templates/authentication/legal_info.html:144
+msgid "Leave company"
+msgstr ""
+
+#: authentication/templates/authentication/legal_info.html:144
+msgid "Remove from company"
+msgstr ""
+
+#: authentication/templates/authentication/legal_info.html:149
+msgid ""
+"If you leave company, you won't have access to it's printers, materials and "
+"testing sessions."
+msgstr ""
+
+#: authentication/templates/authentication/legal_info.html:151
+#: authentication/templates/authentication/legal_info.html:193
+#, python-format
+msgid ""
+"By pressing \"Remove\", you confirm removal of <b>%(first)s %(last)s</b> "
+"from your company."
+msgstr ""
+
+#: authentication/templates/authentication/legal_info.html:189
+#: authentication/templates/authentication/legal_info.html:229
+msgid "Remove from corporation"
+msgstr ""
+
+#: authentication/templates/authentication/legal_info.html:233
+#, python-format
+msgid ""
+"By pressing \"Remove\", you confirm removal of <b>%(name)s</b> from your "
+"company."
+msgstr ""
+
+#: authentication/templates/authentication/legal_info.html:259
+msgid "Invite user"
+msgstr ""
+
+#: authentication/templates/authentication/legal_info.html:269
+#, python-format
+msgid "%(count)s of %(allowed)s users registered"
+msgstr ""
+
+#: authentication/templates/authentication/legal_info.html:275
+msgid "Upgrade to add more users"
+msgstr ""
+
+#: authentication/templates/authentication/login.html:34
+msgid "Sign in"
+msgstr ""
+
+#: authentication/templates/authentication/login.html:39
+#: authentication/templates/authentication/signup.html:7
+#: authentication/templates/authentication/signup.html:29
+#: authentication/templates/authentication/signup.html:55
+msgid "Sign up"
+msgstr ""
+
+#: authentication/templates/authentication/login.html:39
+msgid "Recover password"
+msgstr ""
+
+#: authentication/templates/authentication/my_affiliates.html:11
+msgid "Invite a friend"
+msgstr ""
+
+#: authentication/templates/authentication/my_affiliates.html:16
+msgid ""
+"After your friend registers you will receive a free week of 3DOptimizer."
+msgstr ""
+
+#: authentication/templates/authentication/my_affiliates.html:35
+#: payments/templates/payments/invoices.html:16
+msgid "Date"
+msgstr ""
+
+#: authentication/templates/authentication/my_affiliates.html:38
+msgid "Status"
+msgstr ""
+
+#: authentication/templates/authentication/my_affiliates.html:39
+msgid "Bonus"
+msgstr ""
+
+#: authentication/templates/authentication/password_reset.html:15
+msgid "Send recovery email"
+msgstr ""
+
+#: authentication/templates/authentication/password_reset_complete.html:6
+msgid "Your password was successfully reset."
+msgstr ""
+
+#: authentication/templates/authentication/password_reset_confirm.html:7
+msgid "Change Password"
+msgstr ""
+
+#: authentication/templates/authentication/password_reset_confirm.html:23
+msgid ""
+"The password reset link was invalid, possibly because it has already been "
+"used."
+msgstr ""
+
+#: authentication/templates/authentication/password_reset_confirm.html:24
+msgid "Please request a new password reset."
+msgstr ""
+
+#: authentication/templates/authentication/password_reset_done.html:6
+msgid ""
+"Password reset instructions should arrive in your inbox within few minutes."
+msgstr ""
+
+#: authentication/templates/authentication/password_reset_done.html:7
+msgid "If you don't receive email, please check your spam folder."
+msgstr ""
+
+#: authentication/templates/authentication/signup.html:15
+msgid "Individual account (single user)"
+msgstr ""
+
+#: authentication/templates/authentication/signup.html:42
+msgid "Business account (multi-user)"
+msgstr ""
+
+#: authentication/templates/authentication/translation_selector.html:6
+#, python-format
+msgid "Page presented in <a %(attrs)s>%(lang)s</a>"
+msgstr ""
+
+#: authentication/templates/authentication/translation_selector.html:15
+msgid "Change page language"
+msgstr ""
+
+#: authentication/templates/authentication/translation_selector.html:29
+#: session/templates/session/session_validated.html:37
+msgid "Cancel"
+msgstr ""
+
+#: authentication/views.py:51
+msgid "Your account has been deactivated."
+msgstr ""
+
+#: authentication/views.py:54 authentication/views.py:58
+msgid "Failed to log in!"
+msgstr ""
+
+#: authentication/views.py:196
+msgid "Password changed"
+msgstr ""
+
+#: authentication/views.py:220
+msgid "Your email address was confirmed and account activated."
+msgstr ""
+
+#: authentication/views.py:248
+msgid "User already invited or registered"
+msgstr ""
+
+#: authentication/views.py:253
+msgid "Friend's email"
+msgstr ""
+
+#: authentication/views.py:254
+msgid "Friend's name"
+msgstr ""
+
+#: authentication/views.py:255
+msgid "Message"
+msgstr ""
+
+#: authentication/views.py:258
+msgid "Send"
+msgstr ""
+
+#: authentication/views.py:276
+#, python-brace-format
+msgid "Invitation sent to {0.name} ({0.email})"
+msgstr ""
+
+#: authentication/views.py:341
+#, python-brace-format
+msgid ""
+"You can use default <a href=\"{signup}\">sign up form</a> or <a href="
+"\"{login}\">log in </a> to your account."
+msgstr ""
+
+#: authentication/views.py:356
+msgid "Account changed successfully"
+msgstr ""
+
+#: authentication/views.py:486
+#, python-brace-format
+msgid "{email} already invited or joined another corporation"
+msgstr ""
+
+#: authentication/views.py:506
+#, python-brace-format
+msgid "You are now member of {team} team"
+msgstr ""
+
+#: payments/forms.py:58
+msgid "Redeem a voucher "
+msgstr ""
+
+#: payments/forms.py:63
+msgid "Redeem"
+msgstr ""
+
+#: payments/forms.py:68
+msgid "voucher code"
+msgstr ""
+
+#: payments/models.py:82
+msgid "One-time payment"
+msgstr ""
+
+#: payments/models.py:84
+msgid "Recurring dayly payment"
+msgstr ""
+
+#: payments/models.py:86
+msgid "Recurring monthly payment"
+msgstr ""
+
+#: payments/models.py:88
+msgid "Recurring yearly payment"
+msgstr ""
+
+#: payments/templates/payments/checkout.html:10
+msgid "Redirecting to checkout page, please wait..."
+msgstr ""
+
+#: payments/templates/payments/invoices.html:15
+msgid "Invoice"
+msgstr ""
+
+#: payments/templates/payments/invoices.html:17
+msgid "Amount paid"
+msgstr ""
+
+#: payments/templates/payments/invoices.html:29
+msgid "Download"
+msgstr ""
+
+#: payments/templates/payments/plans.html:58
+#, python-format
+msgid "%(expiration)s day of full access remaining."
+msgid_plural "%(expiration)s days of full access remaining."
+msgstr[0] ""
+msgstr[1] ""
+
+#: payments/templates/payments/plans.html:69
+msgid "Individual"
+msgstr ""
+
+#: payments/templates/payments/plans.html:72
+msgid "Business"
+msgstr ""
+
+#: payments/templates/payments/plans.html:75
+msgid "Education"
+msgstr ""
+
+#: payments/templates/payments/plans.html:99
+#: payments/templates/payments/plans.html:158
+msgid "All tests"
+msgstr ""
+
+#: payments/templates/payments/plans.html:100
+#: payments/templates/payments/plans.html:159
+msgid "Full guided testing mode"
+msgstr ""
+
+#: payments/templates/payments/plans.html:101
+#: payments/templates/payments/plans.html:160
+msgid "Advanced testing mode"
+msgstr ""
+
+#: payments/templates/payments/plans.html:102
+#: payments/templates/payments/plans.html:162
+msgid "Email support"
+msgstr ""
+
+#: payments/templates/payments/plans.html:110
+#: payments/templates/payments/plans.html:170
+msgid "Currently active"
+msgstr ""
+
+#: payments/templates/payments/plans.html:124
+msgid ""
+"If you’re not happy with our software for any reason, we’ll refund your "
+"money within a week from payment date no-questions-asked."
+msgstr ""
+
+#: payments/templates/payments/plans.html:138
+msgid "Payment plans"
+msgstr ""
+
+#: payments/templates/payments/plans.html:161
+#, python-format
+msgid "%(users)s user included"
+msgid_plural "%(users)s users included"
+msgstr[0] ""
+msgstr[1] ""
+
+#: payments/templates/payments/plans.html:184
+#, python-format
+msgid "If you need different setup or more users, contact %(support)s"
+msgstr ""
+
+#: payments/templates/payments/plans.html:190
+msgid "Individual account"
+msgstr ""
+
+#: payments/templates/payments/plans.html:193
+#, python-format
+msgid ""
+"Free full access for individual students and teachers - </br><a "
+"%(support)s>contact support</a> after creating a free account to activate."
+msgstr ""
+
+#: payments/templates/payments/plans.html:196
+msgid "Educational institution account"
+msgstr ""
+
+#: payments/templates/payments/plans.html:199
+#, python-format
+msgid "We offer discounts for multi-user accounts — contact %(sales)s."
+msgstr ""
+
+#: payments/views.py:101
+msgid "Your checkout was cancelled"
+msgstr ""
+
+#: payments/views.py:111 payments/views.py:134
+msgid "Your session has expired"
+msgstr ""
+
+#: payments/views.py:115 payments/views.py:361
+#, python-format
+msgid "Your full access was extended for %(day)d day"
+msgid_plural "Your full access was extended for %(day)d days"
+msgstr[0] ""
+msgstr[1] ""
+
+#: payments/views.py:119
+msgid "Subscription successful"
+msgstr ""
+
+#: payments/views.py:126
+msgid "We haven't received your payment yet. Please check after few minutes"
+msgstr ""
+
+#: payments/views.py:171
+msgid "Subscription payment method changed!"
+msgstr ""
+
+#: payments/views.py:177
+msgid "Something went wrong. Please try again later."
+msgstr ""
+
+#: payments/views.py:196
+msgid "Subscription cancelled"
+msgstr ""
+
+#: payments/views.py:365
+msgid "Provided voucher code is not valid"
+msgstr ""
+
+#: session/choices.py:18
+msgid "Mechanical Strength"
+msgstr ""
+
+#: session/choices.py:18
+msgid "Visual Quality"
+msgstr ""
+
+#: session/choices.py:18
+msgid "Short Printing Time"
+msgstr ""
+
+#: session/choices.py:22
+msgid "Delta"
+msgstr ""
+
+#: session/choices.py:22
+msgid "Cartesian"
+msgstr ""
+
+#: session/forms.py:178
+msgid "Min temperature (°C)"
+msgstr ""
+
+#: session/forms.py:179
+#, python-brace-format
+msgid ""
+"Manufacturer's suggested temperature. After the testing process you might "
+"end up with a different temperature. If you do not have this data, a method "
+"to determine it can be faund <a href='{help_link}'>here</a>."
+msgstr ""
+
+#: session/forms.py:182 session/forms.py:591 session/forms.py:620
+#: session/forms.py:634
+msgid "Max temperature (°C)"
+msgstr ""
+
+#: session/forms.py:183
+msgid "Same as above."
+msgstr ""
+
+#: session/forms.py:185 session/templates/session/material_manager.html:25
+msgid "Material name"
+msgstr ""
+
+#: session/forms.py:186 session/templates/session/material_manager.html:26
+msgid "Filament diameter (mm)"
+msgstr ""
+
+#: session/forms.py:189 session/templates/session/material_manager.html:27
+msgid "Notes"
+msgstr ""
+
+#: session/forms.py:190
+msgid "(Batch number, color, SKU etc.)"
+msgstr ""
+
+#: session/forms.py:195 session/templates/session/session_info.html:51
+msgid "Build Plate"
+msgstr ""
+
+#: session/forms.py:196
+msgid "Other"
+msgstr ""
+
+#: session/forms.py:231
+msgid "Other Build Plate"
+msgstr ""
+
+#: session/forms.py:247 session/templates/session/dashboard.html:111
+#: session/templates/session/session_manager.html:37
+msgid "Session name"
+msgstr ""
+
+#: session/forms.py:248 session/templates/session/dashboard.html:112
+#: session/templates/session/session_info.html:39
+#: session/templates/session/session_manager.html:38
+msgid "Mode"
+msgstr ""
+
+#: session/forms.py:249 session/templates/session/dashboard.html:115
+#: session/templates/session/session_info.html:47
+#: session/templates/session/session_manager.html:41
+msgid "Material"
+msgstr ""
+
+#: session/forms.py:253 session/templates/session/material_form.html:11
+#: session/templates/session/material_manager.html:16
+msgid "New Material"
+msgstr ""
+
+#: session/forms.py:254 session/templates/session/dashboard.html:114
+#: session/templates/session/session_info.html:43
+#: session/templates/session/session_manager.html:40
+msgid "3D Printer"
+msgstr ""
+
+#: session/forms.py:258 session/templates/session/machine_form.html:10
+#: session/templates/session/machine_manager.html:16
+msgid "New 3D Printer"
+msgstr ""
+
+#: session/forms.py:259 session/templates/session/dashboard.html:113
+#: session/templates/session/session_info.html:35
+#: session/templates/session/session_manager.html:39
+msgid "Target"
+msgstr ""
+
+#: session/forms.py:264
+#, python-brace-format
+msgid ""
+"Mechanical Strength and Short Printing Time targets require <a href="
+"\"{link}\">Full Access</a>"
+msgstr ""
+
+#: session/forms.py:268
+#, python-brace-format
+msgid "Advanced mode require <a href=\"{link}\">Full Access</a>"
+msgstr ""
+
+#: session/forms.py:340
+msgid "My notes (optional)"
+msgstr ""
+
+#: session/forms.py:371
+msgid "Yes"
+msgstr ""
+
+#: session/forms.py:371
+msgid "No"
+msgstr ""
+
+#: session/forms.py:533
+msgid "3D Printer model"
+msgstr ""
+
+#: session/forms.py:534
+msgid "Max dimension on X axis (mm)"
+msgstr ""
+
+#: session/forms.py:535
+msgid "Max dimension on Y axis (mm)"
+msgstr ""
+
+#: session/forms.py:537
+msgid "Offset on X axis (mm)"
+msgstr ""
+
+#: session/forms.py:538
+msgid "Offset on Y axis (mm)"
+msgstr ""
+
+#: session/forms.py:540 session/templates/session/machine_manager.html:26
+msgid "Type"
+msgstr ""
+
+#: session/forms.py:541
+msgid "Extruder type"
+msgstr ""
+
+#: session/forms.py:543
+msgid "Header"
+msgstr ""
+
+#: session/forms.py:546
+msgid "Footer"
+msgstr ""
+
+#: session/forms.py:550
+msgid "Homing script"
+msgstr ""
+
+#: session/forms.py:590 session/forms.py:618
+msgid "Gcode tool index"
+msgstr ""
+
+#: session/forms.py:592 session/translatable_backend_strings.py:18
+msgid "Part cooling"
+msgstr ""
+
+#: session/forms.py:605
+msgid "Nozzle's inner diameter (mm)"
+msgstr ""
+
+#: session/forms.py:619
+msgid "Gcode syntax"
+msgstr ""
+
+#: session/forms.py:621
+msgid "Chamber heatable"
+msgstr ""
+
+#: session/forms.py:636
+msgid "Print bed heatable"
+msgstr ""
+
+#: session/migrations/0048_manual_add_session_modes.py:12
+msgid "Advanced"
+msgstr ""
+
+#: session/migrations/0048_manual_add_session_modes.py:16
+msgid "Guided"
+msgstr ""
+
+#: session/migrations/0048_manual_add_session_modes.py:20 session/models.py:589
+msgid "Core"
+msgstr ""
+
+#: session/migrations/0055_add_and_assign_descriptors.py:13
+msgid "Is the nozzle too close to the print bed?"
+msgstr ""
+
+#: session/migrations/0055_add_and_assign_descriptors.py:14
+#: session/migrations/0055_add_and_assign_descriptors.py:15
+msgid "All combinations are bad."
+msgstr ""
+
+#: session/migrations/0055_add_and_assign_descriptors.py:14
+msgid "Extruder's nozzle may be too large to retract filament successfully"
+msgstr ""
+
+#: session/migrations/0055_add_and_assign_descriptors.py:16
+msgid "Are all values between 0 and 6 mm bad?"
+msgstr ""
+
+#: session/migrations/0055_add_and_assign_descriptors.py:17
+#: session/migrations/0055_add_and_assign_descriptors.py:21
+#: session/migrations/0055_add_and_assign_descriptors.py:22
+msgid "Are there voids between tracks?"
+msgstr ""
+
+#: session/migrations/0055_add_and_assign_descriptors.py:17
+msgid "Try lowering printing speed values in the interval."
+msgstr ""
+
+#: session/migrations/0055_add_and_assign_descriptors.py:18
+msgid "I wish to fine-tune printing speed."
+msgstr ""
+
+#: session/migrations/0055_add_and_assign_descriptors.py:19
+msgid "Are there still voids between tracks?"
+msgstr ""
+
+#: session/migrations/0055_add_and_assign_descriptors.py:20
+msgid "I wish to fine-tune track height (print resolution)."
+msgstr ""
+
+#: session/migrations/0055_add_and_assign_descriptors.py:23
+msgid "Does the print peel off from print bed, although the height is correct?"
+msgstr ""
+
+#: session/migrations/0055_add_and_assign_descriptors.py:23
+msgid ""
+"Try increasing extrusion temperature, reduce printing speed, increase print "
+"bed temperature or apply an adhesive to the print bed."
+msgstr ""
+
+#: session/migrations/0055_add_and_assign_descriptors.py:24
+msgid "Does the print float above the print bed?"
+msgstr ""
+
+#: session/models.py:152
+msgid "Unknown"
+msgstr ""
+
+#: session/models.py:159
+msgid "Bowden"
+msgstr ""
+
+#: session/models.py:159
+msgid "Direct drive"
+msgstr ""
+
+#: session/models.py:310
+msgid "Untitled"
+msgstr ""
+
+#: session/models.py:591
+msgid "Optional"
+msgstr ""
+
+#: session/templates/session/404.html:7
+msgid "Sorry! This page does not exist!"
+msgstr ""
+
+#: session/templates/session/500.html:7
+msgid "Something went wrong!"
+msgstr ""
+
+#: session/templates/session/500.html:9
+msgid ""
+"Feel free to contact our <a href=\"mailto:support@fabcontrol.com\">support</"
+"a>!"
+msgstr ""
+
+#: session/templates/session/dashboard.html:11
+msgid "Welcome to 3DOptimizer!"
+msgstr ""
+
+#: session/templates/session/dashboard.html:19
+#, python-format
+msgid "%(first_name)s %(last_name)s invited you to collaborate in %(company)s."
+msgstr ""
+
+#: session/templates/session/dashboard.html:20
+msgid "Join"
+msgstr ""
+
+#: session/templates/session/dashboard.html:21
+msgid "Decline"
+msgstr ""
+
+#: session/templates/session/dashboard.html:30
+#: session/templates/session/navbar.html:65
+#: session/templates/session/session_manager.html:12
+msgid "Testing Sessions"
+msgstr ""
+
+#: session/templates/session/dashboard.html:32
+msgid "View all Sessions"
+msgstr ""
+
+#: session/templates/session/dashboard.html:37
+#: session/templates/session/machine_manager.html:12
+#: session/templates/session/navbar.html:68
+msgid "3D Printers"
+msgstr ""
+
+#: session/templates/session/dashboard.html:39
+msgid "View all 3D Printers"
+msgstr ""
+
+#: session/templates/session/dashboard.html:44
+#: session/templates/session/material_manager.html:12
+#: session/templates/session/navbar.html:71
+msgid "Materials"
+msgstr ""
+
+#: session/templates/session/dashboard.html:46
+msgid "View all Materials"
+msgstr ""
+
+#: session/templates/session/dashboard.html:54
+msgid "View all Users"
+msgstr ""
+
+#: session/templates/session/dashboard.html:63
+msgid "Start a new testing session"
+msgstr ""
+
+#: session/templates/session/dashboard.html:68
+#, python-format
+msgid ""
+"Video overview and user manual are available in <a href=\"%(help)s\">Help "
+"Center</a>"
+msgstr ""
+
+#: session/templates/session/dashboard.html:69
+msgid "When you return, this page will show your recent testing sessions."
+msgstr ""
+
+#: session/templates/session/dashboard.html:71
+msgid "Upgrade to add multiple users"
+msgstr ""
+
+#: session/templates/session/dashboard.html:88
+msgid "Recent Testing Sessions"
+msgstr ""
+
+#: session/templates/session/dashboard.html:92
+#: session/templates/session/dashboard.html:101
+#: session/templates/session/new_session.html:11
+#: session/templates/session/session_manager.html:17
+#: session/templates/session/session_manager.html:26
+msgid "New Testing Session"
+msgstr ""
+
+#: session/templates/session/dashboard.html:94
+#: session/templates/session/session_manager.html:19
+msgid "Upgrade to create a new Testing Session"
+msgstr ""
+
+#: session/templates/session/dashboard.html:97
+#: session/templates/session/session_manager.html:22
+#, python-format
+msgid ""
+"To create new Testing Sessions, ask %(first_name)s %(last_name)s to upgrade "
+"account"
+msgstr ""
+
+#: session/templates/session/dashboard.html:110
+#: session/templates/session/session_info.html:6
+#: session/templates/session/session_manager.html:36
+msgid "ID"
+msgstr ""
+
+#: session/templates/session/dashboard.html:116
+#: session/templates/session/session_manager.html:42
+msgid "Tests"
+msgstr ""
+
+#: session/templates/session/dashboard.html:117
+#: session/templates/session/machine_manager.html:28
+#: session/templates/session/material_manager.html:28
+#: session/templates/session/session_info.html:55
+#: session/templates/session/session_manager.html:43
+msgid "Created"
+msgstr ""
+
+#: session/templates/session/guided_mode/guided_session.html:13
+#: session/templates/session/session.html:13
+#, python-format
+msgid "TEST %(number)s"
+msgstr ""
+
+#: session/templates/session/guided_mode/guided_session.html:20
+#: session/templates/session/session.html:20
+#, python-format
+msgid "Read more and see samples in <a %(help_link)s><b>Help Center</b></a>"
+msgstr ""
+
+#: session/templates/session/guided_mode/session_generate.html:4
+msgid "Enter parameter values to be tested:"
+msgstr ""
+
+#: session/templates/session/guided_mode/session_generate.html:11
+msgid "Re-validate Previous Test"
+msgstr ""
+
+#: session/templates/session/guided_mode/session_generate.html:15
+#: session/templates/session/session_generate.html:7
+msgid "Download .GCODE"
+msgstr ""
+
+#: session/templates/session/guided_mode/session_validate.html:8
+#: session/templates/session/session_validate.html:7
+#, python-format
+msgid ""
+"<b>Print the downloaded test file</b><br>If the test gcode didn't download, "
+"you can get it <a href=\"%(gcode_link)s\">here</a>."
+msgstr ""
+
+#: session/templates/session/guided_mode/session_validate.html:13
+#: session/templates/session/session_validate.html:12
+msgid "Inspect the printed test structure"
+msgstr ""
+
+#: session/templates/session/guided_mode/session_validate.html:28
+msgid "Select all the best parameter combinations"
+msgstr ""
+
+#: session/templates/session/guided_mode/session_validate.html:38
+msgid "Back to Setup"
+msgstr ""
+
+#: session/templates/session/guided_mode/session_validate.html:41
+#: session/templates/session/session_validate.html:35
+msgid "Next Test"
+msgstr ""
+
+#: session/templates/session/machine_detail.html:10
+msgid "3D Printer Editor"
+msgstr ""
+
+#: session/templates/session/machine_detail.html:17
+#: session/templates/session/machine_detail.html:77
+msgid ""
+"The changes will not be reflected in sessions already using this printer."
+msgstr ""
+
+#: session/templates/session/machine_detail.html:19
+#: session/templates/session/machine_form.html:16
+msgid "Load from preset"
+msgstr ""
+
+#: session/templates/session/machine_detail.html:21
+#: session/templates/session/machine_form.html:18
+msgid "Select from list"
+msgstr ""
+
+#: session/templates/session/machine_detail.html:23
+#: session/templates/session/machine_form.html:20
+msgid "OTHER PRINTER (enter values below)"
+msgstr ""
+
+#: session/templates/session/machine_detail.html:39
+#: session/templates/session/machine_form.html:36
+msgid "Extruder"
+msgstr ""
+
+#: session/templates/session/machine_detail.html:46
+#: session/templates/session/machine_form.html:43
+msgid "Heating chamber"
+msgstr ""
+
+#: session/templates/session/machine_detail.html:52
+#: session/templates/session/machine_form.html:49
+msgid "Print bed"
+msgstr ""
+
+#: session/templates/session/machine_detail.html:58
+#: session/templates/session/machine_form.html:55
+msgid "Custom GCODE scripts"
+msgstr ""
+
+#: session/templates/session/machine_detail.html:61
+#: session/templates/session/machine_form.html:58
+msgid ""
+"Header is prepended to test routine GCODEs. This can be altered to better "
+"accomodate certain printer features, such as autocalibration."
+msgstr ""
+
+#: session/templates/session/machine_detail.html:63
+#: session/templates/session/machine_form.html:60
+msgid ""
+"Homing script is executed after printer has heated up, but before actual "
+"printing starts."
+msgstr ""
+
+#: session/templates/session/machine_detail.html:65
+#: session/templates/session/machine_form.html:62
+msgid ""
+"Footer is appended to test routine GCODEs. Homing command is recommended "
+"here, to move the nozzle away from the printed structure."
+msgstr ""
+
+#: session/templates/session/machine_detail.html:68
+#: session/templates/session/machine_form.html:65
+msgid "Offset from center of printbed"
+msgstr ""
+
+#: session/templates/session/machine_detail.html:72
+#: session/templates/session/machine_form.html:69
+msgid ""
+"Test structure is centered on the printbed by default. Offset may be used to "
+"shift the test structure on build-plate."
+msgstr ""
+
+#: session/templates/session/machine_form.html:76
+#: session/templates/session/material_form.html:27
+msgid "Create"
+msgstr ""
+
+#: session/templates/session/machine_manager.html:25
+msgid "Model"
+msgstr ""
+
+#: session/templates/session/machine_manager.html:27
+msgid "Nozzle diameter (mm)"
+msgstr ""
+
+#: session/templates/session/machine_manager.html:48
+#: session/templates/session/material_manager.html:48
+msgid "Edit"
+msgstr ""
+
+#: session/templates/session/machine_manager.html:52
+#: session/templates/session/material_manager.html:52
+#: session/templates/session/session_manager.html:72
+msgid "Delete"
+msgstr ""
+
+#: session/templates/session/material_detail.html:11
+msgid "Material Editor"
+msgstr ""
+
+#: session/templates/session/navbar.html:39
+msgid "Invoices"
+msgstr ""
+
+#: session/templates/session/navbar.html:41
+msgid "Account Settings"
+msgstr ""
+
+#: session/templates/session/navbar.html:46
+msgid "Redeem a voucher"
+msgstr ""
+
+#: session/templates/session/navbar.html:51
+msgid "Sign Out"
+msgstr ""
+
+#: session/templates/session/navbar.html:62
+msgid "Dashboard"
+msgstr ""
+
+#: session/templates/session/navbar.html:79
+msgid "Help Center"
+msgstr ""
+
+#: session/templates/session/new_session.html:24
+msgid "Start Testing Session"
+msgstr ""
+
+#: session/templates/session/session_info.html:16
+msgid "Change session name"
+msgstr ""
+
+#: session/templates/session/session_info.html:60
+msgid "Completed"
+msgstr ""
+
+#: session/templates/session/session_info.html:61
+#, python-format
+msgid "%(test)s Test"
+msgid_plural "%(test)s Tests"
+msgstr[0] ""
+msgstr[1] ""
+
+#: session/templates/session/session_info.html:65
+msgid "Progress"
+msgstr ""
+
+#: session/templates/session/session_info.html:78
+msgid "Back to Session"
+msgstr ""
+
+#: session/templates/session/session_info.html:81
+msgid "Results"
+msgstr ""
+
+#: session/templates/session/session_manager.html:44
+msgid "Performer"
+msgstr ""
+
+#: session/templates/session/session_manager.html:68
+msgid "Open"
+msgstr ""
+
+#: session/templates/session/session_nav.html:4
+msgid "Setup"
+msgstr ""
+
+#: session/templates/session/session_nav.html:7
+msgid "Print and validate"
+msgstr ""
+
+#: session/templates/session/session_overview.html:13
+msgid "Slicing profiles"
+msgstr ""
+
+#: session/templates/session/session_overview.html:18
+#: session/templates/session/session_overview.html:21
+#: session/templates/session/session_overview.html:24
+#, python-format
+msgid "Version %(version)s"
+msgstr ""
+
+#: session/templates/session/session_overview.html:30
+msgid "Select profile quality type"
+msgstr ""
+
+#: session/templates/session/session_overview.html:39
+msgid "Existing Cura profile to use as template:"
+msgstr ""
+
+#: session/templates/session/session_overview.html:45
+msgid "*You can find your printer profiles in Cura profile manager."
+msgstr ""
+
+#: session/templates/session/session_overview.html:48
+msgid "Download profile"
+msgstr ""
+
+#: session/templates/session/session_overview.html:57
+msgid "Test reports"
+msgstr ""
+
+#: session/templates/session/session_overview.html:62
+msgid "Download Test Report"
+msgstr ""
+
+#: session/templates/session/session_overview.html:67
+msgid "Selected parameters"
+msgstr ""
+
+#: session/templates/session/session_overview.html:77
+#: session/templates/session/session_overview.html:82
+#: session/templates/session/session_overview.html:88
+#, python-format
+msgid "Selected <b>%(param)s</b> value:"
+msgstr ""
+
+#: session/templates/session/session_validate.html:23
+msgid "Select the best parameter combination"
+msgstr ""
+
+#: session/templates/session/session_validate.html:32
+msgid "Back"
+msgstr ""
+
+#: session/templates/session/session_validated.html:6
+msgid "Validated values:"
+msgstr ""
+
+#: session/templates/session/session_validated.html:22
+msgid "Revert to this test"
+msgstr ""
+
+#: session/templates/session/session_validated.html:29
+msgid "Are you sure you want to proceed?"
+msgstr ""
+
+#: session/templates/session/session_validated.html:35
+msgid "Reverting to this test will discard all progress achieved after it."
+msgstr ""
+
+#: session/templates/session/session_validated.html:39
+msgid "Revert"
+msgstr ""
+
+#: session/templates/session/team_stats.html:12
+#, python-format
+msgid "%(company)s Users"
+msgstr ""
+
+#: session/templates/session/team_stats.html:18
+msgid "Manage users"
+msgstr ""
+
+#: session/templates/session/team_stats.html:29
+msgid "Latest session"
+msgstr ""
+
+#: session/templates/session/team_stats.html:30
+msgid "Last 7 days"
+msgstr ""
+
+#: session/templates/session/team_stats.html:31
+msgid "Last 30 days"
+msgstr ""
+
+#: session/templates/session/team_stats.html:32
+msgid "Last 90 days"
+msgstr ""
+
+#: session/templates/session/team_stats.html:33
+msgid "Total"
+msgstr ""
+
+#: session/translatable_backend_strings.py:6
+msgid "Bridging extrusion multiplier"
+msgstr ""
+
+#: session/translatable_backend_strings.py:7
+msgid "Bridging part cooling"
+msgstr ""
+
+#: session/translatable_backend_strings.py:8
+msgid "Bridging printing speed"
+msgstr ""
+
+#: session/translatable_backend_strings.py:9
+msgid "Chamber temperature"
+msgstr ""
+
+#: session/translatable_backend_strings.py:10
+msgid "Coasting distance"
+msgstr ""
+
+#: session/translatable_backend_strings.py:11
+msgid "Exit ventilation power"
+msgstr ""
+
+#: session/translatable_backend_strings.py:12
+msgid "Extrusion multiplier"
+msgstr ""
+
+#: session/translatable_backend_strings.py:13
+msgid "Extrusion temperature"
+msgstr ""
+
+#: session/translatable_backend_strings.py:14
+msgid "First-layer extrusion temperature"
+msgstr ""
+
+#: session/translatable_backend_strings.py:15
+msgid "First-layer printing speed"
+msgstr ""
+
+#: session/translatable_backend_strings.py:16
+msgid "First-layer track height"
+msgstr ""
+
+#: session/translatable_backend_strings.py:17
+msgid "First-layer track width"
+msgstr ""
+
+#: session/translatable_backend_strings.py:19
+msgid "Print bed coating"
+msgstr ""
+
+#: session/translatable_backend_strings.py:20
+msgid "Print bed temperature"
+msgstr ""
+
+#: session/translatable_backend_strings.py:21
+msgid "Printing speed"
+msgstr ""
+
+#: session/translatable_backend_strings.py:22
+msgid "Retraction distance"
+msgstr ""
+
+#: session/translatable_backend_strings.py:23
+msgid "Retraction speed"
+msgstr ""
+
+#: session/translatable_backend_strings.py:24
+msgid "Retraction-restart distance"
+msgstr ""
+
+#: session/translatable_backend_strings.py:25
+msgid "Track height"
+msgstr ""
+
+#: session/translatable_backend_strings.py:26
+msgid "Track width"
+msgstr ""
+
+#: session/translatable_backend_strings.py:27
+msgid "Z-offset"
+msgstr ""
+
+#: session/translatable_backend_strings.py:31
+msgid ""
+"For this test this value is equal to unity, but, if needed, it can be tested "
+"in a separate test"
+msgstr ""
+
+#: session/translatable_backend_strings.py:32
+msgid ""
+"Set a value from the range 20-50 mm/s for printing flexible materials, or "
+"30-70 mm/s for printing harder materials"
+msgstr ""
+
+#: session/translatable_backend_strings.py:33
+msgid ""
+"Set part cooling. Active part cooling is required when printing using high "
+"deposition rates or when printing fine details"
+msgstr ""
+
+#: session/translatable_backend_strings.py:34
+msgid "Set the range of <b>Retraction distances</b> to be tested"
+msgstr ""
+
+#: session/translatable_backend_strings.py:35
+msgid ""
+"Set the range to 10-25 mm/s for printing flexible materials, or 15-35 mm/s "
+"for harder materials"
+msgstr ""
+
+#: session/translatable_backend_strings.py:36
+msgid ""
+"Set the range to 20-50 mm/s for printing flexible materials, or to 30-70 mm/"
+"s for printing harder materials"
+msgstr ""
+
+#: session/translatable_backend_strings.py:37
+msgid ""
+"Set the range to 5-15 mm/s for printing flexible materials, or to 10-30 mm/s "
+"for printing harder materials"
+msgstr ""
+
+#: session/translatable_backend_strings.py:38
+msgid "Set this value to proceed"
+msgstr ""
+
+#: session/translatable_backend_strings.py:39
+msgid ""
+"Set this value to proceed. Perform the corresponding test to fine-tune this "
+"value"
+msgstr ""
+
+#: session/translatable_backend_strings.py:40
+msgid ""
+"Set this value to proceed. This value will determine the resolution and "
+"surface quality of your print"
+msgstr ""
+
+#: session/translatable_backend_strings.py:41
+msgid ""
+"The default value is equal to the nozzle inner diameter, but you can perform "
+"the corresponding test to fine-tune this value"
+msgstr ""
+
+#: session/translatable_backend_strings.py:42
+msgid ""
+"These seven values will be tested at four <b>Printing speeds</b>. You can "
+"change the limiting values"
+msgstr ""
+
+#: session/translatable_backend_strings.py:43
+msgid ""
+"These seven values will be tested at four different <b>Bridging printing "
+"speeds</b> (see below). You can change the limiting values"
+msgstr ""
+
+#: session/translatable_backend_strings.py:44
+msgid ""
+"These seven values will be tested at four different <b>First-layer printing "
+"speeds</b> (see below). You can change the limiting values"
+msgstr ""
+
+#: session/translatable_backend_strings.py:45
+msgid ""
+"These seven values will be tested at four different <b>Printing speeds</b> "
+"(see below). You can change the limiting values"
+msgstr ""
+
+#: session/translatable_backend_strings.py:46
+msgid ""
+"These seven values will be tested at four different <b>Retraction distances</"
+"b> (see below). You can change the limiting values"
+msgstr ""
+
+#: session/translatable_backend_strings.py:47
+msgid ""
+"These seven values will be tested at four different <b>Retraction speeds</b> "
+"(see below). You can change the limiting values"
+msgstr ""
+
+#: session/translatable_backend_strings.py:48
+msgid ""
+"These seven values will be tested at one <b>First-layer printing speed</b>. "
+"You can change the limiting values"
+msgstr ""
+
+#: session/translatable_backend_strings.py:49
+msgid ""
+"These seven values will be tested at one <b>Printing speed</b>. You can "
+"change the limiting values"
+msgstr ""
+
+#: session/translatable_backend_strings.py:50
+msgid ""
+"These seven values will be tested while all other processing parameters are "
+"constant. You can change the limiting values"
+msgstr ""
+
+#: session/translatable_backend_strings.py:51
+msgid "These seven values will be tested. You can change the limiting values"
+msgstr ""
+
+#: session/translatable_backend_strings.py:52
+msgid "This value was determined in the previous test(s) and cannot be changed"
+msgstr ""
+
+#: session/translatable_backend_strings.py:56
+msgid ""
+"This is a core test which helps finding a working retraction distance under "
+"general conditions."
+msgstr ""
+
+#: session/translatable_backend_strings.py:57
+msgid "This is an additional test to avoid under-extrusion."
+msgstr ""
+
+#: session/translatable_backend_strings.py:58
+msgid ""
+"This test helps you find a base temperature and printing speed. These will "
+"be optimized further in later tests. Since there can be different parameter "
+"combinations that work, but are not optimal for your intended target, this "
+"is an essential test."
+msgstr ""
+
+#: session/translatable_backend_strings.py:59
+msgid "This test is needed to arrive at the most optimal flow-rate."
+msgstr ""
+
+#: session/translatable_backend_strings.py:60
+msgid ""
+"This test is needed to avoid gaps between tracks and find the limits of "
+"horizontal resolution with a given nozzle."
+msgstr ""
+
+#: session/translatable_backend_strings.py:61
+msgid "This test is needed to avoid stringing."
+msgstr ""
+
+#: session/translatable_backend_strings.py:62
+msgid ""
+"This test is needed to establish good first layer printing settings. A good "
+"first layer is essential to achieving good prints."
+msgstr ""
+
+#: session/translatable_backend_strings.py:63
+msgid ""
+"This test is needed to find Z-offset value in case of non-level print bed or "
+"printbed coating."
+msgstr ""
+
+#: session/translatable_backend_strings.py:64
+msgid ""
+"This test is needed to find reliable settings for retraction. The best "
+"combination of 3 parameters are determined simulataneously."
+msgstr ""
+
+#: session/translatable_backend_strings.py:65
+msgid "This test is needed to find the best bridging settings."
+msgstr ""
+
+#: session/translatable_backend_strings.py:66
+msgid ""
+"This test is needed to find the best retraction restart distance and "
+"coasting settings."
+msgstr ""
+
+#: session/translatable_backend_strings.py:67
+msgid ""
+"This test is needed to find the limits of printing resolution (layer "
+"thickness)."
+msgstr ""
+
+#: session/translatable_backend_strings.py:68
+msgid ""
+"This test is needed to solve possible issues with adhesion between tracks if "
+"there are any. Good weld-together is essential to achieving good mechanical "
+"properties in any printed part.<br>Run it only if you see the voids in "
+"between the tracks in the previous test. By skipping this test, the <b>First-"
+"layer-track-width</b> value will be set to the <b>Nozzle inner diameter</b>"
+msgstr ""
+
+#: session/translatable_backend_strings.py:73
+msgid ""
+"<ul><li>If the print does not adhere to the build platform, increase the "
+"<b>First-layer extrusion temperature</b> and re-run the test.</li><li>If "
+"this does not help, increase the <b>Printbed temperature</b> or apply "
+"different coating/spray on the build platform.</li><li>If you cannot find "
+"acceptable combination of two parameters, re-run the test with different "
+"<b>First-layer-extrusion-temperature</b> value and/or using different "
+"<b>Printing-speed</b> range.</li></ul>"
+msgstr ""
+
+#: session/translatable_backend_strings.py:79
+#: session/translatable_backend_strings.py:97
+msgid "Z-Offset"
+msgstr ""
+
+#: session/translatable_backend_strings.py:80
+msgid "First-Layer Track Height vs First-Layer Printing Speed"
+msgstr ""
+
+#: session/translatable_backend_strings.py:81
+#: session/translatable_backend_strings.py:99
+msgid "First-Layer Track Width"
+msgstr ""
+
+#: session/translatable_backend_strings.py:82
+msgid "Extrusion Temperature vs Printing Speed"
+msgstr ""
+
+#: session/translatable_backend_strings.py:83
+msgid "Track Height vs Printing Speed"
+msgstr ""
+
+#: session/translatable_backend_strings.py:84
+#: session/translatable_backend_strings.py:102
+msgid "Track Width"
+msgstr ""
+
+#: session/translatable_backend_strings.py:85
+#: session/translatable_backend_strings.py:103
+msgid "Extrusion Multiplier"
+msgstr ""
+
+#: session/translatable_backend_strings.py:86
+#: session/translatable_backend_strings.py:104
+msgid "Printing Speed"
+msgstr ""
+
+#: session/translatable_backend_strings.py:87
+msgid "Extrusion Temperature vs Retraction Distance"
+msgstr ""
+
+#: session/translatable_backend_strings.py:88
+msgid "Retraction Distance vs Printing Speed"
+msgstr ""
+
+#: session/translatable_backend_strings.py:89
+#: session/translatable_backend_strings.py:107
+msgid "Retraction Distance"
+msgstr ""
+
+#: session/translatable_backend_strings.py:90
+msgid "Retraction Distance vs Retraction Speed"
+msgstr ""
+
+#: session/translatable_backend_strings.py:91
+msgid "Retraction Restart Distance vs Printing Speed And Coasting Distance"
+msgstr ""
+
+#: session/translatable_backend_strings.py:92
+msgid "Bridging Extrusion Multiplier vs Bridging Printing Speed"
+msgstr ""
+
+#: session/translatable_backend_strings.py:93
+#: session/translatable_backend_strings.py:111
+msgid "Soluble Support Adhesion"
+msgstr ""
+
+#: session/translatable_backend_strings.py:98
+msgid "First-Layer Track Height vs<br>First-Layer Printing Speed"
+msgstr ""
+
+#: session/translatable_backend_strings.py:100
+msgid "Extrusion Temperature vs<br>Printing Speed"
+msgstr ""
+
+#: session/translatable_backend_strings.py:101
+msgid "Track Height vs<br>Printing Speed"
+msgstr ""
+
+#: session/translatable_backend_strings.py:105
+msgid "Extrusion Temperature vs<br>Retraction Distance"
+msgstr ""
+
+#: session/translatable_backend_strings.py:106
+msgid "Retraction Distance vs<br>Printing Speed"
+msgstr ""
+
+#: session/translatable_backend_strings.py:108
+msgid "Retraction Distance vs<br>Retraction Speed"
+msgstr ""
+
+#: session/translatable_backend_strings.py:109
+msgid "Retraction Restart Distance vs<br>Printing Speed And Coasting Distance"
+msgstr ""
+
+#: session/translatable_backend_strings.py:110
+msgid "Bridging Extrusion Multiplier vs<br>Bridging Printing Speed"
+msgstr ""
+
+#: session/views.py:101
+#, python-brace-format
+msgid "Material \"{material}\" has been created!"
+msgstr ""
+
+#: session/views.py:138
+#, python-brace-format
+msgid "{printer} has been updated!"
+msgstr ""
+
+#: session/views.py:193
+#, python-brace-format
+msgid "3D Printer \"{printer}\" has been created!"
+msgstr ""
+
+#: session/views.py:384
+#, python-brace-format
+msgid ""
+"Your next test is available in Full Access only. You can skip it and go to "
+"the next available test or <a href={link}>purchase Full Access.</a>"
+msgstr ""
+
+#: session/views.py:388
+#, python-brace-format
+msgid ""
+"Your next test is available in Full Access only. You can skip it and go to "
+"the next available test or ask {first_name} {last_name} to upgrade account."
+msgstr ""
