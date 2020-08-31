@@ -125,6 +125,11 @@ class User(AbstractUser):
         self.save()
 
     @property
+    def has_translator_access(self):
+        return self.groups.filter(name__startswith='translators').count() > 0
+
+
+    @property
     def plan_navbar_text(self):
         expiration_delta = (self.subscription_expiration - timezone.now()).days + 1
         if self.plan == 'basic':

@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'payments.apps.PaymentsConfig',
     'django_simple_cookie_consent.apps.DjangoSimpleCookieConsentConfig',
     'authentication.apps.AuthenticationConfig',
-    'crispy_forms'
+    'crispy_forms',
+    'rosetta'
 ]
 
 MIDDLEWARE = [
@@ -121,6 +122,25 @@ LOCALE_PATHS = [
         os.path.join(BASE_DIR, 'locale')
         ]
 
+# Allow translation of specific model fields
+LOCALIZABLE_MODELS = [
+        ('payments.models.Plan', ('extra_info_text',))
+        ]
+
+# Allow translation of specific languages instead of all
+ROSETTA_LANGUAGE_GROUPS = True
+
+ROSETTA_SHOW_AT_ADMIN_PANEL = True
+
+ROSETTA_LANGUAGES = (
+        ('en', _('English')),
+        ('lv', _('Latvian')),
+        ('de', _('German')),
+        ('es', _('Spanish')),
+        ('fr', _('French')),
+        ('pt', _('Portuguese')),
+        )
+
 # USE_L10N = True
 
 USE_TZ = True
@@ -155,6 +175,11 @@ LOGGING = {
 PASSWORD_RESET_TIMEOUT_DAYS = 1
 
 SAMPLE_SESSIONS_OWNER = 'sample_settings_user@fabcontrol.com'
+
+DEVELOPERS = [
+        'aivars@fabcontrol.com',
+        'egils@fabcontrol.com',
+        ]
 
 TIME_LIMITED_PLANS = ['education', 'premium', 'test', 'limited']
 

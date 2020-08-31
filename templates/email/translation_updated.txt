@@ -1,0 +1,16 @@
+{% extends "email/base.txt" %}
+
+{% block content %}
+{{ creator.first_name }} {{ creator.last_name }} ({{ creator.email }}) has just updated {{ language }} translation.
+
+Please check and apply attached patch with:
+
+git apply --check {{ patch_filename }} && git apply --index {{ patch_filename }}
+
+Then commit with:
+
+git commit -m '{{ language }} translation update from {{ creator.email }}'
+
+Remeber to notify other developers as soon as you commit this patch, to avoid merge collisions.
+
+{% endblock content %}
