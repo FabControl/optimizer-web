@@ -23,13 +23,12 @@ class CustomTranslationFormView(TranslationFormView):
 
         for (model_name, fields) in settings.LOCALIZABLE_MODELS:
             model = import_string(model_name)
-            # rework this to single aggregation query
-            for instance in model.objects.all():
+            for unique_instance in model.objects.values(*fields).distinct():
                 for field in fields:
-                    msgid = getattr(instance, field)
+                    msgid = unique_instance.get(field)
                     if msgid == '': continue
 
-                    occurrence = ('.'.join((model_name, field)), str(instance.pk))
+                    occurrence = ('.'.join((model_name, field)), '0')
                     entry = pofile.find(msgid)
                     if entry is None:
                         entry = POEntry(msgid=msgid)

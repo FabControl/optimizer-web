@@ -124,7 +124,7 @@ LOCALE_PATHS = [
 
 # Allow translation of specific model fields
 LOCALIZABLE_MODELS = [
-        ('payments.models.Plan', ['extra_info_text'])
+        ('payments.models.Plan', ('extra_info_text',))
         ]
 
 # USE_L10N = True
