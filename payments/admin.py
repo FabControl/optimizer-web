@@ -9,7 +9,11 @@ from django.utils import safestring
 
 # Register your models here.
 admin.site.register(payment_models.TaxationCountry)
-admin.site.register(payment_models.Corporation)
+
+
+@admin.register(payment_models.Corporation)
+class CorporationModelAdmin(admin.ModelAdmin):
+    list_display = ('__str__', 'user_count', )
 
 
 def mark_checkout_paid(modeladmin, request, queryset):
