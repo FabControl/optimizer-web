@@ -6,6 +6,7 @@ from django.shortcuts import redirect
 from django import forms
 from django.contrib import messages
 from django.utils import safestring
+from django.db import models
 
 # Register your models here.
 admin.site.register(payment_models.TaxationCountry)
@@ -78,7 +79,15 @@ class CurrencyModelAdmin(admin.ModelAdmin):
 @admin.register(payment_models.Partner)
 class PartnerModelAdmin(admin.ModelAdmin):
     form = PartnerAdminForm
-    list_display = ('name', 'voucher_prefix')
+    list_display = ('name', 'voucher_prefix', 'voucher_count')
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        queryset = queryset.annotate(_voucher_count=models.Count('voucher'))
+        return queryset
+
+    def voucher_count(self, instance):
+        return instance._voucher_count
 
     def change_view(self, request, object_id, form_url='', extra_context=None):
         extra_context = extra_context or {}
