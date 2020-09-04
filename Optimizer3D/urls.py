@@ -20,6 +20,14 @@ from django.urls import include, path
 from .views import index
 from django.conf import settings
 from django.conf.urls.static import static
+from rosetta import urls as rosetta_urls
+from .views import CustomTranslationFormView
+
+# A bit of a hack to override specific view from another app
+for u in rosetta_urls.urlpatterns:
+    if u.name == "rosetta-form":
+        u.callback = CustomTranslationFormView.as_view()
+        break
 
 urlpatterns = [
                   path('', include('session.urls')),
@@ -27,6 +35,7 @@ urlpatterns = [
                   path('admin/', admin.site.urls),
                   # path('', index, name='index')
                   path('', include('payments.urls')),
+                  path('rosetta/', include('rosetta.urls')),
               ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 handler404 = 'session.views.error_404_view'

@@ -14,6 +14,7 @@ class SessionAdmin(admin.ModelAdmin):
     search_fields = ('name', 'owner__email', 'material__name', 'machine__model')
     sortable_by = ('name', 'pub_date', 'owner', 'material', 'completed_tests')
     date_hierarchy = 'pub_date'
+    readonly_fields = ('owner', 'material', 'corporation', 'machine', 'settings')
 
 
 @admin.register(Machine)
@@ -22,6 +23,7 @@ class MachineAdmin(admin.ModelAdmin):
     search_fields = ('model', 'owner__email', 'form')
     sortable_by = ('model', 'pub_date', 'owner', 'form')
     date_hierarchy = 'pub_date'
+    readonly_fields = ('owner', 'corporation')
 
 
 @admin.register(Material)
@@ -30,6 +32,7 @@ class MaterialAdmin(admin.ModelAdmin):
     search_fields = ('name', 'owner__email', 'size_od')
     sortable_by = ('name', 'pub_date', 'owner', 'size_od')
     date_hierarchy = 'pub_date'
+    readonly_fields = ('owner', 'corporation')
 
 
 @admin.register(PrintDescriptor)

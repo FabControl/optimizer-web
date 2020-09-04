@@ -29,6 +29,10 @@
         <li class="nav-item">
           <a class="nav-link" href="/admin">admin</a>
         </li>
+        {% elif user.has_translator_access %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'rosetta-file-list-redirect' %}">translations</a>
+        </li>
         {% endif %}
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
