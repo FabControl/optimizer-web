@@ -162,10 +162,13 @@ class User(AbstractUser):
         :param delta: Time period that will be added to subscription
         :return:
         """
-        base = max(self.subscription_expiration, timezone.now())
-        new_date = base + delta
+        base = timezone.now()
         if self.plan == 'limited':
             self.plan = 'premium'
+        else:
+            base = max(self.subscription_expiration, timezone.now())
+
+        new_date = base + delta
         self.subscription_expiration = new_date.replace(hour=23, minute=59, second=59)
         self.save()
 
