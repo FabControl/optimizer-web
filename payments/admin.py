@@ -137,6 +137,15 @@ class PartnerModelAdmin(admin.ModelAdmin):
 class VoucherModelAdmin(admin.ModelAdmin):
     form = VoucherAdminForm
     readonly_fields = ('partner',)
+    list_display = ('__str__', 'partner', 'bonus_days', 'valid_till', 'used_by')
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        queryset = queryset.annotate(_used_count=models.Count('redeemed_by'))
+        return queryset
+
+    def used_by(self, instance):
+        return instance._used_count
 
     def has_add_permission(self, request):
         return False
