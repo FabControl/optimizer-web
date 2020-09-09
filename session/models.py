@@ -378,9 +378,8 @@ class Session(models.Model, DependenciesCopyMixin):
         :param to_zero:
         :return:
         """
-
         for parameter in self.min_max_parameters:
-            if "speed_printing" not in parameter["programmatic_name"]:
+            if "speed_printing" not in parameter["programmatic_name"] or parameter["parameter"].endswith("one"):
                 if to_zero:
                     output = [0, 0]
                 else:
@@ -714,14 +713,21 @@ class Session(models.Model, DependenciesCopyMixin):
         Attempts to return the previously used min_max speed, returns [0,0] if doesn't find any.
         :return:
         """
+        # for test in self.previous_tests[::-1]:
+        #     for i in range(len(test["tested_parameters"])):
+        #         parameter = test["tested_parameters"][i]
+        #         if parameter["programmatic_name"] is None: continue
+        #         if "speed_printing" in parameter["programmatic_name"]:
+        #             selected = test['selected_parameter_{}_value'.format(
+        #                 ('one', 'two', 'three')[i])]
+        #             import pdb; pdb.set_trace()
+        #             return [selected, selected * 2]
+
         for test in self.previous_tests[::-1]:
-            for i in range(len(test["tested_parameters"])):
-                parameter = test["tested_parameters"][i]
-                if parameter["programmatic_name"] is None: continue
-                if "speed_printing" in parameter["programmatic_name"]:
-                    selected = test['selected_parameter_{}_value'.format(
-                        ('one', 'two', 'three')[i])]
-                    return [selected, selected * 2]
+            for param in test['tested_parameters']:
+                if param['programmatic_name'] == 'speed_printing' and type(param['values']) == list:
+                    if len(param['values']) > 1:
+                        return [param['values'][0], param['values'][-1]]
 
         return [0, 0]
 
@@ -800,8 +806,8 @@ class Session(models.Model, DependenciesCopyMixin):
             self.clean_min_max()
         else:
             self.test_number = self.test_number_next()
-            self.save()
             logging.getLogger("views").info("{} tried to set a disallowed test_number".format(self.owner))
+        self.save()
 
     @property
     def completed(self):
