@@ -7,6 +7,12 @@ from django import forms
 from django.contrib import messages
 from django.utils import safestring
 from django.db import models
+from django.utils import safestring, timezone
+from django.http import StreamingHttpResponse
+import csv
+from datetime import timedelta
+from django.contrib.auth import get_user_model
+from collections import Counter
 
 # Register your models here.
 admin.site.register(payment_models.TaxationCountry)
@@ -76,10 +82,19 @@ class CurrencyModelAdmin(admin.ModelAdmin):
         return False
 
 
+class Echo:
+    """An object that implements just the write method of the file-like
+    interface.
+    """
+    def write(self, value):
+        """Write the value by returning it, instead of storing in a buffer."""
+        return value
+
+
 @admin.register(payment_models.Partner)
 class PartnerModelAdmin(admin.ModelAdmin):
     form = PartnerAdminForm
-    list_display = ('name', 'voucher_prefix', 'voucher_count')
+    list_display = ('name', 'voucher_prefix', 'voucher_count', 'stats')
 
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
@@ -108,6 +123,9 @@ class PartnerModelAdmin(admin.ModelAdmin):
                 path('voucher/create/',
                         self.admin_site.admin_view(self.create_voucher),
                         name='create_voucher'),
+                path('<object_id>/stats/',
+                        self.admin_site.admin_view(self.get_stats),
+                        name='partner_stats'),
                 ]
 
         return extra_urls + urls
@@ -132,11 +150,182 @@ class PartnerModelAdmin(admin.ModelAdmin):
 
         return redirect(reverse('admin:payments_partner_change', kwargs=dict(object_id=form.cleaned_data['partner'].pk)))
 
+    def stats(self, instance):
+        return safestring.mark_safe('<a href="{}" target="blank">Download</a>'.format(reverse('admin:partner_stats', args=[instance.pk])))
+
+
+    def _active_client(self, user, partner):
+        # should always contain at least one row
+        # Ordered with latest first
+        redeemed = payment_models.RedeemedVoucher.objects.filter(user=user).order_by('-date_redeemed')
+        # latest used voucher was deleted - no idea, who was partner
+        if redeemed[0].voucher is None:
+            return False
+        # user once was client of partner, but no more
+        if redeemed[0].voucher.partner != partner:
+            return False
+        for i in range(len(redeemed)):
+            if redeemed[i].voucher is None or redeemed[i].voucher.partner != partner:
+                break
+            user.client_of_selected_partner_since = redeemed[i].date_redeemed
+
+        payments = list(user.checkout_set
+                                    .filter(created__gt=user.client_of_selected_partner_since, is_paid=True)
+                                    .annotate(amount_paid=models.F('payment_plan__price')*models.F('payment_plan__currency__conversion_rate'))
+                                    .values_list('created', 'amount_paid'))
+
+        subscriptions = (user.subscription_set
+                                    .filter(created__gt=user.client_of_selected_partner_since)
+                                    .annotate(amount_paid=models.F('payment_plan__price')*models.F('payment_plan__currency__conversion_rate'))
+                                    .values_list('created', 'amount_paid', 'paid_till', 'payment_plan__interval'))
+
+        for created, amount, paid_till, interval in subscriptions:
+            payment_date = paid_till - payment_models.Plan.timedelta_interval[interval]
+            while payment_date >= created:
+                payments.append((payment_date, amount))
+                payment_date = payment_date - payment_models.Plan.timedelta_interval[interval]
+
+        # sort ascending by payment date
+        payments.sort(key=lambda x: x[0])
+        user.received_subscription_payments = payments
+
+        return True
+
+
+    def generate_stats(self, partner, now):
+        client_keys = partner.voucher_set.annotate(models.Count('redeemed_by')).filter(redeemed_by__count__gt=0).values_list('redeemed_by').distinct()
+
+        clients = [c for c in get_user_model().objects.filter(pk__in=client_keys) if self._active_client(c, partner)]
+
+        month_prev = now.month - 1
+        year_prev = now.year
+        if month_prev < 1:
+            month_prev += 12
+            year_prev -= 1
+
+        last_30 = now - timedelta(days=30)
+        last_60 = now - timedelta(days=60)
+        last_90 = now - timedelta(days=90)
+
+        yield [partner.name, now]
+
+        yield ['Category', f'Last month({year_prev}-{month_prev})', 'Last 30 days', 'Last 60 days', 'Last 90 days', 'Total']
+        yield ['New clients',
+                len(tuple(c for c in clients if c.client_of_selected_partner_since.month == month_prev and c.client_of_selected_partner_since.year == year_prev)),
+                len(tuple(c for c in clients if c.client_of_selected_partner_since > last_30)),
+                len(tuple(c for c in clients if c.client_of_selected_partner_since > last_60)),
+                len(tuple(c for c in clients if c.client_of_selected_partner_since > last_90)),
+                len(clients)]
+        yield ['New accounts',
+                len(tuple(c for c in clients if c.date_joined.month == month_prev and c.date_joined.year == year_prev)),
+                len(tuple(c for c in clients if c.date_joined > last_30)),
+                len(tuple(c for c in clients if c.date_joined > last_60)),
+                len(tuple(c for c in clients if c.date_joined > last_90)),
+                len(clients)]
+
+        payments_total = [c.received_subscription_payments for c in clients if len(c.received_subscription_payments) > 0]
+        payments_90 = [c for c in payments_total if any(x[0] > last_90 for x in c)]
+        payments_60 = [c for c in payments_90 if any(x[0] > last_60 for x in c)]
+        payments_30 = [c for c in payments_60 if any(x[0] > last_30 for x in c)]
+        payments_month = [c for c in payments_60 if any(x[0].month == month_prev and x[0].year == year_prev for x in c)]
+
+        yield ['Paying clients',
+                len(payments_month),
+                len(payments_30),
+                len(payments_60),
+                len(payments_90),
+                len(payments_total)
+                ]
+
+        yield ['Income',
+                sum(p[1] for c in payments_month for p in c if p[0].month == month_prev and p[0].year == year_prev),
+                sum(p[1] for c in payments_30 for p in c if p[0] > last_30),
+                sum(p[1] for c in payments_60 for p in c if p[0] > last_60),
+                sum(p[1] for c in payments_90 for p in c if p[0] > last_90),
+                sum(p[1] for c in payments_total for p in c),
+                ]
+
+        del payments_total, payments_90, payments_60, payments_30, payments_month
+
+
+        sessions = [s for u in clients for s in u.session_set.filter(pub_date__gt=u.client_of_selected_partner_since).values_list('pub_date', 'material__name', 'machine__model', 'buildplate')]
+        column_names = ('Materials', '3D Printers', 'Build plate coating/material')
+        session_count = len(sessions)
+
+        yield ['Testing sessions',
+                len(tuple(s for s in sessions if s[0].month == month_prev and s[0].year == year_prev)),
+                len(tuple(s for s in sessions if s[0] > last_30)),
+                len(tuple(s for s in sessions if s[0] > last_60)),
+                len(tuple(s for s in sessions if s[0] > last_90)),
+                session_count]
+
+        for i in range(len(column_names)):
+            yield [' ']
+            yield [column_names[i]]
+
+            column = i + 1
+            items_total = Counter(x[column] for x in sessions)
+            items_month = Counter(sessions[x][column] for x in range(session_count) if sessions[x][0].month == month_prev and sessions[x][0].year == year_prev)
+            items_30 = Counter(sessions[x][column] for x in range(session_count) if sessions[x][0] > last_30)
+            items_60 = Counter(sessions[x][column] for x in range(session_count) if sessions[x][0] > last_60)
+            items_90 = Counter(sessions[x][column] for x in range(session_count) if sessions[x][0] > last_90)
+
+            for item in items_total:
+                yield [item,
+                        items_month[item],
+                        items_30[item],
+                        items_60[item],
+                        items_90[item],
+                        items_total[item]]
+
+
+        del sessions
+
+        yield [' ']
+        yield ['Vouchers']
+        yield ['Code', 'Bonus days', 'Valid till', 'Max uses allowed', 'Used by']
+
+        vouchers = (partner.voucher_set
+                        .annotate(code=models.functions.Concat(models.Value(f'{partner.voucher_prefix}-'), 'number'),
+                                  used_by=models.Count('redeemed_by'))
+                        .order_by('-used_by')
+                        .values_list('code', 'bonus_days', 'valid_till', 'max_uses', 'used_by'))
+        for v in vouchers:
+            yield v
+
+
+        yield [' ']
+        yield ['End of stats file']
+
+
+
+    def get_stats(self, request, object_id):
+        partner = payment_models.Partner.objects.get(pk=object_id)
+
+        pseudo_buffer = Echo()
+        writer = csv.writer(pseudo_buffer)
+
+        now = timezone.now()
+
+        response = StreamingHttpResponse((writer.writerow(row) for row in self.generate_stats(partner, now)),
+                                                 content_type="text/csv")
+        response['Content-Disposition'] = f'attachment; filename="{partner.voucher_prefix}_stats_{now:%Y-%m-%d_%H-%M-%S}.csv"'
+        return response
+
 
 @admin.register(payment_models.Voucher)
 class VoucherModelAdmin(admin.ModelAdmin):
     form = VoucherAdminForm
     readonly_fields = ('partner',)
+    list_display = ('__str__', 'partner', 'bonus_days', 'valid_till', 'used_by')
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        queryset = queryset.annotate(_used_count=models.Count('redeemed_by'))
+        return queryset
+
+    def used_by(self, instance):
+        return instance._used_count
 
     def has_add_permission(self, request):
         return False
