@@ -195,7 +195,7 @@ class Subscription(models.Model):
 
     created = models.DateTimeField(auto_now_add=True, editable=False)
     paid_till = models.DateTimeField(auto_now_add=True, editable=False)
-    stripe_id = models.CharField(max_length=32, editable=False)
+    stripe_id = models.CharField(max_length=32, editable=False, unique=True)
     state = models.CharField(max_length=32, default=PENDING, editable=False,
                             choices=[(ACTIVE, 'Active'),
                                      (PENDING, 'First payment pending'),
