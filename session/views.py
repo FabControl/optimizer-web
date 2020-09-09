@@ -441,6 +441,7 @@ def session_undo(request, pk):
     if session.previous_tests[-1]['validated']:
         session.alter_previous_tests(-1, "validated", False)
         session.test_number = session.previous_tests[-1]['test_number']
+        session.save()
         return redirect('session_detail', pk=pk, download=0)
 
     else:
