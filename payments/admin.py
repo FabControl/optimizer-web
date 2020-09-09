@@ -279,6 +279,21 @@ class PartnerModelAdmin(admin.ModelAdmin):
                         items_total[item]]
 
 
+        del sessions
+
+        yield [' ']
+        yield ['Vouchers']
+        yield ['Code', 'Bonus days', 'Valid till', 'Max uses allowed', 'Used by']
+
+        vouchers = (partner.voucher_set
+                        .annotate(code=models.functions.Concat(models.Value(f'{partner.voucher_prefix}-'), 'number'),
+                                  used_by=models.Count('redeemed_by'))
+                        .order_by('-used_by')
+                        .values_list('code', 'bonus_days', 'valid_till', 'max_uses', 'used_by'))
+        for v in vouchers:
+            yield v
+
+
         yield [' ']
         yield ['End of stats file']
 
