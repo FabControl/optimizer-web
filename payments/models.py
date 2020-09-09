@@ -232,9 +232,10 @@ class Subscription(models.Model):
 class Currency(models.Model):
     name = models.CharField(max_length=3,
                             editable=True,
-                            choices=codes_iso4217, 
+                            choices=codes_iso4217,
                             primary_key=True)
     _countries = models.CharField(max_length=600, editable=False, default='')
+    conversion_rate = models.DecimalField(default=1, decimal_places=5, max_digits=9)
 
     @property
     def countries(self):
