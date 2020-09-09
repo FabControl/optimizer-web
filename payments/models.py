@@ -67,6 +67,13 @@ class Plan(ModelDiffMixin, models.Model):
     extra_info_text = models.TextField(default='', blank=True)
     interval = models.CharField(max_length=15, default='')
 
+    timedelta_interval = {
+            'day': timedelta(days=1),
+            'week': timedelta(days=7),
+            'month': timedelta(days=30),
+            'year': timedelta(days=365),
+            }
+
     @property
     def extra_info_text_lines(self):
         if self.extra_info_text == '':
