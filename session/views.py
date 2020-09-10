@@ -306,6 +306,7 @@ class SessionValidateView(SessionView):
     def form_valid(self, form):
         session = form.save(commit=False)
         session.alter_previous_tests(-1, "validated", True)
+        session.clean_min_max()
         session = form.save(commit=True)
         if self.request.method == "POST" and "btnprimary" in self.request.POST:
             return redirect('session_next_test', pk=session.pk, priority="any")
@@ -459,6 +460,7 @@ def session_undo(request, pk):
     if session.previous_tests[-1]['validated']:
         session.alter_previous_tests(-1, "validated", False)
         session.test_number = session.previous_tests[-1]['test_number']
+        session.save()
         return redirect('session_detail', pk=pk, download=0)
 
     else:
