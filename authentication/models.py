@@ -166,7 +166,7 @@ class User(AbstractUser):
         if self.plan == 'limited':
             self.plan = 'premium'
         else:
-            base = max(self.subscription_expiration, timezone.now())
+            base = max(self.subscription_expiration, base)
 
         new_date = base + delta
         self.subscription_expiration = new_date.replace(hour=23, minute=59, second=59)
