@@ -235,6 +235,24 @@ def sample_machine_data(request, pk):
     return JsonResponse(result)
 
 
+@login_required
+def publish_sample_machine(request):
+    target = reverse('dashboard')
+    if request.method == 'POST':
+        if not request.user.is_staff or 'machine' not in request.POST:
+            raise Http404()
+        machine = get_object_or_404(Machine, model_ownership_query(request.user), pk=request.POST['machine'])
+        samples_owner = get_user_model().objects.get(email=settings.SAMPLE_SESSIONS_OWNER)
+        machine.owner = samples_owner
+        machine.corporation = None
+        machine.save()
+        messages.success(request, f'{machine} added to sample printers')
+        if 'next' in request.POST:
+            target = request.POST['next']
+
+    return redirect(target)
+
+
 class SessionListView(LoginRequiredMixin, ModelOwnershipCheckMixin, generic.ListView):
     template_name = "session/session_manager.html"
     context_object_name = 'sessions'

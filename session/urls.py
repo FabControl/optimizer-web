@@ -14,6 +14,7 @@ urlpatterns = [
 
     path('resources/machines/', views.MachinesView.as_view(), name='machine_manager'),
     path('resources/machines/new/', views.machine_form, name='machine_form'),
+    path('resources/machines/publish_sample/', views.publish_sample_machine, name='publish_sample_machine'),
     path('resources/machines/<pk>/', views.machine_edit_view, name='machine_detail'),
     path('resources/machines/<pk>/delete', views.MachineDelete.as_view(), name='machine_delete'),
     path('resources/machines/sample/<int:pk>/', views.sample_machine_data, name='machine_sample'),
