@@ -238,8 +238,10 @@ def sample_machine_data(request, pk):
 @login_required
 def publish_sample_machine(request):
     target = reverse('dashboard')
+    if not request.user.is_staff:
+        raise Http404()
     if request.method == 'POST':
-        if not request.user.is_staff or 'machine' not in request.POST:
+        if 'machine' not in request.POST:
             raise Http404()
         machine = get_object_or_404(Machine, model_ownership_query(request.user), pk=request.POST['machine'])
         samples_owner = get_user_model().objects.get(email=settings.SAMPLE_SESSIONS_OWNER)

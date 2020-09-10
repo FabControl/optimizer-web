@@ -104,7 +104,8 @@ class SessionViewsTest(TestCase):
 
         staff_only_urls = [
                 ('session_json', {'pk': test_session.pk}),
-                ('session__test_info', {'pk': test_session.pk})
+                ('session__test_info', {'pk': test_session.pk}),
+                ('publish_sample_machine', {})
                 ]
         # order does matter
         login_req_urls = [
