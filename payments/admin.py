@@ -171,12 +171,12 @@ class PartnerModelAdmin(admin.ModelAdmin):
 
         payments = list(user.checkout_set
                                     .filter(created__gt=user.client_of_selected_partner_since, is_paid=True)
-                                    .annotate(amount_paid=models.F('payment_plan__price')*models.F('payment_plan__currency__conversion_rate'))
+                                    .annotate(amount_paid=models.F('payment_plan__price')*models.F('payment_plan__currency__conversion_rate')*0.971-0.3)
                                     .values_list('created', 'amount_paid'))
 
         subscriptions = (user.subscription_set
                                     .filter(created__gt=user.client_of_selected_partner_since)
-                                    .annotate(amount_paid=models.F('payment_plan__price')*models.F('payment_plan__currency__conversion_rate'))
+                                    .annotate(amount_paid=models.F('payment_plan__price')*models.F('payment_plan__currency__conversion_rate')*0.971-0.3)
                                     .values_list('created', 'amount_paid', 'paid_till', 'payment_plan__interval'))
 
         for created, amount, paid_till, interval in subscriptions:
