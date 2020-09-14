@@ -55,7 +55,16 @@
   </style>
   <footer class="footer mt-auto py-3">
     {% if request.user.is_authenticated %}
-    {% if request.user.member_of_corporation is None  and not request.user.active_subscriptions %}
+    {% if request.user.member_of_corporation is None and not request.user.active_subscriptions %}
+    {% if user.client_of %}
+    {% with user.client_of as partner %}
+    {% if partner.banner %}
+    <div class="container text-center">
+      <a target="_blank" href="{{ partner.homepage }}"><img height="40px" class="d-inline-block" src="data:image/png;base64,{{ partner.banner }}" alt="{{ partner.name }}"></a>
+    </div>
+    {% endif %}
+    {% endwith %}
+    {% endif %}
     <div class="container text-center">
       <!--<div class="pt-5 pb-2">
         <span class="text-muted alert alert-primary" style="padding: 0.3rem 0.7rem;"><small><b><a href="{% url 'my_affiliates' %}">Invite a friend and get full access to 3DOptimizer for a week!</a></b></small></span>

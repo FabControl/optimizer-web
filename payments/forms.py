@@ -13,6 +13,8 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout
 from crispy_forms.bootstrap import FieldWithButtons
 from django.utils.translation import gettext_lazy as _
+from PIL import Image
+from io import BytesIO
 
 
 class PaymentPlanForm(forms.Form):
@@ -116,6 +118,8 @@ class CurrencyAdminForm(forms.ModelForm):
 
 class PartnerAdminForm(forms.ModelForm):
     logo_image = forms.FileField()
+    banner_image = forms.FileField(help_text='728x90px. Larger images will be scaled down to fit.', required=False)
+    clear_banner = forms.BooleanField(required=False, widget=forms.HiddenInput())
 
     class Meta:
         model = Partner
@@ -129,6 +133,7 @@ class PartnerAdminForm(forms.ModelForm):
                 kwargs['initial'] = {}
 
             kwargs['initial']['logo_image'] = 'logo.png'
+            kwargs['initial']['logo_image'] = 'banner.png'
 
         super().__init__(*args, **kwargs)
 
@@ -136,6 +141,10 @@ class PartnerAdminForm(forms.ModelForm):
 
         if instance is not None:
             self.fields['logo_image'].help_text = mark_safe('<img src="data:image/png;base64,{}"/>'.format(instance.logo))
+            if instance.banner != '':
+                self.fields['banner_image'].help_text += mark_safe('<br><img src="data:image/png;base64,{}"/>'.format(instance.banner))
+                self.fields['clear_banner'].widget = forms.CheckboxInput()
+
             # self.fields['voucher_prefix'].widget.attrs['disabled'] = ''  # Had to be removed in order to be able modify partners from AdminView
     def _validate_prefix(self, prefix):
         if '-' in prefix:
@@ -146,6 +155,20 @@ class PartnerAdminForm(forms.ModelForm):
 
         if 'logo_image' in self.files:
             instance.logo = b64encode(self.files['logo_image'].read()).decode("utf-8")
+
+        clear_banner = 'clear_banner' in self.cleaned_data and self.cleaned_data['clear_banner']
+
+        if 'banner_image' in self.files and not clear_banner:
+            banner_image = Image.open(self.files['banner_image'])
+            scale = max((banner_image.width / 728.0, banner_image.height / 90.0))
+            if scale > 1.0:
+                banner_image = banner_image.resize((int(banner_image.width / scale), int(banner_image.height / scale)))
+            banner_bytes = BytesIO()
+            banner_image.save(banner_bytes, format='PNG')
+            instance.banner = b64encode(banner_bytes.getvalue()).decode('utf-8')
+
+        elif clear_banner:
+            instance.banner = ''
 
         if commit:
             instance.save()
