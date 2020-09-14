@@ -117,7 +117,7 @@ class CurrencyAdminForm(forms.ModelForm):
 
 
 class PartnerAdminForm(forms.ModelForm):
-    logo_image = forms.FileField()
+    logo_image = forms.FileField(help_text='800x80px. Larger images will be scaled down to fit.')
     banner_image = forms.FileField(help_text='728x90px. Larger images will be scaled down to fit.', required=False)
     clear_banner = forms.BooleanField(required=False, widget=forms.HiddenInput())
 
@@ -140,7 +140,7 @@ class PartnerAdminForm(forms.ModelForm):
         self.fields['voucher_prefix'].validators.append(self._validate_prefix)
 
         if instance is not None:
-            self.fields['logo_image'].help_text = mark_safe('<img src="data:image/png;base64,{}"/>'.format(instance.logo))
+            self.fields['logo_image'].help_text += mark_safe('<br><img src="data:image/png;base64,{}"/>'.format(instance.logo))
             if instance.banner != '':
                 self.fields['banner_image'].help_text += mark_safe('<br><img src="data:image/png;base64,{}"/>'.format(instance.banner))
                 self.fields['clear_banner'].widget = forms.CheckboxInput()
@@ -154,7 +154,13 @@ class PartnerAdminForm(forms.ModelForm):
         instance = super().save(commit=False)
 
         if 'logo_image' in self.files:
-            instance.logo = b64encode(self.files['logo_image'].read()).decode("utf-8")
+            logo_image = Image.open(self.files['logo_image'])
+            scale = max((logo_image.width / 800.0, logo_image.height / 80.0))
+            if scale > 1.0:
+                logo_image = logo_image.resize((int(logo_image.width / scale), int(logo_image.height / scale)))
+            logo_bytes = BytesIO()
+            logo_image.save(logo_bytes, format='PNG')
+            instance.logo = b64encode(logo_bytes.getvalue()).decode('utf-8')
 
         clear_banner = 'clear_banner' in self.cleaned_data and self.cleaned_data['clear_banner']
 
