@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-08-27 08:15+0300\n"
+"POT-Creation-Date: 2020-09-15 08:24+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,27 +18,27 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: Optimizer3D/settings.py:118 Optimizer3D/settings.py:136
+#: Optimizer3D/settings.py:121 Optimizer3D/settings.py:140
 msgid "English"
 msgstr ""
 
-#: Optimizer3D/settings.py:119 Optimizer3D/settings.py:137
+#: Optimizer3D/settings.py:122 Optimizer3D/settings.py:141
 msgid "Latvian"
 msgstr ""
 
-#: Optimizer3D/settings.py:138
-msgid "German"
-msgstr ""
-
-#: Optimizer3D/settings.py:139
-msgid "Spanish"
-msgstr ""
-
-#: Optimizer3D/settings.py:140
+#: Optimizer3D/settings.py:123 Optimizer3D/settings.py:144
 msgid "French"
 msgstr ""
 
-#: Optimizer3D/settings.py:141
+#: Optimizer3D/settings.py:142
+msgid "German"
+msgstr ""
+
+#: Optimizer3D/settings.py:143
+msgid "Spanish"
+msgstr ""
+
+#: Optimizer3D/settings.py:145
 msgid "Portuguese"
 msgstr ""
 
@@ -158,18 +158,18 @@ msgid_plural "Limited Access ({expiration} Days)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: authentication/models.py:294
+#: authentication/models.py:297
 #, python-format
 msgid "Registered on %(date)s"
 msgstr ""
 
-#: authentication/models.py:296
+#: authentication/models.py:299
 #: authentication/templates/authentication/legal_info.html:174
 #: authentication/templates/authentication/legal_info.html:214
 msgid "Invitation sent"
 msgstr ""
 
-#: authentication/models.py:301
+#: authentication/models.py:304
 #, python-format
 msgid "Received %(days)d days full access"
 msgstr ""
@@ -522,31 +522,31 @@ msgstr ""
 msgid "You are now member of {team} team"
 msgstr ""
 
-#: payments/forms.py:58
+#: payments/forms.py:60
 msgid "Redeem a voucher "
 msgstr ""
 
-#: payments/forms.py:63
+#: payments/forms.py:65
 msgid "Redeem"
 msgstr ""
 
-#: payments/forms.py:68
+#: payments/forms.py:70
 msgid "voucher code"
 msgstr ""
 
-#: payments/models.py:82
+#: payments/models.py:89
 msgid "One-time payment"
 msgstr ""
 
-#: payments/models.py:84
+#: payments/models.py:91
 msgid "Recurring dayly payment"
 msgstr ""
 
-#: payments/models.py:86
+#: payments/models.py:93
 msgid "Recurring monthly payment"
 msgstr ""
 
-#: payments/models.py:88
+#: payments/models.py:95
 msgid "Recurring yearly payment"
 msgstr ""
 
@@ -895,7 +895,7 @@ msgstr ""
 msgid "Guided"
 msgstr ""
 
-#: session/migrations/0048_manual_add_session_modes.py:20 session/models.py:589
+#: session/migrations/0048_manual_add_session_modes.py:20 session/models.py:588
 msgid "Core"
 msgstr ""
 
@@ -968,7 +968,7 @@ msgstr ""
 msgid "Untitled"
 msgstr ""
 
-#: session/models.py:591
+#: session/models.py:590
 msgid "Optional"
 msgstr ""
 
@@ -1247,7 +1247,7 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
-#: session/templates/session/machine_manager.html:52
+#: session/templates/session/machine_manager.html:60
 #: session/templates/session/material_manager.html:52
 #: session/templates/session/session_manager.html:72
 msgid "Delete"
@@ -1839,14 +1839,14 @@ msgstr ""
 msgid "3D Printer \"{printer}\" has been created!"
 msgstr ""
 
-#: session/views.py:384
+#: session/views.py:405
 #, python-brace-format
 msgid ""
 "Your next test is available in Full Access only. You can skip it and go to "
 "the next available test or <a href={link}>purchase Full Access.</a>"
 msgstr ""
 
-#: session/views.py:388
+#: session/views.py:409
 #, python-brace-format
 msgid ""
 "Your next test is available in Full Access only. You can skip it and go to "

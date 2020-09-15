@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-08-31 14:12+0300\n"
+"POT-Creation-Date: 2020-09-15 08:24+0300\n"
 "PO-Revision-Date: 2020-08-21 14:00+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -19,27 +19,27 @@ msgstr ""
 "2);\n"
 "X-Generator: Poedit 2.4.1\n"
 
-#: Optimizer3D/settings.py:118 Optimizer3D/settings.py:136
+#: Optimizer3D/settings.py:121 Optimizer3D/settings.py:140
 msgid "English"
 msgstr "Angļu"
 
-#: Optimizer3D/settings.py:119 Optimizer3D/settings.py:137
+#: Optimizer3D/settings.py:122 Optimizer3D/settings.py:141
 msgid "Latvian"
 msgstr "Latviešu"
 
-#: Optimizer3D/settings.py:138
-msgid "German"
-msgstr ""
-
-#: Optimizer3D/settings.py:139
-msgid "Spanish"
-msgstr ""
-
-#: Optimizer3D/settings.py:140
+#: Optimizer3D/settings.py:123 Optimizer3D/settings.py:144
 msgid "French"
 msgstr ""
 
-#: Optimizer3D/settings.py:141
+#: Optimizer3D/settings.py:142
+msgid "German"
+msgstr ""
+
+#: Optimizer3D/settings.py:143
+msgid "Spanish"
+msgstr ""
+
+#: Optimizer3D/settings.py:145
 msgid "Portuguese"
 msgstr ""
 
@@ -163,18 +163,18 @@ msgstr[0] "Ierobežota piekļuve ({expiration} diena)"
 msgstr[1] "Ierobežota piekļuve ({expiration} dienas)"
 msgstr[2] "Ierobežota piekļuve ({expiration} dienas)"
 
-#: authentication/models.py:294
+#: authentication/models.py:297
 #, python-format
 msgid "Registered on %(date)s"
 msgstr "Reģistrējās %(date)s"
 
-#: authentication/models.py:296
+#: authentication/models.py:299
 #: authentication/templates/authentication/legal_info.html:174
 #: authentication/templates/authentication/legal_info.html:214
 msgid "Invitation sent"
 msgstr "Uzaicinājums nosūtīts"
 
-#: authentication/models.py:301
+#: authentication/models.py:304
 #, python-format
 msgid "Received %(days)d days full access"
 msgstr "Saņemtas %(days)d pilnas piekļuves dienas"
@@ -539,31 +539,31 @@ msgstr "{email} ir jau uzaicināts vai ir pievienojies citam uzņēmumam"
 msgid "You are now member of {team} team"
 msgstr "Jūs pievienojāties {team} komandai"
 
-#: payments/forms.py:58
+#: payments/forms.py:60
 msgid "Redeem a voucher "
 msgstr "Izmantot kuponu "
 
-#: payments/forms.py:63
+#: payments/forms.py:65
 msgid "Redeem"
 msgstr "Izmantot"
 
-#: payments/forms.py:68
+#: payments/forms.py:70
 msgid "voucher code"
 msgstr "kupona kods"
 
-#: payments/models.py:82
+#: payments/models.py:89
 msgid "One-time payment"
 msgstr "Vienreizējs maksājums"
 
-#: payments/models.py:84
+#: payments/models.py:91
 msgid "Recurring dayly payment"
 msgstr "Ikdienas maksājums"
 
-#: payments/models.py:86
+#: payments/models.py:93
 msgid "Recurring monthly payment"
 msgstr "Ikmēneša maksājums"
 
-#: payments/models.py:88
+#: payments/models.py:95
 msgid "Recurring yearly payment"
 msgstr "Ikgadējs maksājums"
 
@@ -931,7 +931,7 @@ msgstr "Advancēts"
 msgid "Guided"
 msgstr "Vadīts"
 
-#: session/migrations/0048_manual_add_session_modes.py:20 session/models.py:589
+#: session/migrations/0048_manual_add_session_modes.py:20 session/models.py:588
 msgid "Core"
 msgstr "Pamata"
 
@@ -1007,7 +1007,7 @@ msgstr ""
 msgid "Untitled"
 msgstr "Bez nosaukuma"
 
-#: session/models.py:591
+#: session/models.py:590
 msgid "Optional"
 msgstr "Papildu"
 
@@ -1307,7 +1307,7 @@ msgstr "Sprauslas diametrs (mm)"
 msgid "Edit"
 msgstr "Rediģēt"
 
-#: session/templates/session/machine_manager.html:52
+#: session/templates/session/machine_manager.html:60
 #: session/templates/session/material_manager.html:52
 #: session/templates/session/session_manager.html:72
 msgid "Delete"
@@ -1970,7 +1970,7 @@ msgstr "Printera \"{printer}\" izmaiņas saglabātas!"
 msgid "3D Printer \"{printer}\" has been created!"
 msgstr "Izveidots 3D printeris \"{printer}\"!"
 
-#: session/views.py:384
+#: session/views.py:405
 #, python-brace-format
 msgid ""
 "Your next test is available in Full Access only. You can skip it and go to "
@@ -1979,7 +1979,7 @@ msgstr ""
 "Jums nepieciešamais tests pieejams tikai ar Pilnu piekļuvi. Varat doties uz "
 "nākamo pieejamo testu vai <a href={link}>iegādāties Pilnu piekļuvi.</a>"
 
-#: session/views.py:388
+#: session/views.py:409
 #, python-brace-format
 msgid ""
 "Your next test is available in Full Access only. You can skip it and go to "
