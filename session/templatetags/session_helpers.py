@@ -15,8 +15,6 @@ def direct_link(target):
 
 register.filter('direct_link', direct_link)
 
-import pysnooper
-@pysnooper.snoop()
 def wrap_in_tag(text, tag_with_attrs):
     tag, *attrs = tag_with_attrs.split(' ')
     attrs = ' '.join(attrs)
