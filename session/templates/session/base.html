@@ -60,7 +60,7 @@
     {% with user.client_of as partner %}
     {% if partner.banner %}
     <div class="container text-center py-4">
-      <a target="_blank" href="{{ partner.homepage }}"><img class="d-inline-block" src="data:image/png;base64,{{ partner.banner }}" alt="{{ partner.name }}"></a>
+      <a target="_blank" href="{% if partner.banner_link %}{{ partner.banner_link }}{% else %}{{ partner.homepage }}{% endif %}"><img class="d-inline-block" src="data:image/png;base64,{{ partner.banner }}" alt="{{ partner.name }}"></a>
     </div>
     {% endif %}
     {% endwith %}
