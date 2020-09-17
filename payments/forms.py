@@ -118,7 +118,7 @@ class CurrencyAdminForm(forms.ModelForm):
 
 class PartnerAdminForm(forms.ModelForm):
     logo_image = forms.FileField(help_text='800x80px. Larger images will be scaled down to fit.')
-    banner_image = forms.FileField(help_text='728x90px. Larger images will be scaled down to fit.', required=False)
+    banner_image = forms.FileField(help_text='728x130px. Larger images will be scaled down to fit.', required=False)
     clear_banner = forms.BooleanField(required=False, widget=forms.HiddenInput())
 
     class Meta:
@@ -166,7 +166,7 @@ class PartnerAdminForm(forms.ModelForm):
 
         if 'banner_image' in self.files and not clear_banner:
             banner_image = Image.open(self.files['banner_image'])
-            scale = max((banner_image.width / 728.0, banner_image.height / 90.0))
+            scale = max((banner_image.width / 728.0, banner_image.height / 130.0))
             if scale > 1.0:
                 banner_image = banner_image.resize((int(banner_image.width / scale), int(banner_image.height / scale)))
             banner_bytes = BytesIO()
