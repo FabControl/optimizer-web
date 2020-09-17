@@ -1,10 +1,11 @@
 {% extends "email/base.html" %}
+{% load i18n %}
 
 {% block content %}
-<p>{{ affiliate.name }}, you have been invited by {{ affiliate.sender.first_name }} {{ affiliate.sender.last_name }} to 3D Optimizer!</p>
+<p>{% blocktrans %}{{ affiliate.name }}, you have been invited by {{ affiliate.sender.first_name }} {{ affiliate.sender.last_name }} to 3D Optimizer!{% endblocktrans %}</p>
 {{ affiliate.message|linebreaks }}
-<p>With 3DOptimizer, you can develop your own printing settings — tailored for your exact 3D printer and material combination, and three targets: mechanical strength, best visual quality or shortest printing time.</p>
-<p>3DOptimizer offers a free account with core tests, that give a useful head start with optimized process parameters. Create your account and enjoy your improved printing!</p>
+<p>{% trans 'With 3DOptimizer, you can develop your own printing settings — tailored for your exact 3D printer and material combination, and three targets: mechanical strength, best visual quality or shortest printing time.' %}</p>
+<p>{% trans '3DOptimizer offers a free account with core tests, that give a useful head start with optimized process parameters. Create your account and enjoy your improved printing!' %}</p>
 
 <table width="100%" cellspacing="0" cellpadding="0">
   <tr>
@@ -13,7 +14,7 @@
         <tr>
           <td style="border-radius: 2px;" bgcolor="#0082ba">
             <a href="{{ application_url }}{% url 'use_affiliate' uidb64=uid token=token %}" target="_blank" style="font-size: 20px; padding: 15px 20px; border: 1px solid #0079ad;border-radius: 2px; color: #ffffff;text-decoration: none;font-weight:bold;display: inline-block;">
-              Create 3DOptimizer Account
+              {% trans 'Create 3DOptimizer Account' %}
             </a>
           </td>
         </tr>
@@ -22,7 +23,7 @@
   </tr>
 </table>
 <br>
-<small>If you’re having trouble with the button above, copy and paste following URL into your web browser.</small><br>
+<small>{% trans 'If you’re having trouble with the button above, copy and paste following URL into your web browser.' %}</small><br>
 <a href="{{ application_url }}{% url 'use_affiliate' uidb64=uid token=token %}">{{ application_url }}{% url 'use_affiliate' uidb64=uid token=token %}</a><br>
 
 {% endblock content %}

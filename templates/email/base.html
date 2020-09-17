@@ -1,3 +1,5 @@
+{% load i18n %}
+{% load session_helpers %}
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
 <head>
@@ -17,8 +19,9 @@
 <body>
   {% block content %}{% endblock %}
   <hr />
-  Automated email from
-  <a href="{{ application_url }}{% url 'index' %}">{{ application_url }}{% url 'index' %}</a>
+  {# Alignment does matter here - DO NOT CHANGE INDENTATION #}
+  {% blocktrans with index_url|direct_link as service_url %}Automated email from
+{{ service_url }}{% endblocktrans %}
 </body>
 </html>
 
