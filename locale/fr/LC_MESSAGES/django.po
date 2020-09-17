@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-17 13:10+0300\n"
+"POT-Creation-Date: 2020-09-17 16:52+0300\n"
 "PO-Revision-Date: 2020-09-12 20:38+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -472,11 +472,23 @@ msgstr "Compte d'entreprise (multi-user)"
 msgid "Page presented in <a %(attrs)s>%(lang)s</a>"
 msgstr "Page présentée en <a %(attrs)s>%(lang)s</a>"
 
-#: authentication/templates/authentication/translation_selector.html:15
+#: authentication/templates/authentication/translation_selector.html:8
+#, fuzzy
+#| msgid ""
+#| "Feel free to contact our <a href=\"mailto:support@fabcontrol.com"
+#| "\">support</a>!"
+msgid ""
+"Found a bug / wrong translation? <a href=\"mailto:support@fabcontrol.com?"
+"subject=Bug report\">Let us know</a>!"
+msgstr ""
+"N'hésitez pas à contacter notre <a href=\"mailto:support@fabcontrol.com"
+"\">support</a>!"
+
+#: authentication/templates/authentication/translation_selector.html:18
 msgid "Change page language"
 msgstr "Changer le langage de la page"
 
-#: authentication/templates/authentication/translation_selector.html:29
+#: authentication/templates/authentication/translation_selector.html:32
 #: session/templates/session/session_validated.html:37
 msgid "Cancel"
 msgstr "Annuler"

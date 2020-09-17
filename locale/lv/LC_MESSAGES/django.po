@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-17 13:10+0300\n"
+"POT-Creation-Date: 2020-09-17 16:52+0300\n"
 "PO-Revision-Date: 2020-08-21 14:00+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -466,11 +466,19 @@ msgstr "Biznesa konts (vairākiem lietotājiem)"
 msgid "Page presented in <a %(attrs)s>%(lang)s</a>"
 msgstr "Lapa atvērta <a %(attrs)s>%(lang)s</a> valodā"
 
-#: authentication/templates/authentication/translation_selector.html:15
+#: authentication/templates/authentication/translation_selector.html:8
+msgid ""
+"Found a bug / wrong translation? <a href=\"mailto:support@fabcontrol.com?"
+"subject=Bug report\">Let us know</a>!"
+msgstr ""
+"Atradi kļūdu? <a href=\"mailto:support@fabcontrol.com?"
+"subject=Bug report\">Sazinies ar mums</a>!"
+
+#: authentication/templates/authentication/translation_selector.html:18
 msgid "Change page language"
 msgstr "Mainīt lapas valodu"
 
-#: authentication/templates/authentication/translation_selector.html:29
+#: authentication/templates/authentication/translation_selector.html:32
 #: session/templates/session/session_validated.html:37
 msgid "Cancel"
 msgstr "Atcelt"

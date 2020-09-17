@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-17 13:10+0300\n"
+"POT-Creation-Date: 2020-09-17 16:52+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -451,11 +451,17 @@ msgstr ""
 msgid "Page presented in <a %(attrs)s>%(lang)s</a>"
 msgstr ""
 
-#: authentication/templates/authentication/translation_selector.html:15
+#: authentication/templates/authentication/translation_selector.html:8
+msgid ""
+"Found a bug / wrong translation? <a href=\"mailto:support@fabcontrol.com?"
+"subject=Bug report\">Let us know</a>!"
+msgstr ""
+
+#: authentication/templates/authentication/translation_selector.html:18
 msgid "Change page language"
 msgstr ""
 
-#: authentication/templates/authentication/translation_selector.html:29
+#: authentication/templates/authentication/translation_selector.html:32
 #: session/templates/session/session_validated.html:37
 msgid "Cancel"
 msgstr ""
