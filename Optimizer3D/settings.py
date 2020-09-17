@@ -46,6 +46,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'authentication.middleware.translation.IgnoreBrowserLanguageSetting',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'authentication.middleware.translation.SiteLocaleMiddleware',

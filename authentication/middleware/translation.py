@@ -16,3 +16,13 @@ class SiteLocaleMiddleware(LocaleMiddleware):
             return response
 
         return super().process_response(request, response)
+
+class IgnoreBrowserLanguageSetting:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        if 'HTTP_ACCEPT_LANGUAGE' in request.META:
+            del request.META['HTTP_ACCEPT_LANGUAGE']
+        return self.get_response(request)
+
