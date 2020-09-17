@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-15 08:24+0300\n"
+"POT-Creation-Date: 2020-09-17 13:10+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -43,7 +43,7 @@ msgid "Portuguese"
 msgstr ""
 
 #: authentication/forms.py:28 authentication/forms.py:65
-#: authentication/forms.py:220
+#: authentication/forms.py:221
 #: authentication/templates/authentication/account_activation.html:15
 #: authentication/templates/authentication/legal_info.html:109
 #: authentication/templates/authentication/my_affiliates.html:37
@@ -70,7 +70,7 @@ msgstr ""
 msgid "Last name"
 msgstr ""
 
-#: authentication/forms.py:84 authentication/forms.py:192
+#: authentication/forms.py:84 authentication/forms.py:193
 msgid "Country"
 msgstr ""
 
@@ -83,36 +83,36 @@ msgstr ""
 msgid "Password recovery instructions will be sent to this email."
 msgstr ""
 
-#: authentication/forms.py:189
+#: authentication/forms.py:190
 msgid "Company name*"
 msgstr ""
 
-#: authentication/forms.py:193
+#: authentication/forms.py:194
 msgid "Company legal address*"
 msgstr ""
 
-#: authentication/forms.py:194
+#: authentication/forms.py:195
 msgid "Company registration number*"
 msgstr ""
 
-#: authentication/forms.py:195
+#: authentication/forms.py:196
 msgid "Company VAT number"
 msgstr ""
 
-#: authentication/forms.py:197
+#: authentication/forms.py:198
 msgid "Show legal info (for EU companies)"
 msgstr ""
 
-#: authentication/forms.py:210
+#: authentication/forms.py:211
 #, python-brace-format
 msgid "Company account requires {field_label}"
 msgstr ""
 
-#: authentication/forms.py:221
+#: authentication/forms.py:222
 msgid "email"
 msgstr ""
 
-#: authentication/forms.py:223
+#: authentication/forms.py:224
 #: authentication/templates/authentication/my_affiliates.html:36
 #: session/forms.py:285 session/templates/session/session_info.html:10
 msgid "Name"
@@ -468,56 +468,56 @@ msgstr ""
 msgid "Failed to log in!"
 msgstr ""
 
-#: authentication/views.py:196
+#: authentication/views.py:197
 msgid "Password changed"
 msgstr ""
 
-#: authentication/views.py:220
+#: authentication/views.py:221
 msgid "Your email address was confirmed and account activated."
 msgstr ""
 
-#: authentication/views.py:248
+#: authentication/views.py:249
 msgid "User already invited or registered"
 msgstr ""
 
-#: authentication/views.py:253
+#: authentication/views.py:254
 msgid "Friend's email"
 msgstr ""
 
-#: authentication/views.py:254
+#: authentication/views.py:255
 msgid "Friend's name"
 msgstr ""
 
-#: authentication/views.py:255
+#: authentication/views.py:256
 msgid "Message"
 msgstr ""
 
-#: authentication/views.py:258
+#: authentication/views.py:259
 msgid "Send"
 msgstr ""
 
-#: authentication/views.py:276
+#: authentication/views.py:277
 #, python-brace-format
 msgid "Invitation sent to {0.name} ({0.email})"
 msgstr ""
 
-#: authentication/views.py:341
+#: authentication/views.py:342
 #, python-brace-format
 msgid ""
 "You can use default <a href=\"{signup}\">sign up form</a> or <a href="
 "\"{login}\">log in </a> to your account."
 msgstr ""
 
-#: authentication/views.py:356
+#: authentication/views.py:357
 msgid "Account changed successfully"
 msgstr ""
 
-#: authentication/views.py:486
+#: authentication/views.py:487
 #, python-brace-format
 msgid "{email} already invited or joined another corporation"
 msgstr ""
 
-#: authentication/views.py:506
+#: authentication/views.py:507
 #, python-brace-format
 msgid "You are now member of {team} team"
 msgstr ""
@@ -1851,4 +1851,160 @@ msgstr ""
 msgid ""
 "Your next test is available in Full Access only. You can skip it and go to "
 "the next available test or ask {first_name} {last_name} to upgrade account."
+msgstr ""
+
+#: templates/email/affiliate_confirmed.html:6
+#: templates/email/affiliate_confirmed.txt:6
+#: templates/email/password_recovery.html:5
+#: templates/email/password_recovery.txt:5
+#: templates/email/register_complete.html:5
+#: templates/email/register_complete.txt:5
+#: templates/email/register_with_known_email.html:5
+#: templates/email/register_with_known_email.txt:5
+#, python-format
+msgid "Hi, %(first_name)s %(last_name)s!"
+msgstr ""
+
+#: templates/email/affiliate_confirmed.html:8
+#: templates/email/affiliate_confirmed.txt:8
+#, python-format
+msgid ""
+"%(affiliate.name)s (%(affiliate.email)s) has registered and started to use "
+"his 3DOptimizer account."
+msgstr ""
+
+#: templates/email/affiliate_confirmed.html:9
+#: templates/email/affiliate_confirmed.txt:9
+#, python-format
+msgid ""
+"To thank you, we've awarded you a free %(affiliate.days_assigned)s days of "
+"full access."
+msgstr ""
+
+#: templates/email/affiliate_confirmed.html:10
+#: templates/email/affiliate_confirmed.txt:10
+#, python-format
+msgid "Your full access now expires on %(expiration_date)s."
+msgstr ""
+
+#: templates/email/affiliate_invitation.html:5
+#: templates/email/affiliate_invitation.txt:5
+#, python-format
+msgid ""
+"%(affiliate.name)s, you have been invited by %(affiliate.sender.first_name)s "
+"%(affiliate.sender.last_name)s to 3D Optimizer!"
+msgstr ""
+
+#: templates/email/affiliate_invitation.html:7
+#: templates/email/affiliate_invitation.txt:9
+msgid ""
+"With 3DOptimizer, you can develop your own printing settings — tailored for "
+"your exact 3D printer and material combination, and three targets: "
+"mechanical strength, best visual quality or shortest printing time."
+msgstr ""
+
+#: templates/email/affiliate_invitation.html:8
+#: templates/email/affiliate_invitation.txt:11
+msgid ""
+"3DOptimizer offers a free account with core tests, that give a useful head "
+"start with optimized process parameters. Create your account and enjoy your "
+"improved printing!"
+msgstr ""
+
+#: templates/email/affiliate_invitation.html:17
+msgid "Create 3DOptimizer Account"
+msgstr ""
+
+#: templates/email/affiliate_invitation.html:26
+msgid ""
+"If you’re having trouble with the button above, copy and paste following URL "
+"into your web browser."
+msgstr ""
+
+#: templates/email/affiliate_invitation.txt:13
+msgid "Follow the link below, to create 3DOptimizer account."
+msgstr ""
+
+#: templates/email/base.html:23 templates/email/base.txt:5
+#, python-format
+msgid ""
+"Automated email from\n"
+"%(service_url)s"
+msgstr ""
+
+#: templates/email/password_recovery.html:6
+#: templates/email/password_recovery.txt:6
+#: templates/email/password_recovery_failure.html:7
+#: templates/email/password_recovery_failure.txt:7
+msgid "You have recently requested to reset password for your account."
+msgstr ""
+
+#: templates/email/password_recovery.html:7
+#: templates/email/password_recovery.txt:8
+#: templates/email/register_with_known_email.html:9
+#: templates/email/register_with_known_email.txt:10
+msgid ""
+"Use link below to reset your password. This link is only valid for 24 hours."
+msgstr ""
+
+#: templates/email/password_recovery.html:10
+#: templates/email/register_complete.html:10
+#: templates/email/register_with_known_email.html:12
+msgid ""
+"If you’re having trouble with the link above, copy and paste the URL above "
+"into your web browser."
+msgstr ""
+
+#: templates/email/password_recovery.html:12
+#: templates/email/password_recovery.txt:11
+msgid ""
+"If you did not request password reset, ignore this email. You can stil sign "
+"in using your current password."
+msgstr ""
+
+#: templates/email/password_recovery_failure.html:6
+#: templates/email/password_recovery_failure.txt:6
+msgid "Hi!"
+msgstr ""
+
+#: templates/email/password_recovery_failure.html:8
+#: templates/email/password_recovery_failure.txt:8
+#, python-format
+msgid "Unfortunatly email address %(email)s did not match any of our records."
+msgstr ""
+
+#: templates/email/password_recovery_failure.html:9
+#: templates/email/password_recovery_failure.txt:9
+msgid "Please use email address that you used to create account."
+msgstr ""
+
+#: templates/email/register_complete.html:6
+#: templates/email/register_complete.txt:6
+msgid "You have successfully created account."
+msgstr ""
+
+#: templates/email/register_complete.html:7
+#: templates/email/register_complete.txt:7
+msgid ""
+"Use link below to activate your account. This link is only valid for 24 "
+"hours."
+msgstr ""
+
+#: templates/email/register_with_known_email.html:6
+#: templates/email/register_with_known_email.txt:6
+msgid "Someone tried to register account with your email address."
+msgstr ""
+
+#: templates/email/register_with_known_email.html:7
+#: templates/email/register_with_known_email.txt:7
+msgid ""
+"If you did not attempt to create account, ignore this email. You can stil "
+"sign in using your current password."
+msgstr ""
+
+#: templates/email/register_with_known_email.html:8
+#: templates/email/register_with_known_email.txt:9
+msgid ""
+"Since you already have an account, we sent you password recovery "
+"instructions."
 msgstr ""
