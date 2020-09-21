@@ -145,7 +145,8 @@ class ResetPasswordForm(PasswordResetForm):
         for user in self.get_users(user_email):
             email.send_to_single(user_email, 'password_recovery',
                                  request,
-                                 receiving_user=' '.join((user.first_name, user.last_name)),
+                                 first_name=user.first_name,
+                                 last_name=user.last_name,
                                  token=default_token_generator.make_token(user),
                                  uid=urlsafe_base64_encode(force_bytes(user.pk))
                                  )

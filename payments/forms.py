@@ -13,6 +13,8 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout
 from crispy_forms.bootstrap import FieldWithButtons
 from django.utils.translation import gettext_lazy as _
+from PIL import Image
+from io import BytesIO
 
 
 class PaymentPlanForm(forms.Form):
@@ -115,7 +117,9 @@ class CurrencyAdminForm(forms.ModelForm):
 
 
 class PartnerAdminForm(forms.ModelForm):
-    logo_image = forms.FileField()
+    logo_image = forms.FileField(help_text='800x80px. Larger images will be scaled down to fit.')
+    banner_image = forms.FileField(help_text='728x130px. Larger images will be scaled down to fit.', required=False)
+    clear_banner = forms.BooleanField(required=False, widget=forms.HiddenInput())
 
     class Meta:
         model = Partner
@@ -129,13 +133,18 @@ class PartnerAdminForm(forms.ModelForm):
                 kwargs['initial'] = {}
 
             kwargs['initial']['logo_image'] = 'logo.png'
+            kwargs['initial']['logo_image'] = 'banner.png'
 
         super().__init__(*args, **kwargs)
 
         self.fields['voucher_prefix'].validators.append(self._validate_prefix)
 
         if instance is not None:
-            self.fields['logo_image'].help_text = mark_safe('<img src="data:image/png;base64,{}"/>'.format(instance.logo))
+            self.fields['logo_image'].help_text += mark_safe('<br><img src="data:image/png;base64,{}"/>'.format(instance.logo))
+            if instance.banner != '':
+                self.fields['banner_image'].help_text += mark_safe('<br><img src="data:image/png;base64,{}"/>'.format(instance.banner))
+                self.fields['clear_banner'].widget = forms.CheckboxInput()
+
             # self.fields['voucher_prefix'].widget.attrs['disabled'] = ''  # Had to be removed in order to be able modify partners from AdminView
     def _validate_prefix(self, prefix):
         if '-' in prefix:
@@ -145,7 +154,27 @@ class PartnerAdminForm(forms.ModelForm):
         instance = super().save(commit=False)
 
         if 'logo_image' in self.files:
-            instance.logo = b64encode(self.files['logo_image'].read()).decode("utf-8")
+            logo_image = Image.open(self.files['logo_image'])
+            scale = max((logo_image.width / 800.0, logo_image.height / 80.0))
+            if scale > 1.0:
+                logo_image = logo_image.resize((int(logo_image.width / scale), int(logo_image.height / scale)))
+            logo_bytes = BytesIO()
+            logo_image.save(logo_bytes, format='PNG')
+            instance.logo = b64encode(logo_bytes.getvalue()).decode('utf-8')
+
+        clear_banner = 'clear_banner' in self.cleaned_data and self.cleaned_data['clear_banner']
+
+        if 'banner_image' in self.files and not clear_banner:
+            banner_image = Image.open(self.files['banner_image'])
+            scale = max((banner_image.width / 728.0, banner_image.height / 130.0))
+            if scale > 1.0:
+                banner_image = banner_image.resize((int(banner_image.width / scale), int(banner_image.height / scale)))
+            banner_bytes = BytesIO()
+            banner_image.save(banner_bytes, format='PNG')
+            instance.banner = b64encode(banner_bytes.getvalue()).decode('utf-8')
+
+        elif clear_banner:
+            instance.banner = ''
 
         if commit:
             instance.save()

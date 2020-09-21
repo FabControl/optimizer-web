@@ -1,10 +1,11 @@
 {% extends "email/base.html" %}
+{% load i18n %}
 
 {% block content %}
-Hi, {{ receiving_user }}!
-You have successfully created account.<br>
-Use link below to activate your account. This link is only valid for 24 hours.<br>
+{% blocktrans %}Hi, {{ first_name }} {{ last_name }}!{% endblocktrans %}<br>
+{% trans 'You have successfully created account.' %}<br>
+{% trans 'Use link below to activate your account. This link is only valid for 24 hours.' %}<br>
 <a href="{{ application_url }}{% url 'activate_account' uidb64=uid token=token %}">{{ application_url }}{% url 'activate_account' uidb64=uid token=token %}</a><br>
 
-If you’re having trouble with the link above, copy and paste the URL above into your web browser.
+{% trans 'If you’re having trouble with the link above, copy and paste the URL above into your web browser.' %}
 {% endblock content %}

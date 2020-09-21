@@ -1,8 +1,10 @@
 {% extends "email/base.txt" %}
+{% load i18n %}
 
 {% block content %}
-Hi, {{ receiving_user }}!
-You have successfully created account.
-Use link below to activate your account. This link is only valid for 24 hours.
+{% blocktrans %}Hi, {{ first_name }} {{ last_name }}!{% endblocktrans %}
+{% trans 'You have successfully created account.' %}
+{% trans 'Use link below to activate your account. This link is only valid for 24 hours.' %}
+
 {{ application_url }}{% url 'activate_account' uidb64=uid token=token %}
 {% endblock content %}

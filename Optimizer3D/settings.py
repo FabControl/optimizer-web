@@ -46,6 +46,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'authentication.middleware.translation.IgnoreBrowserLanguageSetting',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'authentication.middleware.translation.SiteLocaleMiddleware',
@@ -117,6 +118,7 @@ USE_I18N = True
 LANGUAGES = (
         ('en', _('English')),
         ('lv', _('Latvian')),
+        ('fr', _('French')),
         )
 LOCALE_PATHS = [
         os.path.join(BASE_DIR, 'locale')

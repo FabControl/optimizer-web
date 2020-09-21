@@ -3,7 +3,10 @@
 <div class="container text-center">
   {% get_current_language as LANGUAGE_CODE %}
   {% get_language_info for LANGUAGE_CODE as current_lang %}
-  <span>{% blocktrans with current_lang.name_local as lang and 'href="#" data-toggle="modal" data-target="#languageModal"' as attrs %}Page presented in <a {{ attrs }}>{{ lang }}</a>{% endblocktrans %}</span>
+  <span>{% blocktrans with current_lang.name_local as lang and 'href="#" data-toggle="modal" data-target="#languageModal"' as attrs %}Page presented in <a {{ attrs }}>{{ lang }}</a>{% endblocktrans %}
+    |
+    {% trans 'Found a bug / wrong translation? <a href="mailto:support@fabcontrol.com?subject=Bug report">Let us know</a>!' %}
+  </span>
 </div>
 <div id="languageModal" class="modal fade" role="dialog">
   <div class="modal-dialog">

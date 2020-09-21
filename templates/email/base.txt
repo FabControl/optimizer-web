@@ -1,6 +1,7 @@
+{% load i18n %}
 {% block content %}{% endblock %}
 
 ------
-Automated email from
-{{ application_url }}{% url 'index' %}
+{% blocktrans with index_url as service_url %}Automated email from
+{{ service_url }}{% endblocktrans %}
 

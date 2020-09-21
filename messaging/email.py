@@ -4,6 +4,8 @@ from django.core.mail import get_connection
 from django.core.mail.message import EmailMultiAlternatives
 from django.conf import settings
 from django.http.request import HttpRequest
+from django.urls import reverse
+from django.utils.safestring import mark_safe
 
 _HTML_TEMPLATE = 'email/{0}.html'
 _PLAIN_TEMPLATE = 'email/{0}.txt'
@@ -35,13 +37,14 @@ def send_to_multi(recipients:list,
                   attachments:list,
                   **context):
     context['application_url'] = 'https://' + request.META['HTTP_HOST']
+    context['index_url'] = context['application_url'] + reverse('index')
 #    context = Context(context_kw)
     plain = get_template(_PLAIN_TEMPLATE.format(message_type)).render(context)
     html = get_template(_HTML_TEMPLATE.format(message_type)).render(context)
 
     connection = get_connection()
-    mail = EmailMultiAlternatives(_SUBJECTS[message_type], 
-                                  plain, 
+    mail = EmailMultiAlternatives(_SUBJECTS[message_type],
+                                  plain,
                                   settings.EMAIL_SENDER_ADDRESS,
                                   recipients,
                                   attachments=attachments,

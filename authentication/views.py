@@ -90,7 +90,8 @@ def user_signup(request):
                 user = get_user_model().objects.get(email=user_email)
                 email.send_to_single(user_email, 'register_with_known_email',
                                      request,
-                                     receiving_user=' '.join((user.first_name, user.last_name)),
+                                     first_name=user.first_name,
+                                     last_name=user.last_name,
                                      token=default_token_generator.make_token(user),
                                      uid=urlsafe_base64_encode(force_bytes(user.pk))
                                      )

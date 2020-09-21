@@ -47,6 +47,14 @@
                   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <a class="dropdown-item" href="{% url 'machine_detail' machine.pk %}">{% trans 'Edit' %}</a>
                     <div class="dropdown-divider"></div>
+                    {% if request.user.is_staff %}
+                    <form class="" action="{% url 'publish_sample_machine' %}" method="post">
+                      {% csrf_token %}
+                      <input type="hidden" name="next" value="{{ request.path }}">
+                      <input type="hidden" name="machine" value="{{ machine.pk }}">
+                      <button class="dropdown-item" type="submit">Publish as sample</button>
+                    </form>
+                    {% endif %}
                     <form class="" action="{% url 'machine_delete' machine.pk %}" method="post">
                       {% csrf_token %}
                       <button class="dropdown-item" type="submit" href="{% url 'machine_delete' machine.pk %}">{% trans 'Delete' %}</button>

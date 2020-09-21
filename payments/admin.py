@@ -171,12 +171,12 @@ class PartnerModelAdmin(admin.ModelAdmin):
 
         payments = list(user.checkout_set
                                     .filter(created__gt=user.client_of_selected_partner_since, is_paid=True)
-                                    .annotate(amount_paid=models.F('payment_plan__price')*models.F('payment_plan__currency__conversion_rate'))
+                                    .annotate(amount_paid=models.F('payment_plan__price')*models.F('payment_plan__currency__conversion_rate')*0.971-0.3)
                                     .values_list('created', 'amount_paid'))
 
         subscriptions = (user.subscription_set
                                     .filter(created__gt=user.client_of_selected_partner_since)
-                                    .annotate(amount_paid=models.F('payment_plan__price')*models.F('payment_plan__currency__conversion_rate'))
+                                    .annotate(amount_paid=models.F('payment_plan__price')*models.F('payment_plan__currency__conversion_rate')*0.971-0.3)
                                     .values_list('created', 'amount_paid', 'paid_till', 'payment_plan__interval'))
 
         for created, amount, paid_till, interval in subscriptions:
@@ -249,7 +249,7 @@ class PartnerModelAdmin(admin.ModelAdmin):
 
 
         sessions = [s for u in clients for s in u.session_set.filter(pub_date__gt=u.client_of_selected_partner_since).values_list('pub_date', 'material__name', 'machine__model', 'buildplate')]
-        column_names = ('Materials', '3D Printers', 'Build plate coating/material')
+        column_names = ('Materials by session', '3D Printers by session', 'Build plate coating/material by session')
         session_count = len(sessions)
 
         yield ['Testing sessions',
@@ -280,6 +280,47 @@ class PartnerModelAdmin(admin.ModelAdmin):
 
 
         del sessions
+
+        yield [' ']
+        yield ['Materials by user']
+        materials = [m for u in clients for m in u.material_set.values_list('pub_date', 'name')]
+        material_count = len(materials)
+        items_total = Counter(x[1] for x in materials)
+        items_month = Counter(materials[x][1] for x in range(material_count) if materials[x][0].month == month_prev and materials[x][0].year == year_prev)
+        items_30 = Counter(materials[x][1] for x in range(material_count) if materials[x][0] > last_30)
+        items_60 = Counter(materials[x][1] for x in range(material_count) if materials[x][0] > last_60)
+        items_90 = Counter(materials[x][1] for x in range(material_count) if materials[x][0] > last_90)
+
+        for item in items_total:
+            yield [item,
+                    items_month[item],
+                    items_30[item],
+                    items_60[item],
+                    items_90[item],
+                    items_total[item]]
+
+        del materials
+
+        yield [' ']
+        yield ['3D printers by user']
+        machines = [m for u in clients for m in u.machine_set.values_list('pub_date', 'model')]
+        machine_count = len(machines)
+        items_total = Counter(x[1] for x in machines)
+        items_month = Counter(machines[x][1] for x in range(machine_count) if machines[x][0].month == month_prev and machines[x][0].year == year_prev)
+        items_30 = Counter(machines[x][1] for x in range(machine_count) if machines[x][0] > last_30)
+        items_60 = Counter(machines[x][1] for x in range(machine_count) if machines[x][0] > last_60)
+        items_90 = Counter(machines[x][1] for x in range(machine_count) if machines[x][0] > last_90)
+
+        for item in items_total:
+            yield [item,
+                    items_month[item],
+                    items_30[item],
+                    items_60[item],
+                    items_90[item],
+                    items_total[item]]
+
+        del machines
+
 
         yield [' ']
         yield ['Vouchers']

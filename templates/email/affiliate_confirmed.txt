@@ -1,11 +1,12 @@
-
 {% extends "email/base.txt" %}
+{% load i18n %}
 
 {% block content %}
-Hi, {{ affiliate.sender.first_name }} {{ affiliate.sender.last_name }}!
-
-{{ affiliate.name }} ({{ affiliate.email }}) has registered and started to use his 3DOptimizer account.
-To thank you, we've awarded you a free {{ affiliate.days_assigned }} days of full access.
-Your full access now expires {{ affiliate.sender.subscription_expiration }}.
+{% with affiliate.sender.first_name as first_name and affiliate,sender.last_name as last_name %}
+{% blocktrans %}Hi, {{ first_name }} {{ last_name }}!{% endblocktrans %}
+{% endwith %}
+{% blocktrans %}{{ affiliate.name }} ({{ affiliate.email }}) has registered and started to use his 3DOptimizer account.{% endblocktrans %}
+{% blocktrans %}To thank you, we've awarded you a free {{ affiliate.days_assigned }} days of full access.{% endblocktrans %}
+{% blocktrans with affiliate.sender.subscription_expiration|date:"Y-m-d" as expiration_date %}Your full access now expires on {{ expiration_date }}.{% endblocktrans %}
 {% endblock content %}
 

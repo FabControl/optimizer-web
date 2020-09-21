@@ -1,13 +1,13 @@
 {% extends "email/base.txt" %}
+{% load i18n %}
 
 {% block content %}
-Hi, {{ receiving_user }}!
-Someone tried to register account with your email address.
-Since you already have an account, we sent you password recovery instructions.
+{% blocktrans %}Hi, {{ first_name }} {{ last_name }}!{% endblocktrans %}
+{% trans 'Someone tried to register account with your email address.' %}
+{% trans 'If you did not attempt to create account, ignore this email. You can stil sign in using your current password.' %}
 
-Use link below to reset your password. This link is only valid for 24 hours.
+{% trans 'Since you already have an account, we sent you password recovery instructions.' %}
+{% trans 'Use link below to reset your password. This link is only valid for 24 hours.' %}
 {{ application_url }}{% url 'password_reset_confirm' uidb64=uid token=token %}
-
-If you did not attempt to create account, ignore this email. You can stil sign in using your current password.
 {% endblock content %}
 

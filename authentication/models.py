@@ -210,8 +210,8 @@ class User(AbstractUser):
     def send_account_activation(self, request):
         email.send_to_single(self.email, 'register_complete',
                              request,
-                             receiving_user=' '.join((self.first_name,
-                                                      self.last_name)),
+                             first_name=self.first_name,
+                             last_name=self.last_name,
                              uid=urlsafe_base64_encode(force_bytes(self.pk)),
                              token=account_activation_token.make_token(self)
                              )
