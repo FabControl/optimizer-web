@@ -80,7 +80,9 @@ class Material(models.Model, CopyableModelMixin):
     def __json__(self):
         output = {
             "size_od": self.size_od,
-            "name": self.name
+            "name": self.name,
+            "min_extrusion_temperature": self.min_temperature,
+            "max_extrusion_temperature": self.max_temperature,
         }
         return output
 
