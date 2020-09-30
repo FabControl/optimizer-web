@@ -376,6 +376,9 @@ class ValidateFormTestDescriptionForm(forms.ModelForm):
             else:
                 q.label = statement
             q.required = False
+            if question.invalidates_current_results:
+                q.widget.attrs.update({'can_hide_validation_matrix': 'true'})
+                q.widget.attrs.update({'onclick': 'toggle_validation_matrix()'})
             q.widget.attrs.update({'value': question.pk})
             q.widget.attrs.update({'target': question.target_test})
             self.fields[question_name] = q

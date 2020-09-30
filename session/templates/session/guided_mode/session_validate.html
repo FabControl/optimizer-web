@@ -24,12 +24,14 @@
     <div class="col-sm">
       {% if questions %}
       {% crispy question_form %}
-      <div class="pt-4 pb-2">
-        <p><b>{% trans 'Select all the best parameter combinations' %}</b></p>
-      </div>
-      {% endif %}
-      <div class="valid-form">
-        {% crispy form %}
+      <div id="structures_validation_form">
+        <div class="pt-4 pb-2">
+          <p><b>{% trans 'Select all the best parameter combinations' %}</b></p>
+        </div>
+        {% endif %}
+        <div class="valid-form">
+          {% crispy form %}
+        </div>
       </div>
     </div>
   </div>
@@ -43,12 +45,35 @@
   </div>
 </form>
 <script type="text/javascript">
-  // Client-side check that at least one checkbox has been selected
-  $('button[type="submit"]').on('click', function() {
-    $cbx_group = $("input:checkbox[name='validation']");
-    $cbx_group.prop('required', true);
-    if ($cbx_group.is(":checked")) {
-      $cbx_group.prop('required', false);
+var form = $('#structures_validation_form');
+var radios = $('[can-hide-validation-matrix=true]');
+var validation_inputs = form.find("input:checkbox[name='validation']");
+var btn_submit = $('button[type="submit"]');
+var before_submit = function() {
+  validation_inputs.prop('required', true);
+  if (validation_inputs.is(":checked")) {
+    validation_inputs.prop('required', false);
+  }
+};
+var toggle_validation_matrix = function(){
+  var should_hide = false;
+  for (var i=0; i<radios.length; i++) {
+    if (radios[i].value != 'null' && radios[i].checked) {
+      should_hide = true;
+      break;
     }
-  });
+  }
+  if (should_hide) { 
+    form.slideUp(1); 
+    btn_submit.off('click');
+  }
+  else { 
+    form.slideDown(1); 
+    btn_submit.on('click', before_submit);
+  }
+  validation_inputs.prop('required', !should_hide)
+
+};
+toggle_validation_matrix();
+radios.on('click', toggle_validation_matrix);
 </script>

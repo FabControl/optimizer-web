@@ -993,6 +993,8 @@ class PrintDescriptor(models.Model):
     target_test = models.CharField(max_length=4, choices=TEST_NUMBER_CHOICES, default="")
     hint = models.CharField(max_length=512, null=True, blank=True)
     image = models.ImageField(upload_to='descriptors', null=True, blank=True)
+    invalidates_current_results = models.BooleanField(default=False, 
+                help_text='Hide validation matrix, if descriptor is matched by user. THIS WILL MAKE DESCRIPTOR PRIORITY ABOVE OTHERS.')
 
     def __str__(self):
         return f'"{self.statement}" > {self.target_test}'
