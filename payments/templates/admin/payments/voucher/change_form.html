@@ -3,7 +3,6 @@
 {{ block.super }}
 
 {% if original %}
-{% with original.redeemers as redeemers %}
 <div class="result">
   <h3 style="padding: 15px;">Redeemers</h3>
 {% if redeemers %}
@@ -11,24 +10,79 @@
     <thead>
       <tr>
         <th>
-          <div class="text">Email</div>
+          <div class="text">
+            {% if ordering == 'user_email' %}
+              <a href="?redeemer_order_by=-user_email">Email &uarr;</a>
+            {% elif ordering == '-user_email' %}
+              <a href="?redeemer_order_by=user_email">Email &darr;</a>
+            {% else %}
+              <a href="?redeemer_order_by=user_email">Email</a>
+            {% endif %}
+          </div>
         </th>
         <th>
-          <div class="text">Date redeemed</div>
+          <div class="text">
+            {% if ordering == 'date_redeemed' %}
+            <a href="?redeemer_order_by=-date_redeemed">Date Redeemed &uarr;</a>
+            {% elif ordering == '-date_redeemed' %}
+            <a href="?redeemer_order_by=date_redeemed">Date Redeemed &darr;</a>
+            {% else %}
+            <a href="?redeemer_order_by=date_redeemed">Date Redeemed</a>
+            {% endif %}
+          </div>
+
+        </th>
+        <th>
+          <div class="text">
+            {% if ordering == 'user_plan' %}
+            <a href="?redeemer_order_by=-user_plan">Plan &uarr;</a>
+            {% elif ordering == '-user_plan' %}
+            <a href="?redeemer_order_by=user_plan">Plan &darr;</a>
+            {% else %}
+            <a href="?redeemer_order_by=user_plan">Plan</a>
+            {% endif %}
+          </div>
+
+        </th>
+        <th>
+          <div class="text">
+            {% if ordering == 'subscription_expiration' %}
+            <a href="?redeemer_order_by=-subscription_expiration">Plan Expires &uarr;</a>
+            {% elif ordering == '-subscription_expiration' %}
+            <a href="?redeemer_order_by=subscription_expiration">Plan Expires &darr;</a>
+            {% else %}
+            <a href="?redeemer_order_by=subscription_expiration">Plan Expires</a>
+            {% endif %}
+          </div>
+
         </th>
       </tr>
     </thead>
     <tbody>
       {% for redeemer in redeemers %}
       <tr>
-        <td>{{ redeemer.user.email }}</td>
+        <td>{{ redeemer.user_email }}</td>
         <td>{{ redeemer.date_redeemed }}</td>
+        <td>{{ redeemer.user_plan }}</td>
+        <td>{{ redeemer.subscription_expiration }}</td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
+  {% if redeemers.has_other_pages %}
+  <div class="text">
+    {% if redeemers.has_previous %}
+    <a href="?redeemer_page=1&redeemer_order_by={{ ordering }}">First</a> |
+    <a href="?redeemer_page={{ redeemers.previous_page_number }}&redeemer_order_by={{ ordering }}">Previous</a> |
+    {% endif %}
+    Page {{ redeemers.number }} of {{ redeemers.paginator.num_pages }}
+    {% if redeemers.has_next %}
+    | <a href="?redeemer_page={{ redeemers.next_page_number }}&redeemer_order_by={{ ordering }}">Next</a>
+    | <a href="?redeemer_page=-1&redeemer_order_by={{ ordering }}">Last</a>
+    {% endif %}
+  </div>
+  {% endif %}
 {% endif %}
 </div>
-{% endwith %}
 {% endif %}
 {% endblock %}
