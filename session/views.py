@@ -316,8 +316,7 @@ class SessionValidateView(SessionView):
             return redirect('session_next_test', pk=session.pk, priority="any")
 
     def form_invalid(self, form):
-        session = form.save(commit=False)
-        return redirect('session_validate_back', pk=session.pk)
+        return redirect('session_validate_back', pk=self.object.pk)
 
 
 class GuidedValidateView(GuidedSessionView):
@@ -374,8 +373,7 @@ class GuidedValidateView(GuidedSessionView):
 
 
     def form_invalid(self, form):
-        session = form.save(commit=False)
-        return redirect('session_validate_back', pk=session.pk)
+        return redirect('session_validate_back', pk=self.object.pk)
 
 
 class SessionOverview(SessionTestsSelectionMixin, LoginRequiredMixin, ModelOwnershipCheckMixin, generic.DetailView):
