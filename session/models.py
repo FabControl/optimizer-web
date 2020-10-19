@@ -943,16 +943,6 @@ class Session(models.Model, DependenciesCopyMixin):
                             output.append(param)
         return output
 
-    def remove_last_test(self):
-        """
-        Delete the last test in previous_tests. Used to undo a test_generation from test validation_view.
-        :return:
-        """
-        temp_persistence = self.persistence
-        del temp_persistence["session"]["previous_tests"][-1]
-        self.persistence = temp_persistence
-        self.update_persistence()
-
     @property
     def test_youtube_id(self):
         """
