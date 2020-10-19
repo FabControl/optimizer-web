@@ -673,6 +673,24 @@ class Session(models.Model, DependenciesCopyMixin):
         temp_persistence["session"]["previous_tests"] = temp_tests
         self.persistence = temp_persistence
 
+    def reset_min_max_parameters(self, number):
+        previous_values = self.previous_tests_as_dict().get(number)
+        if previous_values is None:
+            return
+
+        min_max_one = previous_values.get('tested_parameter_one_values')
+        if min_max_one is not None:
+            self.min_max_parameter_one = [min_max_one[0], min_max_one[-1]]
+
+        min_max_two = previous_values.get('tested_parameter_two_values')
+        if min_max_two is not None:
+            self.min_max_parameter_two = [min_max_two[0], min_max_two[-1]]
+
+        min_max_three = previous_values.get('tested_parameter_three_values')
+        if min_max_three is not None:
+            self.min_max_parameter_three = [min_max_three[0], min_max_three[-1]]
+
+
     def get_readable_test_with_current_number(self):
         """
         Looks through previous tests and returns data of the first test whose number matches the current self.test_number.

@@ -481,7 +481,9 @@ def session_undo(request, pk):
     session = get_object_or_404(Session, model_ownership_query(request.user), pk=pk)
     if session.previous_tests[-1]['validated']:
         session.alter_previous_tests(-1, "validated", False)
-        session.test_number = session.previous_tests[-1]['test_number']
+        test_number = session.previous_tests[-1]['test_number']
+        session.reset_min_max_parameters(test_number)
+        session.test_number = test_number
         session.save()
         return redirect('session_detail', pk=pk, download=0)
 
@@ -503,6 +505,7 @@ def session_validate_revert(request, pk):
 @login_required
 def test_switch(request, pk, number):
     session = get_object_or_404(Session, model_ownership_query(request.user), pk=pk)
+    session.reset_min_max_parameters(number)
     session.test_number = number
     session.save()
     return redirect('session_detail', pk=pk)
