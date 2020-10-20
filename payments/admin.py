@@ -13,6 +13,7 @@ import csv
 from datetime import timedelta
 from django.contrib.auth import get_user_model
 from collections import Counter
+from django.core.paginator import Paginator
 
 # Register your models here.
 admin.site.register(payment_models.TaxationCountry)
@@ -359,6 +360,26 @@ class VoucherModelAdmin(admin.ModelAdmin):
     form = VoucherAdminForm
     readonly_fields = ('partner',)
     list_display = ('__str__', 'partner', 'bonus_days', 'valid_till', 'used_by')
+
+    def change_view(self, request, object_id, form_url='', extra_context=None):
+        if extra_context is None:
+            extra_context = {}
+        extra_context['ordering'] = request.GET.get('redeemer_order_by', '-date_redeemed')
+        redeemers = (payment_models.RedeemedVoucher.objects.filter(voucher=object_id)
+                                            .annotate(user_email=models.F('user__email'),
+                                                      user_plan=models.F('user___plan'),
+                                                      subscription_expiration=models.F('user__subscription_expiration'))
+                                            .values('user_email', 
+                                                    'date_redeemed',
+                                                    'user_plan',
+                                                    'subscription_expiration')
+                                            .order_by(extra_context['ordering'])
+                            )
+
+        redeemer_paginator = Paginator(redeemers, 100)
+        extra_context['redeemers'] = redeemer_paginator.get_page(request.GET.get('redeemer_page'))
+        return super().change_view(request, object_id, form_url, extra_context)
+
 
     def get_queryset(self, request):
         queryset = super().get_queryset(request)

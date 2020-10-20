@@ -316,8 +316,7 @@ class SessionValidateView(SessionView):
             return redirect('session_next_test', pk=session.pk, priority="any")
 
     def form_invalid(self, form):
-        session = form.save(commit=False)
-        return redirect('session_validate_back', pk=session.pk)
+        return redirect('session_validate_back', pk=self.object.pk)
 
 
 class GuidedValidateView(GuidedSessionView):
@@ -330,30 +329,51 @@ class GuidedValidateView(GuidedSessionView):
         context['questions'] = Junction.objects.get(base_test=session.test_number).descriptors.all()
         return context
 
-    def form_valid(self, form):
+    def post(self, request, *args, **kwargs):
+        """
+        Handle POST requests: instantiate a form instance with the passed
+        POST variables and then check if it's valid.
+        """
+        self.object = self.get_object()
+        question_keys = [int(self.request.POST[x]) for x in self.request.POST if x.startswith('question') and self.request.POST[x] != 'null']
+        questions = PrintDescriptor.objects.filter(pk__in=question_keys).order_by('target_test')
+        invalidate = tuple(x for x in questions if x.invalidates_current_results)
+        if len(invalidate) > 0:
+            self.object.delete_previous_test(self.object.test_number)
+            self.object.save()
+            return self.descriptor_jump(invalidate[0])
+
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form, questions)
+        else:
+            return self.form_invalid(form)
+
+
+    def form_valid(self, form, questions):
         session = form.save(commit=False)
         session.alter_previous_tests(-1, "validated", True)
         session = form.save(commit=True)
         # filter any items in request.POST with key that starts with 'question' and has any value other than 'null'
-        questions = [PrintDescriptor.objects.get(pk=int(y)) for y in [self.request.POST[x] for x in self.request.POST if x.startswith('question')] if y != 'null']
-        # sort the selected questions by target tests as numbers.
-        questions.sort(key=lambda x: int(x.target_test))
         if len(questions) > 0:
             # Select the highest priority test. Lower test number = higher priority
             # first element will have the lowest test number
-            q1 = questions[0]
-            if q1.hint is not None:
-                messages.info(self.request, _(q1.hint))
-            if q1.target_test == session.test_number:
-                session.delete_previous_test(q1.target_test)
-                session.save()
-            return redirect('test_switch', number=q1.target_test, pk=session.pk)
+            return self.descriptor_jump(questions[0])
         # Go to next primary if not directed elsewhere
         return redirect('session_next_test', pk=session.pk, priority='primary')
 
+
+    def descriptor_jump(self, q1):
+        if q1.hint is not None:
+            messages.info(self.request, _(q1.hint))
+        if q1.target_test == self.object.test_number:
+            self.object.delete_previous_test(q1.target_test)
+            self.object.save()
+        return redirect('test_switch', number=q1.target_test, pk=self.object.pk)
+
+
     def form_invalid(self, form):
-        session = form.save(commit=False)
-        return redirect('session_validate_back', pk=session.pk)
+        return redirect('session_validate_back', pk=self.object.pk)
 
 
 class SessionOverview(SessionTestsSelectionMixin, LoginRequiredMixin, ModelOwnershipCheckMixin, generic.DetailView):
@@ -461,7 +481,9 @@ def session_undo(request, pk):
     session = get_object_or_404(Session, model_ownership_query(request.user), pk=pk)
     if session.previous_tests[-1]['validated']:
         session.alter_previous_tests(-1, "validated", False)
-        session.test_number = session.previous_tests[-1]['test_number']
+        test_number = session.previous_tests[-1]['test_number']
+        session.reset_min_max_parameters(test_number)
+        session.test_number = test_number
         session.save()
         return redirect('session_detail', pk=pk, download=0)
 
@@ -483,6 +505,7 @@ def session_validate_revert(request, pk):
 @login_required
 def test_switch(request, pk, number):
     session = get_object_or_404(Session, model_ownership_query(request.user), pk=pk)
+    session.reset_min_max_parameters(number)
     session.test_number = number
     session.save()
     return redirect('session_detail', pk=pk)

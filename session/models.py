@@ -80,7 +80,9 @@ class Material(models.Model, CopyableModelMixin):
     def __json__(self):
         output = {
             "size_od": self.size_od,
-            "name": self.name
+            "name": self.name,
+            "min_extrusion_temperature": self.min_temperature,
+            "max_extrusion_temperature": self.max_temperature,
         }
         return output
 
@@ -671,6 +673,24 @@ class Session(models.Model, DependenciesCopyMixin):
         temp_persistence["session"]["previous_tests"] = temp_tests
         self.persistence = temp_persistence
 
+    def reset_min_max_parameters(self, number):
+        previous_values = self.previous_tests_as_dict().get(number)
+        if previous_values is None:
+            return
+
+        min_max_one = previous_values.get('tested_parameter_one_values')
+        if min_max_one is not None:
+            self.min_max_parameter_one = [min_max_one[0], min_max_one[-1]]
+
+        min_max_two = previous_values.get('tested_parameter_two_values')
+        if min_max_two is not None:
+            self.min_max_parameter_two = [min_max_two[0], min_max_two[-1]]
+
+        min_max_three = previous_values.get('tested_parameter_three_values')
+        if min_max_three is not None:
+            self.min_max_parameter_three = [min_max_three[0], min_max_three[-1]]
+
+
     def get_readable_test_with_current_number(self):
         """
         Looks through previous tests and returns data of the first test whose number matches the current self.test_number.
@@ -923,16 +943,6 @@ class Session(models.Model, DependenciesCopyMixin):
                             output.append(param)
         return output
 
-    def remove_last_test(self):
-        """
-        Delete the last test in previous_tests. Used to undo a test_generation from test validation_view.
-        :return:
-        """
-        temp_persistence = self.persistence
-        del temp_persistence["session"]["previous_tests"][-1]
-        self.persistence = temp_persistence
-        self.update_persistence()
-
     @property
     def test_youtube_id(self):
         """
@@ -991,6 +1001,8 @@ class PrintDescriptor(models.Model):
     target_test = models.CharField(max_length=4, choices=TEST_NUMBER_CHOICES, default="")
     hint = models.CharField(max_length=512, null=True, blank=True)
     image = models.ImageField(upload_to='descriptors', null=True, blank=True)
+    invalidates_current_results = models.BooleanField(default=False, 
+                help_text='Hide validation matrix, if descriptor is matched by user. THIS WILL MAKE DESCRIPTOR PRIORITY ABOVE OTHERS.')
 
     def __str__(self):
         return f'"{self.statement}" > {self.target_test}'
