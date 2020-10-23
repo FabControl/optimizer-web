@@ -86,7 +86,7 @@ class User(AbstractUser):
                                               on_delete=models.SET_NULL,
                                               related_name='team')
 
-    information_reference = models.CharField(gettext_lazy('Where did you find our about 3DOptimizer'),
+    information_reference = models.CharField(gettext_lazy('Where did you find out about 3DOptimizer'),
                                       max_length=150, blank=True, default='')
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
