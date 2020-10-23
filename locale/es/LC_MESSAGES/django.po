@@ -9,38 +9,40 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-17 16:52+0300\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2020-10-21 22:32+0137\n"
+"Last-Translator: b'Spanish Translator <spanish@3doptimizer.com>'\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Translated-Using: django-rosetta 0.9.4\n"
 
 #: Optimizer3D/settings.py:121 Optimizer3D/settings.py:140
 msgid "English"
-msgstr ""
+msgstr "Inglés"
 
 #: Optimizer3D/settings.py:122 Optimizer3D/settings.py:141
+#, fuzzy
 msgid "Latvian"
-msgstr ""
+msgstr "Letón"
 
 #: Optimizer3D/settings.py:123 Optimizer3D/settings.py:144
 msgid "French"
-msgstr ""
+msgstr "Francés"
 
 #: Optimizer3D/settings.py:142
 msgid "German"
-msgstr ""
+msgstr "Alemán"
 
 #: Optimizer3D/settings.py:143
 msgid "Spanish"
-msgstr ""
+msgstr "Español"
 
 #: Optimizer3D/settings.py:145
 msgid "Portuguese"
-msgstr ""
+msgstr "Portugués"
 
 #: authentication/forms.py:28 authentication/forms.py:65
 #: authentication/forms.py:221
@@ -48,75 +50,77 @@ msgstr ""
 #: authentication/templates/authentication/legal_info.html:109
 #: authentication/templates/authentication/my_affiliates.html:37
 msgid "Email"
-msgstr ""
+msgstr "Correo Electrónico"
 
 #: authentication/forms.py:30 authentication/forms.py:42
 msgid "Password"
-msgstr ""
+msgstr "Contraseña"
 
 #: authentication/forms.py:56
 msgid "Password did not match our records"
-msgstr ""
+msgstr "La contraseña no coincide con nuestros registros"
 
 #: authentication/forms.py:66
 msgid "We will not share your email address with 3rd parties."
-msgstr ""
+msgstr "Su correo electrónico no será compartido con terceros"
 
 #: authentication/forms.py:69
 msgid "First name"
-msgstr ""
+msgstr "Nombre"
 
 #: authentication/forms.py:72
 msgid "Last name"
-msgstr ""
+msgstr "Apellido"
 
 #: authentication/forms.py:84 authentication/forms.py:193
 msgid "Country"
-msgstr ""
+msgstr "País"
 
 #: authentication/forms.py:86
-#, python-format
+#, python-format, fuzzy
 msgid "I agree to %(starttag)sterms of use%(endtag)s"
-msgstr ""
+msgstr "Estoy de acuerdo con %(starttag)s los términos de uso%(endtag)s"
 
 #: authentication/forms.py:123
 msgid "Password recovery instructions will be sent to this email."
 msgstr ""
+"Las instrucciones para recuperar la contraseña serán enviadas a este correo "
+"electrónico"
 
 #: authentication/forms.py:190
 msgid "Company name*"
-msgstr ""
+msgstr "Nombre de la empresa"
 
 #: authentication/forms.py:194
 msgid "Company legal address*"
-msgstr ""
+msgstr "Nombre legal de la empresa"
 
 #: authentication/forms.py:195
 msgid "Company registration number*"
-msgstr ""
+msgstr "Número de registro de la empresa"
 
 #: authentication/forms.py:196
 msgid "Company VAT number"
-msgstr ""
+msgstr "Número de IVA de la empresa"
 
 #: authentication/forms.py:198
 msgid "Show legal info (for EU companies)"
-msgstr ""
+msgstr "Mostrar información legal (para empresas de la UE)"
 
 #: authentication/forms.py:211
 #, python-brace-format
 msgid "Company account requires {field_label}"
-msgstr ""
+msgstr "Una cuenta de empresa requiere {field_label}"
 
 #: authentication/forms.py:222
 msgid "email"
-msgstr ""
+msgstr "correo electrónico"
 
 #: authentication/forms.py:224
 #: authentication/templates/authentication/my_affiliates.html:36
 #: session/forms.py:285 session/templates/session/session_info.html:10
 msgid "Name"
-msgstr ""
+msgstr "Nombre"
 
 #: authentication/models.py:136 session/templates/session/navbar.html:49
 msgid "Upgrade to Full Access"
@@ -124,7 +128,7 @@ msgstr ""
 
 #: authentication/models.py:138
 msgid "Permanent License"
-msgstr ""
+msgstr "Licencia Perpetua"
 
 #: authentication/models.py:140
 #, python-brace-format
@@ -161,46 +165,47 @@ msgstr[1] ""
 #: authentication/models.py:297
 #, python-format
 msgid "Registered on %(date)s"
-msgstr ""
+msgstr "Registrado el  %(date)s"
 
 #: authentication/models.py:299
 #: authentication/templates/authentication/legal_info.html:174
 #: authentication/templates/authentication/legal_info.html:214
 msgid "Invitation sent"
-msgstr ""
+msgstr "Invitación enviada"
 
 #: authentication/models.py:304
 #, python-format
 msgid "Received %(days)d days full access"
-msgstr ""
+msgstr "Ha recibido acceso total por  %(days)d días"
 
 #: authentication/templates/authentication/account_activation.html:9
 msgid "To activate account, enter your password"
-msgstr ""
+msgstr "Para activar, ingrese su contraseña"
 
 #: authentication/templates/authentication/account_activation.html:27
 msgid "Activate account"
-msgstr ""
+msgstr "Activar cuenta"
 
 #: authentication/templates/authentication/account_activation.html:33
 msgid "Account activation link is not valid."
-msgstr ""
+msgstr "El link de activación no es válido"
 
 #: authentication/templates/authentication/account_activation.html:34
 msgid "If link is expired, try resetting password."
-msgstr ""
+msgstr "Si el link expiró, intente restablecer la contraseña"
 
 #: authentication/templates/authentication/check_email.html:6
 msgid "Your account was successfully created."
-msgstr ""
+msgstr "Su cuenta fue creada satisfactoriamente"
 
 #: authentication/templates/authentication/check_email.html:7
 msgid "Please check your email for further instructions."
-msgstr ""
+msgstr "Por favor revise su correo electrónico para más información"
 
 #: authentication/templates/authentication/invalid_affiliate_url.html:6
+#, fuzzy
 msgid "Affiliate link is not valid."
-msgstr ""
+msgstr "El link de afiliado no es válido"
 
 #: authentication/templates/authentication/legal_info.html:22
 msgid "Account info"
@@ -234,8 +239,8 @@ msgstr ""
 
 #: authentication/templates/authentication/legal_info.html:75
 msgid ""
-"By pressing \"Cancel subscription\", you confirm cancellation of full access "
-"subscription."
+"By pressing \"Cancel subscription\", you confirm cancellation of full access"
+" subscription."
 msgstr ""
 
 #: authentication/templates/authentication/legal_info.html:76
@@ -453,8 +458,8 @@ msgstr ""
 
 #: authentication/templates/authentication/translation_selector.html:8
 msgid ""
-"Found a bug / wrong translation? <a href=\"mailto:support@fabcontrol.com?"
-"subject=Bug report\">Let us know</a>!"
+"Found a bug / wrong translation? <a "
+"href=\"mailto:support@fabcontrol.com?subject=Bug report\">Let us know</a>!"
 msgstr ""
 
 #: authentication/templates/authentication/translation_selector.html:18
@@ -510,8 +515,8 @@ msgstr ""
 #: authentication/views.py:342
 #, python-brace-format
 msgid ""
-"You can use default <a href=\"{signup}\">sign up form</a> or <a href="
-"\"{login}\">log in </a> to your account."
+"You can use default <a href=\"{signup}\">sign up form</a> or <a "
+"href=\"{login}\">log in </a> to your account."
 msgstr ""
 
 #: authentication/views.py:357
@@ -808,8 +813,8 @@ msgstr ""
 #: session/forms.py:264
 #, python-brace-format
 msgid ""
-"Mechanical Strength and Short Printing Time targets require <a href="
-"\"{link}\">Full Access</a>"
+"Mechanical Strength and Short Printing Time targets require <a "
+"href=\"{link}\">Full Access</a>"
 msgstr ""
 
 #: session/forms.py:268
@@ -901,7 +906,8 @@ msgstr ""
 msgid "Guided"
 msgstr ""
 
-#: session/migrations/0048_manual_add_session_modes.py:20 session/models.py:588
+#: session/migrations/0048_manual_add_session_modes.py:20
+#: session/models.py:588
 msgid "Core"
 msgstr ""
 
@@ -945,7 +951,8 @@ msgid "I wish to fine-tune track height (print resolution)."
 msgstr ""
 
 #: session/migrations/0055_add_and_assign_descriptors.py:23
-msgid "Does the print peel off from print bed, although the height is correct?"
+msgid ""
+"Does the print peel off from print bed, although the height is correct?"
 msgstr ""
 
 #: session/migrations/0055_add_and_assign_descriptors.py:23
@@ -988,8 +995,8 @@ msgstr ""
 
 #: session/templates/session/500.html:9
 msgid ""
-"Feel free to contact our <a href=\"mailto:support@fabcontrol.com\">support</"
-"a>!"
+"Feel free to contact our <a "
+"href=\"mailto:support@fabcontrol.com\">support</a>!"
 msgstr ""
 
 #: session/templates/session/dashboard.html:11
@@ -998,7 +1005,8 @@ msgstr ""
 
 #: session/templates/session/dashboard.html:19
 #, python-format
-msgid "%(first_name)s %(last_name)s invited you to collaborate in %(company)s."
+msgid ""
+"%(first_name)s %(last_name)s invited you to collaborate in %(company)s."
 msgstr ""
 
 #: session/templates/session/dashboard.html:20
@@ -1231,8 +1239,8 @@ msgstr ""
 #: session/templates/session/machine_detail.html:72
 #: session/templates/session/machine_form.html:69
 msgid ""
-"Test structure is centered on the printbed by default. Offset may be used to "
-"shift the test structure on build-plate."
+"Test structure is centered on the printbed by default. Offset may be used to"
+" shift the test structure on build-plate."
 msgstr ""
 
 #: session/templates/session/machine_form.html:76
@@ -1523,8 +1531,8 @@ msgstr ""
 
 #: session/translatable_backend_strings.py:31
 msgid ""
-"For this test this value is equal to unity, but, if needed, it can be tested "
-"in a separate test"
+"For this test this value is equal to unity, but, if needed, it can be tested"
+" in a separate test"
 msgstr ""
 
 #: session/translatable_backend_strings.py:32
@@ -1551,14 +1559,14 @@ msgstr ""
 
 #: session/translatable_backend_strings.py:36
 msgid ""
-"Set the range to 20-50 mm/s for printing flexible materials, or to 30-70 mm/"
-"s for printing harder materials"
+"Set the range to 20-50 mm/s for printing flexible materials, or to 30-70 "
+"mm/s for printing harder materials"
 msgstr ""
 
 #: session/translatable_backend_strings.py:37
 msgid ""
-"Set the range to 5-15 mm/s for printing flexible materials, or to 10-30 mm/s "
-"for printing harder materials"
+"Set the range to 5-15 mm/s for printing flexible materials, or to 10-30 mm/s"
+" for printing harder materials"
 msgstr ""
 
 #: session/translatable_backend_strings.py:38
@@ -1579,8 +1587,8 @@ msgstr ""
 
 #: session/translatable_backend_strings.py:41
 msgid ""
-"The default value is equal to the nozzle inner diameter, but you can perform "
-"the corresponding test to fine-tune this value"
+"The default value is equal to the nozzle inner diameter, but you can perform"
+" the corresponding test to fine-tune this value"
 msgstr ""
 
 #: session/translatable_backend_strings.py:42
@@ -1609,14 +1617,14 @@ msgstr ""
 
 #: session/translatable_backend_strings.py:46
 msgid ""
-"These seven values will be tested at four different <b>Retraction distances</"
-"b> (see below). You can change the limiting values"
+"These seven values will be tested at four different <b>Retraction "
+"distances</b> (see below). You can change the limiting values"
 msgstr ""
 
 #: session/translatable_backend_strings.py:47
 msgid ""
-"These seven values will be tested at four different <b>Retraction speeds</b> "
-"(see below). You can change the limiting values"
+"These seven values will be tested at four different <b>Retraction speeds</b>"
+" (see below). You can change the limiting values"
 msgstr ""
 
 #: session/translatable_backend_strings.py:48
@@ -1642,7 +1650,8 @@ msgid "These seven values will be tested. You can change the limiting values"
 msgstr ""
 
 #: session/translatable_backend_strings.py:52
-msgid "This value was determined in the previous test(s) and cannot be changed"
+msgid ""
+"This value was determined in the previous test(s) and cannot be changed"
 msgstr ""
 
 #: session/translatable_backend_strings.py:56
@@ -1685,8 +1694,8 @@ msgstr ""
 
 #: session/translatable_backend_strings.py:63
 msgid ""
-"This test is needed to find Z-offset value in case of non-level print bed or "
-"printbed coating."
+"This test is needed to find Z-offset value in case of non-level print bed or"
+" printbed coating."
 msgstr ""
 
 #: session/translatable_backend_strings.py:64
@@ -1713,11 +1722,12 @@ msgstr ""
 
 #: session/translatable_backend_strings.py:68
 msgid ""
-"This test is needed to solve possible issues with adhesion between tracks if "
-"there are any. Good weld-together is essential to achieving good mechanical "
-"properties in any printed part.<br>Run it only if you see the voids in "
-"between the tracks in the previous test. By skipping this test, the <b>First-"
-"layer-track-width</b> value will be set to the <b>Nozzle inner diameter</b>"
+"This test is needed to solve possible issues with adhesion between tracks if"
+" there are any. Good weld-together is essential to achieving good mechanical"
+" properties in any printed part.<br>Run it only if you see the voids in "
+"between the tracks in the previous test. By skipping this test, the "
+"<b>First-layer-track-width</b> value will be set to the <b>Nozzle inner "
+"diameter</b>"
 msgstr ""
 
 #: session/translatable_backend_strings.py:73
@@ -1897,8 +1907,8 @@ msgstr ""
 #: templates/email/affiliate_invitation.txt:5
 #, python-format
 msgid ""
-"%(affiliate.name)s, you have been invited by %(affiliate.sender.first_name)s "
-"%(affiliate.sender.last_name)s to 3D Optimizer!"
+"%(affiliate.name)s, you have been invited by %(affiliate.sender.first_name)s"
+" %(affiliate.sender.last_name)s to 3D Optimizer!"
 msgstr ""
 
 #: templates/email/affiliate_invitation.html:7
@@ -1923,8 +1933,8 @@ msgstr ""
 
 #: templates/email/affiliate_invitation.html:26
 msgid ""
-"If you’re having trouble with the button above, copy and paste following URL "
-"into your web browser."
+"If you’re having trouble with the button above, copy and paste following URL"
+" into your web browser."
 msgstr ""
 
 #: templates/email/affiliate_invitation.txt:13
@@ -2013,4 +2023,20 @@ msgstr ""
 msgid ""
 "Since you already have an account, we sent you password recovery "
 "instructions."
+msgstr ""
+
+#: payments.models.Plan.extra_info_text:0
+msgid ""
+"Multi-user features\r\n"
+"Online onboarding session"
+msgstr ""
+
+#: payments.models.Plan.extra_info_text:0
+msgid ""
+"Multi-user features \r\n"
+"Online onboarding session"
+msgstr ""
+
+#: payments.models.Plan.extra_info_text:0
+msgid "Multi-user features"
 msgstr ""
