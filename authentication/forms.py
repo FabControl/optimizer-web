@@ -89,7 +89,13 @@ class SignUpForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('email', 'first_name', 'last_name', 'password1', 'password2', 'company_country')
+        fields = ('email', 
+                  'first_name', 
+                  'last_name', 
+                  'password1', 
+                  'password2', 
+                  'company_country',
+                  'information_reference')
 
     def save_and_notify(self, request):
         user = self.save()
@@ -101,7 +107,14 @@ class CorporationSignUpForm(SignUpForm):
     company_name = forms.CharField(max_length=30, required=True)
     class Meta:
         model = User
-        fields = ('email', 'first_name', 'last_name', 'password1', 'password2', 'company_country', 'company_name')
+        fields = ('email', 
+                  'first_name', 
+                  'last_name', 
+                  'password1', 
+                  'password2', 
+                  'company_country', 
+                  'company_name',
+                  'information_reference')
 
     def save(self, *a, **k):
         user = super().save(*a, **k)
