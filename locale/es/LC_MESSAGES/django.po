@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-23 18:08+0300\n"
+"POT-Creation-Date: 2020-10-25 12:39+0200\n"
 "PO-Revision-Date: 2020-10-21 22:32+0137\n"
 "Last-Translator: b'Spanish Translator <spanish@3doptimizer.com>'\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -132,7 +132,7 @@ msgid "Name"
 msgstr "Nombre"
 
 #: authentication/models.py:89
-msgid "Where did you find out about 3DOptimizer"
+msgid "Where did you find out about 3DOptimizer?"
 msgstr ""
 
 #: authentication/models.py:138 session/templates/session/navbar.html:49

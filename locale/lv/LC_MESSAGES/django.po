@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-23 18:08+0300\n"
+"POT-Creation-Date: 2020-10-25 12:39+0200\n"
 "PO-Revision-Date: 2020-08-21 14:00+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -129,8 +129,8 @@ msgid "Name"
 msgstr "Vārds"
 
 #: authentication/models.py:89
-msgid "Where did you find out about 3DOptimizer"
-msgstr "Kur Jūs uzzinājāt par 3DOptimizer"
+msgid "Where did you find out about 3DOptimizer?"
+msgstr "Kur Jūs uzzinājāt par 3DOptimizer?"
 
 #: authentication/models.py:138 session/templates/session/navbar.html:49
 msgid "Upgrade to Full Access"
