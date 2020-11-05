@@ -218,6 +218,8 @@ class Settings(models.Model):
     temperature_chamber_setpoint = models.IntegerField(default=0)
     part_cooling_setpoint = models.IntegerField(default=0)
     offset_z = models.DecimalField(max_digits=3, decimal_places=2, default=0)
+    support_pattern_spacing = models.DecimalField(max_digits=3, decimal_places=2, default=0)
+    support_contact_distance = models.DecimalField(max_digits=4, decimal_places=3, default=0)
 
     def __str__(self):
         return self.name
@@ -268,6 +270,8 @@ class Settings(models.Model):
             "temperature_chamber_setpoint": self.temperature_chamber_setpoint,
             "part_cooling_setpoint": self.part_cooling_setpoint,
             "offset_z": self.offset_z,
+            "support_pattern_spacing": self.support_pattern_spacing,
+            "support_contact_distance": self.support_contact_distance,
         }
         return output
 
@@ -519,8 +523,6 @@ class Session(models.Model, DependenciesCopyMixin):
         :param new_value:
         :return:
         """
-        if self.test_number == '14':  # This test is only informative
-            return
         if new_value is not None:
             parameter_numbers = ["parameter_one", "parameter_two", "parameter_three"]
             for number in parameter_numbers:
