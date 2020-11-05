@@ -87,6 +87,8 @@ class Plan(ModelDiffMixin, models.Model):
     def payment_frequency_string(self):
         if self.is_one_time:
             return _('One-time payment')
+        if self.interval == 'week':
+            return _('Recurring weekly payment')
         if self.interval == 'day':
             return _('Recurring dayly payment')
         elif self.interval == 'month':
