@@ -666,12 +666,13 @@ class Session(models.Model, DependenciesCopyMixin):
         """
         temp_persistence = self.persistence
         temp_tests = self.previous_tests.copy()
-        numbers_to_delete = [number]
-        if delete_above:
-            numbers_to_delete = []
-            for number in range(int(number), 14):
-                numbers_to_delete.append("{:02d}".format(number))
-        temp_tests = [t for t in temp_tests if t['test_number'] not in numbers_to_delete]
+        number = int(number)
+
+        should_keep = lambda t: (int(t['test_number']) < number if delete_above else int(t['test_number']) != number)
+
+        for t in temp_tests:
+            print(number, should_keep(t), t['test_number'])
+        temp_tests = [t for t in temp_tests if should_keep(t)]
         temp_persistence["session"]["previous_tests"] = temp_tests
         self.persistence = temp_persistence
 
