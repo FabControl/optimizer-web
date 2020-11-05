@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
+from django.views.generic.list import ListView
 from .models import User, Affiliate
 
 # Register your models here.
@@ -53,3 +54,25 @@ class AffiliatesAdmin(admin.ModelAdmin):
 
     def has_add_permission(self, request):
         return False
+
+
+
+class UserInformationReferenceView(ListView):
+    model = User
+    paginate_by = 100
+    template_name = 'admin/user_references_list.html'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.exclude(information_reference='')
+        queryset = queryset.values('email', 'date_joined', 'information_reference')
+        queryset = queryset.order_by(self.request.GET.get('order_by', '-date_joined'))
+        return queryset
+
+    def render_to_response(self, context, *args, **kwargs):
+        context['ordering'] = self.request.GET.get('order_by', '-date_joined')
+        return super().render_to_response(context, *args, **kwargs)
+
+
+admin.site.register_custom_view('user_references',
+                                UserInformationReferenceView.as_view())

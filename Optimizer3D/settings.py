@@ -31,7 +31,8 @@ DEBUG = False
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
+    'administration.apps.OptimizerAdminConfig', #replaces 'django.contrib.admin',
+    'administration', # includes custom teplates
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -42,7 +43,7 @@ INSTALLED_APPS = [
     'django_simple_cookie_consent.apps.DjangoSimpleCookieConsentConfig',
     'authentication.apps.AuthenticationConfig',
     'crispy_forms',
-    'rosetta'
+    'rosetta',
 ]
 
 MIDDLEWARE = [
@@ -132,7 +133,7 @@ LOCALIZABLE_MODELS = [
 # Allow translation of specific languages instead of all
 ROSETTA_LANGUAGE_GROUPS = True
 
-ROSETTA_SHOW_AT_ADMIN_PANEL = True
+ROSETTA_SHOW_AT_CUSTOM_ADMIN_PANEL = True
 
 ROSETTA_LANGUAGES = (
         ('en', _('English')),

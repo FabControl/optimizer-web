@@ -1,0 +1,34 @@
+{% extends "admin/index.html" %}
+{% load i18n %}
+
+{% block sidebar %}
+{{block.super}}
+{% if show_rosetta_link %}
+<div id="rosetta-content-main">
+  <div class="app-rosetta module">
+    <table>
+      <caption>
+        <a class="section" href="{% url 'rosetta-file-list' po_filter='project' %}">Rosetta</a>
+      </caption>
+      <tbody><tr>
+          <th scope="row"><a href="{% url 'rosetta-file-list' po_filter='project' %}">{% trans "Translations" %}</a></th>
+          <td colspan="2"><a href="{% url 'rosetta-file-list' po_filter='project' %}" class="changelink">{% trans "Change" %}</a></td>
+        </tr>
+      </tbody></table>
+  </div>
+</div>
+{% endif %}
+{% if custom_views %}
+<div>
+  <div class="module">
+    <table>
+      <caption>Custom pages</caption>
+      <tbody>
+        {% for name, urlname in custom_views.items %}
+        <tr><th scope="row"><a href="{% url name %}">{{ urlname|capfirst }}</a></th><td></td></tr>
+        {% endfor %}
+      </tbody></table>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

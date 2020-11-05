@@ -218,6 +218,8 @@ class Settings(models.Model):
     temperature_chamber_setpoint = models.IntegerField(default=0)
     part_cooling_setpoint = models.IntegerField(default=0)
     offset_z = models.DecimalField(max_digits=3, decimal_places=2, default=0)
+    support_pattern_spacing = models.DecimalField(max_digits=3, decimal_places=2, default=0)
+    support_contact_distance = models.DecimalField(max_digits=4, decimal_places=3, default=0)
 
     def __str__(self):
         return self.name
@@ -268,6 +270,8 @@ class Settings(models.Model):
             "temperature_chamber_setpoint": self.temperature_chamber_setpoint,
             "part_cooling_setpoint": self.part_cooling_setpoint,
             "offset_z": self.offset_z,
+            "support_pattern_spacing": self.support_pattern_spacing,
+            "support_contact_distance": self.support_contact_distance,
         }
         return output
 
@@ -519,8 +523,6 @@ class Session(models.Model, DependenciesCopyMixin):
         :param new_value:
         :return:
         """
-        if self.test_number == '14':  # This test is only informative
-            return
         if new_value is not None:
             parameter_numbers = ["parameter_one", "parameter_two", "parameter_three"]
             for number in parameter_numbers:
@@ -664,12 +666,13 @@ class Session(models.Model, DependenciesCopyMixin):
         """
         temp_persistence = self.persistence
         temp_tests = self.previous_tests.copy()
-        numbers_to_delete = [number]
-        if delete_above:
-            numbers_to_delete = []
-            for number in range(int(number), 14):
-                numbers_to_delete.append("{:02d}".format(number))
-        temp_tests = [t for t in temp_tests if t['test_number'] not in numbers_to_delete]
+        number = int(number)
+
+        should_keep = lambda t: (int(t['test_number']) < number if delete_above else int(t['test_number']) != number)
+
+        for t in temp_tests:
+            print(number, should_keep(t), t['test_number'])
+        temp_tests = [t for t in temp_tests if should_keep(t)]
         temp_persistence["session"]["previous_tests"] = temp_tests
         self.persistence = temp_persistence
 

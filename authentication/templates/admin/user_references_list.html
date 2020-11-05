@@ -1,0 +1,72 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+
+<div class="result">
+  <h1 style="padding: 15px;">User references</h1>
+{% if user_list %}
+  <table id="result_list" style="width: 100%;">
+    <thead>
+      <tr>
+        <th style="width: 25%;">
+          <div class="text">
+            {% if ordering == 'email' %}
+              <a href="?order_by=-email">Email &uarr;</a>
+            {% elif ordering == '-email' %}
+              <a href="?order_by=email">Email &darr;</a>
+            {% else %}
+              <a href="?order_by=email">Email</a>
+            {% endif %}
+          </div>
+        </th>
+        <th style="width: 15%;">
+          <div class="text">
+            {% if ordering == 'date_joined' %}
+            <a href="?order_by=-date_joined">Date Joined &uarr;</a>
+            {% elif ordering == '-date_joined' %}
+            <a href="?order_by=date_joined">Date Joined &darr;</a>
+            {% else %}
+            <a href="?order_by=date_joined">Date Joined</a>
+            {% endif %}
+          </div>
+        </th>
+        <th>
+          <div class="text">
+            {% if ordering == 'information_reference' %}
+            <a href="?order_by=-information_reference">Reference &uarr;</a>
+            {% elif ordering == '-information_reference' %}
+            <a href="?order_by=information_reference">Reference &darr;</a>
+            {% else %}
+            <a href="?order_by=information_reference">Reference</a>
+            {% endif %}
+          </div>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in user_list %}
+      <tr>
+        <td>{{ user.email }}</td>
+        <td>{{ user.date_joined }}</td>
+        <td>{{ user.information_reference }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% if page_obj.has_other_pages %}
+  <div class="text">
+    {% if page_obj.has_previous %}
+    <a href="?page=1&order_by={{ ordering }}">First</a> |
+    <a href="?page={{ page_obj.previous_page_number }}&order_by={{ ordering }}">Previous</a> |
+    {% endif %}
+    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+    {% if page_obj.has_next %}
+    | <a href="?page={{ page_obj.next_page_number }}&order_by={{ ordering }}">Next</a>
+    | <a href="?page=-1&order_by={{ ordering }}">Last</a>
+    {% endif %}
+  </div>
+  {% endif %}
+{% else %}
+  <h3 style="padding: 15px;">Nothing to see here</h3>
+{% endif %}
+</div>
+{% endblock %}

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-17 16:52+0300\n"
+"POT-Creation-Date: 2020-10-25 12:39+0200\n"
 "PO-Revision-Date: 2020-08-21 14:00+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -19,32 +19,41 @@ msgstr ""
 "2);\n"
 "X-Generator: Poedit 2.4.1\n"
 
-#: Optimizer3D/settings.py:121 Optimizer3D/settings.py:140
+#: Optimizer3D/settings.py:123 Optimizer3D/settings.py:142
 msgid "English"
 msgstr "Angļu"
 
-#: Optimizer3D/settings.py:122 Optimizer3D/settings.py:141
+#: Optimizer3D/settings.py:124 Optimizer3D/settings.py:143
 msgid "Latvian"
 msgstr "Latviešu"
 
-#: Optimizer3D/settings.py:123 Optimizer3D/settings.py:144
+#: Optimizer3D/settings.py:125 Optimizer3D/settings.py:146
 msgid "French"
 msgstr "Franču"
 
-#: Optimizer3D/settings.py:142
+#: Optimizer3D/settings.py:144
 msgid "German"
 msgstr "Vācu"
 
-#: Optimizer3D/settings.py:143
+#: Optimizer3D/settings.py:145
 msgid "Spanish"
 msgstr "Spāņu"
 
-#: Optimizer3D/settings.py:145
+#: Optimizer3D/settings.py:147
 msgid "Portuguese"
 msgstr "Portugāļu"
 
+#: administration/templates/administration/admin_index.html:14
+msgid "Translations"
+msgstr ""
+
+#: administration/templates/administration/admin_index.html:15
+#: authentication/templates/authentication/legal_info.html:84
+msgid "Change"
+msgstr "Mainīt"
+
 #: authentication/forms.py:28 authentication/forms.py:65
-#: authentication/forms.py:221
+#: authentication/forms.py:234
 #: authentication/templates/authentication/account_activation.html:15
 #: authentication/templates/authentication/legal_info.html:109
 #: authentication/templates/authentication/my_affiliates.html:37
@@ -71,7 +80,7 @@ msgstr "Vārds"
 msgid "Last name"
 msgstr "Uzvārds"
 
-#: authentication/forms.py:84 authentication/forms.py:193
+#: authentication/forms.py:84 authentication/forms.py:206
 msgid "Country"
 msgstr "Valsts"
 
@@ -80,54 +89,58 @@ msgstr "Valsts"
 msgid "I agree to %(starttag)sterms of use%(endtag)s"
 msgstr "Piekrītu %(starttag)slietošanas noteikumiem%(endtag)s"
 
-#: authentication/forms.py:123
+#: authentication/forms.py:136
 msgid "Password recovery instructions will be sent to this email."
 msgstr "Tālākās norādes tiks nosūtītas uz norādīto epasta adresi."
 
-#: authentication/forms.py:190
+#: authentication/forms.py:203
 msgid "Company name*"
 msgstr "Uzņēmuma nosaukums*"
 
-#: authentication/forms.py:194
+#: authentication/forms.py:207
 msgid "Company legal address*"
 msgstr "Uzņēmuma adrese*"
 
-#: authentication/forms.py:195
+#: authentication/forms.py:208
 msgid "Company registration number*"
 msgstr "Uzņēmuma reģistrācijas numurs*"
 
-#: authentication/forms.py:196
+#: authentication/forms.py:209
 msgid "Company VAT number"
 msgstr "PVN maksātāja numurs"
 
-#: authentication/forms.py:198
+#: authentication/forms.py:211
 msgid "Show legal info (for EU companies)"
 msgstr "Norādīt uzņēmuma datus (ES uzņēmumiem)"
 
-#: authentication/forms.py:211
+#: authentication/forms.py:224
 #, python-brace-format
 msgid "Company account requires {field_label}"
 msgstr "Uzņēmuma kontam jāaizpilda {field_label}"
 
-#: authentication/forms.py:222
+#: authentication/forms.py:235
 msgid "email"
 msgstr "epasts"
 
-#: authentication/forms.py:224
+#: authentication/forms.py:237
 #: authentication/templates/authentication/my_affiliates.html:36
 #: session/forms.py:285 session/templates/session/session_info.html:10
 msgid "Name"
 msgstr "Vārds"
 
-#: authentication/models.py:136 session/templates/session/navbar.html:49
+#: authentication/models.py:89
+msgid "Where did you find out about 3DOptimizer?"
+msgstr "Kur Jūs uzzinājāt par 3DOptimizer?"
+
+#: authentication/models.py:138 session/templates/session/navbar.html:49
 msgid "Upgrade to Full Access"
 msgstr "Iegādāties pilnu piekļuvi"
 
-#: authentication/models.py:138
+#: authentication/models.py:140
 msgid "Permanent License"
 msgstr "Bezlimita licence"
 
-#: authentication/models.py:140
+#: authentication/models.py:142
 #, python-brace-format
 msgid "Educational License ({expiration} Day)"
 msgid_plural "Educational License ({expiration} Days)"
@@ -135,7 +148,7 @@ msgstr[0] "Izglītības licence ({expiration} diena)"
 msgstr[1] "Izglītības licence ({expiration} dienas)"
 msgstr[2] "Izglītības licence ({expiration} dienas)"
 
-#: authentication/models.py:145
+#: authentication/models.py:147
 #, python-brace-format
 msgid "Full Access ({expiration} Day)"
 msgid_plural "Full Access ({expiration} Days)"
@@ -143,11 +156,11 @@ msgstr[0] "Pilna piekļuve ({expiration} diena)"
 msgstr[1] "Pilna piekļuve ({expiration} dienas)"
 msgstr[2] "Pilna piekļuve ({expiration} dienas)"
 
-#: authentication/models.py:149
+#: authentication/models.py:151
 msgid "Full Access"
 msgstr "Pilna piekļuve"
 
-#: authentication/models.py:151
+#: authentication/models.py:153
 #, python-brace-format
 msgid "Test Access ({expiration} Day)"
 msgid_plural "Test Access ({expiration} Days)"
@@ -155,7 +168,7 @@ msgstr[0] "Testa piekļuve ({expiration} diena)"
 msgstr[1] "Testa piekļuve ({expiration} dienas)"
 msgstr[2] "Testa piekļuve ({expiration} dienas)"
 
-#: authentication/models.py:155
+#: authentication/models.py:157
 #, python-brace-format
 msgid "Limited Access ({expiration} Day)"
 msgid_plural "Limited Access ({expiration} Days)"
@@ -163,18 +176,18 @@ msgstr[0] "Ierobežota piekļuve ({expiration} diena)"
 msgstr[1] "Ierobežota piekļuve ({expiration} dienas)"
 msgstr[2] "Ierobežota piekļuve ({expiration} dienas)"
 
-#: authentication/models.py:297
+#: authentication/models.py:299
 #, python-format
 msgid "Registered on %(date)s"
 msgstr "Reģistrējās %(date)s"
 
-#: authentication/models.py:299
+#: authentication/models.py:301
 #: authentication/templates/authentication/legal_info.html:174
 #: authentication/templates/authentication/legal_info.html:214
 msgid "Invitation sent"
 msgstr "Uzaicinājums nosūtīts"
 
-#: authentication/models.py:304
+#: authentication/models.py:306
 #, python-format
 msgid "Received %(days)d days full access"
 msgstr "Saņemtas %(days)d pilnas piekļuves dienas"
@@ -253,10 +266,6 @@ msgstr "Varēsiet izmantot pilnu piekļuvi līdz %(end_date)s."
 #: authentication/templates/authentication/legal_info.html:84
 msgid "Payment method:"
 msgstr "Maksājuma veids:"
-
-#: authentication/templates/authentication/legal_info.html:84
-msgid "Change"
-msgstr "Mainīt"
 
 #: authentication/templates/authentication/legal_info.html:86
 msgid "You don't have active subscription."
@@ -471,8 +480,8 @@ msgid ""
 "Found a bug / wrong translation? <a href=\"mailto:support@fabcontrol.com?"
 "subject=Bug report\">Let us know</a>!"
 msgstr ""
-"Atradi kļūdu? <a href=\"mailto:support@fabcontrol.com?"
-"subject=Bug report\">Sazinies ar mums</a>!"
+"Atradi kļūdu? <a href=\"mailto:support@fabcontrol.com?subject=Bug report"
+"\">Sazinies ar mums</a>!"
 
 #: authentication/templates/authentication/translation_selector.html:18
 msgid "Change page language"
@@ -763,8 +772,8 @@ msgstr ""
 "cita vērtība. Ja nav ieteiktās temeperatūras, <a href='{help_link}'>šeit</a> "
 "atrodama metode tās noskaidrošanai."
 
-#: session/forms.py:182 session/forms.py:591 session/forms.py:620
-#: session/forms.py:634
+#: session/forms.py:182 session/forms.py:594 session/forms.py:623
+#: session/forms.py:637
 msgid "Max temperature (°C)"
 msgstr "Max. temperatūra (°C)"
 
@@ -867,67 +876,67 @@ msgstr "Jā"
 msgid "No"
 msgstr "Nē"
 
-#: session/forms.py:533
+#: session/forms.py:536
 msgid "3D Printer model"
 msgstr "3D printera modelis"
 
-#: session/forms.py:534
+#: session/forms.py:537
 msgid "Max dimension on X axis (mm)"
 msgstr "Max. koordināte uz X ass (mm)"
 
-#: session/forms.py:535
+#: session/forms.py:538
 msgid "Max dimension on Y axis (mm)"
 msgstr "Max. koordināte uz Y ass (mm)"
 
-#: session/forms.py:537
+#: session/forms.py:540
 msgid "Offset on X axis (mm)"
 msgstr "Nobīde pa X asi (mm)"
 
-#: session/forms.py:538
+#: session/forms.py:541
 msgid "Offset on Y axis (mm)"
 msgstr "Nobīde pa Y asi (mm)"
 
-#: session/forms.py:540 session/templates/session/machine_manager.html:26
+#: session/forms.py:543 session/templates/session/machine_manager.html:26
 msgid "Type"
 msgstr "Tips"
 
-#: session/forms.py:541
+#: session/forms.py:544
 msgid "Extruder type"
 msgstr "Ekstrūdera tips"
 
-#: session/forms.py:543
+#: session/forms.py:546
 msgid "Header"
 msgstr "Sākuma Gkods"
 
-#: session/forms.py:546
+#: session/forms.py:549
 msgid "Footer"
 msgstr "Beigu Gkods"
 
-#: session/forms.py:550
+#: session/forms.py:553
 msgid "Homing script"
 msgstr "Atgriešanās (Homing) Gkods"
 
-#: session/forms.py:590 session/forms.py:618
+#: session/forms.py:593 session/forms.py:621
 msgid "Gcode tool index"
 msgstr "Ekstrūdera numurs Gkodā"
 
-#: session/forms.py:592 session/translatable_backend_strings.py:18
+#: session/forms.py:595 session/translatable_backend_strings.py:18
 msgid "Part cooling"
 msgstr "Detaļas dzesēšana"
 
-#: session/forms.py:605
+#: session/forms.py:608
 msgid "Nozzle's inner diameter (mm)"
 msgstr "Sprauslas iekšējais diametrs (mm)"
 
-#: session/forms.py:619
+#: session/forms.py:622
 msgid "Gcode syntax"
 msgstr "Gkoda sintakse"
 
-#: session/forms.py:621
+#: session/forms.py:624
 msgid "Chamber heatable"
 msgstr "Apsildāma kamera"
 
-#: session/forms.py:636
+#: session/forms.py:639
 msgid "Print bed heatable"
 msgstr "Apsildāma printēšanas platforma"
 
@@ -939,7 +948,7 @@ msgstr "Advancēts"
 msgid "Guided"
 msgstr "Vadīts"
 
-#: session/migrations/0048_manual_add_session_modes.py:20 session/models.py:588
+#: session/migrations/0048_manual_add_session_modes.py:20 session/models.py:590
 msgid "Core"
 msgstr "Pamata"
 
@@ -999,23 +1008,23 @@ msgstr ""
 msgid "Does the print float above the print bed?"
 msgstr "Vai detaļa nepieķeras pie pamatnes."
 
-#: session/models.py:152
+#: session/models.py:154
 msgid "Unknown"
 msgstr "Nezināms"
 
-#: session/models.py:159
+#: session/models.py:161
 msgid "Bowden"
 msgstr ""
 
-#: session/models.py:159
+#: session/models.py:161
 msgid "Direct drive"
 msgstr ""
 
-#: session/models.py:310
+#: session/models.py:312
 msgid "Untitled"
 msgstr "Bez nosaukuma"
 
-#: session/models.py:590
+#: session/models.py:592
 msgid "Optional"
 msgstr "Papildu"
 
@@ -1198,15 +1207,15 @@ msgstr ""
 msgid "Inspect the printed test structure"
 msgstr "Novērtējiet izdrukāto detaļu"
 
-#: session/templates/session/guided_mode/session_validate.html:28
+#: session/templates/session/guided_mode/session_validate.html:29
 msgid "Select all the best parameter combinations"
 msgstr "Izvēlies labākās parametru kombinācijas"
 
-#: session/templates/session/guided_mode/session_validate.html:38
+#: session/templates/session/guided_mode/session_validate.html:40
 msgid "Back to Setup"
 msgstr "Atgriezties pie parametriem"
 
-#: session/templates/session/guided_mode/session_validate.html:41
+#: session/templates/session/guided_mode/session_validate.html:43
 #: session/templates/session/session_validate.html:35
 msgid "Next Test"
 msgstr "Nākamais tests"
@@ -1978,7 +1987,7 @@ msgstr "Printera \"{printer}\" izmaiņas saglabātas!"
 msgid "3D Printer \"{printer}\" has been created!"
 msgstr "Izveidots 3D printeris \"{printer}\"!"
 
-#: session/views.py:405
+#: session/views.py:425
 #, python-brace-format
 msgid ""
 "Your next test is available in Full Access only. You can skip it and go to "
@@ -1987,7 +1996,7 @@ msgstr ""
 "Jums nepieciešamais tests pieejams tikai ar Pilnu piekļuvi. Varat doties uz "
 "nākamo pieejamo testu vai <a href={link}>iegādāties Pilnu piekļuvi.</a>"
 
-#: session/views.py:409
+#: session/views.py:429
 #, python-brace-format
 msgid ""
 "Your next test is available in Full Access only. You can skip it and go to "

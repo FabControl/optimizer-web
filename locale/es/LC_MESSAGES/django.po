@@ -8,199 +8,217 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-17 16:52+0300\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2020-10-25 12:39+0200\n"
+"PO-Revision-Date: 2020-10-21 22:32+0137\n"
+"Last-Translator: b'Spanish Translator <spanish@3doptimizer.com>'\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Translated-Using: django-rosetta 0.9.4\n"
 
-#: Optimizer3D/settings.py:121 Optimizer3D/settings.py:140
+#: Optimizer3D/settings.py:123 Optimizer3D/settings.py:142
 msgid "English"
-msgstr ""
+msgstr "Inglés"
 
-#: Optimizer3D/settings.py:122 Optimizer3D/settings.py:141
+#: Optimizer3D/settings.py:124 Optimizer3D/settings.py:143
+#, fuzzy
 msgid "Latvian"
-msgstr ""
+msgstr "Letón"
 
-#: Optimizer3D/settings.py:123 Optimizer3D/settings.py:144
+#: Optimizer3D/settings.py:125 Optimizer3D/settings.py:146
 msgid "French"
-msgstr ""
+msgstr "Francés"
 
-#: Optimizer3D/settings.py:142
+#: Optimizer3D/settings.py:144
 msgid "German"
-msgstr ""
-
-#: Optimizer3D/settings.py:143
-msgid "Spanish"
-msgstr ""
+msgstr "Alemán"
 
 #: Optimizer3D/settings.py:145
+msgid "Spanish"
+msgstr "Español"
+
+#: Optimizer3D/settings.py:147
 msgid "Portuguese"
+msgstr "Portugués"
+
+#: administration/templates/administration/admin_index.html:14
+msgid "Translations"
+msgstr ""
+
+#: administration/templates/administration/admin_index.html:15
+#: authentication/templates/authentication/legal_info.html:84
+msgid "Change"
 msgstr ""
 
 #: authentication/forms.py:28 authentication/forms.py:65
-#: authentication/forms.py:221
+#: authentication/forms.py:234
 #: authentication/templates/authentication/account_activation.html:15
 #: authentication/templates/authentication/legal_info.html:109
 #: authentication/templates/authentication/my_affiliates.html:37
 msgid "Email"
-msgstr ""
+msgstr "Correo Electrónico"
 
 #: authentication/forms.py:30 authentication/forms.py:42
 msgid "Password"
-msgstr ""
+msgstr "Contraseña"
 
 #: authentication/forms.py:56
 msgid "Password did not match our records"
-msgstr ""
+msgstr "La contraseña no coincide con nuestros registros"
 
 #: authentication/forms.py:66
 msgid "We will not share your email address with 3rd parties."
-msgstr ""
+msgstr "Su correo electrónico no será compartido con terceros"
 
 #: authentication/forms.py:69
 msgid "First name"
-msgstr ""
+msgstr "Nombre"
 
 #: authentication/forms.py:72
 msgid "Last name"
-msgstr ""
+msgstr "Apellido"
 
-#: authentication/forms.py:84 authentication/forms.py:193
+#: authentication/forms.py:84 authentication/forms.py:206
 msgid "Country"
-msgstr ""
+msgstr "País"
 
 #: authentication/forms.py:86
-#, python-format
+#, fuzzy, python-format
 msgid "I agree to %(starttag)sterms of use%(endtag)s"
-msgstr ""
+msgstr "Estoy de acuerdo con %(starttag)s los términos de uso%(endtag)s"
 
-#: authentication/forms.py:123
+#: authentication/forms.py:136
 msgid "Password recovery instructions will be sent to this email."
 msgstr ""
+"Las instrucciones para recuperar la contraseña serán enviadas a este correo "
+"electrónico"
 
-#: authentication/forms.py:190
+#: authentication/forms.py:203
 msgid "Company name*"
-msgstr ""
+msgstr "Nombre de la empresa"
 
-#: authentication/forms.py:194
+#: authentication/forms.py:207
 msgid "Company legal address*"
-msgstr ""
+msgstr "Nombre legal de la empresa"
 
-#: authentication/forms.py:195
+#: authentication/forms.py:208
 msgid "Company registration number*"
-msgstr ""
+msgstr "Número de registro de la empresa"
 
-#: authentication/forms.py:196
+#: authentication/forms.py:209
 msgid "Company VAT number"
-msgstr ""
-
-#: authentication/forms.py:198
-msgid "Show legal info (for EU companies)"
-msgstr ""
+msgstr "Número de IVA de la empresa"
 
 #: authentication/forms.py:211
-#, python-brace-format
-msgid "Company account requires {field_label}"
-msgstr ""
-
-#: authentication/forms.py:222
-msgid "email"
-msgstr ""
+msgid "Show legal info (for EU companies)"
+msgstr "Mostrar información legal (para empresas de la UE)"
 
 #: authentication/forms.py:224
+#, python-brace-format
+msgid "Company account requires {field_label}"
+msgstr "Una cuenta de empresa requiere {field_label}"
+
+#: authentication/forms.py:235
+msgid "email"
+msgstr "correo electrónico"
+
+#: authentication/forms.py:237
 #: authentication/templates/authentication/my_affiliates.html:36
 #: session/forms.py:285 session/templates/session/session_info.html:10
 msgid "Name"
+msgstr "Nombre"
+
+#: authentication/models.py:89
+msgid "Where did you find out about 3DOptimizer?"
 msgstr ""
 
-#: authentication/models.py:136 session/templates/session/navbar.html:49
+#: authentication/models.py:138 session/templates/session/navbar.html:49
 msgid "Upgrade to Full Access"
 msgstr ""
 
-#: authentication/models.py:138
-msgid "Permanent License"
-msgstr ""
-
 #: authentication/models.py:140
+msgid "Permanent License"
+msgstr "Licencia Perpetua"
+
+#: authentication/models.py:142
 #, python-brace-format
 msgid "Educational License ({expiration} Day)"
 msgid_plural "Educational License ({expiration} Days)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: authentication/models.py:145
+#: authentication/models.py:147
 #, python-brace-format
 msgid "Full Access ({expiration} Day)"
 msgid_plural "Full Access ({expiration} Days)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: authentication/models.py:149
+#: authentication/models.py:151
 msgid "Full Access"
 msgstr ""
 
-#: authentication/models.py:151
+#: authentication/models.py:153
 #, python-brace-format
 msgid "Test Access ({expiration} Day)"
 msgid_plural "Test Access ({expiration} Days)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: authentication/models.py:155
+#: authentication/models.py:157
 #, python-brace-format
 msgid "Limited Access ({expiration} Day)"
 msgid_plural "Limited Access ({expiration} Days)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: authentication/models.py:297
+#: authentication/models.py:299
 #, python-format
 msgid "Registered on %(date)s"
-msgstr ""
+msgstr "Registrado el  %(date)s"
 
-#: authentication/models.py:299
+#: authentication/models.py:301
 #: authentication/templates/authentication/legal_info.html:174
 #: authentication/templates/authentication/legal_info.html:214
 msgid "Invitation sent"
-msgstr ""
+msgstr "Invitación enviada"
 
-#: authentication/models.py:304
+#: authentication/models.py:306
 #, python-format
 msgid "Received %(days)d days full access"
-msgstr ""
+msgstr "Ha recibido acceso total por  %(days)d días"
 
 #: authentication/templates/authentication/account_activation.html:9
 msgid "To activate account, enter your password"
-msgstr ""
+msgstr "Para activar, ingrese su contraseña"
 
 #: authentication/templates/authentication/account_activation.html:27
 msgid "Activate account"
-msgstr ""
+msgstr "Activar cuenta"
 
 #: authentication/templates/authentication/account_activation.html:33
 msgid "Account activation link is not valid."
-msgstr ""
+msgstr "El link de activación no es válido"
 
 #: authentication/templates/authentication/account_activation.html:34
 msgid "If link is expired, try resetting password."
-msgstr ""
+msgstr "Si el link expiró, intente restablecer la contraseña"
 
 #: authentication/templates/authentication/check_email.html:6
 msgid "Your account was successfully created."
-msgstr ""
+msgstr "Su cuenta fue creada satisfactoriamente"
 
 #: authentication/templates/authentication/check_email.html:7
 msgid "Please check your email for further instructions."
-msgstr ""
+msgstr "Por favor revise su correo electrónico para más información"
 
 #: authentication/templates/authentication/invalid_affiliate_url.html:6
+#, fuzzy
 msgid "Affiliate link is not valid."
-msgstr ""
+msgstr "El link de afiliado no es válido"
 
 #: authentication/templates/authentication/legal_info.html:22
 msgid "Account info"
@@ -245,10 +263,6 @@ msgstr ""
 
 #: authentication/templates/authentication/legal_info.html:84
 msgid "Payment method:"
-msgstr ""
-
-#: authentication/templates/authentication/legal_info.html:84
-msgid "Change"
 msgstr ""
 
 #: authentication/templates/authentication/legal_info.html:86
@@ -729,8 +743,8 @@ msgid ""
 "to determine it can be faund <a href='{help_link}'>here</a>."
 msgstr ""
 
-#: session/forms.py:182 session/forms.py:591 session/forms.py:620
-#: session/forms.py:634
+#: session/forms.py:182 session/forms.py:594 session/forms.py:623
+#: session/forms.py:637
 msgid "Max temperature (°C)"
 msgstr ""
 
@@ -829,67 +843,67 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: session/forms.py:533
+#: session/forms.py:536
 msgid "3D Printer model"
 msgstr ""
 
-#: session/forms.py:534
+#: session/forms.py:537
 msgid "Max dimension on X axis (mm)"
 msgstr ""
 
-#: session/forms.py:535
+#: session/forms.py:538
 msgid "Max dimension on Y axis (mm)"
 msgstr ""
 
-#: session/forms.py:537
+#: session/forms.py:540
 msgid "Offset on X axis (mm)"
 msgstr ""
 
-#: session/forms.py:538
+#: session/forms.py:541
 msgid "Offset on Y axis (mm)"
 msgstr ""
 
-#: session/forms.py:540 session/templates/session/machine_manager.html:26
+#: session/forms.py:543 session/templates/session/machine_manager.html:26
 msgid "Type"
 msgstr ""
 
-#: session/forms.py:541
+#: session/forms.py:544
 msgid "Extruder type"
 msgstr ""
 
-#: session/forms.py:543
+#: session/forms.py:546
 msgid "Header"
 msgstr ""
 
-#: session/forms.py:546
+#: session/forms.py:549
 msgid "Footer"
 msgstr ""
 
-#: session/forms.py:550
+#: session/forms.py:553
 msgid "Homing script"
 msgstr ""
 
-#: session/forms.py:590 session/forms.py:618
+#: session/forms.py:593 session/forms.py:621
 msgid "Gcode tool index"
 msgstr ""
 
-#: session/forms.py:592 session/translatable_backend_strings.py:18
+#: session/forms.py:595 session/translatable_backend_strings.py:18
 msgid "Part cooling"
 msgstr ""
 
-#: session/forms.py:605
+#: session/forms.py:608
 msgid "Nozzle's inner diameter (mm)"
 msgstr ""
 
-#: session/forms.py:619
+#: session/forms.py:622
 msgid "Gcode syntax"
 msgstr ""
 
-#: session/forms.py:621
+#: session/forms.py:624
 msgid "Chamber heatable"
 msgstr ""
 
-#: session/forms.py:636
+#: session/forms.py:639
 msgid "Print bed heatable"
 msgstr ""
 
@@ -901,7 +915,7 @@ msgstr ""
 msgid "Guided"
 msgstr ""
 
-#: session/migrations/0048_manual_add_session_modes.py:20 session/models.py:588
+#: session/migrations/0048_manual_add_session_modes.py:20 session/models.py:590
 msgid "Core"
 msgstr ""
 
@@ -958,23 +972,23 @@ msgstr ""
 msgid "Does the print float above the print bed?"
 msgstr ""
 
-#: session/models.py:152
+#: session/models.py:154
 msgid "Unknown"
 msgstr ""
 
-#: session/models.py:159
+#: session/models.py:161
 msgid "Bowden"
 msgstr ""
 
-#: session/models.py:159
+#: session/models.py:161
 msgid "Direct drive"
 msgstr ""
 
-#: session/models.py:310
+#: session/models.py:312
 msgid "Untitled"
 msgstr ""
 
-#: session/models.py:590
+#: session/models.py:592
 msgid "Optional"
 msgstr ""
 
@@ -1144,15 +1158,15 @@ msgstr ""
 msgid "Inspect the printed test structure"
 msgstr ""
 
-#: session/templates/session/guided_mode/session_validate.html:28
+#: session/templates/session/guided_mode/session_validate.html:29
 msgid "Select all the best parameter combinations"
 msgstr ""
 
-#: session/templates/session/guided_mode/session_validate.html:38
+#: session/templates/session/guided_mode/session_validate.html:40
 msgid "Back to Setup"
 msgstr ""
 
-#: session/templates/session/guided_mode/session_validate.html:41
+#: session/templates/session/guided_mode/session_validate.html:43
 #: session/templates/session/session_validate.html:35
 msgid "Next Test"
 msgstr ""
@@ -1845,14 +1859,14 @@ msgstr ""
 msgid "3D Printer \"{printer}\" has been created!"
 msgstr ""
 
-#: session/views.py:405
+#: session/views.py:425
 #, python-brace-format
 msgid ""
 "Your next test is available in Full Access only. You can skip it and go to "
 "the next available test or <a href={link}>purchase Full Access.</a>"
 msgstr ""
 
-#: session/views.py:409
+#: session/views.py:429
 #, python-brace-format
 msgid ""
 "Your next test is available in Full Access only. You can skip it and go to "

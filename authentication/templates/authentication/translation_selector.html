@@ -18,7 +18,7 @@
         <h4 class="modal-title">{% trans 'Change page language' %}</h4>
       </div>
       <div class="modal-body">
-        <div class="container">
+        <div>
           {% for lang in languages %}
           <div class="row justify-content-center">
               <form action="{% url 'set_language' %}" method="post">{% csrf_token %}<input name="language" type="hidden" value="{{ lang.code }}">
