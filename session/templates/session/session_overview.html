@@ -22,6 +22,7 @@
         </div>
         <div class="col-sm">
           <button type="button" id="curaBtn" class="btn btn-block btn-primary" data-toggle="modal" data-target="#curaQualtyTypePrompt" name="button">Ultimaker Cura<br><small>{% blocktrans with version='4.6.1' %}Version {{ version }}{% endblocktrans %}</small></button>
+          <div class="pt-3 text-center"><a href="#" data-toggle="modal" data-target="#cura-3-modal">Cura {% blocktrans with version='3' %}Version {{ version }}{% endblocktrans %}</a></div>
         </div>
         <div class="modal fade" id="curaQualtyTypePrompt" tabindex="-1" role="dialog" aria-labelledby="curaModalLabel" aria-hidden="true">
           <div class="modal-dialog" role="document">
@@ -43,6 +44,28 @@
                       {% endfor %}
                     </select>
                     <small>{% trans '*You can find your printer profiles in Cura profile manager.' %}</small>
+                  </div>
+                  <br>
+                  <button type="submit" class="btn btn-primary">{% trans 'Download profile' %}</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal fade" id="cura-3-modal" tabindex="-1" role="dialog" aria-labelledby="curaModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">{% trans 'Download Cura 3 slicing profile' %}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form action="{% url 'config' pk=object.pk slicer='cura' %}" method="post" enctype="multipart/form-data">
+                  <div>
+                  {% load crispy_forms_tags %}
+                  {% crispy sample_cura_config_form %}
                   </div>
                   <br>
                   <button type="submit" class="btn btn-primary">{% trans 'Download profile' %}</button>

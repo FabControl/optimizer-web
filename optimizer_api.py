@@ -103,11 +103,15 @@ class ApiClient(object):
         else:
             raise ValueError("Incorrect routine return mode selected. Valid modes are ['full', 'primary', 'secondary']")
 
-    def get_config(self, slicer: str, persistence: dict, quality_type: str):
+    def get_config(self, slicer: str, persistence: dict, quality_type: str, sample_config):
         url = '/'.join((self.base_url, "config", slicer))
         if quality_type != '':
             url += '/' + quality_type
-        response = requests.post(url, json=persistence)
+        files = {
+                'persistence' : ('persistence', json.dumps(persistence), 'application/json')}
+        if sample_config is not None:
+            files['sample_config'] = ('sample_config', sample_config, 'application/octet')
+        response = requests.post(url, files=files)
         if response.status_code == 500:
             raise ConnectionError("Optimizer API encountered an error while processing the request.")
         imported_json = json.loads(response.text)

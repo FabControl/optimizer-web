@@ -9,6 +9,7 @@ from .choices import TEST_NUMBER_CHOICES, MODE_CHOICES
 from decimal import Decimal
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
+from django.template.defaultfilters import filesizeformat
 
 
 def wrap_decimal_to_python(field):
@@ -153,6 +154,34 @@ class RangeSliderWidget(forms.widgets.Input):
         else:
             return None
 
+class LimitedSizeFileField(forms.FileField):
+    """
+    Same as FileField, but you can specify:
+        * max_upload_size - a number indicating the maximum file size allowed for upload.
+            2.5MB - 2621440
+            5MB - 5242880
+            10MB - 10485760
+            20MB - 20971520
+            50MB - 5242880
+            100MB - 104857600
+            250MB - 214958080
+            500MB - 429916160
+    """
+    def __init__(self, *args, **kwargs):
+        self.max_upload_size = kwargs.pop("max_upload_size", -1)
+        super().__init__(*args, **kwargs)
+
+    def clean(self, *args, **kwargs):
+        data = super().clean(*args, **kwargs)
+        if self.max_upload_size < 0: return data
+
+        try:
+            if data.size > self.max_upload_size:
+                raise forms.ValidationError(_('Please keep filesize under %s. Current filesize %s') % (filesizeformat(self.max_upload_size), filesizeformat(data.size)))
+        except AttributeError:
+            pass
+
+        return data
 
 class NewTestForm(forms.Form):
     session_name = forms.CharField(label='Session name', max_length=20,
@@ -642,3 +671,10 @@ class NewPrintbedForm(MultiDecimalSeperatorModelForm):
         model = Printbed
         fields = ["printbed_heatable", "temperature_max"]
 
+class SampleCuraConfigForm(forms.Form):
+    # 20KB should be more than enough
+    slicing_profile_template = LimitedSizeFileField(max_upload_size=20*1024,
+                        help_text=_("Any custom slicing profile, that is compatible with"
+                                    " your printer"))
+    helper = FormHelper()
+    helper.form_tag = False

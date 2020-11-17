@@ -385,6 +385,7 @@ class SessionOverview(SessionTestsSelectionMixin, LoginRequiredMixin, ModelOwner
         context['default_quality_type'] = 'normal'
         context['other_quality_types'] = common_cura_qulity_types
         context['rename_form'] = SessionRenameForm(instance=self.object)
+        context['sample_cura_config_form'] = SampleCuraConfigForm()
         return context
 
 
@@ -550,10 +551,17 @@ def serve_config(request, pk, slicer):
     session = get_object_or_404(Session, model_ownership_query(request.user), pk=pk)
 
     quality_type = ''
+    sample_config = None
     if request.method == 'POST':
         quality_type = request.POST.get('quality_type', '')
+        if quality_type == '':
+            form = SampleCuraConfigForm(request.POST, request.FILES)
+            if not form.is_valid():
+                messages.error(request, mark_safe('</br>'.join(_(err) for f in form.errors.values() for err in f)))
+                return redirect(reverse('session_overview', args=[pk]))
+            sample_config = form.cleaned_data['slicing_profile_template'].file
 
-    configuration_file, configuration_file_format = api_client.get_config(slicer, session.persistence, quality_type)
+    configuration_file, configuration_file_format = api_client.get_config(slicer, session.persistence, quality_type, sample_config)
     response = HttpResponse(configuration_file, content_type='application/octet-stream')
 
     filename = f'{session.number}_{session.material}_{session.machine}'

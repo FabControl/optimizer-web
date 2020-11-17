@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-25 12:39+0200\n"
+"POT-Creation-Date: 2020-11-17 10:41+0200\n"
 "PO-Revision-Date: 2020-08-21 14:00+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -124,7 +124,7 @@ msgstr "epasts"
 
 #: authentication/forms.py:237
 #: authentication/templates/authentication/my_affiliates.html:36
-#: session/forms.py:285 session/templates/session/session_info.html:10
+#: session/forms.py:314 session/templates/session/session_info.html:10
 msgid "Name"
 msgstr "Vārds"
 
@@ -573,14 +573,18 @@ msgid "One-time payment"
 msgstr "Vienreizējs maksājums"
 
 #: payments/models.py:91
+msgid "Recurring weekly payment"
+msgstr "Iknedēļas maksājums"
+
+#: payments/models.py:93
 msgid "Recurring dayly payment"
 msgstr "Ikdienas maksājums"
 
-#: payments/models.py:93
+#: payments/models.py:95
 msgid "Recurring monthly payment"
 msgstr "Ikmēneša maksājums"
 
-#: payments/models.py:95
+#: payments/models.py:97
 msgid "Recurring yearly payment"
 msgstr "Ikgadējs maksājums"
 
@@ -757,11 +761,16 @@ msgstr ""
 msgid "Cartesian"
 msgstr ""
 
-#: session/forms.py:178
+#: session/forms.py:180
+#, python-format
+msgid "Please keep filesize under %s. Current filesize %s"
+msgstr "Datnes izmērs nedrīkst pārsniegt %s. Šobrīd - %s"
+
+#: session/forms.py:207
 msgid "Min temperature (°C)"
 msgstr "Min. temperatūra (°C)"
 
-#: session/forms.py:179
+#: session/forms.py:208
 #, python-brace-format
 msgid ""
 "Manufacturer's suggested temperature. After the testing process you might "
@@ -772,83 +781,83 @@ msgstr ""
 "cita vērtība. Ja nav ieteiktās temeperatūras, <a href='{help_link}'>šeit</a> "
 "atrodama metode tās noskaidrošanai."
 
-#: session/forms.py:182 session/forms.py:594 session/forms.py:623
-#: session/forms.py:637
+#: session/forms.py:211 session/forms.py:623 session/forms.py:652
+#: session/forms.py:666
 msgid "Max temperature (°C)"
 msgstr "Max. temperatūra (°C)"
 
-#: session/forms.py:183
+#: session/forms.py:212
 msgid "Same as above."
 msgstr "Tāpat kā iepriekšējam laukam."
 
-#: session/forms.py:185 session/templates/session/material_manager.html:25
+#: session/forms.py:214 session/templates/session/material_manager.html:25
 msgid "Material name"
 msgstr "Materiāla nosaukums"
 
-#: session/forms.py:186 session/templates/session/material_manager.html:26
+#: session/forms.py:215 session/templates/session/material_manager.html:26
 msgid "Filament diameter (mm)"
 msgstr "Filamenta diametrs (mm)"
 
-#: session/forms.py:189 session/templates/session/material_manager.html:27
+#: session/forms.py:218 session/templates/session/material_manager.html:27
 msgid "Notes"
 msgstr "Piezīmes"
 
-#: session/forms.py:190
+#: session/forms.py:219
 msgid "(Batch number, color, SKU etc.)"
 msgstr "(Sērijas numurs, krāsa, u.t.t.)"
 
-#: session/forms.py:195 session/templates/session/session_info.html:51
+#: session/forms.py:224 session/templates/session/session_info.html:51
 msgid "Build Plate"
 msgstr "Printēšanas pamatne"
 
-#: session/forms.py:196
+#: session/forms.py:225
 msgid "Other"
 msgstr "Cita"
 
-#: session/forms.py:231
+#: session/forms.py:260
 msgid "Other Build Plate"
 msgstr "Cita printēšanas pamatne"
 
-#: session/forms.py:247 session/templates/session/dashboard.html:111
+#: session/forms.py:276 session/templates/session/dashboard.html:111
 #: session/templates/session/session_manager.html:37
 msgid "Session name"
 msgstr "Sesijas nosaukums"
 
-#: session/forms.py:248 session/templates/session/dashboard.html:112
+#: session/forms.py:277 session/templates/session/dashboard.html:112
 #: session/templates/session/session_info.html:39
 #: session/templates/session/session_manager.html:38
 msgid "Mode"
 msgstr "Režīms"
 
-#: session/forms.py:249 session/templates/session/dashboard.html:115
+#: session/forms.py:278 session/templates/session/dashboard.html:115
 #: session/templates/session/session_info.html:47
 #: session/templates/session/session_manager.html:41
 msgid "Material"
 msgstr "Materiāls"
 
-#: session/forms.py:253 session/templates/session/material_form.html:11
+#: session/forms.py:282 session/templates/session/material_form.html:11
 #: session/templates/session/material_manager.html:16
 msgid "New Material"
 msgstr "Jauns materiāls"
 
-#: session/forms.py:254 session/templates/session/dashboard.html:114
+#: session/forms.py:283 session/templates/session/dashboard.html:114
 #: session/templates/session/session_info.html:43
 #: session/templates/session/session_manager.html:40
 msgid "3D Printer"
 msgstr "3D printeris"
 
-#: session/forms.py:258 session/templates/session/machine_form.html:10
+#: session/forms.py:287 session/templates/session/machine_form.html:10
 #: session/templates/session/machine_manager.html:16
 msgid "New 3D Printer"
 msgstr "Jauns 3D printeris"
 
-#: session/forms.py:259 session/templates/session/dashboard.html:113
+#: session/forms.py:288 session/templates/session/dashboard.html:113
 #: session/templates/session/session_info.html:35
 #: session/templates/session/session_manager.html:39
 msgid "Target"
 msgstr "Mērķis"
 
-#: session/forms.py:264
+#: session/forms.py:293
 #, python-brace-format
 msgid ""
 "Mechanical Strength and Short Printing Time targets require <a href="
@@ -857,88 +866,92 @@ msgstr ""
 "Lai izvēlētos mehānisko izturību vai samazinātu printēšanas laiku, "
 "nepieciešama <a href=\"{link}\">Pilna piekļuve</a>"
 
-#: session/forms.py:268
+#: session/forms.py:297
 #, python-brace-format
 msgid "Advanced mode require <a href=\"{link}\">Full Access</a>"
 msgstr ""
 "Lai izvēlētos profesionāļu (Advanced) testēšanas režīmu nepieciešama <a href="
 "\"{link}\">Pilna piekļuve</a>"
 
-#: session/forms.py:340
+#: session/forms.py:369
 msgid "My notes (optional)"
 msgstr "Piezīmes (var atstāt tukšu)"
 
-#: session/forms.py:371
+#: session/forms.py:400
 msgid "Yes"
 msgstr "Jā"
 
-#: session/forms.py:371
+#: session/forms.py:400
 msgid "No"
 msgstr "Nē"
 
-#: session/forms.py:536
+#: session/forms.py:565
 msgid "3D Printer model"
 msgstr "3D printera modelis"
 
-#: session/forms.py:537
+#: session/forms.py:566
 msgid "Max dimension on X axis (mm)"
 msgstr "Max. koordināte uz X ass (mm)"
 
-#: session/forms.py:538
+#: session/forms.py:567
 msgid "Max dimension on Y axis (mm)"
 msgstr "Max. koordināte uz Y ass (mm)"
 
-#: session/forms.py:540
+#: session/forms.py:569
 msgid "Offset on X axis (mm)"
 msgstr "Nobīde pa X asi (mm)"
 
-#: session/forms.py:541
+#: session/forms.py:570
 msgid "Offset on Y axis (mm)"
 msgstr "Nobīde pa Y asi (mm)"
 
-#: session/forms.py:543 session/templates/session/machine_manager.html:26
+#: session/forms.py:572 session/templates/session/machine_manager.html:26
 msgid "Type"
 msgstr "Tips"
 
-#: session/forms.py:544
+#: session/forms.py:573
 msgid "Extruder type"
 msgstr "Ekstrūdera tips"
 
-#: session/forms.py:546
+#: session/forms.py:575
 msgid "Header"
 msgstr "Sākuma Gkods"
 
-#: session/forms.py:549
+#: session/forms.py:578
 msgid "Footer"
 msgstr "Beigu Gkods"
 
-#: session/forms.py:553
+#: session/forms.py:582
 msgid "Homing script"
 msgstr "Atgriešanās (Homing) Gkods"
 
-#: session/forms.py:593 session/forms.py:621
+#: session/forms.py:622 session/forms.py:650
 msgid "Gcode tool index"
 msgstr "Ekstrūdera numurs Gkodā"
 
-#: session/forms.py:595 session/translatable_backend_strings.py:18
+#: session/forms.py:624 session/translatable_backend_strings.py:18
 msgid "Part cooling"
 msgstr "Detaļas dzesēšana"
 
-#: session/forms.py:608
+#: session/forms.py:637
 msgid "Nozzle's inner diameter (mm)"
 msgstr "Sprauslas iekšējais diametrs (mm)"
 
-#: session/forms.py:622
+#: session/forms.py:651
 msgid "Gcode syntax"
 msgstr "Gkoda sintakse"
 
-#: session/forms.py:624
+#: session/forms.py:653
 msgid "Chamber heatable"
 msgstr "Apsildāma kamera"
 
-#: session/forms.py:639
+#: session/forms.py:668
 msgid "Print bed heatable"
 msgstr "Apsildāma printēšanas platforma"
+
+#: session/forms.py:677
+msgid "Any custom slicing profile, that is compatible with your printer"
+msgstr "Jebkura, ar jūsu pinteri saderīga, konfigurācija"
 
 #: session/migrations/0048_manual_add_session_modes.py:12
 msgid "Advanced"
@@ -948,7 +961,7 @@ msgstr "Advancēts"
 msgid "Guided"
 msgstr "Vadīts"
 
-#: session/migrations/0048_manual_add_session_modes.py:20 session/models.py:590
+#: session/migrations/0048_manual_add_session_modes.py:20 session/models.py:592
 msgid "Core"
 msgstr "Pamata"
 
@@ -1020,11 +1033,11 @@ msgstr ""
 msgid "Direct drive"
 msgstr ""
 
-#: session/models.py:312
+#: session/models.py:316
 msgid "Untitled"
 msgstr "Bez nosaukuma"
 
-#: session/models.py:592
+#: session/models.py:594
 msgid "Optional"
 msgstr "Papildu"
 
@@ -1413,42 +1426,48 @@ msgstr "Sagriešanas (slicing) konfigurācijas"
 #: session/templates/session/session_overview.html:18
 #: session/templates/session/session_overview.html:21
 #: session/templates/session/session_overview.html:24
+#: session/templates/session/session_overview.html:25
 #, python-format
 msgid "Version %(version)s"
 msgstr "Versija %(version)s"
 
-#: session/templates/session/session_overview.html:30
+#: session/templates/session/session_overview.html:31
 msgid "Select profile quality type"
 msgstr "Izvēlēties profila kvalitātes tipu"
 
-#: session/templates/session/session_overview.html:39
+#: session/templates/session/session_overview.html:40
 msgid "Existing Cura profile to use as template:"
 msgstr "Esošā Cura konfigurācija, kuru izmantot kā paraugu:"
 
-#: session/templates/session/session_overview.html:45
+#: session/templates/session/session_overview.html:46
 msgid "*You can find your printer profiles in Cura profile manager."
 msgstr ""
 "*Konfigurācijas var atrast Cura profilu pārvaldniekā (Cura Profile Manager)."
 
-#: session/templates/session/session_overview.html:48
+#: session/templates/session/session_overview.html:49
+#: session/templates/session/session_overview.html:71
 msgid "Download profile"
 msgstr "Lejupielādēt konfigurāciju"
 
-#: session/templates/session/session_overview.html:57
+#: session/templates/session/session_overview.html:59
+msgid "Download Cura 3 slicing profile"
+msgstr "Lejupielādēt Cura 3 konfigurāciju"
+
+#: session/templates/session/session_overview.html:80
 msgid "Test reports"
 msgstr "Testēšanas atskaite"
 
-#: session/templates/session/session_overview.html:62
+#: session/templates/session/session_overview.html:85
 msgid "Download Test Report"
 msgstr "Lejupielādēt testēšanas atskaiti"
 
-#: session/templates/session/session_overview.html:67
+#: session/templates/session/session_overview.html:90
 msgid "Selected parameters"
 msgstr "Izvēlētie parametri"
 
-#: session/templates/session/session_overview.html:77
-#: session/templates/session/session_overview.html:82
-#: session/templates/session/session_overview.html:88
+#: session/templates/session/session_overview.html:100
+#: session/templates/session/session_overview.html:105
+#: session/templates/session/session_overview.html:111
 #, python-format
 msgid "Selected <b>%(param)s</b> value:"
 msgstr "Izvēlētais <b>%(param)s</b>:"
@@ -1987,7 +2006,7 @@ msgstr "Printera \"{printer}\" izmaiņas saglabātas!"
 msgid "3D Printer \"{printer}\" has been created!"
 msgstr "Izveidots 3D printeris \"{printer}\"!"
 
-#: session/views.py:425
+#: session/views.py:426
 #, python-brace-format
 msgid ""
 "Your next test is available in Full Access only. You can skip it and go to "
@@ -1996,7 +2015,7 @@ msgstr ""
 "Jums nepieciešamais tests pieejams tikai ar Pilnu piekļuvi. Varat doties uz "
 "nākamo pieejamo testu vai <a href={link}>iegādāties Pilnu piekļuvi.</a>"
 
-#: session/views.py:429
+#: session/views.py:430
 #, python-brace-format
 msgid ""
 "Your next test is available in Full Access only. You can skip it and go to "
