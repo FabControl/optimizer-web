@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-25 12:39+0200\n"
+"POT-Creation-Date: 2020-11-17 10:41+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -123,7 +123,7 @@ msgstr ""
 
 #: authentication/forms.py:237
 #: authentication/templates/authentication/my_affiliates.html:36
-#: session/forms.py:285 session/templates/session/session_info.html:10
+#: session/forms.py:314 session/templates/session/session_info.html:10
 msgid "Name"
 msgstr ""
 
@@ -554,14 +554,18 @@ msgid "One-time payment"
 msgstr ""
 
 #: payments/models.py:91
-msgid "Recurring dayly payment"
+msgid "Recurring weekly payment"
 msgstr ""
 
 #: payments/models.py:93
-msgid "Recurring monthly payment"
+msgid "Recurring dayly payment"
 msgstr ""
 
 #: payments/models.py:95
+msgid "Recurring monthly payment"
+msgstr ""
+
+#: payments/models.py:97
 msgid "Recurring yearly payment"
 msgstr ""
 
@@ -726,11 +730,16 @@ msgstr ""
 msgid "Cartesian"
 msgstr ""
 
-#: session/forms.py:178
+#: session/forms.py:180
+#, python-format
+msgid "Please keep filesize under %s. Current filesize %s"
+msgstr ""
+
+#: session/forms.py:207
 msgid "Min temperature (°C)"
 msgstr ""
 
-#: session/forms.py:179
+#: session/forms.py:208
 #, python-brace-format
 msgid ""
 "Manufacturer's suggested temperature. After the testing process you might "
@@ -738,168 +747,172 @@ msgid ""
 "to determine it can be faund <a href='{help_link}'>here</a>."
 msgstr ""
 
-#: session/forms.py:182 session/forms.py:594 session/forms.py:623
-#: session/forms.py:637
+#: session/forms.py:211 session/forms.py:623 session/forms.py:652
+#: session/forms.py:666
 msgid "Max temperature (°C)"
 msgstr ""
 
-#: session/forms.py:183
+#: session/forms.py:212
 msgid "Same as above."
 msgstr ""
 
-#: session/forms.py:185 session/templates/session/material_manager.html:25
+#: session/forms.py:214 session/templates/session/material_manager.html:25
 msgid "Material name"
 msgstr ""
 
-#: session/forms.py:186 session/templates/session/material_manager.html:26
+#: session/forms.py:215 session/templates/session/material_manager.html:26
 msgid "Filament diameter (mm)"
 msgstr ""
 
-#: session/forms.py:189 session/templates/session/material_manager.html:27
+#: session/forms.py:218 session/templates/session/material_manager.html:27
 msgid "Notes"
 msgstr ""
 
-#: session/forms.py:190
+#: session/forms.py:219
 msgid "(Batch number, color, SKU etc.)"
 msgstr ""
 
-#: session/forms.py:195 session/templates/session/session_info.html:51
+#: session/forms.py:224 session/templates/session/session_info.html:51
 msgid "Build Plate"
 msgstr ""
 
-#: session/forms.py:196
+#: session/forms.py:225
 msgid "Other"
 msgstr ""
 
-#: session/forms.py:231
+#: session/forms.py:260
 msgid "Other Build Plate"
 msgstr ""
 
-#: session/forms.py:247 session/templates/session/dashboard.html:111
+#: session/forms.py:276 session/templates/session/dashboard.html:111
 #: session/templates/session/session_manager.html:37
 msgid "Session name"
 msgstr ""
 
-#: session/forms.py:248 session/templates/session/dashboard.html:112
+#: session/forms.py:277 session/templates/session/dashboard.html:112
 #: session/templates/session/session_info.html:39
 #: session/templates/session/session_manager.html:38
 msgid "Mode"
 msgstr ""
 
-#: session/forms.py:249 session/templates/session/dashboard.html:115
+#: session/forms.py:278 session/templates/session/dashboard.html:115
 #: session/templates/session/session_info.html:47
 #: session/templates/session/session_manager.html:41
 msgid "Material"
 msgstr ""
 
-#: session/forms.py:253 session/templates/session/material_form.html:11
+#: session/forms.py:282 session/templates/session/material_form.html:11
 #: session/templates/session/material_manager.html:16
 msgid "New Material"
 msgstr ""
 
-#: session/forms.py:254 session/templates/session/dashboard.html:114
+#: session/forms.py:283 session/templates/session/dashboard.html:114
 #: session/templates/session/session_info.html:43
 #: session/templates/session/session_manager.html:40
 msgid "3D Printer"
 msgstr ""
 
-#: session/forms.py:258 session/templates/session/machine_form.html:10
+#: session/forms.py:287 session/templates/session/machine_form.html:10
 #: session/templates/session/machine_manager.html:16
 msgid "New 3D Printer"
 msgstr ""
 
-#: session/forms.py:259 session/templates/session/dashboard.html:113
+#: session/forms.py:288 session/templates/session/dashboard.html:113
 #: session/templates/session/session_info.html:35
 #: session/templates/session/session_manager.html:39
 msgid "Target"
 msgstr ""
 
-#: session/forms.py:264
+#: session/forms.py:293
 #, python-brace-format
 msgid ""
 "Mechanical Strength and Short Printing Time targets require <a href="
 "\"{link}\">Full Access</a>"
 msgstr ""
 
-#: session/forms.py:268
+#: session/forms.py:297
 #, python-brace-format
 msgid "Advanced mode require <a href=\"{link}\">Full Access</a>"
 msgstr ""
 
-#: session/forms.py:340
+#: session/forms.py:369
 msgid "My notes (optional)"
 msgstr ""
 
-#: session/forms.py:371
+#: session/forms.py:400
 msgid "Yes"
 msgstr ""
 
-#: session/forms.py:371
+#: session/forms.py:400
 msgid "No"
 msgstr ""
 
-#: session/forms.py:536
+#: session/forms.py:565
 msgid "3D Printer model"
 msgstr ""
 
-#: session/forms.py:537
+#: session/forms.py:566
 msgid "Max dimension on X axis (mm)"
 msgstr ""
 
-#: session/forms.py:538
+#: session/forms.py:567
 msgid "Max dimension on Y axis (mm)"
 msgstr ""
 
-#: session/forms.py:540
+#: session/forms.py:569
 msgid "Offset on X axis (mm)"
 msgstr ""
 
-#: session/forms.py:541
+#: session/forms.py:570
 msgid "Offset on Y axis (mm)"
 msgstr ""
 
-#: session/forms.py:543 session/templates/session/machine_manager.html:26
+#: session/forms.py:572 session/templates/session/machine_manager.html:26
 msgid "Type"
 msgstr ""
 
-#: session/forms.py:544
+#: session/forms.py:573
 msgid "Extruder type"
 msgstr ""
 
-#: session/forms.py:546
+#: session/forms.py:575
 msgid "Header"
 msgstr ""
 
-#: session/forms.py:549
+#: session/forms.py:578
 msgid "Footer"
 msgstr ""
 
-#: session/forms.py:553
+#: session/forms.py:582
 msgid "Homing script"
 msgstr ""
 
-#: session/forms.py:593 session/forms.py:621
+#: session/forms.py:622 session/forms.py:650
 msgid "Gcode tool index"
 msgstr ""
 
-#: session/forms.py:595 session/translatable_backend_strings.py:18
+#: session/forms.py:624 session/translatable_backend_strings.py:18
 msgid "Part cooling"
 msgstr ""
 
-#: session/forms.py:608
+#: session/forms.py:637
 msgid "Nozzle's inner diameter (mm)"
 msgstr ""
 
-#: session/forms.py:622
+#: session/forms.py:651
 msgid "Gcode syntax"
 msgstr ""
 
-#: session/forms.py:624
+#: session/forms.py:653
 msgid "Chamber heatable"
 msgstr ""
 
-#: session/forms.py:639
+#: session/forms.py:668
 msgid "Print bed heatable"
+msgstr ""
+
+#: session/forms.py:677
+msgid "Any custom slicing profile, that is compatible with your printer"
 msgstr ""
 
 #: session/migrations/0048_manual_add_session_modes.py:12
@@ -910,7 +923,7 @@ msgstr ""
 msgid "Guided"
 msgstr ""
 
-#: session/migrations/0048_manual_add_session_modes.py:20 session/models.py:590
+#: session/migrations/0048_manual_add_session_modes.py:20 session/models.py:592
 msgid "Core"
 msgstr ""
 
@@ -979,11 +992,11 @@ msgstr ""
 msgid "Direct drive"
 msgstr ""
 
-#: session/models.py:312
+#: session/models.py:316
 msgid "Untitled"
 msgstr ""
 
-#: session/models.py:592
+#: session/models.py:594
 msgid "Optional"
 msgstr ""
 
@@ -1350,41 +1363,47 @@ msgstr ""
 #: session/templates/session/session_overview.html:18
 #: session/templates/session/session_overview.html:21
 #: session/templates/session/session_overview.html:24
+#: session/templates/session/session_overview.html:25
 #, python-format
 msgid "Version %(version)s"
 msgstr ""
 
-#: session/templates/session/session_overview.html:30
+#: session/templates/session/session_overview.html:31
 msgid "Select profile quality type"
 msgstr ""
 
-#: session/templates/session/session_overview.html:39
+#: session/templates/session/session_overview.html:40
 msgid "Existing Cura profile to use as template:"
 msgstr ""
 
-#: session/templates/session/session_overview.html:45
+#: session/templates/session/session_overview.html:46
 msgid "*You can find your printer profiles in Cura profile manager."
 msgstr ""
 
-#: session/templates/session/session_overview.html:48
+#: session/templates/session/session_overview.html:49
+#: session/templates/session/session_overview.html:71
 msgid "Download profile"
 msgstr ""
 
-#: session/templates/session/session_overview.html:57
+#: session/templates/session/session_overview.html:59
+msgid "Download Cura 3 slicing profile"
+msgstr ""
+
+#: session/templates/session/session_overview.html:80
 msgid "Test reports"
 msgstr ""
 
-#: session/templates/session/session_overview.html:62
+#: session/templates/session/session_overview.html:85
 msgid "Download Test Report"
 msgstr ""
 
-#: session/templates/session/session_overview.html:67
+#: session/templates/session/session_overview.html:90
 msgid "Selected parameters"
 msgstr ""
 
-#: session/templates/session/session_overview.html:77
-#: session/templates/session/session_overview.html:82
-#: session/templates/session/session_overview.html:88
+#: session/templates/session/session_overview.html:100
+#: session/templates/session/session_overview.html:105
+#: session/templates/session/session_overview.html:111
 #, python-format
 msgid "Selected <b>%(param)s</b> value:"
 msgstr ""
@@ -1854,14 +1873,14 @@ msgstr ""
 msgid "3D Printer \"{printer}\" has been created!"
 msgstr ""
 
-#: session/views.py:425
+#: session/views.py:426
 #, python-brace-format
 msgid ""
 "Your next test is available in Full Access only. You can skip it and go to "
 "the next available test or <a href={link}>purchase Full Access.</a>"
 msgstr ""
 
-#: session/views.py:429
+#: session/views.py:430
 #, python-brace-format
 msgid ""
 "Your next test is available in Full Access only. You can skip it and go to "
