@@ -21,7 +21,7 @@
           <button type="button" class="btn btn-block btn-primary" onclick="location.href='{% url 'config' pk=object.pk slicer='simplify3d' %}'" name="button">Simplify3D<br><small>{% blocktrans with version='4.1' %}Version {{ version }}{% endblocktrans %}</small></button>
         </div>
         <div class="col-sm">
-          <button type="button" id="curaBtn" class="btn btn-block btn-primary" data-toggle="modal" data-target="#curaQualtyTypePrompt" name="button">Ultimaker Cura<br><small>{% blocktrans with version='4.6.1' %}Version {{ version }}{% endblocktrans %}</small></button>
+          <button type="button" id="curaBtn" class="btn btn-block btn-primary" data-toggle="modal" data-target="#curaQualtyTypePrompt" name="button">Ultimaker Cura<br><small>{% blocktrans with version='4.8.0' %}Version {{ version }}{% endblocktrans %}</small></button>
           <div class="pt-3 text-center"><a href="#" data-toggle="modal" data-target="#cura-3-modal">Cura {% blocktrans with version='3' %}Version {{ version }}{% endblocktrans %}</a></div>
         </div>
         <div class="modal fade" id="curaQualtyTypePrompt" tabindex="-1" role="dialog" aria-labelledby="curaModalLabel" aria-hidden="true">
