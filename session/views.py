@@ -316,6 +316,7 @@ class SessionValidateView(SessionView):
             return redirect('session_next_test', pk=session.pk, priority="any")
 
     def form_invalid(self, form):
+        logging.getLogger("views").info(form.errors.as_json())
         return redirect('session_validate_back', pk=self.object.pk)
 
 
@@ -373,6 +374,7 @@ class GuidedValidateView(GuidedSessionView):
 
 
     def form_invalid(self, form):
+        logging.getLogger("views").info(form.errors.as_json())
         return redirect('session_validate_back', pk=self.object.pk)
 
 
@@ -437,18 +439,18 @@ def session_dispatcher(request, pk, download=1):
     if session.mode.type == 'normal':
         # Check if session should be in Generate or Validate state
         if session.executed:
-            logging.getLogger("views").info("{} is initializing Session validation view!".format(request.user))
+            logging.getLogger("views").info("{} is initializing advanced Session validation view!".format(request.user))
             return SessionValidateView.as_view()(request, pk=pk, download=download)
         else:
-            logging.getLogger("views").info("{} is initializing Session generation view!".format(request.user))
+            logging.getLogger("views").info("{} is initializing advanced Session generation view!".format(request.user))
             return SessionView.as_view()(request, pk=pk)
 
     elif session.mode.type == 'guided':
         if session.executed:
-            logging.getLogger("views").info("{} is initializing Session validation view!".format(request.user))
+            logging.getLogger("views").info("{} is initializing guided Session validation view!".format(request.user))
             return GuidedValidateView.as_view()(request, pk=pk, download=download)
         else:
-            logging.getLogger("views").info("{} is initializing Session generation view!".format(request.user))
+            logging.getLogger("views").info("{} is initializing guided Session generation view!".format(request.user))
             return GuidedSessionView.as_view()(request, pk=pk)
 
 
