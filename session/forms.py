@@ -205,7 +205,7 @@ class MaterialForm(MultiDecimalSeperatorModelForm):
         super(MaterialForm, self).__init__(*args, **kwargs)
 
         self.fields['min_temperature'].label = _("Min temperature (°C)")
-        hlp_txt = _("Manufacturer's suggested temperature. After the testing process you might end up with a different temperature. If you do not have this data, a method to determine it can be faund <a href='{help_link}'>here</a>.")
+        hlp_txt = _("Manufacturer's suggested temperature. After the testing process you might end up with a different temperature. If you do not have this data, a method to determine it can be found <a href='{help_link}'>here</a>.")
         self.fields['min_temperature'].help_text = mark_safe(hlp_txt.format(help_link='https://3doptimizer.helpscoutdocs.com/article/42-determining-initial-printing-temperature'))
 
         self.fields['max_temperature'].label = _("Max temperature (°C)")
