@@ -33,49 +33,56 @@ class PaymentPlansView(LoginRequiredMixin, BaseFormView):
     def get(self, request, *a, **k):
         if request.user.is_authenticated:
             country = request.user.company_country
+            show_plans = not request.user.custom_payments
         else:
             country = ''
 
-        if country == '' and hasattr(request, 'geolocation'):
-            country = request.geolocation['county']['code']
+        if show_plans:
+            if country == '' and hasattr(request, 'geolocation'):
+                country = request.geolocation['county']['code']
 
-        currencies = []
-        if country != '':
-            currencies = Currency.objects.filter(_countries__contains=country)
+            currencies = []
+            if country != '':
+                currencies = Currency.objects.filter(_countries__contains=country)
 
-        if len(currencies) < 1:
-            currencies = Currency.objects.filter(name='USD')
+            if len(currencies) < 1:
+                currencies = Currency.objects.filter(name='USD')
 
-        plans = Plan.objects.filter(type='premium', currency__in=currencies).order_by('price')
-        for plan in plans:
-            plan.banner_image = static('payments/images/' + ('week' if plan.interval is '' else plan.interval) + '.png')
-            if plan.interval == 'month':
-                plan.popular_badge = True
+            plans = Plan.objects.filter(type='premium', currency__in=currencies).order_by('price')
+            for plan in plans:
+                plan.banner_image = static('payments/images/' + ('week' if plan.interval is '' else plan.interval) + '.png')
+                if plan.interval == 'month':
+                    plan.popular_badge = True
 
-        corporation_plans = Plan.objects.filter(type='corporate',
-                                                currency__in=currencies
-                                                ).order_by('price').annotate(
-                                                        popular_badge=models.Case(
-                                                                    models.When(max_users_allowed=5,
-                                                                                interval='year',
-                                                                                then=True),
-                                                                    default=False,
-                                                                    output_field=models.BooleanField()))
+            corporation_plans = Plan.objects.filter(type='corporate',
+                                                    currency__in=currencies
+                                                    ).order_by('price').annotate(
+                                                            popular_badge=models.Case(
+                                                                        models.When(max_users_allowed=5,
+                                                                                    interval='year',
+                                                                                    then=True),
+                                                                        default=False,
+                                                                        output_field=models.BooleanField()))
 
 
-        context = {'plans': plans,
-                    'voucher_form': VoucherRedeemForm(),
-                   'corporation_plans': corporation_plans}
+            context = {'plans': plans,
+                        'voucher_form': VoucherRedeemForm(),
+                       'corporation_plans': corporation_plans}
+
+            context['section'] = self.kwargs.get('section', None)
+            context['active_subscriptions'] = request.user.active_subscriptions
+        else:
+            context = {}
 
         days_remaining = request.user.subscription_expiration - timezone.now()
         context['expiration'] = days_remaining.days + 1
-        context['section'] = self.kwargs.get('section', None)
-        context['active_subscriptions'] = request.user.active_subscriptions
 
         return render(request, 'payments/plans.html', context)
 
     @method_decorator(login_required)
     def post(self, request, *a, **k):
+        if request.user.custom_payments:
+            return Http404()
         form = self.get_form()
         if form.is_valid():
             checkout_id = form.create_invoice(request.user, request)

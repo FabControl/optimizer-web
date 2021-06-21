@@ -88,6 +88,8 @@ class User(AbstractUser):
 
     information_reference = models.CharField(gettext_lazy('Where did you find out about 3DOptimizer?'),
                                       max_length=150, blank=True, default='')
+    custom_payments = models.BooleanField(default=False,
+                                        help_text="Mark true to hide subscriptions page from user")
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 

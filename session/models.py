@@ -634,6 +634,15 @@ class Session(models.Model, DependenciesCopyMixin):
                 t['parameter_three_name'] = _(t['parameter_three_name'])
         return tests
 
+    @property
+    def following_tests_executed(self):
+        tests = [x["test_number"] for x in self.previous_tests]
+        if len(tests) < 1:
+            return False
+        tests.sort()
+        return int(tests[-1]) > int(self.test_info["test_number"])
+
+
     def previous_tests_as_dict(self):
         """
         A shortcut method for retrieving a dict of dicts of previous test data.

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-17 10:41+0200\n"
+"POT-Creation-Date: 2021-06-21 09:09+0300\n"
 "PO-Revision-Date: 2020-09-12 20:38+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -47,14 +47,14 @@ msgid "Translations"
 msgstr ""
 
 #: administration/templates/administration/admin_index.html:15
-#: authentication/templates/authentication/legal_info.html:84
+#: authentication/templates/authentication/legal_info.html:85
 msgid "Change"
 msgstr "Changer"
 
 #: authentication/forms.py:28 authentication/forms.py:65
 #: authentication/forms.py:234
 #: authentication/templates/authentication/account_activation.html:15
-#: authentication/templates/authentication/legal_info.html:109
+#: authentication/templates/authentication/legal_info.html:111
 #: authentication/templates/authentication/my_affiliates.html:37
 msgid "Email"
 msgstr "Adresse e-mail"
@@ -134,58 +134,58 @@ msgstr "Nom"
 msgid "Where did you find out about 3DOptimizer?"
 msgstr ""
 
-#: authentication/models.py:138 session/templates/session/navbar.html:49
+#: authentication/models.py:140 session/templates/session/navbar.html:49
 msgid "Upgrade to Full Access"
 msgstr "Mise à niveau à l'ensemble des fonctionnalités"
 
-#: authentication/models.py:140
+#: authentication/models.py:142
 msgid "Permanent License"
 msgstr "Licence Permanente"
 
-#: authentication/models.py:142
+#: authentication/models.py:144
 #, python-brace-format
 msgid "Educational License ({expiration} Day)"
 msgid_plural "Educational License ({expiration} Days)"
 msgstr[0] "Licence étudiant ({expiration} Day)"
 msgstr[1] "Licences étudiants ({expiration} Days)"
 
-#: authentication/models.py:147
+#: authentication/models.py:149
 #, python-brace-format
 msgid "Full Access ({expiration} Day)"
 msgid_plural "Full Access ({expiration} Days)"
 msgstr[0] "Accès complet  ({expiration} Day)"
 msgstr[1] "Accès complet ({expiration} Days)"
 
-#: authentication/models.py:151
+#: authentication/models.py:153
 msgid "Full Access"
 msgstr "Accès complet"
 
-#: authentication/models.py:153
+#: authentication/models.py:155
 #, python-brace-format
 msgid "Test Access ({expiration} Day)"
 msgid_plural "Test Access ({expiration} Days)"
 msgstr[0] "Accès au test ({expiration} Day)"
 msgstr[1] "Accès aux tests ({expiration} Days)"
 
-#: authentication/models.py:157
+#: authentication/models.py:159
 #, python-brace-format
 msgid "Limited Access ({expiration} Day)"
 msgid_plural "Limited Access ({expiration} Days)"
 msgstr[0] "Accès limité ({expiration} Day)"
 msgstr[1] "Accès limités ({expiration} Days)"
 
-#: authentication/models.py:299
+#: authentication/models.py:301
 #, python-format
 msgid "Registered on %(date)s"
 msgstr "Enregistré le %(date)s"
 
-#: authentication/models.py:301
-#: authentication/templates/authentication/legal_info.html:174
-#: authentication/templates/authentication/legal_info.html:214
+#: authentication/models.py:303
+#: authentication/templates/authentication/legal_info.html:176
+#: authentication/templates/authentication/legal_info.html:216
 msgid "Invitation sent"
 msgstr "Invitation envoyée"
 
-#: authentication/models.py:306
+#: authentication/models.py:308
 #, python-format
 msgid "Received %(days)d days full access"
 msgstr "Reçu %(days)d jours accès complet"
@@ -237,20 +237,20 @@ msgstr "Changer de mot de passe"
 msgid "Save"
 msgstr "Sauvegarder"
 
-#: authentication/templates/authentication/legal_info.html:60
+#: authentication/templates/authentication/legal_info.html:61
 msgid "Subscription and payments"
 msgstr "Abonnements et paiements"
 
-#: authentication/templates/authentication/legal_info.html:66
+#: authentication/templates/authentication/legal_info.html:67
 msgid "Active subscription:"
 msgstr "Activer l'abonnement:"
 
-#: authentication/templates/authentication/legal_info.html:71
-#: authentication/templates/authentication/legal_info.html:79
+#: authentication/templates/authentication/legal_info.html:72
+#: authentication/templates/authentication/legal_info.html:80
 msgid "Cancel subscription"
 msgstr "Annuler l'abonnement"
 
-#: authentication/templates/authentication/legal_info.html:75
+#: authentication/templates/authentication/legal_info.html:76
 msgid ""
 "By pressing \"Cancel subscription\", you confirm cancellation of full access "
 "subscription."
@@ -258,96 +258,96 @@ msgstr ""
 "En appuyant sur \"Cancel subscription\", vous confirmez l'abandon à l'accès "
 "complet de votre abonnement."
 
-#: authentication/templates/authentication/legal_info.html:76
+#: authentication/templates/authentication/legal_info.html:77
 #, python-format
 msgid "You will have full access till %(end_date)s."
 msgstr "Vous aurez un accès complet jusqu'au %(end_date)s."
 
-#: authentication/templates/authentication/legal_info.html:84
+#: authentication/templates/authentication/legal_info.html:85
 msgid "Payment method:"
 msgstr "Méthode de paiement:"
 
-#: authentication/templates/authentication/legal_info.html:86
+#: authentication/templates/authentication/legal_info.html:87
 msgid "You don't have active subscription."
 msgstr "Vous n'avez pas d'abonnement actif."
 
-#: authentication/templates/authentication/legal_info.html:87
-#: payments/templates/payments/plans.html:113
-#: payments/templates/payments/plans.html:173
+#: authentication/templates/authentication/legal_info.html:88
+#: payments/templates/payments/plans.html:119
+#: payments/templates/payments/plans.html:180
 msgid "Purchase"
 msgstr "Poursuivre"
 
-#: authentication/templates/authentication/legal_info.html:98
+#: authentication/templates/authentication/legal_info.html:100
 #: session/templates/session/dashboard.html:52
 #: session/templates/session/navbar.html:79
 msgid "Users"
 msgstr "Utilisateurs"
 
-#: authentication/templates/authentication/legal_info.html:108
-#: authentication/templates/authentication/legal_info.html:121
+#: authentication/templates/authentication/legal_info.html:110
+#: authentication/templates/authentication/legal_info.html:123
 #: session/templates/session/team_stats.html:27
 msgid "User"
 msgstr "Utilisateur"
 
-#: authentication/templates/authentication/legal_info.html:110
+#: authentication/templates/authentication/legal_info.html:112
 msgid "Role"
 msgstr "Rôle"
 
-#: authentication/templates/authentication/legal_info.html:111
+#: authentication/templates/authentication/legal_info.html:113
 #: session/templates/session/team_stats.html:28
 msgid "Last active"
 msgstr "Dernière activité"
 
-#: authentication/templates/authentication/legal_info.html:121
+#: authentication/templates/authentication/legal_info.html:123
 #: session/templates/session/machine_manager.html:29
 #: session/templates/session/material_manager.html:29
 msgid "Owner"
 msgstr "Propriétaire"
 
-#: authentication/templates/authentication/legal_info.html:121
+#: authentication/templates/authentication/legal_info.html:123
 msgid "Manager"
 msgstr "Directeur"
 
-#: authentication/templates/authentication/legal_info.html:128
-#: authentication/templates/authentication/legal_info.html:180
-#: authentication/templates/authentication/legal_info.html:220
+#: authentication/templates/authentication/legal_info.html:130
+#: authentication/templates/authentication/legal_info.html:182
+#: authentication/templates/authentication/legal_info.html:222
 #: session/templates/session/machine_manager.html:45
 #: session/templates/session/material_manager.html:45
 #: session/templates/session/session_manager.html:66
 msgid "Action"
 msgstr "Fonction"
 
-#: authentication/templates/authentication/legal_info.html:135
+#: authentication/templates/authentication/legal_info.html:137
 msgid "Resign manager role"
 msgstr "Démissionner du rôle de gestionnaire"
 
-#: authentication/templates/authentication/legal_info.html:135
+#: authentication/templates/authentication/legal_info.html:137
 msgid "Assign manager role"
 msgstr "Attribuer le rôle de gestionnaire"
 
-#: authentication/templates/authentication/legal_info.html:138
-#: authentication/templates/authentication/legal_info.html:158
+#: authentication/templates/authentication/legal_info.html:140
+#: authentication/templates/authentication/legal_info.html:160
 msgid "Leave"
 msgstr "Quitter"
 
-#: authentication/templates/authentication/legal_info.html:138
-#: authentication/templates/authentication/legal_info.html:158
-#: authentication/templates/authentication/legal_info.html:183
-#: authentication/templates/authentication/legal_info.html:199
-#: authentication/templates/authentication/legal_info.html:223
-#: authentication/templates/authentication/legal_info.html:239
+#: authentication/templates/authentication/legal_info.html:140
+#: authentication/templates/authentication/legal_info.html:160
+#: authentication/templates/authentication/legal_info.html:185
+#: authentication/templates/authentication/legal_info.html:201
+#: authentication/templates/authentication/legal_info.html:225
+#: authentication/templates/authentication/legal_info.html:241
 msgid "Remove"
 msgstr "Supprimer"
 
-#: authentication/templates/authentication/legal_info.html:144
+#: authentication/templates/authentication/legal_info.html:146
 msgid "Leave company"
 msgstr "Quitter l'entreprise"
 
-#: authentication/templates/authentication/legal_info.html:144
+#: authentication/templates/authentication/legal_info.html:146
 msgid "Remove from company"
 msgstr "Licenciement de l'entreprise"
 
-#: authentication/templates/authentication/legal_info.html:149
+#: authentication/templates/authentication/legal_info.html:151
 msgid ""
 "If you leave company, you won't have access to it's printers, materials and "
 "testing sessions."
@@ -355,8 +355,8 @@ msgstr ""
 "Si vous quittez l'entreprise, vous n'aurez pas accès à ses imprimantes, à "
 "son matériel et à ses séances d'essai."
 
-#: authentication/templates/authentication/legal_info.html:151
-#: authentication/templates/authentication/legal_info.html:193
+#: authentication/templates/authentication/legal_info.html:153
+#: authentication/templates/authentication/legal_info.html:195
 #, python-format
 msgid ""
 "By pressing \"Remove\", you confirm removal of <b>%(first)s %(last)s</b> "
@@ -365,12 +365,12 @@ msgstr ""
 "En appuyant sur \"Supprimer\", vous confirmez la suppression de <b>%(first)s "
 "%(last)s</b> de votre entreprise."
 
-#: authentication/templates/authentication/legal_info.html:189
-#: authentication/templates/authentication/legal_info.html:229
+#: authentication/templates/authentication/legal_info.html:191
+#: authentication/templates/authentication/legal_info.html:231
 msgid "Remove from corporation"
 msgstr "Sorti de l'entreprise"
 
-#: authentication/templates/authentication/legal_info.html:233
+#: authentication/templates/authentication/legal_info.html:235
 #, python-format
 msgid ""
 "By pressing \"Remove\", you confirm removal of <b>%(name)s</b> from your "
@@ -379,16 +379,16 @@ msgstr ""
 "En appuyant sur \"Remove\", vous confirmez la suppression de <b>%(name)s</b> "
 "de votre entreprise."
 
-#: authentication/templates/authentication/legal_info.html:259
+#: authentication/templates/authentication/legal_info.html:261
 msgid "Invite user"
 msgstr "Inviter un utilisateur"
 
-#: authentication/templates/authentication/legal_info.html:269
+#: authentication/templates/authentication/legal_info.html:271
 #, python-format
 msgid "%(count)s of %(allowed)s users registered"
 msgstr "%(count)s of %(allowed)s d'utilisateurs enregistrés"
 
-#: authentication/templates/authentication/legal_info.html:275
+#: authentication/templates/authentication/legal_info.html:277
 msgid "Upgrade to add more users"
 msgstr "Mettre à jour pour ajouter des utilisateurs"
 
@@ -623,44 +623,52 @@ msgid_plural "%(expiration)s days of full access remaining."
 msgstr[0] "%(expiration)s jour d'accès complet restant."
 msgstr[1] "%(expiration)s jours d'accès complet restant."
 
-#: payments/templates/payments/plans.html:69
+#: payments/templates/payments/plans.html:70
+#, fuzzy, python-format
+#| msgid "If you need different setup or more users, contact %(support)s"
+msgid "To extend Full Access, contact %(support)s"
+msgstr ""
+"Si vous avez besoin d'une configuration différente ou de plusieurs "
+"utilisateurs, contactez %(support)s"
+
+#: payments/templates/payments/plans.html:75
 msgid "Individual"
 msgstr "Individuel"
 
-#: payments/templates/payments/plans.html:72
+#: payments/templates/payments/plans.html:78
 msgid "Business"
 msgstr "Entreprises"
 
-#: payments/templates/payments/plans.html:75
+#: payments/templates/payments/plans.html:81
 msgid "Education"
 msgstr "Éducation"
 
-#: payments/templates/payments/plans.html:99
-#: payments/templates/payments/plans.html:158
+#: payments/templates/payments/plans.html:105
+#: payments/templates/payments/plans.html:165
 msgid "All tests"
 msgstr "Tous les tests"
 
-#: payments/templates/payments/plans.html:100
-#: payments/templates/payments/plans.html:159
+#: payments/templates/payments/plans.html:106
+#: payments/templates/payments/plans.html:166
 msgid "Full guided testing mode"
 msgstr "Session d'essai entièrement guidé"
 
-#: payments/templates/payments/plans.html:101
-#: payments/templates/payments/plans.html:160
+#: payments/templates/payments/plans.html:107
+#: payments/templates/payments/plans.html:167
 msgid "Advanced testing mode"
 msgstr "Mode de test avancé"
 
-#: payments/templates/payments/plans.html:102
-#: payments/templates/payments/plans.html:162
+#: payments/templates/payments/plans.html:108
+#: payments/templates/payments/plans.html:169
 msgid "Email support"
 msgstr "Assistance par e-mail"
 
-#: payments/templates/payments/plans.html:110
-#: payments/templates/payments/plans.html:170
+#: payments/templates/payments/plans.html:116
+#: payments/templates/payments/plans.html:177
 msgid "Currently active"
 msgstr "Actuellement en activité"
 
-#: payments/templates/payments/plans.html:124
+#: payments/templates/payments/plans.html:130
 msgid ""
 "If you’re not happy with our software for any reason, we’ll refund your "
 "money within a week from payment date no-questions-asked."
@@ -669,29 +677,29 @@ msgstr ""
 "nous vous rembourserons dans un délai d'une semaine à compter de la date de "
 "paiement, sans poser de questions."
 
-#: payments/templates/payments/plans.html:138
+#: payments/templates/payments/plans.html:145
 msgid "Payment plans"
 msgstr "Modalités de paiement"
 
-#: payments/templates/payments/plans.html:161
+#: payments/templates/payments/plans.html:168
 #, python-format
 msgid "%(users)s user included"
 msgid_plural "%(users)s users included"
 msgstr[0] "%(users)s utilisateur inclus"
 msgstr[1] "%(users)s utilisateurs inclus"
 
-#: payments/templates/payments/plans.html:184
+#: payments/templates/payments/plans.html:191
 #, python-format
 msgid "If you need different setup or more users, contact %(support)s"
 msgstr ""
 "Si vous avez besoin d'une configuration différente ou de plusieurs "
 "utilisateurs, contactez %(support)s"
 
-#: payments/templates/payments/plans.html:190
+#: payments/templates/payments/plans.html:197
 msgid "Individual account"
 msgstr "Compte individuel"
 
-#: payments/templates/payments/plans.html:193
+#: payments/templates/payments/plans.html:200
 #, python-format
 msgid ""
 "Free full access for individual students and teachers - </br><a "
@@ -701,55 +709,55 @@ msgstr ""
 "br><a %(support)s>contact support</a> après avoir créé un compte gratuit à "
 "activer."
 
-#: payments/templates/payments/plans.html:196
+#: payments/templates/payments/plans.html:203
 msgid "Educational institution account"
 msgstr "Compte de l'établissement scolaire"
 
-#: payments/templates/payments/plans.html:199
+#: payments/templates/payments/plans.html:206
 #, python-format
 msgid "We offer discounts for multi-user accounts — contact %(sales)s."
 msgstr ""
 "Nous offrons des réductions pour les comptes multi-utilisateurs - contact "
 "%(sales)s."
 
-#: payments/views.py:101
+#: payments/views.py:108
 msgid "Your checkout was cancelled"
 msgstr "Votre commande a été annulée"
 
-#: payments/views.py:111 payments/views.py:134
+#: payments/views.py:118 payments/views.py:141
 msgid "Your session has expired"
 msgstr "Votre session a expiré"
 
-#: payments/views.py:115 payments/views.py:361
+#: payments/views.py:122 payments/views.py:368
 #, python-format
 msgid "Your full access was extended for %(day)d day"
 msgid_plural "Your full access was extended for %(day)d days"
 msgstr[0] "Votre accès complet a été étendu pour %(day)d jour"
 msgstr[1] "Votre accès complet a été étendu pour %(day)d jours"
 
-#: payments/views.py:119
+#: payments/views.py:126
 msgid "Subscription successful"
 msgstr "Abonnement réussi"
 
-#: payments/views.py:126
+#: payments/views.py:133
 msgid "We haven't received your payment yet. Please check after few minutes"
 msgstr ""
 "Nous n'avons pas encore reçu votre paiement. Veuillez vérifier après "
 "quelques minutes"
 
-#: payments/views.py:171
+#: payments/views.py:178
 msgid "Subscription payment method changed!"
 msgstr "Le mode de paiement des abonnements a changé !"
 
-#: payments/views.py:177
+#: payments/views.py:184
 msgid "Something went wrong. Please try again later."
 msgstr "Un problème est survenu. Veuillez réessayer plus tard."
 
-#: payments/views.py:196
+#: payments/views.py:203
 msgid "Subscription cancelled"
 msgstr "Abonnement annulé"
 
-#: payments/views.py:365
+#: payments/views.py:372
 msgid "Provided voucher code is not valid"
 msgstr "Le code du ticket de réduction n'est pas valide"
 
@@ -2047,7 +2055,7 @@ msgstr "{printer} a été mis à jour !"
 msgid "3D Printer \"{printer}\" has been created!"
 msgstr "L'imprimante 3D \"{printer}\" a été créé !"
 
-#: session/views.py:426
+#: session/views.py:428
 #, python-brace-format
 msgid ""
 "Your next test is available in Full Access only. You can skip it and go to "
@@ -2057,7 +2065,7 @@ msgstr ""
 "pouvez le sauter et passer au prochain test disponible ou <a href={link}"
 ">purchase Full Access.</a>"
 
-#: session/views.py:430
+#: session/views.py:432
 #, python-brace-format
 msgid ""
 "Your next test is available in Full Access only. You can skip it and go to "
