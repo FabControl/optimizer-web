@@ -294,6 +294,7 @@ class SessionView(SessionTestsSelectionMixin, LoginRequiredMixin, generic.Update
         # Do any custom stuff here
         session.persistence = api_client.return_data(session.persistence, "persistence")
         session.update_test_info()
+        session.delete_previous_test(int(session.test_info["test_number"]) + 1)
         session.save()
         return redirect('session_detail', pk=session.pk)
 
