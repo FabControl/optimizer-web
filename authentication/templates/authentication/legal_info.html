@@ -53,42 +53,44 @@
         </div>
         {% if request.user.member_of_corporation and request.user.member_of_corporation.owner != request.user %}
         {% else %}
-        <div class="card">
-          <div class="card-header" id="headingTwo" data-toggle="collapse" data-target="#subscriptionInfo">
-            <a name="subscription"></a>
-            <h2 class="mb-0">
-              <button type="button" class="btn btn-link collapsed">{% trans 'Subscription and payments' %}</button>
-            </h2>
-          </div>
-          <div id="subscriptionInfo" class="collapse{% if category == 'subscription' %} show {% endif %}" aria-labelledby="headingTwo" data-parent="#myAccordion">
-            <div class="card-body">
-              {% if subscription %}
-              <p>{% trans 'Active subscription:' %} <b><a href="{% url 'plans' %}">{{ subscription.payment_plan.name }}</a></b> | <a data-toggle="modal" data-target="#cancelationPrompt" href="">Cancel subscription</a></p>
-              <div class="modal fade" id="cancelationPrompt" role="dialog">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h4 class="modal-title">{% trans 'Cancel subscription' %}</h4>
-                      <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                      <p>{% trans 'By pressing "Cancel subscription", you confirm cancellation of full access subscription.' %}</p>
-                      <small>{% blocktrans with end_date=request.user.subscription_expiration|date:"Y-m-d" %}You will have full access till {{ end_date }}.{% endblocktrans %}</small>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-danger" onclick="location.href='{% url 'cancel_subscription' subscription.pk %}'">{% trans 'Cancel subscription' %}</button>
+          {% if not request.user.custom_payments %}
+          <div class="card">
+            <div class="card-header" id="headingTwo" data-toggle="collapse" data-target="#subscriptionInfo">
+              <a name="subscription"></a>
+              <h2 class="mb-0">
+                <button type="button" class="btn btn-link collapsed">{% trans 'Subscription and payments' %}</button>
+              </h2>
+            </div>
+            <div id="subscriptionInfo" class="collapse{% if category == 'subscription' %} show {% endif %}" aria-labelledby="headingTwo" data-parent="#myAccordion">
+              <div class="card-body">
+                {% if subscription %}
+                <p>{% trans 'Active subscription:' %} <b><a href="{% url 'plans' %}">{{ subscription.payment_plan.name }}</a></b> | <a data-toggle="modal" data-target="#cancelationPrompt" href="">Cancel subscription</a></p>
+                <div class="modal fade" id="cancelationPrompt" role="dialog">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h4 class="modal-title">{% trans 'Cancel subscription' %}</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      </div>
+                      <div class="modal-body">
+                        <p>{% trans 'By pressing "Cancel subscription", you confirm cancellation of full access subscription.' %}</p>
+                        <small>{% blocktrans with end_date=request.user.subscription_expiration|date:"Y-m-d" %}You will have full access till {{ end_date }}.{% endblocktrans %}</small>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" onclick="location.href='{% url 'cancel_subscription' subscription.pk %}'">{% trans 'Cancel subscription' %}</button>
+                      </div>
                     </div>
                   </div>
                 </div>
+                <p>{% trans 'Payment method:' %} {{ subscription.card_info|title }} <a href="{% url 'update_payment_method' subscription.pk %}">{% trans 'Change' %}</a></p>
+                {% else %}
+                  <p>{% trans "You don't have active subscription." %}</p>
+                  <button type="button" onclick="location.href='{% url 'plans' %}'" class="btn btn-primary btn">{% trans 'Purchase' %}</button>
+                {% endif %}
               </div>
-              <p>{% trans 'Payment method:' %} {{ subscription.card_info|title }} <a href="{% url 'update_payment_method' subscription.pk %}">{% trans 'Change' %}</a></p>
-              {% else %}
-                <p>{% trans "You don't have active subscription." %}</p>
-                <button type="button" onclick="location.href='{% url 'plans' %}'" class="btn btn-primary btn">{% trans 'Purchase' %}</button>
-              {% endif %}
             </div>
           </div>
-        </div>
+          {% endif %}
         {% endif %}
         {% if request.user.member_of_corporation %}
         <div class="card">

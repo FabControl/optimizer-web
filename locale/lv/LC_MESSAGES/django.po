@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-17 10:41+0200\n"
+"POT-Creation-Date: 2021-06-21 09:09+0300\n"
 "PO-Revision-Date: 2020-08-21 14:00+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -48,14 +48,14 @@ msgid "Translations"
 msgstr ""
 
 #: administration/templates/administration/admin_index.html:15
-#: authentication/templates/authentication/legal_info.html:84
+#: authentication/templates/authentication/legal_info.html:85
 msgid "Change"
 msgstr "Mainīt"
 
 #: authentication/forms.py:28 authentication/forms.py:65
 #: authentication/forms.py:234
 #: authentication/templates/authentication/account_activation.html:15
-#: authentication/templates/authentication/legal_info.html:109
+#: authentication/templates/authentication/legal_info.html:111
 #: authentication/templates/authentication/my_affiliates.html:37
 msgid "Email"
 msgstr "Epasts"
@@ -132,15 +132,15 @@ msgstr "Vārds"
 msgid "Where did you find out about 3DOptimizer?"
 msgstr "Kur Jūs uzzinājāt par 3DOptimizer?"
 
-#: authentication/models.py:138 session/templates/session/navbar.html:49
+#: authentication/models.py:140 session/templates/session/navbar.html:49
 msgid "Upgrade to Full Access"
 msgstr "Iegādāties pilnu piekļuvi"
 
-#: authentication/models.py:140
+#: authentication/models.py:142
 msgid "Permanent License"
 msgstr "Bezlimita licence"
 
-#: authentication/models.py:142
+#: authentication/models.py:144
 #, python-brace-format
 msgid "Educational License ({expiration} Day)"
 msgid_plural "Educational License ({expiration} Days)"
@@ -148,7 +148,7 @@ msgstr[0] "Izglītības licence ({expiration} diena)"
 msgstr[1] "Izglītības licence ({expiration} dienas)"
 msgstr[2] "Izglītības licence ({expiration} dienas)"
 
-#: authentication/models.py:147
+#: authentication/models.py:149
 #, python-brace-format
 msgid "Full Access ({expiration} Day)"
 msgid_plural "Full Access ({expiration} Days)"
@@ -156,11 +156,11 @@ msgstr[0] "Pilna piekļuve ({expiration} diena)"
 msgstr[1] "Pilna piekļuve ({expiration} dienas)"
 msgstr[2] "Pilna piekļuve ({expiration} dienas)"
 
-#: authentication/models.py:151
+#: authentication/models.py:153
 msgid "Full Access"
 msgstr "Pilna piekļuve"
 
-#: authentication/models.py:153
+#: authentication/models.py:155
 #, python-brace-format
 msgid "Test Access ({expiration} Day)"
 msgid_plural "Test Access ({expiration} Days)"
@@ -168,7 +168,7 @@ msgstr[0] "Testa piekļuve ({expiration} diena)"
 msgstr[1] "Testa piekļuve ({expiration} dienas)"
 msgstr[2] "Testa piekļuve ({expiration} dienas)"
 
-#: authentication/models.py:157
+#: authentication/models.py:159
 #, python-brace-format
 msgid "Limited Access ({expiration} Day)"
 msgid_plural "Limited Access ({expiration} Days)"
@@ -176,18 +176,18 @@ msgstr[0] "Ierobežota piekļuve ({expiration} diena)"
 msgstr[1] "Ierobežota piekļuve ({expiration} dienas)"
 msgstr[2] "Ierobežota piekļuve ({expiration} dienas)"
 
-#: authentication/models.py:299
+#: authentication/models.py:301
 #, python-format
 msgid "Registered on %(date)s"
 msgstr "Reģistrējās %(date)s"
 
-#: authentication/models.py:301
-#: authentication/templates/authentication/legal_info.html:174
-#: authentication/templates/authentication/legal_info.html:214
+#: authentication/models.py:303
+#: authentication/templates/authentication/legal_info.html:176
+#: authentication/templates/authentication/legal_info.html:216
 msgid "Invitation sent"
 msgstr "Uzaicinājums nosūtīts"
 
-#: authentication/models.py:306
+#: authentication/models.py:308
 #, python-format
 msgid "Received %(days)d days full access"
 msgstr "Saņemtas %(days)d pilnas piekļuves dienas"
@@ -237,20 +237,20 @@ msgstr "Nomainīt paroli"
 msgid "Save"
 msgstr "Saglabāt"
 
-#: authentication/templates/authentication/legal_info.html:60
+#: authentication/templates/authentication/legal_info.html:61
 msgid "Subscription and payments"
 msgstr "Abonementi un maksājumi"
 
-#: authentication/templates/authentication/legal_info.html:66
+#: authentication/templates/authentication/legal_info.html:67
 msgid "Active subscription:"
 msgstr "Aktīvie abonementi:"
 
-#: authentication/templates/authentication/legal_info.html:71
-#: authentication/templates/authentication/legal_info.html:79
+#: authentication/templates/authentication/legal_info.html:72
+#: authentication/templates/authentication/legal_info.html:80
 msgid "Cancel subscription"
 msgstr "Atcelt abonementu"
 
-#: authentication/templates/authentication/legal_info.html:75
+#: authentication/templates/authentication/legal_info.html:76
 msgid ""
 "By pressing \"Cancel subscription\", you confirm cancellation of full access "
 "subscription."
@@ -258,96 +258,96 @@ msgstr ""
 "Nospiežot \"Atcelt abonementu\", jūs atsakaties no pilnas piekļuves "
 "3DOptimizer."
 
-#: authentication/templates/authentication/legal_info.html:76
+#: authentication/templates/authentication/legal_info.html:77
 #, python-format
 msgid "You will have full access till %(end_date)s."
 msgstr "Varēsiet izmantot pilnu piekļuvi līdz %(end_date)s."
 
-#: authentication/templates/authentication/legal_info.html:84
+#: authentication/templates/authentication/legal_info.html:85
 msgid "Payment method:"
 msgstr "Maksājuma veids:"
 
-#: authentication/templates/authentication/legal_info.html:86
+#: authentication/templates/authentication/legal_info.html:87
 msgid "You don't have active subscription."
 msgstr "Nav aktīvu abonementu."
 
-#: authentication/templates/authentication/legal_info.html:87
-#: payments/templates/payments/plans.html:113
-#: payments/templates/payments/plans.html:173
+#: authentication/templates/authentication/legal_info.html:88
+#: payments/templates/payments/plans.html:119
+#: payments/templates/payments/plans.html:180
 msgid "Purchase"
 msgstr "Iegādāties"
 
-#: authentication/templates/authentication/legal_info.html:98
+#: authentication/templates/authentication/legal_info.html:100
 #: session/templates/session/dashboard.html:52
 #: session/templates/session/navbar.html:79
 msgid "Users"
 msgstr "Lietotāji"
 
-#: authentication/templates/authentication/legal_info.html:108
-#: authentication/templates/authentication/legal_info.html:121
+#: authentication/templates/authentication/legal_info.html:110
+#: authentication/templates/authentication/legal_info.html:123
 #: session/templates/session/team_stats.html:27
 msgid "User"
 msgstr "Lietotājs"
 
-#: authentication/templates/authentication/legal_info.html:110
+#: authentication/templates/authentication/legal_info.html:112
 msgid "Role"
 msgstr "Loma"
 
-#: authentication/templates/authentication/legal_info.html:111
+#: authentication/templates/authentication/legal_info.html:113
 #: session/templates/session/team_stats.html:28
 msgid "Last active"
 msgstr "Pēdējā aktivitāte"
 
-#: authentication/templates/authentication/legal_info.html:121
+#: authentication/templates/authentication/legal_info.html:123
 #: session/templates/session/machine_manager.html:29
 #: session/templates/session/material_manager.html:29
 msgid "Owner"
 msgstr "Īpašnieks"
 
-#: authentication/templates/authentication/legal_info.html:121
+#: authentication/templates/authentication/legal_info.html:123
 msgid "Manager"
 msgstr "Menedžeris"
 
-#: authentication/templates/authentication/legal_info.html:128
-#: authentication/templates/authentication/legal_info.html:180
-#: authentication/templates/authentication/legal_info.html:220
+#: authentication/templates/authentication/legal_info.html:130
+#: authentication/templates/authentication/legal_info.html:182
+#: authentication/templates/authentication/legal_info.html:222
 #: session/templates/session/machine_manager.html:45
 #: session/templates/session/material_manager.html:45
 #: session/templates/session/session_manager.html:66
 msgid "Action"
 msgstr "Mainīt"
 
-#: authentication/templates/authentication/legal_info.html:135
+#: authentication/templates/authentication/legal_info.html:137
 msgid "Resign manager role"
 msgstr "Noņemt menedžera lomu"
 
-#: authentication/templates/authentication/legal_info.html:135
+#: authentication/templates/authentication/legal_info.html:137
 msgid "Assign manager role"
 msgstr "Piešķirt menedžera lomu"
 
-#: authentication/templates/authentication/legal_info.html:138
-#: authentication/templates/authentication/legal_info.html:158
+#: authentication/templates/authentication/legal_info.html:140
+#: authentication/templates/authentication/legal_info.html:160
 msgid "Leave"
 msgstr "Pamest"
 
-#: authentication/templates/authentication/legal_info.html:138
-#: authentication/templates/authentication/legal_info.html:158
-#: authentication/templates/authentication/legal_info.html:183
-#: authentication/templates/authentication/legal_info.html:199
-#: authentication/templates/authentication/legal_info.html:223
-#: authentication/templates/authentication/legal_info.html:239
+#: authentication/templates/authentication/legal_info.html:140
+#: authentication/templates/authentication/legal_info.html:160
+#: authentication/templates/authentication/legal_info.html:185
+#: authentication/templates/authentication/legal_info.html:201
+#: authentication/templates/authentication/legal_info.html:225
+#: authentication/templates/authentication/legal_info.html:241
 msgid "Remove"
 msgstr "Izņemt"
 
-#: authentication/templates/authentication/legal_info.html:144
+#: authentication/templates/authentication/legal_info.html:146
 msgid "Leave company"
 msgstr "Pamest uzņēmumu"
 
-#: authentication/templates/authentication/legal_info.html:144
+#: authentication/templates/authentication/legal_info.html:146
 msgid "Remove from company"
 msgstr "Izņemt no uzņēmuma"
 
-#: authentication/templates/authentication/legal_info.html:149
+#: authentication/templates/authentication/legal_info.html:151
 msgid ""
 "If you leave company, you won't have access to it's printers, materials and "
 "testing sessions."
@@ -355,8 +355,8 @@ msgstr ""
 "Pametot uzņēmumu jums tiks liegta piekļuve uzņēmuma printeriem, materiāliem "
 "un testēšanas sesijām."
 
-#: authentication/templates/authentication/legal_info.html:151
-#: authentication/templates/authentication/legal_info.html:193
+#: authentication/templates/authentication/legal_info.html:153
+#: authentication/templates/authentication/legal_info.html:195
 #, python-format
 msgid ""
 "By pressing \"Remove\", you confirm removal of <b>%(first)s %(last)s</b> "
@@ -365,12 +365,12 @@ msgstr ""
 "Nospiežot \"Izņemt\", jūs apstiprināt <b>%(first)s %(last)s</b> izņemšanu no "
 "uzņēmuma."
 
-#: authentication/templates/authentication/legal_info.html:189
-#: authentication/templates/authentication/legal_info.html:229
+#: authentication/templates/authentication/legal_info.html:191
+#: authentication/templates/authentication/legal_info.html:231
 msgid "Remove from corporation"
 msgstr "Izņemt no uzņēmuma"
 
-#: authentication/templates/authentication/legal_info.html:233
+#: authentication/templates/authentication/legal_info.html:235
 #, python-format
 msgid ""
 "By pressing \"Remove\", you confirm removal of <b>%(name)s</b> from your "
@@ -378,16 +378,16 @@ msgid ""
 msgstr ""
 "Nospiežot \"Izņemt\", jūs apstiprināt <b>%(name)s</b> izņemšanu no uzņēmuma."
 
-#: authentication/templates/authentication/legal_info.html:259
+#: authentication/templates/authentication/legal_info.html:261
 msgid "Invite user"
 msgstr "Uzaicināt lietotāju"
 
-#: authentication/templates/authentication/legal_info.html:269
+#: authentication/templates/authentication/legal_info.html:271
 #, python-format
 msgid "%(count)s of %(allowed)s users registered"
 msgstr "Reģistrēti %(count)s no %(allowed)s lietotājiem"
 
-#: authentication/templates/authentication/legal_info.html:275
+#: authentication/templates/authentication/legal_info.html:277
 msgid "Upgrade to add more users"
 msgstr "Atjaunināt, lai pievienotu papildu lietotājus"
 
@@ -612,46 +612,54 @@ msgstr[0] "Atlikusi %(expiration)s pilnas piekļuves diena."
 msgstr[1] "Atlikušas %(expiration)s pilnas piekļuves dienas."
 msgstr[2] ""
 
-#: payments/templates/payments/plans.html:69
+#: payments/templates/payments/plans.html:70
+#, fuzzy, python-format
+#| msgid "If you need different setup or more users, contact %(support)s"
+msgid "To extend Full Access, contact %(support)s"
+msgstr ""
+"Ja nepieciešama cita konfigurācija vai vairāk lietotāju, sazinieties ar "
+"%(support)s"
+
+#: payments/templates/payments/plans.html:75
 msgid "Individual"
 msgstr "Privātais"
 
-#: payments/templates/payments/plans.html:72
+#: payments/templates/payments/plans.html:78
 msgid "Business"
 msgstr "Biznesa"
 
-#: payments/templates/payments/plans.html:75
+#: payments/templates/payments/plans.html:81
 msgid "Education"
 msgstr "Izglītības"
 
-#: payments/templates/payments/plans.html:99
-#: payments/templates/payments/plans.html:158
+#: payments/templates/payments/plans.html:105
+#: payments/templates/payments/plans.html:165
 msgid "All tests"
 msgstr "Visi testi"
 
 # TODO improve translation
-#: payments/templates/payments/plans.html:100
-#: payments/templates/payments/plans.html:159
+#: payments/templates/payments/plans.html:106
+#: payments/templates/payments/plans.html:166
 msgid "Full guided testing mode"
 msgstr "Pilns, vadīts (guided) testēšanas režīms"
 
 # TODO improve translation
-#: payments/templates/payments/plans.html:101
-#: payments/templates/payments/plans.html:160
+#: payments/templates/payments/plans.html:107
+#: payments/templates/payments/plans.html:167
 msgid "Advanced testing mode"
 msgstr "Profesionāļu (Advanced) testēšanas režīms"
 
-#: payments/templates/payments/plans.html:102
-#: payments/templates/payments/plans.html:162
+#: payments/templates/payments/plans.html:108
+#: payments/templates/payments/plans.html:169
 msgid "Email support"
 msgstr "Atbalsts epastā"
 
-#: payments/templates/payments/plans.html:110
-#: payments/templates/payments/plans.html:170
+#: payments/templates/payments/plans.html:116
+#: payments/templates/payments/plans.html:177
 msgid "Currently active"
 msgstr "Šobrīd aktīvs"
 
-#: payments/templates/payments/plans.html:124
+#: payments/templates/payments/plans.html:130
 msgid ""
 "If you’re not happy with our software for any reason, we’ll refund your "
 "money within a week from payment date no-questions-asked."
@@ -659,11 +667,11 @@ msgstr ""
 "Ja neesat apmierināts ar mūsu pakalpojumu, nedēļas laikā no pirkuma "
 "atgriezīsim naudu."
 
-#: payments/templates/payments/plans.html:138
+#: payments/templates/payments/plans.html:145
 msgid "Payment plans"
 msgstr "Maksājumu plāni"
 
-#: payments/templates/payments/plans.html:161
+#: payments/templates/payments/plans.html:168
 #, python-format
 msgid "%(users)s user included"
 msgid_plural "%(users)s users included"
@@ -671,18 +679,18 @@ msgstr[0] "Iekļauts %(users)s lietotājs"
 msgstr[1] "Iekļauti %(users)s lietotāji"
 msgstr[2] ""
 
-#: payments/templates/payments/plans.html:184
+#: payments/templates/payments/plans.html:191
 #, python-format
 msgid "If you need different setup or more users, contact %(support)s"
 msgstr ""
 "Ja nepieciešama cita konfigurācija vai vairāk lietotāju, sazinieties ar "
 "%(support)s"
 
-#: payments/templates/payments/plans.html:190
+#: payments/templates/payments/plans.html:197
 msgid "Individual account"
 msgstr "Personīgais konts"
 
-#: payments/templates/payments/plans.html:193
+#: payments/templates/payments/plans.html:200
 #, python-format
 msgid ""
 "Free full access for individual students and teachers - </br><a "
@@ -692,24 +700,24 @@ msgstr ""
 "individuālā konta izveidošanas </br><a %(support)s>sazinieties ar klientu "
 "atbalstu</a>."
 
-#: payments/templates/payments/plans.html:196
+#: payments/templates/payments/plans.html:203
 msgid "Educational institution account"
 msgstr "Izglītības iestādes konts"
 
-#: payments/templates/payments/plans.html:199
+#: payments/templates/payments/plans.html:206
 #, python-format
 msgid "We offer discounts for multi-user accounts — contact %(sales)s."
 msgstr "Piedāvājam bezmaksas vairāku lietotāju kontus - sazinieties %(sales)s."
 
-#: payments/views.py:101
+#: payments/views.py:108
 msgid "Your checkout was cancelled"
 msgstr "Maksājums tika atcelts"
 
-#: payments/views.py:111 payments/views.py:134
+#: payments/views.py:118 payments/views.py:141
 msgid "Your session has expired"
 msgstr "Jūsu sesija ir beigusies"
 
-#: payments/views.py:115 payments/views.py:361
+#: payments/views.py:122 payments/views.py:368
 #, python-format
 msgid "Your full access was extended for %(day)d day"
 msgid_plural "Your full access was extended for %(day)d days"
@@ -717,27 +725,27 @@ msgstr[0] "Pilnā piekļuve tika pagarināta par %(day)d dienu"
 msgstr[1] "Pilnā piekļuve tika pagarināta par %(day)d dienām"
 msgstr[2] ""
 
-#: payments/views.py:119
+#: payments/views.py:126
 msgid "Subscription successful"
 msgstr "Abonements veiksmīgi uzsākts"
 
-#: payments/views.py:126
+#: payments/views.py:133
 msgid "We haven't received your payment yet. Please check after few minutes"
 msgstr "Maksājums vēl nav apstiprināts. Lūdzu, pārbaudiet pēc dažām minūtēm"
 
-#: payments/views.py:171
+#: payments/views.py:178
 msgid "Subscription payment method changed!"
 msgstr "Maksājuma dati nomainīti!"
 
-#: payments/views.py:177
+#: payments/views.py:184
 msgid "Something went wrong. Please try again later."
 msgstr "Gadījās kļūda. Lūdzu mēģiniet vēlāk."
 
-#: payments/views.py:196
+#: payments/views.py:203
 msgid "Subscription cancelled"
 msgstr "Abonements atcelts"
 
-#: payments/views.py:365
+#: payments/views.py:372
 msgid "Provided voucher code is not valid"
 msgstr "Ievadītais kupona kods nav derīgs"
 
@@ -2006,7 +2014,7 @@ msgstr "Printera \"{printer}\" izmaiņas saglabātas!"
 msgid "3D Printer \"{printer}\" has been created!"
 msgstr "Izveidots 3D printeris \"{printer}\"!"
 
-#: session/views.py:426
+#: session/views.py:428
 #, python-brace-format
 msgid ""
 "Your next test is available in Full Access only. You can skip it and go to "
@@ -2015,7 +2023,7 @@ msgstr ""
 "Jums nepieciešamais tests pieejams tikai ar Pilnu piekļuvi. Varat doties uz "
 "nākamo pieejamo testu vai <a href={link}>iegādāties Pilnu piekļuvi.</a>"
 
-#: session/views.py:430
+#: session/views.py:432
 #, python-brace-format
 msgid ""
 "Your next test is available in Full Access only. You can skip it and go to "

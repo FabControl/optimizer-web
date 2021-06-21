@@ -10,7 +10,11 @@ class UserAdmin(DjangoUserAdmin):
 
     fieldsets = (
         (None, {'fields': ('email', 'password',)}),
-        ('Subscription', {'fields': ('_plan', 'subscription_expiration', 'manager_of_corporation', 'member_of_corporation')}),
+        ('Subscription', {'fields': ('_plan', 
+                                    'subscription_expiration', 
+                                    'custom_payments', 
+                                    'manager_of_corporation', 
+                                    'member_of_corporation')}),
         ('Personal info', {'fields': ('first_name', 'last_name')}),
         ('Company info', {'fields': ('company_name',
                                         'company_registration_number',

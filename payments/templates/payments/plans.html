@@ -64,6 +64,12 @@
       </div>
     </div>--!>
     {% endif %}
+    {% if request.user.custom_payments %}
+    </div>
+    <div class="row pt-3 justify-content-center">
+    <p>{% blocktrans with support='<a href="mailto:sales@fabcontrol.com">sales@fabcontrol.com</a>' %}To extend Full Access, contact {{ support }}{% endblocktrans %}</p>
+    </div>
+    {% else %}
   <ul class="nav nav-tabs justify-content-center pt-5" id="myTab" role="tablist">
     <li class="nav-item">
       <a class="nav-link{% if section is None or section == 'individual' %} active{% endif %}" id="individual-tab" data-toggle="tab" href="#individual" role="tab" aria-controls="individual" aria-selected="{% if section is None or section == 'individual' %}true{% else %}false{% endif %}">{% trans 'Individual' %}</a>
@@ -132,6 +138,7 @@
       </div>
     </div>
     <div class="tab-pane fade{% if section == 'business' %} show active{% endif %}" id="business" role="tabpanel" aria-labelledby="business-tab">
+    {% endif %}
   {% else %}
   <div class="row pt-5 text-center justify-content-center">
     <div class="col-sm">
@@ -183,7 +190,7 @@
       <div class="row pt-3 justify-content-center">
       <p>{% blocktrans with support='<a href="mailto:sales@fabcontrol.com">sales@fabcontrol.com</a>' %}If you need different setup or more users, contact {{ support }}{% endblocktrans %}</p>
       </div>
-  {% if request.user.member_of_corporation is None %}
+  {% if request.user.member_of_corporation is None and not request.user.custom_payments %}
     </div>
     <div class="tab-pane fade{% if section == 'education' %} show active{% endif %}" id="education" role="tabpanel" aria-labelledby="education-tab">
       <div class="row pt-5 justify-content-center">
